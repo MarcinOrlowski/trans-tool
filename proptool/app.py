@@ -84,9 +84,11 @@ class App:
         group.add_argument('-s', '--strict', action = 'store_true', dest = 'strict',
                            help = 'Controls strict validation mode.')
         group.add_argument('--sep', action = 'store', dest = 'separator', metavar = 'CHAR', nargs = 1,
-                           help = 'If specified, only given CHAR is considerd valid separator.')
+                           help = 'If specified, only given CHAR is considered a valid separator.'
+                                  + f'Must be one of the following: {", ".join(self.allowedSeparators)}')
         group.add_argument('--com', action = 'store', dest = 'comment', metavar = 'CHAR', nargs = 1,
-                           help = 'If specified, only given CHAR is considerd valid comment marker.')
+                           help = 'If specified, only given CHAR is considered va alid comment marker. '
+                                  + f'Must be one of the following: {", ".join(self.allowedCommentMarkers)}')
         group.add_argument('-q', '--quiet', action = 'store_true', dest = 'quiet')
         group.add_argument('-v', '--verbose', action = 'store_true', dest = 'verbose',
                            help = 'Produces more verbose reports')
