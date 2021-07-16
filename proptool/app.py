@@ -25,6 +25,8 @@ class App:
         self.languages: List[str] = []
         self.allowedSeparators: List[str] = ['=', ':']
         self.separator: str = '='
+        self.comment: str = '#'
+        self.allowedCommentMarkers: List[str] = ['#', '!']
         self.log = Log()
 
         args = self._parseArgs()
@@ -35,6 +37,7 @@ class App:
         self.fix = args.fix
         self.languages = args.languages
         self._setSeparatorFromArgs(args.separator)
+        self._setCommentMarkerFromArgs(args.separator)
 
         self.files = self._processFiles(args.files)
 
@@ -48,12 +51,18 @@ class App:
         return tmp
 
     def _setSeparatorFromArgs(self, args):
-        if args:
-            separator = args.separator[0]
-            if separator in self.allowedSeparators:
-                self.separator = separator
-            else:
-                Util.abort(f'Invalid separator. Must be one of the following: {self.allowedSeparators}')
+        separator = args.separator[0]
+        if separator in self.allowedSeparators:
+            self.separator = separator
+        else:
+            Util.abort(f'Invalid separator. Must be one of the following: {self.allowedSeparators}')
+
+    def _setCommentMarkerFromArgs(self, args):
+        comment = args.separator[0]
+        if comment in self.allowedCommentMarkers:
+            self.comment = comment
+        else:
+            Util.abort(f'Invalid comment marker. Must be one of the following: {self.allowedCommentMarkers}')
 
     def _parseArgs(self):
         parser = argparse.ArgumentParser(
@@ -76,6 +85,8 @@ class App:
                            help = 'Controls strict validation mode.')
         group.add_argument('--sep', action = 'store', dest = 'separator', metavar = 'CHAR', nargs = 1,
                            help = 'If specified, only given CHAR is considerd valid separator.')
+        group.add_argument('--com', action = 'store', dest = 'comment', metavar = 'CHAR', nargs = 1,
+                           help = 'If specified, only given CHAR is considerd valid comment marker.')
         group.add_argument('-q', '--quiet', action = 'store_true', dest = 'quiet')
         group.add_argument('-v', '--verbose', action = 'store_true', dest = 'verbose',
                            help = 'Produces more verbose reports')
