@@ -10,13 +10,13 @@ Based on `*.properties`
 
 ## Installation ##
 
-You can install `prop-tool` form PyPi by using `pip`:
+You can install `prop-tool` form [PyPi](https://pypi.org/project/prop-tool/) by using `pip`:
 
 ```bash
 pip install prop-tool
 ```
 
-or by downloading `*.whl` archive and issuing:
+Altermatively, you can download `*.whl` archive and install it manually by issuing:
 
 ```bash
 pip install --upgrade <FILE>.whl
