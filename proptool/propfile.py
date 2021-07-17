@@ -2,8 +2,8 @@
 # prop-tool
 # Java *.properties file sync checker and syncing tool.
 #
-# copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
-# https://github.com/MarcinOrlowski/prop-tool
+# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# https://github.com/MarcinOrlowski/prop-tool/
 #
 
 import re
@@ -28,12 +28,18 @@ class PropFile(list):
         self.commentedOutKeys = []
         self.app = app
         self.separator = app.separator
+        self.loaded = False
 
-        self._load(file)
+        if file is not None:
+            self.loaded = self._load(file)
+
+    # #################################################################################################
 
     def validateAndFix(self, reference: 'PropFile') -> bool:
         if not self.validate(reference) and self.app.fix:
             self.fix(reference)
+
+    # #################################################################################################
 
     def validate(self, reference: 'PropFile') -> bool:
         """
@@ -44,23 +50,26 @@ class PropFile(list):
         """
         errorCount = 0
 
-        # Check if we have all reference keys present.
         myKeys = self.keys.copy()
         missingKeys = []
-        for key in reference.keys:
-            if key in myKeys:
-                myKeys.remove(key)
-            else:
-                missingKeys.append(key)
 
-        # Commented out keys (in form `# ==> KEY =`) are also considered
-        # present in the translation unless we run in strict check mode.
+        if self.loaded:
+            # Check if we have all reference keys present.
+            for key in reference.keys:
+                if key in myKeys:
+                    myKeys.remove(key)
+                else:
+                    missingKeys.append(key)
 
-        if not self.app.strict:
-            commentedOutKeys = self.commentedOutKeys.copy()
-            for key in commentedOutKeys:
-                if key in missingKeys:
-                    missingKeys.remove(key)
+            # Commented out keys are also considered present in the translation unless
+            # we run in strict check mode.
+            if not self.app.strict:
+                commentedOutKeys = self.commentedOutKeys.copy()
+                for key in commentedOutKeys:
+                    if key in missingKeys:
+                        missingKeys.remove(key)
+        else:
+            errorCount += 1
 
         missingKeysCount = len(missingKeys)
         errorCount += missingKeysCount
@@ -70,22 +79,36 @@ class PropFile(list):
         errorCount += danglingKeysCount
 
         if errorCount > 0:
-            Util.error(f'  Found {errorCount} errors in {self.file}')
-            if missingKeysCount > 0:
-                Util.error([f'    Missing keys: {missingKeysCount}'])
-                if self.app.verbose:
-                    Util.error([f'      {key}' for key in missingKeys])
-            if danglingKeysCount > 0:
-                Util.error([f'    Dangling keys: {danglingKeysCount}'])
-                if self.app.verbose:
-                    Util.error([f'      {key}' for key in myKeys])
+            if not self.loaded:
+                Util.error(f'  File does not exist: {self.file}')
+            else:
+                Util.error(f'  Found {errorCount} errors in {self.file}')
+                if missingKeysCount > 0:
+                    Util.error(f'    Missing keys: {missingKeysCount}')
+                    if self.app.verbose:
+                        Util.error(f'      {key}' for key in missingKeys)
+                if danglingKeysCount > 0:
+                    Util.error(f'    Dangling keys: {danglingKeysCount}')
+                    if self.app.verbose:
+                        Util.error([f'      {key}' for key in myKeys])
         elif self.app.verbose:
             print(f'  {self.file}: OK')
 
         return errorCount == 0
 
+    # #################################################################################################
+
     def fix(self, reference: 'PropFile'):
+
+        def findTranslationByKey(self, key: str) -> Union[PropTranslation, None]:
+            for item in self:
+                if isinstance(item, PropTranslation) and item.key == key:
+                    return item
+            return None
+
         synced: List[PropEntry] = []
+
+        commentPattern = self.app.commentTemplate.replace('COM', self.app.commentMarker).replace('SEP', self.separator)
 
         for item in reference:
             if isinstance(item, PropTranslation):
@@ -93,26 +116,21 @@ class PropFile(list):
                     translated = self._findTranslationByKey(item.key)
                     if not translated:
                         raise RuntimeError(f'Unable to find translation of {item.key}')
-                    synced.append(self._findTranslationByKey(item.key).toString() + '\n')
+                    synced.append(findTranslationByKey(item.key).toString() + '\n')
                 else:
-                    synced.append(f'# ==> {item.key} {self.separator}' + '\n')
+                    synced.append(commentPattern.replace('KEY', item.key) + '\n')
             elif isinstance(item, (PropEmpty, PropComment)):
                 synced.append(item.toString() + '\n')
             else:
                 raise RuntimeError(f'Unknown entry type: {type(item)}')
 
-        print(f'    Writing updated file.')
-        # with open(self.file, 'w') as fh:
-        #     fh.writelines(synced)
-        print(''.join(synced))
+        print(f'    Re-writing translation file: {self.file}')
+        with open(self.file, 'w') as fh:
+            fh.writelines(synced)
 
-    def _findTranslationByKey(self, key: str) -> Union[PropTranslation, None]:
-        for item in self:
-            if isinstance(item, PropTranslation) and item.key == key:
-                return item
-        return None
+    # #################################################################################################
 
-    def _load(self, file: Path) -> None:
+    def _load(self, file: Path) -> bool:
         """
         Loads and parses *.properties file.
 
@@ -135,20 +153,26 @@ class PropFile(list):
             self.append(PropEmpty())
 
         if not file.exists():
-            Util.abort(f'File not found: {file}')
+            return False
+
+        commentPattern = re.escape(self.app.commentTemplate).replace(
+            'COM', f'[{"".join(self.app.allowedCommentMarkers)}]').replace(
+            'SEP', f'[{"".join(self.app.allowedSeparators)}]')
+        # NOTE: key pattern must be in () brackets to form a group used later!
+        commentPattern = commentPattern.replace('KEY', '([a-zAz][a-zA-z0-9_.-]+)')
+        commentPattern = f'^{commentPattern}'
 
         previousLine: str = None
         with open(file, 'r') as fh:
-            lineNumber = 0
+            lineNumber: int = 0
             while True:
                 lineNumber += 1
-                line = fh.readline()
+                line: str = fh.readline()
                 if not line:
                     break
 
                 # Remove all trailing/leading spaces.
                 line: str = line.strip()
-                print(f'-- "{line}"')
                 # Skip empty lines
                 if line == '':
                     # Only single subsequent empty line allowed.
@@ -156,22 +180,21 @@ class PropFile(list):
                         continue
                     addEmpty()
 
-                elif line[0] == '#':
+                elif line[0] in self.app.allowedCommentMarkers:
                     # Only single subsequent 'empty' comment line allowed.
-                    if line == '#' and previousLine is not None and previousLine == '#':
+                    # FIXME you can mix comment markers in subsequent linex to fool this detection.
+                    if line == self.app.commentMarker and previousLine is not None and previousLine in self.app.commentMarker:
                         continue
 
-                    # min len of valid commented out key is 9 -> `# ==> K ='
-                    if len(line) > 9:
-                        # Let's look for commented out keys: '# ==> KEY ='
-                        match = re.compile('^[#!] ==> ([a-zA-Z0-9_.-]+) [=:]$').match(line)
-                        if match:
-                            self.commentedOutKeys.append(match.group(1))
+                    # Let's look for commented out keys.
+                    match = re.compile(commentPattern).match(line)
+                    if match:
+                        self.commentedOutKeys.append(match.group(1))
                     addComment(line)
 
                 else:
                     if not self.separator:
-                        # Let's look for separator char. Both `=` and `:` are valid.
+                        # Let's look for used separator character.
                         for i in range(len(line)):
                             if line[i] in self.app.allowedSeparators:
                                 self.separator = line[i]
@@ -185,3 +208,5 @@ class PropFile(list):
                     addTranslation(tmp[0], ''.join(tmp[1:]))
 
                 previousLine = line
+
+        return True
