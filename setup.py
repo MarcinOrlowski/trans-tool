@@ -1,26 +1,24 @@
 #!/usr/bin/env python3
 
-"""
+#
+# prop-tool
+# Java *.properties file sync checker and syncing tool.
+#
+# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# https://github.com/MarcinOrlowski/prop-tool/
+#
+#
+# pytyon3 -m venv venv
+# source venv/activate.fish
+# python3 setup.py sdist bdist_wheel
+# pip install --upgrade dist/prop_tool-1.0.0-py3-none-any.whl
+# twine upload dist/*
+#
 
- prop-tool
-
- Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
-
- https://github.com/MarcinOrlowski/prop-sync
-
-
- pytyon3 -m venv venv
- source venv/activate.fish
- python3 setup.py sdist bdist_wheel
- pip install --upgrade dist/prop_tool-1.0.0-py3-none-any.whl
- twine upload dist/*
-
-
-"""
 from proptool.const import Const
 from setuptools import setup, find_packages
 
-with open("README.md", "r") as fh:
+with open('README.md', 'r') as fh:
     readme = fh.read()
 
 setup(
