@@ -2,8 +2,8 @@
 # prop-tool
 # Java *.properties file sync checker and syncing tool.
 #
-# copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
-# https://github.com/MarcinOrlowski/prop-tool
+# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# https://github.com/MarcinOrlowski/prop-tool/
 #
 
 import sys
@@ -30,6 +30,8 @@ class Main:
             nameSuffix = tmp[1]
 
             reference = PropFile(app, referenceFile)
+            if not reference.loaded:
+                Util.abort(f'File not found: {referenceFile}')
 
             if app.verbose:
                 print(referenceFile)
