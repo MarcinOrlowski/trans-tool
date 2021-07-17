@@ -2,8 +2,8 @@
 # prop-tool
 # Java *.properties file sync checker and syncing tool.
 #
-# copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
-# https://github.com/MarcinOrlowski/prop-tool
+# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# https://github.com/MarcinOrlowski/prop-tool/
 #
 
 import argparse
@@ -25,7 +25,8 @@ class App:
         self.languages: List[str] = []
         self.allowedSeparators: List[str] = ['=', ':']
         self.separator: str = '='
-        self.comment: str = '#'
+        self.commentMarker: str = '#'
+        self.commentTemplate: str = 'COM ==> KEY SEP'
         self.allowedCommentMarkers: List[str] = ['#', '!']
         self.log = Log()
 
@@ -36,33 +37,33 @@ class App:
         self.strict = args.strict
         self.fix = args.fix
         self.languages = args.languages
-        self._setSeparatorFromArgs(args.separator)
-        self._setCommentMarkerFromArgs(args.separator)
 
-        self.files = self._processFiles(args.files)
+        self._fromArgs(args)
 
-    def _processFiles(self, files: List[str]):
-        tmp = []
-        for file in files:
+    def _fromArgs(self, args):
+        # Separator character.
+        separator = args.separator[0]
+        if separator not in self.allowedSeparators:
+            Util.abort(f'Invalid separator. Must be one of the following: {self.allowedSeparators}')
+        self.separator = separator
+
+        # Comment marker character.
+        comment = args.comment[0]
+        if comment not in self.allowedCommentMarkers:
+            Util.abort(f'Invalid comment marker. Must be one of the following: {self.allowedCommentMarkers}')
+        self.commentMarker = comment
+
+        # Comment template.
+        for key in ['COM', 'SEP', 'KEY']:
+            if key not in args.commentTemplate[0]:
+                Util.abort(f'Missing literal in comment template: {key}')
+        self.commentTemplate = args.commentTemplate[0]
+
+        # base files
+        for file in args.files:
             if file[-11:] != '.properties':
                 file += '.properties'
-            tmp.append(Path(file))
-
-        return tmp
-
-    def _setSeparatorFromArgs(self, args):
-        separator = args.separator[0]
-        if separator in self.allowedSeparators:
-            self.separator = separator
-        else:
-            Util.abort(f'Invalid separator. Must be one of the following: {self.allowedSeparators}')
-
-    def _setCommentMarkerFromArgs(self, args):
-        comment = args.separator[0]
-        if comment in self.allowedCommentMarkers:
-            self.comment = comment
-        else:
-            Util.abort(f'Invalid comment marker. Must be one of the following: {self.allowedCommentMarkers}')
+            self.files.append(Path(file))
 
     def _parseArgs(self):
         parser = argparse.ArgumentParser(
@@ -83,16 +84,17 @@ class App:
                            help = "Updated translation files in-place. No backup!")
         group.add_argument('-s', '--strict', action = 'store_true', dest = 'strict',
                            help = 'Controls strict validation mode.')
-        group.add_argument('--sep', action = 'store', dest = 'separator', metavar = 'CHAR', nargs = 1,
+        group.add_argument('--sep', action = 'store', dest = 'separator', metavar = 'CHAR', nargs = 1, default = '=',
                            help = 'If specified, only given CHAR is considered a valid separator.'
                                   + f'Must be one of the following: {", ".join(self.allowedSeparators)}')
-        group.add_argument('--com', action = 'store', dest = 'comment', metavar = 'CHAR', nargs = 1,
+        group.add_argument('--com', action = 'store', dest = 'comment', metavar = 'CHAR', nargs = 1, default = '#',
                            help = 'If specified, only given CHAR is considered va alid comment marker. '
                                   + f'Must be one of the following: {", ".join(self.allowedCommentMarkers)}')
+        group.add_argument('-t', '--tpl', action = 'store', dest = 'commentTemplate', metavar = 'TEMPLATE', nargs = 1,
+                           default = self.commentTemplate,
+                           help = f'Format of commented-out entries. Default: "{self.commentTemplate}"')
         group.add_argument('-q', '--quiet', action = 'store_true', dest = 'quiet')
         group.add_argument('-v', '--verbose', action = 'store_true', dest = 'verbose',
                            help = 'Produces more verbose reports')
 
-        args = parser.parse_args()
-
-        return args
+        return parser.parse_args()
