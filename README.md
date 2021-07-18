@@ -2,7 +2,7 @@
 
 `prop-tool` - Java *.properties file checker and syncing tool.
 
-This utility can be used to check if translation files stay in sync with base file. It can also rewrite translation files adding
+This utility can be used to check if translation files stay in sync with base file. It can also create translation files adding
 missing keys based on the content of base file.
 
 Based on `*.properties`
@@ -16,7 +16,7 @@ You can install `prop-tool` form [PyPi](https://pypi.org/project/prop-tool/) by 
 pip install prop-tool
 ```
 
-Altermatively, you can download `*.whl` archive and install it manually by issuing:
+Alternatively, you can download `*.whl` archive and install it manually by issuing:
 
 ```bash
 pip install --upgrade <FILE>.whl
@@ -24,7 +24,8 @@ pip install --upgrade <FILE>.whl
 
 ## Validation ##
 
-For `prop-tool` base file `A` and its translation file `B` are in sync when:
+The main purpose of `prop-tool` is to ensure translation files are in sync. For that reason you need to have at least two
+`*.properties` files. One is your reference (aka base) and all the others are your translations. File is in sync with base when:
 
 1. All keys present in base file are also present in translation file.
 1. There's no dangling keys (not existing in base) present in translation file.
@@ -36,17 +37,18 @@ fulfilled also when given key exists in `B` file but is commented out and follow
 # ==> KEY =
 ```
 
-If you want to ensure that all keys are in fact translated, use `--strict` mode while checking.
+Default format can changed using `--tpl` argument.
 
-When running with `--strict` option, all keys
+If you want to ensure that all keys are in fact translated, use `--strict` mode while checking. When running with `--strict` option,
+keys in commented out form are ignored.
 
 ## Fixing files ##
 
-You can use `prop-tool` to update your translation files by using `--fix` option. I such case `prop-tool` will completely rewrite
+You can use `prop-tool` to update your translation files by using `--fix` option. In such case `prop-tool` will completely rewrite
 translation files, adding missing keys (in commented out form).
 
 NOTE: Be aware that `--fix` do NOT update existing translation file but builds it completely using base file as reference and
-existing translations (if present). No other content of translation files (i.e. comments etc) will be preserved.
+existing translations (if present). No other content of translation files (for example additional comments etc) will be preserved.
 
 ## Usage examples ##
 
@@ -82,6 +84,24 @@ test_fr.properties
 gui_de.properties
 gui_pl.properties
 gui_fr.properties
+```
+
+---
+
+Check if `es` translation of `gui.properties` is in sync and if there are any missing keys, rewrite translation file to contain all
+keys from base:
+
+```bash
+prop-tool --base gui --lang es --fix
+```
+
+---
+
+Check if `pt` translation of `gui.properties` is in sync and if there are any missing keys, rewrite translation file to contain all
+keys from base using own comment format:
+
+```bash
+prop-tool --base gui --lang es --fix --tpl "COM >~=-> KEY SEP"
 ```
 
 ## Limitations ##
