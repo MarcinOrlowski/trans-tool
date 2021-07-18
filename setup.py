@@ -32,6 +32,7 @@ setup(
     python_requires = '>=3.6',
     entry_points = {
         'console_scripts': [
+            'prop-tool = proptool.main:Main.start',
             'proptool = proptool.main:Main.start',
         ],
     },
