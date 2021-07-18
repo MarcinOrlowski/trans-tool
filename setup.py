@@ -42,10 +42,10 @@ setup(
     description = "prop-tool: Java *.properties file sync checker and syncing tool.",
     long_description = readme,
     long_description_content_type = "text/markdown",
-    url = 'https://github.com/MarcinOrlowski/prop-tool',
+    url = Const.APP_URL,
     keywords = "java properties sync check validation",
     project_urls = {
-        "Bug Tracker":   "https://github.com/MarcinOrlowski/prop-tool/issues",
+        "Bug Tracker":   "https://github.com/MarcinOrlowski/prop-tool/issues/",
         "Documentation": "https://github.com/MarcinOrlowski/prop-tool/",
         "Source Code":   "https://github.com/MarcinOrlowski/prop-tool/",
     },

@@ -21,14 +21,14 @@ class PropFile(list):
     def __init__(self, app: App, file: Path):
         super().__init__()
 
-        self.file = file
+        self.file: Path = file
         # All the keys of 'regular' translations
-        self.keys = []
+        self.keys: List[str] = []
         # All the keys in form `# ==> KEY =` that we found.
-        self.commentedOutKeys = []
-        self.app = app
-        self.separator = app.separator
-        self.loaded = False
+        self.commented_out_keys: List[str] = []
+        self.app: App = app
+        self.separator: str = app.separator
+        self.loaded: bool = False
 
         if file is not None:
             self.loaded = self._load(file)
@@ -48,57 +48,57 @@ class PropFile(list):
         :param reference:
         :return:
         """
-        errorCount = 0
+        error_count = 0
 
-        myKeys = self.keys.copy()
-        missingKeys = []
+        my_keys = self.keys.copy()
+        missing_keys = []
 
         if not self.loaded:
-            errorCount += 1
+            error_count += 1
         else:
             # Check if we have all reference keys present.
             for key in reference.keys:
-                if key in myKeys:
-                    myKeys.remove(key)
+                if key in my_keys:
+                    my_keys.remove(key)
                 else:
-                    missingKeys.append(key)
+                    missing_keys.append(key)
 
             # Commented out keys are also considered present in the translation unless
             # we run in strict check mode.
             if not self.app.strict:
-                commentedOutKeys = self.commentedOutKeys.copy()
-                for key in commentedOutKeys:
-                    if key in missingKeys:
-                        missingKeys.remove(key)
+                commented_out_keys = self.commented_out_keys.copy()
+                for key in commented_out_keys:
+                    if key in missing_keys:
+                        missing_keys.remove(key)
 
-        missingKeysCount = len(missingKeys)
-        errorCount += missingKeysCount
+        missing_keys_count = len(missing_keys)
+        error_count += missing_keys_count
 
         # Check for dangling keys
-        danglingKeysCount = len(myKeys)
-        errorCount += danglingKeysCount
+        dangling_keys_count = len(my_keys)
+        error_count += dangling_keys_count
 
-        if errorCount > 0:
+        if error_count > 0:
             if not self.loaded:
                 Util.error(f'  File does not exist: {self.file}')
             else:
-                Util.error(f'  Found {errorCount} errors in {self.file}')
-                if missingKeysCount > 0:
-                    Util.error(f'    Missing keys: {missingKeysCount}')
+                Util.error(f'  Found {error_count} errors in {self.file}')
+                if missing_keys_count > 0:
+                    Util.error(f'    Missing keys: {missing_keys_count}')
                     if self.app.verbose:
-                        Util.error([f'      {key}' for key in missingKeys])
-                if danglingKeysCount > 0:
-                    Util.error(f'    Dangling keys: {danglingKeysCount}')
+                        Util.error([f'      {key}' for key in missing_keys])
+                if dangling_keys_count > 0:
+                    Util.error(f'    Dangling keys: {dangling_keys_count}')
                     if self.app.verbose:
-                        Util.error([f'      {key}' for key in myKeys])
+                        Util.error([f'      {key}' for key in my_keys])
         elif self.app.verbose:
             print(f'  {self.file}: OK')
 
-        return errorCount == 0
+        return error_count == 0
 
     # #################################################################################################
 
-    def fix(self, reference: 'PropFile'):
+    def fix(self, reference: 'PropFile') -> None:
 
         def findTranslationByKey(key: str) -> Union[PropTranslation, None]:
             for item in self:
@@ -108,7 +108,7 @@ class PropFile(list):
 
         synced: List[PropEntry] = []
 
-        commentPattern = self.app.commentTemplate.replace('COM', self.app.commentMarker).replace('SEP', self.separator)
+        comment_pattern = self.app.comment_template.replace('COM', self.app.comment_marker).replace('SEP', self.separator)
         for item in reference:
             if isinstance(item, PropTranslation):
                 if item.key in self.keys:
@@ -117,7 +117,7 @@ class PropFile(list):
                         raise RuntimeError(f'Unable to find translation of {item.key}')
                     synced.append(findTranslationByKey(item.key).toString() + '\n')
                 else:
-                    synced.append(commentPattern.replace('KEY', item.key) + '\n')
+                    synced.append(comment_pattern.replace('KEY', item.key) + '\n')
             elif isinstance(item, (PropEmpty, PropComment)):
                 synced.append(item.toString() + '\n')
             else:
@@ -154,18 +154,18 @@ class PropFile(list):
         if not file.exists():
             return False
 
-        commentPattern = re.escape(self.app.commentTemplate).replace(
-            'COM', f'[{"".join(self.app.allowedCommentMarkers)}]').replace(
-            'SEP', f'[{"".join(self.app.allowedSeparators)}]')
+        comment_pattern = re.escape(self.app.comment_template).replace(
+            'COM', f'[{"".join(self.app.allowed_comment_markers)}]').replace(
+            'SEP', f'[{"".join(self.app.allowed_separators)}]')
         # NOTE: key pattern must be in () brackets to form a group used later!
-        commentPattern = commentPattern.replace('KEY', '([a-zAz][a-zA-z0-9_.-]+)')
-        commentPattern = f'^{commentPattern}'
+        comment_pattern = comment_pattern.replace('KEY', '([a-zAz][a-zA-z0-9_.-]+)')
+        comment_pattern = f'^{comment_pattern}'
 
-        previousLine: str = None
+        previous_line: str = None
         with open(file, 'r') as fh:
-            lineNumber: int = 0
+            line_number: int = 0
             while True:
-                lineNumber += 1
+                line_number += 1
                 line: str = fh.readline()
                 if not line:
                     break
@@ -175,36 +175,36 @@ class PropFile(list):
                 # Skip empty lines
                 if line == '':
                     # Only single subsequent empty line allowed.
-                    if previousLine is not None and previousLine == '':
+                    if previous_line is not None and previous_line == '':
                         continue
                     addEmpty()
 
-                elif line[0] in self.app.allowedCommentMarkers:
+                elif line[0] in self.app.allowed_comment_markers:
                     # Only single subsequent 'empty' comment line allowed.
-                    if line == self.app.commentMarker and previousLine is not None and previousLine == self.app.commentMarker:
+                    if line == self.app.comment_marker and previous_line is not None and previous_line == self.app.comment_marker:
                         continue
 
                     # Let's look for commented out keys.
-                    match = re.compile(commentPattern).match(line)
+                    match = re.compile(comment_pattern).match(line)
                     if match:
-                        self.commentedOutKeys.append(match.group(1))
+                        self.commented_out_keys.append(match.group(1))
                     addComment(line)
 
                 else:
                     if not self.separator:
                         # Let's look for used separator character.
                         for i in range(len(line)):
-                            if line[i] in self.app.allowedSeparators:
+                            if line[i] in self.app.allowed_separators:
                                 self.separator = line[i]
                                 break
 
                     tmp: List[str] = line.split(self.separator)
                     if len(tmp) < 2:
-                        Util.abort([f'Invalid syntax. Line {lineNumber}, file: {file}',
+                        Util.abort([f'Invalid syntax. Line {line_number}, file: {file}',
                                     f'Using "{self.separator}" as separator.'])
 
                     addTranslation(tmp[0], ''.join(tmp[1:]))
 
-                previousLine = line
+                previous_line = line
 
         return True
