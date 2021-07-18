@@ -55,9 +55,12 @@ class App:
 
         # Comment template.
         for key in ['COM', 'SEP', 'KEY']:
-            if key not in args.commentTemplate[0]:
+            if args.commentTemplate.find(key) == -1:
                 Util.abort(f'Missing literal in comment template: {key}')
-        self.commentTemplate = args.commentTemplate[0]
+        self.commentTemplate = args.commentTemplate
+
+        if args.verbose:
+            print(f'Comment Template: ${self.commentTemplate}')
 
         # base files
         for file in args.files:
@@ -74,8 +77,8 @@ class App:
             formatter_class = argparse.RawTextHelpFormatter)
 
         group = parser.add_argument_group('Options')
-        group.add_argument('-c', '--config', action = 'store', dest = 'config', nargs = 1, metavar = 'FILE',
-                           help = 'Use specified config file. Note command line arguments can override config!')
+        # group.add_argument('--config', action = 'store', dest = 'config', nargs = 1, metavar = 'FILE',
+        #                    help = 'Use specified config file. Note command line arguments can override config!')
         group.add_argument('-l', '--lang', action = 'store', dest = 'languages', nargs = '+', metavar = 'LANG', required = True,
                            help = f'List of languages to check (space separated if more than one, i.e. "de pl").')
         group.add_argument('-b', '--base', action = 'store', dest = 'files', nargs = '+', metavar = 'FILE', required = True,
@@ -87,7 +90,7 @@ class App:
         group.add_argument('--sep', action = 'store', dest = 'separator', metavar = 'CHAR', nargs = 1, default = '=',
                            help = 'If specified, only given CHAR is considered a valid separator.'
                                   + f'Must be one of the following: {", ".join(self.allowedSeparators)}')
-        group.add_argument('--com', action = 'store', dest = 'comment', metavar = 'CHAR', nargs = 1, default = '#',
+        group.add_argument('-c', '--com', action = 'store', dest = 'comment', metavar = 'CHAR', nargs = 1, default = '#',
                            help = 'If specified, only given CHAR is considered va alid comment marker. '
                                   + f'Must be one of the following: {", ".join(self.allowedCommentMarkers)}')
         group.add_argument('-t', '--tpl', action = 'store', dest = 'commentTemplate', metavar = 'TEMPLATE', nargs = 1,

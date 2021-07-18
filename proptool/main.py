@@ -21,25 +21,25 @@ class Main:
 
         errors = 0
         for fileStr in app.files:
-            referenceFile = Path(fileStr)
+            referenceFilePath = Path(fileStr)
 
-            tmp = Path(referenceFile).name.split('.')
+            tmp = Path(referenceFilePath).name.split('.')
             if len(tmp) != 2:
                 Util.abort('Base filename format invalid. Must be "prefix.suffix".')
             namePrefix = tmp[0]
             nameSuffix = tmp[1]
 
-            reference = PropFile(app, referenceFile)
-            if not reference.loaded:
-                Util.abort(f'File not found: {referenceFile}')
+            referenceFile = PropFile(app, referenceFilePath)
+            if not referenceFile.loaded:
+                Util.abort(f'File not found: {referenceFilePath}')
 
             if app.verbose:
-                print(referenceFile)
+                print(referenceFilePath)
 
             for lang in app.languages:
-                langFilePath = Path(referenceFile.parent / f'{namePrefix}_{lang}.{nameSuffix}')
-                langFile = PropFile(app, langFilePath)
-                if not langFile.validateAndFix(reference):
+                translationFilePath = Path(referenceFilePath.parent / f'{namePrefix}_{lang}.{nameSuffix}')
+                translationFile = PropFile(app, translationFilePath)
+                if not translationFile.validateAndFix(referenceFile):
                     errors += 1
 
         # log.dump()

@@ -53,7 +53,9 @@ class PropFile(list):
         myKeys = self.keys.copy()
         missingKeys = []
 
-        if self.loaded:
+        if not self.loaded:
+            errorCount += 1
+        else:
             # Check if we have all reference keys present.
             for key in reference.keys:
                 if key in myKeys:
@@ -68,8 +70,6 @@ class PropFile(list):
                 for key in commentedOutKeys:
                     if key in missingKeys:
                         missingKeys.remove(key)
-        else:
-            errorCount += 1
 
         missingKeysCount = len(missingKeys)
         errorCount += missingKeysCount
@@ -86,7 +86,7 @@ class PropFile(list):
                 if missingKeysCount > 0:
                     Util.error(f'    Missing keys: {missingKeysCount}')
                     if self.app.verbose:
-                        Util.error(f'      {key}' for key in missingKeys)
+                        Util.error([f'      {key}' for key in missingKeys])
                 if danglingKeysCount > 0:
                     Util.error(f'    Dangling keys: {danglingKeysCount}')
                     if self.app.verbose:
@@ -100,7 +100,7 @@ class PropFile(list):
 
     def fix(self, reference: 'PropFile'):
 
-        def findTranslationByKey(self, key: str) -> Union[PropTranslation, None]:
+        def findTranslationByKey(key: str) -> Union[PropTranslation, None]:
             for item in self:
                 if isinstance(item, PropTranslation) and item.key == key:
                     return item
@@ -109,11 +109,10 @@ class PropFile(list):
         synced: List[PropEntry] = []
 
         commentPattern = self.app.commentTemplate.replace('COM', self.app.commentMarker).replace('SEP', self.separator)
-
         for item in reference:
             if isinstance(item, PropTranslation):
                 if item.key in self.keys:
-                    translated = self._findTranslationByKey(item.key)
+                    translated = findTranslationByKey(item.key)
                     if not translated:
                         raise RuntimeError(f'Unable to find translation of {item.key}')
                     synced.append(findTranslationByKey(item.key).toString() + '\n')
@@ -182,8 +181,7 @@ class PropFile(list):
 
                 elif line[0] in self.app.allowedCommentMarkers:
                     # Only single subsequent 'empty' comment line allowed.
-                    # FIXME you can mix comment markers in subsequent linex to fool this detection.
-                    if line == self.app.commentMarker and previousLine is not None and previousLine in self.app.commentMarker:
+                    if line == self.app.commentMarker and previousLine is not None and previousLine == self.app.commentMarker:
                         continue
 
                     # Let's look for commented out keys.
