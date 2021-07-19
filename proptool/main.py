@@ -14,7 +14,6 @@ from .config import Config
 from .const import Const
 from .log import Log
 from .propfile import PropFile
-from .report.report import Report
 
 
 class PropTool:

@@ -11,12 +11,12 @@ import re
 from pathlib import Path
 from typing import List, Union
 
-from .config import Config
 from .check.dangling_keys import DanglingKeys
 from .check.missing_keys import MissingKeys
 from .check.punctuation import Punctuation
 from .check.trailing_whitechars import TrailingWhiteChars
-from .entries import PropComment, PropTranslation, PropEmpty, PropEntry
+from .config import Config
+from .entries import PropComment, PropEmpty, PropEntry, PropTranslation
 from .log import Log
 from .report.report import Report
 from .report.report_group import ReportGroup
