@@ -2,44 +2,68 @@
 # prop-tool
 # Java *.properties file sync checker and syncing tool.
 #
-# copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
-# https://github.com/MarcinOrlowski/prop-tool
+# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# https://github.com/MarcinOrlowski/prop-tool/
 #
+
+from .overrides import overrides
+
 
 # #################################################################################################
 
+class PropEntry:
+    def to_string(self) -> str:
+        raise NotImplemented
 
-class PropEntry():
-    pass
 
+# #################################################################################################
 
 class PropTranslation(PropEntry):
-    def __init__(self, key: str, value: str = None, separator: str = ':'):
+    """
+    Class representing valid translation entry.
+    """
+
+    def __init__(self, key: str, value: str = None, separator: str = ':') -> None:
         key = key.strip()
         assert len(key) > 0
 
         self.key = key
-        self.value = value.strip()
+        self.value = value
         self.separator = separator
 
-    def toString(self) -> str:
+    @overrides(PropEntry)
+    def to_string(self) -> str:
         return f'{self.key} {self.separator} {self.value}'
 
 
+# #################################################################################################
+
 class PropComment(PropEntry):
-    def __init__(self, value: str):
-        value = value.strip()
+    """
+    Class representing line comment.
+    """
+
+    def __init__(self, value: str) -> None:
+        value = value
         assert len(value) > 0
-        assert value[0] == '#'
+        assert value[0] in ['!', '#']
         self.value = value
 
-    def toString(self) -> str:
+    @overrides(PropEntry)
+    def to_string(self) -> str:
         return self.value
 
 
+# #################################################################################################
+
 class PropEmpty(PropEntry):
-    def __init__(self):
+    """
+    Class representing empty line.
+    """
+
+    def __init__(self) -> None:
         pass
 
-    def toString(self):
+    @overrides(PropEntry)
+    def to_string(self) -> str:
         return ''
