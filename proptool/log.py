@@ -54,9 +54,6 @@ class Log(object):
     COLOR_DEBUG = ANSI_REVERSE
     COLOR_BANNER = (ANSI_WHITE + ANSI_REVERSE)
 
-    COLOR_REPO = (ANSI_BG_CYAN + ANSI_BLACK)
-    COLOR_LOCAL = (ANSI_REVERSE + ANSI_WHITE_BRIGHT)
-
     # ---------------------------------------------------------------------------------------------------------------
     deferred_log_level = None
     deferred_log_entry = None
@@ -137,20 +134,30 @@ class Log(object):
         Log.log_level += 1
 
     @staticmethod
+    def level_push_e(message = None, color = None, ignore_quiet_switch = False, deferred = False):
+        Log.level_push(f'%error%%reverse%{message}', color, ignore_quiet_switch, deferred);
+
+    @staticmethod
+    def level_push_ok(message = None, color = None, ignore_quiet_switch = False, deferred = False):
+        Log.level_push(f'%ok%%reverse%{message}', color, ignore_quiet_switch, deferred);
+
+    @staticmethod
     def level_push_v(message = None, color = None, ignore_quiet_switch = False, deferred = False):
         if Log.is_verbose():
             Log.level_push(message, color, ignore_quiet_switch, deferred)
 
     @staticmethod
-    def level_pop(messages = None, color = None, ignore_quiet_switch = False):
+    def level_pop(messages = None, color = None, ignore_quiet_switch = False) -> bool:
         if messages is not None:
             Log.i(messages = messages, color = color, ignore_quiet_switch = ignore_quiet_switch)
 
-        Log._flush_deferred_entry()
+        had_anything_defered = Log._flush_deferred_entry()
 
         if Log.log_level == 0:
             Log.abort('level_pop() called too many times')
         Log.log_level -= 1
+
+        return had_anything_defered
 
     @staticmethod
     def level_pop_v(messages = None, color = None, ignore_quiet_switch = False):
@@ -313,6 +320,10 @@ class Log(object):
         Returns:
           message with placeholders replaced with ANSI codes
         """
+
+        if not issubclass(type(message), str):
+            message = str(message)
+
         color_map = {
             'reset':         Log.ANSI_RESET,
             'reverse':       Log.ANSI_REVERSE,
@@ -401,15 +412,24 @@ class Log(object):
                 print(message.rstrip())
 
     @staticmethod
-    def _flush_deferred_entry():
+    def _flush_deferred_entry() -> bool:
+        """
+        Removes any defered log entry. Returns False if there was nothing
+        defered to flush, True otherwise.
+
+        :return:
+        """
+        result = False
         if Log.deferred_log_entry is not None:
             if Log.last_log_entry_level > Log.deferred_log_level:
                 Log._log_raw(Log.deferred_log_entry)
 
             Log.deferred_log_entry = None
             Log.deferred_log_level = None
+            result = True
 
         Log.last_log_entry_level = 0
+        return result
 
     # ---------------------------------------------------------------------------------------------------------------
 

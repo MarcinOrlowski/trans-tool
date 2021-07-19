@@ -115,33 +115,29 @@ class PropFile(list):
         error_count += punctuation_mismatch_count
 
         if error_count > 0:
-            # Log.level_push(f'Found {error_count} errors in "{self.file}":')
-
             if missing_keys_count > 0:
-                Log.e(f'Missing keys: {missing_keys_count}')
+                Log.level_push_e(f'Missing keys: {missing_keys_count}')
                 if self.config.verbose:
                     Log.e([f'{key}' for key in missing_keys])
                 Log.level_pop()
 
             if dangling_keys_count > 0:
-                Log.level_push(f'Dangling keys: {dangling_keys_count}')
+                Log.level_push_e(f'Dangling keys: {dangling_keys_count}')
                 if self.config.verbose:
                     Log.e([f'{key}' for key in my_keys])
                 Log.level_pop()
 
             if trailing_chars_count > 0:
-                Log.level_push(f'Trailing white characters: {trailing_chars_count}')
+                Log.level_push_e(f'Trailing white characters: {trailing_chars_count}')
                 if self.config.verbose:
                     trailing_chars_report.dump()
                 Log.level_pop()
 
             if punctuation_mismatch_count > 0:
-                Log.level_push(f'Punctuation mismatch: {punctuation_mismatch_count}')
+                Log.level_push_e(f'Punctuation mismatch: {punctuation_mismatch_count}')
                 if self.config.verbose:
                     punctuation_mismatch_report.dump()
                 Log.level_pop()
-
-            # Log.level_pop()
 
         return error_count == 0
 

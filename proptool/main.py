@@ -86,29 +86,28 @@ class PropTool:
             ref_file_errors += trailing_chars_count
 
             if ref_file_errors > 0:
-                Log.level_push(f'Found {ref_file_errors} errors in reference file:')
-
                 if reference_file_error_count > 0:
-                    Log.e(f'Duplicated keys: {reference_file_error_count}')
+                    Log.level_push_e(f'Duplicated keys: {reference_file_error_count}')
                     if config.verbose:
-                        Log.e([f'{item.to_string()}' for item in reference_propfile.duplicated_keys_report])
+                        reference_propfile.duplicated_keys_report.dump()
                     Log.level_pop()
 
                 if trailing_chars_count > 0:
-                    Log.level_push(f'Trailing white characters: {trailing_chars_count}')
+                    Log.level_push_e(f'Trailing white characters: {trailing_chars_count}')
                     if config.verbose:
-                        Log.e([f'{item.to_string()}' for item in trailing_chars_report])
+                        trailing_chars_report.dump()
                     Log.level_pop()
-
-                Log.level_pop()
             else:
                 for lang in config.languages:
                     translation_path = Path(reference_path.parent / f'{name_prefix}_{lang}.{name_suffix}')
                     translation_propfile = PropFile(config, translation_path, lang)
-                    Log.level_push(translation_path)
+
+                    Log.level_push(translation_path, deferred = True)
                     if not translation_propfile.validate_and_fix(reference_propfile):
                         errors += 1
-                    Log.level_pop()
+                    if Log.level_pop():
+                        Log.level_push_ok(f'{translation_path}: OK')
+                        Log.level_push()
 
             Log.level_pop()
 
