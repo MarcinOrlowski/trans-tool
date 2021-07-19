@@ -9,15 +9,16 @@
 
 from abc import ABC, abstractmethod
 
-from ..app import App
+from ..config import Config
 from ..report.report import Report
 
 
 # #################################################################################################
 
+# noinspection PyUnresolvedReferences
 class Check(ABC):
     @staticmethod
     @abstractmethod
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
-    def check(self, app: App, reference: 'PropFile', translation: 'PropFile') -> Report:
+    def check(self, config: Config, reference: 'PropFile', translation: 'PropFile') -> Report:
         raise NotImplemented

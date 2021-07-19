@@ -11,7 +11,7 @@ import re
 from pathlib import Path
 from typing import List, Union
 
-from .app import App
+from .config import Config
 from .check.punctuation import Punctuation
 from .check.trailing_whitechars import TrailingWhiteChars
 from .entries import PropComment, PropTranslation, PropEmpty, PropEntry
@@ -22,16 +22,17 @@ from .report.report import Report
 # #################################################################################################
 
 class PropFile(list):
-    def __init__(self, app: App, file: Path, language: str = None):
+    def __init__(self, config: Config, file: Path, language: str = None):
         super().__init__()
+
+        self.config: Config = config
 
         self.file: Path = file
         # All the keys of 'regular' translations
         self.keys: List[str] = []
         # All the keys in form `# ==> KEY =` that we found.
         self.commented_out_keys: List[str] = []
-        self.app: App = app
-        self.separator: str = app.separator
+        self.separator: str = config.separator
         self.loaded: bool = False
         self.language = language
 
@@ -57,7 +58,7 @@ class PropFile(list):
     # #################################################################################################
 
     def validate_and_fix(self, reference: 'PropFile') -> None:
-        if not self.validate(reference) and self.app.fix:
+        if not self.validate(reference) and self.config.fix:
             self.fix(reference)
 
     # #################################################################################################
@@ -88,17 +89,17 @@ class PropFile(list):
 
         # Commented out keys are also considered present in the translation unless
         # we run in strict check mode.
-        if not self.app.strict:
+        if not self.config.strict:
             commented_out_keys = self.commented_out_keys.copy()
             for key in commented_out_keys:
                 if key in missing_keys:
                     missing_keys.remove(key)
 
         # Check for trailing white chars
-        trailing_chars_report = TrailingWhiteChars.check(self.app, self)
+        trailing_chars_report = TrailingWhiteChars.check(self.config, self)
 
         # Check for punctuation marks
-        punctuation_mismatch_report = Punctuation.check(self.app, reference, self)
+        punctuation_mismatch_report = Punctuation.check(self.config, reference, self)
 
         # Check for space before \n
         # for item in self:
@@ -118,22 +119,22 @@ class PropFile(list):
             Util.error(f'  Found {error_count} errors in "{self.file}":')
             if missing_keys_count > 0:
                 Util.error(f'    Missing keys: {missing_keys_count}')
-                if self.app.verbose:
+                if self.config.verbose:
                     Util.error([f'      {key}' for key in missing_keys])
             if dangling_keys_count > 0:
                 Util.error(f'    Dangling keys: {dangling_keys_count}')
-                if self.app.verbose:
+                if self.config.verbose:
                     Util.error([f'      {key}' for key in my_keys])
             if trailing_chars_count > 0:
                 Util.error(f'    Trailing white characters: {trailing_chars_count}')
-                if self.app.verbose:
+                if self.config.verbose:
                     Util.error([f'      {item.to_string()}' for item in trailing_chars_report])
             if punctuation_mismatch_count > 0:
                 Util.error(f'    Punctuation mismatch: {punctuation_mismatch_count}')
-                if self.app.verbose:
+                if self.config.verbose:
                     Util.error([f'      {item.to_string()}' for item in punctuation_mismatch_report])
 
-        elif self.app.verbose:
+        elif self.config.verbose:
             print(f'  {self.file}: OK')
 
         return error_count == 0
@@ -143,7 +144,7 @@ class PropFile(list):
     def fix(self, reference: 'PropFile') -> None:
         synced: List[PropEntry] = []
 
-        comment_pattern = self.app.comment_template.replace('COM', self.app.comment_marker).replace('SEP', self.separator)
+        comment_pattern = self.config.comment_template.replace('COM', self.config.comment_marker).replace('SEP', self.separator)
         for item in reference:
             if isinstance(item, PropTranslation):
                 if item.key in self.keys:
@@ -175,9 +176,9 @@ class PropFile(list):
         if not file.exists():
             return False
 
-        comment_pattern = re.escape(self.app.comment_template).replace(
-            'COM', f'[{"".join(self.app.allowed_comment_markers)}]').replace(
-            'SEP', f'[{"".join(self.app.allowed_separators)}]')
+        comment_pattern = re.escape(self.config.comment_template).replace(
+            'COM', f'[{"".join(self.config.allowed_comment_markers)}]').replace(
+            'SEP', f'[{"".join(self.config.allowed_separators)}]')
         # NOTE: key pattern must be in () brackets to form a group used later!
         comment_pattern = comment_pattern.replace('KEY', '([a-zAz][a-zA-z0-9_.-]+)')
         comment_pattern = f'^{comment_pattern}'
@@ -200,29 +201,18 @@ class PropFile(list):
                 if line.strip() == '':
                     self.append(PropEmpty())
 
-                elif line[0] in self.app.allowed_comment_markers:
+                elif line[0] in self.config.allowed_comment_markers:
                     # Let's look for commented out keys.
                     match = re.compile(comment_pattern).match(line)
                     if match:
                         self.commented_out_keys.append(match.group(1))
                     self.append(PropComment(line))
 
-                # elif line[0] in self.app.allowed_comment_markers:
-                #     # Only single subsequent 'empty' comment line allowed.
-                #     if line == self.app.comment_marker and previous_line is not None and previous_line == self.app.comment_marker:
-                #         continue
-                #
-                #     # Let's look for commented out keys.
-                #     match = re.compile(comment_pattern).match(line)
-                #     if match:
-                #         self.commented_out_keys.append(match.group(1))
-                #     addComment(line)
-
                 else:
                     if not self.separator:
                         # Let's look for used separator character
                         for i in range(len(line)):
-                            if line[i] in self.app.allowed_separators:
+                            if line[i] in self.config.allowed_separators:
                                 self.separator = line[i]
                                 break
 

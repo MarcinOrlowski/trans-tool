@@ -8,7 +8,7 @@
 """
 
 from .check import Check
-from ..app import App
+from ..config import Config
 from ..entries import PropTranslation, PropComment
 from ..overrides import overrides
 from ..report.report import Report
@@ -16,6 +16,7 @@ from ..report.report import Report
 
 # #################################################################################################
 
+# noinspection PyUnresolvedReferences
 class TrailingWhiteChars(Check):
     """
     Checks if file has trailing white characters at the end of each line.
@@ -24,8 +25,7 @@ class TrailingWhiteChars(Check):
     @staticmethod
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
-    def check(app: App, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> Report:
-
+    def check(config: Config, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> Report:
         if reference_file is None and translation_file is None:
             raise RuntimeError('You must pass either reference or translation file.')
         if reference_file is not None and translation_file is not None:

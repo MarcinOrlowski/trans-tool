@@ -8,7 +8,7 @@
 """
 
 from .check import Check
-from ..app import App
+from ..config import Config
 from ..entries import PropTranslation
 from ..overrides import overrides
 from ..report.report import Report
@@ -16,6 +16,7 @@ from ..report.report import Report
 
 # #################################################################################################
 
+# noinspection PyUnresolvedReferences
 class Punctuation(Check):
     """
     This check verifies translation ends with the same punctuation marks or special characters (\n)
@@ -25,7 +26,7 @@ class Punctuation(Check):
     @staticmethod
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
-    def check(app: App, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> Report:
+    def check(config: Config, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> Report:
         report = Report()
         for idx, item in enumerate(reference_file):
             # We care translations only for now.
