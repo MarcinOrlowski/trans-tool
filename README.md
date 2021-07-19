@@ -6,7 +6,7 @@ This utility can be used to check if translation files stay in sync with base fi
 missing keys based on the content of base file.
 
 ```bash
-$ proptool -b mark -l pl -v
+$ prop-tool -b mark -l pl -v
 Base: mark.properties
   Found 6 errors in "mark_pl.properties":
     Trailing white characters: 3
