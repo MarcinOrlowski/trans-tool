@@ -80,12 +80,12 @@ class PropFile(list):
             return False
 
         checks = [
-            # MissingKeys,
-            # DanglingKeys,
-            # TrailingWhiteChars,
-            # Punctuation,
+            MissingKeys,
+            DanglingKeys,
+            TrailingWhiteChars,
+            Punctuation,
             StartsWithTheSameCase,
-            # EmptyTranslations,
+            EmptyTranslations,
         ]
         for validator in checks:
             self.report.add((validator(self.config)).check(copy.copy(reference_file), copy.copy(self)))
