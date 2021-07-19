@@ -7,9 +7,11 @@
 #
 """
 import argparse
+import copy
 from pathlib import Path
 
-from .check.trailing_whitechars import TrailingWhiteChars
+from .check.trailing_white_chars import TrailingWhiteChars
+from .check.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from .config import Config
 from .const import Const
 from .log import Log
@@ -76,8 +78,18 @@ class PropTool:
             if not reference_propfile.loaded:
                 Log.abort(f'File not found: {reference_path}')
 
-            # TrailingWhiteChars validates translation only, so we pass reference as translation to keep DRY.
-            reference_propfile.report.add(TrailingWhiteChars.check(config, None, reference_propfile))
+            checks = [
+                TrailingWhiteChars,
+                WhiteCharsBeforeLinefeed,
+            ]
+            for validator in checks:
+                # Almost any check validates translation against reference file, so we cannot use all here,
+                # but we can use those which in fact do not need reference file. For them we pass our base
+                # file as translation which will do the trick.
+                #
+                # Each validator gets copy of the files, to prevent any potential destructive operation.
+                reference_propfile.report.add((validator(config)).check(None, copy.copy(reference_propfile)))
+
             if not reference_propfile.report.empty():
                 reference_propfile.report.dump()
             else:

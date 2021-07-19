@@ -17,6 +17,7 @@ from .check.missing_keys import MissingKeys
 from .check.punctuation import Punctuation
 from .check.starts_with_the_same_case import StartsWithTheSameCase
 from .check.trailing_whitechars import TrailingWhiteChars
+from .check.whitechars_before_linefeed import WhiteCharsBeforeLinefeed
 from .config import Config
 from .entries import PropComment, PropEmpty, PropEntry, PropTranslation
 from .log import Log
@@ -86,12 +87,11 @@ class PropFile(list):
             Punctuation,
             StartsWithTheSameCase,
             EmptyTranslations,
+            WhiteCharsBeforeLinefeed,
         ]
         for validator in checks:
+            # Each validator gets copy of the files, to prevent any potential destructive operation.
             self.report.add((validator(self.config)).check(copy.copy(reference_file), copy.copy(self)))
-
-        # Check for space before \n
-        # for item in self:
 
         return self.report.empty()
 
@@ -104,9 +104,6 @@ class PropFile(list):
         for item in reference:
             if isinstance(item, PropTranslation):
                 if item.key in self.keys:
-                    translated = self.find_by_key(item.key)
-                    if not translated:
-                        raise RuntimeError(f'Unable to find translation of {item.key}')
                     synced.append(self.find_by_key(item.key).to_string() + '\n')
                 else:
                     synced.append(comment_pattern.replace('KEY', item.key) + '\n')

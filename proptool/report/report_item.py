@@ -9,12 +9,16 @@
 
 
 class ReportItem:
-    def __init__(self, line: int, msg: str) -> None:
+    def __init__(self, line: int, msg: str, column: int = None) -> None:
         self.line = line
+        self.column = column
         self.msg = msg
 
     def to_string(self) -> str:
         if self.line:
-            return f'Line {self.line}: {self.msg}'
+            if self.column:
+                return f'Line {self.line}:{self.column}: {self.msg}'
+            else:
+                return f'Line {self.line}: {self.msg}'
         else:
             return f'{self.msg}'

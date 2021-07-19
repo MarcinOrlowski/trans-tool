@@ -32,18 +32,20 @@ base (reference) file and each translation.
 
 For base file it executes following validators:
 
-* Syntax validation,
-* Trailing white characters: no trailing spaces nor tabs,
+* Syntax validation: ensures use of allowed comment markers, key - value separators etc.
+* Trailing white characters: no trailing spaces nor tabs at the end of each line,
+* WhiteCharsBeforeLinefeed: ensures there's no space nor tab character placed before linefeed literals (`\n` and `\r`).
 
 For translation files, the following checks are performed:
 
-* Syntax validation,
-* Trailing white characters: no trailing spaces nor tabs,
+* Syntax validation: ensures use of allowed comment markers, key - value separators etc.
+* Trailing white characters: no trailing spaces nor tabs at the end of each line.
 * Missing translation: keys found in base file, but missing in translation,
 * Dangling keys: keys found in translation file but not present in base file,
 * Empty translations: empty translations for non-empty text in base file,
-* Case check: ensures translation starts with the same character case (upper/lower) as entry in base file.
-* Punctuation: ensures translation ends with punctuation mark (`:`, `.`, `?`, `!`) if entry if base file ends that way.
+* Case check: ensures translation starts with the same character case (upper/lower) as entry in base file,
+* Punctuation: ensures translation ends with punctuation mark (`:`, `.`, `?`, `!`) if entry if base file ends that way,
+* WhiteCharsBeforeLinefeed: ensures there's no space nor tab character placed before linefeed literals (`\n` and `\r`).
 
 NOTE: as this is quite common that translation file may not be updated instantly, `prop-tool` considers key presence condition
 fulfilled also when given key exists in `B` file but is commented out and follow expected comment format:
