@@ -32,11 +32,16 @@ class ReportGroup(list):
     def empty(self) -> bool:
         return (self.errors + self.warnings) == 0
 
-    def warn(self, line: Union[str, None], msg: str) -> None:
+    def warn(self, line: Union[str, int, None], msg: str) -> None:
+        if type(line) != str:
+            line = str(line)
+
         self.append(Warn(line, msg))
         self.warnings += 1
 
-    def error(self, line: Union[str, None], msg: str) -> None:
+    def error(self, line: Union[str, int, None], msg: str) -> None:
+        if type(line) != str:
+            line = str(line)
         self.append(Error(line, msg))
         self.errors += 1
 

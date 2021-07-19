@@ -11,8 +11,8 @@ import re
 from pathlib import Path
 from typing import List, Union
 
-from .check.empty_translations import EmptyTranslations
 from .check.dangling_keys import DanglingKeys
+from .check.empty_translations import EmptyTranslations
 from .check.key_format import KeyFormat
 from .check.missing_translation import MissingTranslation
 from .check.punctuation import Punctuation
@@ -20,17 +20,17 @@ from .check.starts_with_the_same_case import StartsWithTheSameCase
 from .check.trailing_white_chars import TrailingWhiteChars
 from .check.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from .config import Config
-from .entries import PropComment, PropEmpty, PropEntry, PropTranslation
+from .entries import PropComment, PropEmpty, PropTranslation
 from .log import Log
-from .utils import Utils
 from .report.report import Report
 from .report.report_group import ReportGroup
+from .utils import Utils
 
 
 # #################################################################################################
 
 class PropFile(list):
-    def __init__(self, config: Config, file: Path, language: str = None):
+    def __init__(self, config: Config, file: Path, language: List[str] = None):
         super().__init__()
 
         self.config: Config = config
@@ -42,7 +42,8 @@ class PropFile(list):
         self.commented_out_keys: List[str] = []
         self.separator: str = config.separator
         self.loaded: bool = False
-        self.language: List[str] = language
+
+        self.language: List[str] = [] if language is None else language
 
         self.report = Report()
 
@@ -101,7 +102,7 @@ class PropFile(list):
     # #################################################################################################
 
     def fix(self, reference: 'PropFile') -> None:
-        synced: List[PropEntry] = []
+        synced: List[str] = []
 
         comment_pattern = self.config.comment_template.replace('COM', self.config.comment_marker).replace('SEP', self.separator)
         for item in reference:

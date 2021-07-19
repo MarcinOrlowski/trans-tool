@@ -21,7 +21,8 @@ from .propfile import PropFile
 
 
 class PropTool:
-    def _parse_args(self) -> argparse:
+    @staticmethod
+    def _parse_args() -> argparse:
         parser = argparse.ArgumentParser(
             prog = Const.APP_NAME.lower(),
             description = f'{Const.APP_NAME} v{Const.APP_VERSION} * Copyright 2021 by Marcin Orlowski.\n' +

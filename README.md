@@ -3,7 +3,7 @@
 `prop-tool` - Java *.properties file checker and syncing tool.
 
 This utility can be used to check your `*.properties` Java files to ensure correct syntax is used, all translation files are in sync
-with base file, ther're no missing keys or invalid punctuation and more. It can also create translation files adding missing keys
+with base file, there are no missing keys or invalid punctuation and more. It can also create translation files adding missing keys
 based on the content of base file.
 
 ```bash

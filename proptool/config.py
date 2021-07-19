@@ -75,4 +75,4 @@ class Config:
         for file in args.files:
             if file[-11:] != '.properties':
                 file += '.properties'
-            self.files.append(Path(file))
+            self.files.append(str(Path(file)))

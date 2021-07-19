@@ -21,7 +21,8 @@ class WhiteCharsBeforeLinefeed(Check):
     This check ensures there's no space before "\n", "\r" literals.
     """
 
-    def __scan(self, report: ReportGroup, idx: int, item: PropTranslation, literal: str) -> bool:
+    @staticmethod
+    def __scan(report: ReportGroup, idx: int, item: PropTranslation, literal: str) -> bool:
         literal_len = len(literal)
         for pos in range(len(item.value) - literal_len, 0, -1):
             if item.value[pos:(pos + 2)] == literal:

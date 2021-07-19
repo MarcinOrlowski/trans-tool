@@ -7,8 +7,6 @@
 #
 """
 
-
-from ..overrides import overrides
 from .report_item import ReportItem
 
 
