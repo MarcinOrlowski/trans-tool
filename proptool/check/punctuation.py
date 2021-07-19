@@ -10,7 +10,6 @@ from .check import Check
 from ..app import App
 from ..entries import PropTranslation
 from ..overrides import overrides
-from ..propfile import PropFile
 from ..report.report import Report
 
 
@@ -24,7 +23,8 @@ class Punctuation(Check):
 
     @staticmethod
     @overrides(Check)
-    def check(app: App, reference_file: PropFile, translation_file: PropFile = None) -> Report:
+    # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
+    def check(app: App, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> Report:
         report = Report()
         for idx, item in enumerate(reference_file):
             # We care translations only for now.
