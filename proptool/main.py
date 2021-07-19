@@ -6,7 +6,6 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 
-import sys
 from pathlib import Path
 
 from .app import App
@@ -62,5 +61,4 @@ class Main:
                     if not translation_propfile.validate_and_fix(reference_propfile):
                         errors += 1
 
-        # sys.exit(100 if errors else 0)
         return 100 if errors else 0
