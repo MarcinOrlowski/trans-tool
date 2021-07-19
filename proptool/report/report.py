@@ -6,33 +6,28 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
-from .report_item import ReportItem
-from ..log import Log
-from ..report.error import Error
-from ..report.warn import Warn
+from typing import List
+
+from .report_group import ReportGroup
 
 
 # #################################################################################################
 
-class Report(list):
-    def add(self, item: ReportItem) -> None:
-        item_cls = type(item)
-        if not issubclass(item_cls, ReportItem):
-            raise TypeError(f'Item must be instance of {ReportItem}. {item_cls} given.')
-        self.append(item)
+class Report:
+    def __init__(self):
+        self.__groups: List[ReportGroup] = []
 
-    def failed(self):
-        return len(self) > 0
+    def add(self, report_group: ReportGroup, skip_empty: bool = True) -> None:
+        item_cls = type(report_group)
+        if not issubclass(item_cls, ReportGroup):
+            raise TypeError(f'Item must be instance of {ReportGroup}. {item_cls} given.')
+        if skip_empty and report_group.empty():
+            return
+        self.__groups.append(report_group)
 
-    def warn(self, line: int, msg: str) -> None:
-        self.append(Warn(line, msg))
-
-    def error(self, line: int, msg: str) -> None:
-        self.append(Error(line, msg))
+    def empty(self) -> bool:
+        return len(self.__groups) == 0
 
     def dump(self):
-        for entry in self:
-            if isinstance(entry, Warn):
-                Log.w(entry.to_string())
-            else:
-                Log.e(entry.to_string())
+        for entry in self.__groups:
+            entry.dump()

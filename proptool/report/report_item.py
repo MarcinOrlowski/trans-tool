@@ -14,4 +14,7 @@ class ReportItem:
         self.msg = msg
 
     def to_string(self) -> str:
-        return f'Line {self.line}: {self.msg}'
+        if self.line:
+            return f'Line {self.line}: {self.msg}'
+        else:
+            return f'{self.msg}'

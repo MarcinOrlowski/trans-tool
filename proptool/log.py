@@ -138,6 +138,10 @@ class Log(object):
         Log.level_push(f'%error%%reverse%{message}', color, ignore_quiet_switch, deferred);
 
     @staticmethod
+    def level_push_w(message = None, color = None, ignore_quiet_switch = False, deferred = False):
+        Log.level_push(f'%warn%%reverse%{message}', color, ignore_quiet_switch, deferred);
+
+    @staticmethod
     def level_push_ok(message = None, color = None, ignore_quiet_switch = False, deferred = False):
         Log.level_push(f'%ok%%reverse%{message}', color, ignore_quiet_switch, deferred);
 

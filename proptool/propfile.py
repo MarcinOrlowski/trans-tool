@@ -12,11 +12,14 @@ from pathlib import Path
 from typing import List, Union
 
 from .config import Config
+from .check.dangling_keys import DanglingKeys
+from .check.missing_keys import MissingKeys
 from .check.punctuation import Punctuation
 from .check.trailing_whitechars import TrailingWhiteChars
 from .entries import PropComment, PropTranslation, PropEmpty, PropEntry
 from .log import Log
 from .report.report import Report
+from .report.report_group import ReportGroup
 
 
 # #################################################################################################
@@ -36,7 +39,7 @@ class PropFile(list):
         self.loaded: bool = False
         self.language = language
 
-        self.duplicated_keys_report = Report()
+        self.report = Report()
 
         if file is not None:
             self.loaded = self._load(file)
@@ -74,72 +77,15 @@ class PropFile(list):
             Log.e(f'  File does not exist: {self.file}')
             return False
 
-        error_count = 0
-
-        my_keys = self.keys.copy()
-        missing_keys: List[str] = []
-
-        # Check if we have all reference keys present.
-        for key in reference.keys:
-            if key in my_keys:
-                my_keys.remove(key)
-            else:
-                missing_keys.append(key)
-
-        # Commented out keys are also considered present in the translation unless
-        # we run in strict check mode.
-        if not self.config.strict:
-            commented_out_keys = self.commented_out_keys.copy()
-            for key in commented_out_keys:
-                if key in missing_keys:
-                    missing_keys.remove(key)
-
-        # Check for trailing white chars
-        trailing_chars_report = TrailingWhiteChars.check(self.config, self)
-
-        # Check for punctuation marks
-        punctuation_mismatch_report = Punctuation.check(self.config, reference, self)
+        self.report.add(MissingKeys.check(self.config, reference, self))
+        self.report.add(DanglingKeys.check(self.config, reference, self))
+        self.report.add(TrailingWhiteChars.check(self.config, self))
+        self.report.add(Punctuation.check(self.config, reference, self))
 
         # Check for space before \n
         # for item in self:
 
-        missing_keys_count = len(missing_keys)
-        error_count += missing_keys_count
-        dangling_keys_count = len(my_keys)
-        error_count += dangling_keys_count
-
-        trailing_chars_count = len(trailing_chars_report)
-        error_count += trailing_chars_count
-
-        punctuation_mismatch_count = len(punctuation_mismatch_report)
-        error_count += punctuation_mismatch_count
-
-        if error_count > 0:
-            if missing_keys_count > 0:
-                Log.level_push_e(f'Missing keys: {missing_keys_count}')
-                if self.config.verbose:
-                    Log.e([f'{key}' for key in missing_keys])
-                Log.level_pop()
-
-            if dangling_keys_count > 0:
-                Log.level_push_e(f'Dangling keys: {dangling_keys_count}')
-                if self.config.verbose:
-                    Log.e([f'{key}' for key in my_keys])
-                Log.level_pop()
-
-            if trailing_chars_count > 0:
-                Log.level_push_e(f'Trailing white characters: {trailing_chars_count}')
-                if self.config.verbose:
-                    trailing_chars_report.dump()
-                Log.level_pop()
-
-            if punctuation_mismatch_count > 0:
-                Log.level_push_e(f'Punctuation mismatch: {punctuation_mismatch_count}')
-                if self.config.verbose:
-                    punctuation_mismatch_report.dump()
-                Log.level_pop()
-
-        return error_count == 0
+        return self.report.empty()
 
     # #################################################################################################
 
@@ -187,6 +133,9 @@ class PropFile(list):
 
         with open(file, 'r') as fh:
             line_number: int = 0
+
+            report_group = ReportGroup('Duplicated keys')
+
             while True:
                 line_number += 1
                 line: str = fh.readline()
@@ -229,6 +178,9 @@ class PropFile(list):
                         self.keys.append(key)
                         self.append(PropTranslation(key, val, self.separator))
                     else:
-                        self.duplicated_keys_report.error(line_number, f'Duplicated key "{key}".')
+                        report_group.error(line_number, f'Duplicated key "{key}".')
+
+            if not report_group.empty():
+                self.report.add(report_group)
 
         return True

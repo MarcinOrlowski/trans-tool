@@ -9,11 +9,12 @@
 import argparse
 from pathlib import Path
 
+from .check.trailing_whitechars import TrailingWhiteChars
 from .config import Config
 from .const import Const
 from .log import Log
 from .propfile import PropFile
-from .check.trailing_whitechars import TrailingWhiteChars
+from .report.report import Report
 
 
 class PropTool:
@@ -75,28 +76,9 @@ class PropTool:
             if not reference_propfile.loaded:
                 Log.abort(f'File not found: {reference_path}')
 
-            ref_file_errors = 0
-            reference_file_error_count = len(reference_propfile.duplicated_keys_report)
-            ref_file_errors += reference_file_error_count
-
-            # Some base file checks
-            trailing_chars_report = TrailingWhiteChars.check(config, reference_propfile)
-            trailing_chars_count = len(trailing_chars_report)
-            errors += trailing_chars_count
-            ref_file_errors += trailing_chars_count
-
-            if ref_file_errors > 0:
-                if reference_file_error_count > 0:
-                    Log.level_push_e(f'Duplicated keys: {reference_file_error_count}')
-                    if config.verbose:
-                        reference_propfile.duplicated_keys_report.dump()
-                    Log.level_pop()
-
-                if trailing_chars_count > 0:
-                    Log.level_push_e(f'Trailing white characters: {trailing_chars_count}')
-                    if config.verbose:
-                        trailing_chars_report.dump()
-                    Log.level_pop()
+            reference_propfile.report.add(TrailingWhiteChars.check(config, reference_propfile))
+            if not reference_propfile.report.empty():
+                reference_propfile.report.dump()
             else:
                 for lang in config.languages:
                     translation_path = Path(reference_path.parent / f'{name_prefix}_{lang}.{name_suffix}')
@@ -104,10 +86,10 @@ class PropTool:
 
                     Log.level_push(translation_path, deferred = True)
                     if not translation_propfile.validate_and_fix(reference_propfile):
+                        translation_propfile.report.dump()
                         errors += 1
                     if Log.level_pop():
-                        Log.level_push_ok(f'{translation_path}: OK')
-                        Log.level_push()
+                        Log.i(f'%ok%{translation_path}: OK')
 
             Log.level_pop()
 

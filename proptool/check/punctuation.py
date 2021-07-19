@@ -11,7 +11,7 @@ from .check import Check
 from ..config import Config
 from ..entries import PropTranslation
 from ..overrides import overrides
-from ..report.report import Report
+from ..report.report_group import ReportGroup
 
 
 # #################################################################################################
@@ -26,8 +26,9 @@ class Punctuation(Check):
     @staticmethod
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
-    def check(config: Config, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> Report:
-        report = Report()
+    def check(config: Config, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
+        report = ReportGroup('Punctuation mismatch')
+
         for idx, item in enumerate(reference_file):
             # We care translations only for now.
             if not isinstance(item, PropTranslation):
