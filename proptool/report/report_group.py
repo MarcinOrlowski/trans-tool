@@ -6,6 +6,8 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+from typing import Union
+
 from .report_item import ReportItem
 from ..log import Log
 from ..report.error import Error
@@ -33,7 +35,7 @@ class ReportGroup(list):
         self.append(Warn(line, msg))
         self.warnings += 1
 
-    def error(self, line: int, msg: str) -> None:
+    def error(self, line: Union[int, None], msg: str) -> None:
         self.append(Error(line, msg))
         self.errors += 1
 

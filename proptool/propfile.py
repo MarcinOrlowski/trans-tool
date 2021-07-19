@@ -77,10 +77,14 @@ class PropFile(list):
             Log.e(f'  File does not exist: {self.file}')
             return False
 
-        self.report.add(MissingKeys.check(self.config, reference, self))
-        self.report.add(DanglingKeys.check(self.config, reference, self))
-        self.report.add(TrailingWhiteChars.check(self.config, self))
-        self.report.add(Punctuation.check(self.config, reference, self))
+        checks = [
+            MissingKeys,
+            DanglingKeys,
+            TrailingWhiteChars,
+            Punctuation,
+        ]
+        for validator in checks:
+            self.report.add((validator(self.config)).check(reference, self))
 
         # Check for space before \n
         # for item in self:

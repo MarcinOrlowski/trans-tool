@@ -7,8 +7,7 @@
 #
 """
 
-from .check import Check
-from ..config import Config
+from .base.check import Check
 from ..overrides import overrides
 from ..report.report_group import ReportGroup
 
@@ -20,7 +19,7 @@ class MissingKeys(Check):
 
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
-    def check(config: Config, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
+    def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
         report = ReportGroup('Missing keys')
 
         my_keys = translation_file.keys.copy()
@@ -33,13 +32,13 @@ class MissingKeys(Check):
 
         # Commented out keys are also considered present in the translation unless
         # we run in strict check mode.
-        if not config.strict:
+        if not self.config.strict:
             commented_out_keys = translation_file.commented_out_keys.copy()
             for key in commented_out_keys:
                 if key in missing_keys:
                     missing_keys.remove(key)
 
         for key in missing_keys:
-            report.error(key)
+            report.error(None, key)
 
         return report

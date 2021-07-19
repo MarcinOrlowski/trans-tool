@@ -7,9 +7,8 @@
 #
 """
 
-from .check import Check
-from ..config import Config
-from ..entries import PropTranslation, PropComment
+from .base.check import Check
+from ..entries import PropComment, PropTranslation
 from ..overrides import overrides
 from ..report.report_group import ReportGroup
 
@@ -24,16 +23,9 @@ class TrailingWhiteChars(Check):
 
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
-    def check(config: Config, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
-        if reference_file is None and translation_file is None:
-            raise RuntimeError('You must pass either reference or translation file.')
-        if reference_file is not None and translation_file is not None:
-            raise RuntimeError('Either reference or translation file can be passed. Not both.')
-
-        propfile = reference_file if reference_file is not None else translation_file
-
+    def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
         report = ReportGroup('Trailing white characters')
-        for idx, item in enumerate(propfile):
+        for idx, item in enumerate(translation_file):
             if isinstance(item, (PropTranslation, PropComment)):
                 diff = len(item.value) - len(item.value.rstrip())
                 if diff == 0:

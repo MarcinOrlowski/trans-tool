@@ -76,7 +76,8 @@ class PropTool:
             if not reference_propfile.loaded:
                 Log.abort(f'File not found: {reference_path}')
 
-            reference_propfile.report.add(TrailingWhiteChars.check(config, reference_propfile))
+            # TrailingWhiteChars validates translation only, so we pass reference as translation to keep DRY.
+            reference_propfile.report.add(TrailingWhiteChars.check(config, None, reference_propfile))
             if not reference_propfile.report.empty():
                 reference_propfile.report.dump()
             else:
