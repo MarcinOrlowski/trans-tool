@@ -28,7 +28,7 @@ class WhiteCharsBeforeLinefeed(Check):
                 pre = item.value[pos - 1]
                 if pre in [' ', '\t']:
                     what = 'SPACE' if pre == ' ' else 'TAB'
-                    report.warn(idx + 1, f'"{item.key}" contains {what} character before "{literal}" literal.', pos)
+                    report.warn(f'{idx + 1}:{pos}', f'"{item.key}" contains {what} character before "{literal}" literal.')
                     return True
         return False
 

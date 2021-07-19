@@ -16,8 +16,8 @@ from .check.dangling_keys import DanglingKeys
 from .check.missing_keys import MissingKeys
 from .check.punctuation import Punctuation
 from .check.starts_with_the_same_case import StartsWithTheSameCase
-from .check.trailing_whitechars import TrailingWhiteChars
-from .check.whitechars_before_linefeed import WhiteCharsBeforeLinefeed
+from .check.trailing_white_chars import TrailingWhiteChars
+from .check.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from .config import Config
 from .entries import PropComment, PropEmpty, PropEntry, PropTranslation
 from .log import Log
