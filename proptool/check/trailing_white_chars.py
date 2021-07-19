@@ -26,6 +26,7 @@ class TrailingWhiteChars(Check):
     def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
         report = ReportGroup('Trailing white characters')
         for idx, item in enumerate(translation_file):
+            # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
             if isinstance(item, (PropTranslation, PropComment)):
                 diff_count = len(item.value) - len(item.value.rstrip())
                 if diff_count == 0:
