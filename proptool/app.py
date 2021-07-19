@@ -27,8 +27,9 @@ class App:
         self.comment_marker: str = '#'
         self.comment_template: str = 'COM ==> KEY SEP'
         self.allowed_comment_markers: List[str] = ['#', '!']
+        self.punctuation_exception_langs: List[str] = []
 
-        args = self._parseArgs()
+        args = self._parse_args()
 
         self.verbose = args.verbose
         self.quiet = args.quiet
@@ -36,9 +37,9 @@ class App:
         self.fix = args.fix
         self.languages = args.languages
 
-        self._fromArgs(args)
+        self._from_args(args)
 
-    def _fromArgs(self, args) -> None:
+    def _from_args(self, args) -> None:
         # Separator character.
         separator = args.separator[0]
         if separator not in self.allowed_separators:
@@ -50,6 +51,9 @@ class App:
         if comment not in self.allowed_comment_markers:
             Util.abort(f'Invalid comment marker. Must be one of the following: {self.allowed_comment_markers}')
         self.comment_marker = comment
+
+        if args.punctuation_exception_langs is not None:
+            self.punctuation_exception_langs = args.punctuation_exception_langs
 
         # Comment template.
         for key in ['COM', 'SEP', 'KEY']:
@@ -63,7 +67,7 @@ class App:
                 file += '.properties'
             self.files.append(Path(file))
 
-    def _parseArgs(self) -> argparse:
+    def _parse_args(self) -> argparse:
         parser = argparse.ArgumentParser(
             prog = Const.APP_NAME.lower(),
             description = f'{Const.APP_NAME} v{Const.APP_VERSION} * Copyright 2021 by Marcin Orlowski.\n' +
@@ -80,6 +84,8 @@ class App:
                            help = f'List of languages to check (space separated if more than one, i.e. "de pl").')
         group.add_argument('--fix', action = 'store_true', dest = 'fix',
                            help = "Updated translation files in-place. No backup!")
+        group.add_argument('--pe', '--punctuation-exception', dest = 'punctuation_exception_langs', nargs = '*', metavar = 'LANG',
+                           help = f'List of languages for which punctuation mismatch should not be checked for, i.e. "jp"')
         group.add_argument('-s', '--strict', action = 'store_true', dest = 'strict',
                            help = 'Controls strict validation mode.')
         group.add_argument('--sep', action = 'store', dest = 'separator', metavar = 'CHAR', nargs = 1, default = '=',
@@ -88,7 +94,7 @@ class App:
         group.add_argument('-c', '--com', action = 'store', dest = 'comment', metavar = 'CHAR', nargs = 1, default = '#',
                            help = 'If specified, only given CHAR is considered va alid comment marker. '
                                   + f'Must be one of the following: {", ".join(self.allowed_comment_markers)}')
-        group.add_argument('-t', '--tpl', action = 'store', dest = 'commentTemplate', metavar = 'TEMPLATE', nargs = 1,
+        group.add_argument('-t', '--tpl', action = 'store', dest = 'comment_template', metavar = 'TEMPLATE', nargs = 1,
                            default = self.comment_template,
                            help = f'Format of commented-out entries. Default: "{self.comment_template}"')
 
