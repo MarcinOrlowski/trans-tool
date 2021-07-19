@@ -30,8 +30,6 @@ class DanglingKeys(Check):
         for key in reference_file.keys:
             if key in my_keys:
                 my_keys.remove(key)
-            else:
-                missing_keys.append(key)
 
         for key in my_keys:
             report.error(key)
