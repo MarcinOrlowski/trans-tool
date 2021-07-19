@@ -14,7 +14,7 @@ from .overrides import overrides
 
 class PropEntry:
     def to_string(self) -> str:
-        raise NotImplemented
+        raise NotImplementedError
 
 
 # #################################################################################################

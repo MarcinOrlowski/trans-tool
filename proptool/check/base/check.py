@@ -23,4 +23,4 @@ class Check(ABC):
     @abstractmethod
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(self, reference: 'PropFile', translation: 'PropFile') -> Report:
-        raise NotImplemented
+        raise NotImplementedError
