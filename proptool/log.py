@@ -12,7 +12,7 @@ import os
 import re
 import sys
 from pathlib import PosixPath
-from typing import List
+from typing import List, Union
 
 from .config import Config
 
@@ -75,7 +75,7 @@ class Log(object):
     buffer_enabled = True
 
     @classmethod
-    def configure(cls, config: Config):
+    def configure(cls, config: Config) -> None:
         verbose_level = Log.VERBOSE_NONE
         if config.verbose:
             verbose_level = Log.VERBOSE_NORMAL
@@ -109,22 +109,23 @@ class Log(object):
     # ---------------------------------------------------------------------------------------------------------------
 
     @classmethod
-    def disable_buffer(cls):
+    def disable_buffer(cls) -> None:
         cls.buffer_enabled = False
 
     @classmethod
-    def enable_buffer(cls):
+    def enable_buffer(cls) -> None:
         cls.buffer_enabled = True
 
     # ---------------------------------------------------------------------------------------------------------------
 
     @staticmethod
-    def init(message = None, color = None, ignore_quiet_switch = False):
+    def init(message: Union[str, None] = None, color: Union[str, None] = None, ignore_quiet_switch = False) -> None:
         Log.log_level = 0
         Log.push(message, color, ignore_quiet_switch)
 
     @staticmethod
-    def push(message = None, color = None, ignore_quiet_switch = False, deferred = False):
+    def push(message: Union[str, None] = None, color: Union[str, None] = None, ignore_quiet_switch = False,
+             deferred = False) -> None:
         if Log.verbose_level == Log.VERBOSE_NONE and deferred:
             Log._flush_deferred_entry()
 
@@ -136,24 +137,28 @@ class Log(object):
         Log.log_level += 1
 
     @staticmethod
-    def push_e(message = None, color = None, ignore_quiet_switch = False, deferred = False):
+    def push_e(message: Union[str, None] = None, color: Union[str, None] = None, ignore_quiet_switch = False,
+               deferred = False) -> None:
         Log.push(f'%error%%dim%%reverse%%white%{message}', color, ignore_quiet_switch, deferred)
 
     @staticmethod
-    def push_w(message = None, color = None, ignore_quiet_switch = False, deferred = False):
+    def push_w(message: Union[str, None] = None, color: Union[str, None] = None, ignore_quiet_switch = False,
+               deferred = False) -> None:
         Log.push(f'%warn%%reverse%%dim%{message}', color, ignore_quiet_switch, deferred)
 
     @staticmethod
-    def push_ok(message = None, color = None, ignore_quiet_switch = False, deferred = False):
+    def push_ok(message: Union[str, None] = None, color: Union[str, None] = None, ignore_quiet_switch = False,
+                deferred = False) -> None:
         Log.push(f'%ok%%reverse%%dim%{message}', color, ignore_quiet_switch, deferred)
 
     @staticmethod
-    def push_v(message = None, color = None, ignore_quiet_switch = False, deferred = False):
+    def push_v(message: Union[str, None] = None, color: Union[str, None] = None, ignore_quiet_switch = False,
+               deferred = False) -> None:
         if Log.is_verbose():
             Log.push(message, color, ignore_quiet_switch, deferred)
 
     @staticmethod
-    def pop(messages = None, color = None, ignore_quiet_switch = False) -> bool:
+    def pop(messages = None, color: Union[str, None] = None, ignore_quiet_switch = False) -> bool:
         if messages is not None:
             Log.i(messages = messages, color = color, ignore_quiet_switch = ignore_quiet_switch)
 
@@ -166,7 +171,7 @@ class Log(object):
         return had_anything_deferred
 
     @staticmethod
-    def pop_v(messages = None, color = None, ignore_quiet_switch = False):
+    def pop_v(messages = None, color: Union[str, None] = None, ignore_quiet_switch: bool = False) -> None:
         if Log.is_verbose():
             Log.pop(messages, color, ignore_quiet_switch)
 
@@ -191,7 +196,8 @@ class Log(object):
     # ---------------------------------------------------------------------------------------------------------------
 
     @staticmethod
-    def banner(messages, ignore_quiet_switch: bool = False, add_to_history: bool = True, top: bool = True, bottom: bool = True):
+    def banner(messages, ignore_quiet_switch: bool = False, add_to_history: bool = True, top: bool = True,
+               bottom: bool = True) -> None:
         tmp = Log._to_list(messages)
         max_len = len(max(tmp, key = len))
 
@@ -210,41 +216,42 @@ class Log(object):
         Log._log(messages, None, ignore_quiet_switch, add_to_history)
 
     @staticmethod
-    def banner_v(messages, ignore_quiet_switch: bool = False, add_to_history: bool = True, top: bool = True, bottom: bool = True):
+    def banner_v(messages, ignore_quiet_switch: bool = False, add_to_history: bool = True, top: bool = True,
+                 bottom: bool = True) -> None:
         if Log.verbose_level >= Log.VERBOSE_NORMAL:
             Log.banner(messages, ignore_quiet_switch, add_to_history, top, bottom)
 
     @staticmethod
-    def i(messages = None, color: str = COLOR_INFO, ignore_quiet_switch: bool = False, add_to_history: bool = True):
+    def i(messages = None, color: str = COLOR_INFO, ignore_quiet_switch: bool = False, add_to_history: bool = True) -> None:
         Log._log(messages, color, ignore_quiet_switch, add_to_history)
 
     # notice
     @staticmethod
-    def n(messages = None, color = COLOR_NOTICE, ignore_quiet_switch = False, add_to_history = True):
+    def n(messages = None, color: str = COLOR_NOTICE, ignore_quiet_switch: bool = False, add_to_history: bool = True) -> None:
         Log._log(messages, color, ignore_quiet_switch, add_to_history)
 
     # verbose
     @staticmethod
-    def v(messages = None, condition = True):
+    def v(messages = None, condition: bool = True) -> None:
         if condition and Log.is_verbose():
             Log._log(messages)
 
     # very verbose
     @staticmethod
-    def vv(messages = None, condition = True):
+    def vv(messages = None, condition: bool = True) -> None:
         if condition and Log.is_very_verbose():
             Log._log(messages)
 
     # warning
     @staticmethod
-    def w(message = None, condition = True, prefix = 'W: '):
+    def w(message = None, condition: bool = True, prefix: str = 'W: ') -> None:
         if condition and message is not None:
             messages = Log._to_list(message)
             _ = [Log._log(prefix + Log.strip_ansi(msg), Log.COLOR_WARN, True) for msg in messages]
 
     # error
     @staticmethod
-    def e(messages = None, condition = True, prefix = 'E: '):
+    def e(messages = None, condition: bool = True, prefix: str = 'E: ') -> None:
         if condition and messages is not None:
             messages = Log._to_list(messages)
             _ = [Log._log(prefix + Log.strip_ansi(message), Log.COLOR_ERROR, True) for message in messages]
@@ -252,7 +259,7 @@ class Log(object):
     # debug
     # NOTE: debug entries are not stored in action log
     @staticmethod
-    def d(messages = None, condition = True):
+    def d(messages = None, condition: bool = True) -> None:
         if condition and messages is not None and Log.is_debug():
             postfix = Log._get_stacktrace_string()
             for message in Log._to_list(messages):
@@ -262,18 +269,18 @@ class Log(object):
                 print(message)
 
     @staticmethod
-    def dd(messages = None, condition = True) -> None:
+    def dd(messages = None, condition: bool = True) -> None:
         if condition and Log.is_debug_verbose():
             Log.d(messages)
 
     # ---------------------------------------------------------------------------------------------------------------
 
     @staticmethod
-    def get_entries():
+    def get_entries() -> List[str]:
         return Log.log_entries
 
     @staticmethod
-    def abort(messages = None):
+    def abort(messages = None) -> None:
         Log.e(messages)
         Log.init('*** Aborted', Log.COLOR_ERROR, True)
 
@@ -285,7 +292,7 @@ class Log(object):
             sys.exit(1)
 
     @staticmethod
-    def _get_stacktrace_string():
+    def _get_stacktrace_string() -> str:
         msg = ''
         if Log.is_debug():
             frames = inspect.stack()
@@ -301,7 +308,7 @@ class Log(object):
         return msg
 
     @staticmethod
-    def strip_ansi(message):
+    def strip_ansi(message: Union[str, None]) -> str:
         """Removes all ANSI control codes from given message string
 
         Args:
@@ -317,7 +324,7 @@ class Log(object):
         return ''
 
     @staticmethod
-    def substitute_ansi(message):
+    def substitute_ansi(message) -> str:
         """Replaces color code placeholder with ANSI values.
 
         Args:
@@ -365,7 +372,7 @@ class Log(object):
     # ---------------------------------------------------------------------------------------------------------------
 
     @staticmethod
-    def _format_log_line(message = None, color = None, stacktrace_postfix = None):
+    def _format_log_line(message = None, color: Union[str, None] = None, stacktrace_postfix: Union[str, None] = None):
         """Formats log message, adding required indentation and stuff.
 
         Args:
@@ -396,7 +403,8 @@ class Log(object):
         return message
 
     @staticmethod
-    def _log(messages = None, color = None, ignore_quiet_switch = False, add_to_history = True):
+    def _log(messages = None, color: Union[str, None] = None, ignore_quiet_switch: bool = False,
+             add_to_history: bool = True) -> None:
         if messages is not None:
             Log.last_log_entry_level = Log.log_level
             Log._flush_deferred_entry()
@@ -410,7 +418,7 @@ class Log(object):
                     postfix = ''
 
     @staticmethod
-    def _log_raw(message = None, ignore_quiet_switch = False, add_to_history = True):
+    def _log_raw(message = None, ignore_quiet_switch: bool = False, add_to_history: bool = True) -> None:
         if message is not None:
             if Log.buffer_enabled and add_to_history:
                 Log.log_entries.append(message)
@@ -423,7 +431,7 @@ class Log(object):
     def _flush_deferred_entry() -> bool:
         """
         Removes any deferred log entry. Returns False if there was nothing
-        defered to flush, True otherwise.
+        deferred to flush, True otherwise.
 
         :return:
         """
@@ -442,7 +450,7 @@ class Log(object):
     # ---------------------------------------------------------------------------------------------------------------
 
     @staticmethod
-    def _to_list(data):
+    def _to_list(data) -> List[str]:
         """Converts certain data types (str, unicode) into list.
 
         Args:
@@ -459,7 +467,7 @@ class Log(object):
         return data
 
     @staticmethod
-    def _dict_to_list(data_to_convert, color = None):
+    def _dict_to_list(data_to_convert, color: Union[str, None] = None) -> List[str]:
         """Converts dictionary elements into list.
 
         Args:
