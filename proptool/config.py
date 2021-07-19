@@ -11,7 +11,7 @@ import argparse
 from pathlib import Path
 from typing import List
 
-from .util import Util
+from .utils import Utils
 
 
 class Config:
@@ -47,13 +47,13 @@ class Config:
         # Separator character.
         separator = args.separator[0]
         if separator not in Config.ALLOWED_SEPARATORS:
-            Util.abort(f'Invalid separator. Must be one of the following: {Config.ALLOWED_SEPARATORS}')
+            Utils.abort(f'Invalid separator. Must be one of the following: {Config.ALLOWED_SEPARATORS}')
         self.separator = separator
 
         # Comment marker character.
         comment = args.comment[0]
         if comment not in Config.ALLOWED_COMMENT_MARKERS:
-            Util.abort(f'Invalid comment marker. Must be one of the following: {Config.ALLOWED_COMMENT_MARKERS}')
+            Utils.abort(f'Invalid comment marker. Must be one of the following: {Config.ALLOWED_COMMENT_MARKERS}')
         self.comment_marker = comment
 
         if args.punctuation_exception_langs is not None:
@@ -62,7 +62,7 @@ class Config:
         # Comment template.
         for key in ['COM', 'SEP', 'KEY']:
             if args.comment_template.find(key) == -1:
-                Util.abort(f'Missing literal in comment template: {key}')
+                Utils.abort(f'Missing literal in comment template: {key}')
         self.comment_template = args.comment_template
 
         # base files
