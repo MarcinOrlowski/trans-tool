@@ -8,10 +8,11 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 #
-# pytyon3 -m venv venv
+# python3 -m venv venv
 # source venv/activate.fish
+# pip install wheel twine
 # python3 setup.py sdist bdist_wheel
-# pip install --upgrade dist/prop_tool-1.0.0-py3-none-any.whl
+# pip install --upgrade dist/prop_tool-1.1.0-py3-none-any.whl
 # twine upload dist/*
 #
 
