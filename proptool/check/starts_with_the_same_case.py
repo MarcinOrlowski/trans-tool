@@ -7,7 +7,6 @@
 #
 """
 
-from ..log import Log
 from .base.check import Check
 from ..entries import PropTranslation
 from ..overrides import overrides
@@ -37,7 +36,6 @@ class StartsWithTheSameCase(Check):
             ref = reference_file.find_by_key(item.key)
             # Skip dangling keys
             if not ref:
-                Log.d(f'Ref of {item.key} not found. Skiping')
                 continue
 
             # Skip if translation or reference string is empty.
@@ -49,11 +47,11 @@ class StartsWithTheSameCase(Check):
 
             if trans_first_char.isupper() != ref_first_char.isupper():
                 if ref_first_char.isupper():
-                    expected = 'UPPERCASED'
-                    found = 'lowercased'
+                    expected = 'UPPER-cased'
+                    found = 'lower-cased'
                 else:
-                    expected = 'lowercased'
-                    found = 'UPPERCASED'
+                    expected = 'lower-cased'
+                    found = 'UPPER-cased'
 
                 report.error(idx + 1, f'"{item.key}" starts with {found} character. Expected {expected}.')
 
