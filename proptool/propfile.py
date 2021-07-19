@@ -21,6 +21,7 @@ from .check.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from .config import Config
 from .entries import PropComment, PropEmpty, PropEntry, PropTranslation
 from .log import Log
+from .utils import Utils
 from .report.report import Report
 from .report.report_group import ReportGroup
 
@@ -175,8 +176,10 @@ class PropFile(list):
 
                 tmp: List[str] = line.split(self.separator)
                 if len(tmp) < 2:
-                    Log.abort([f'Invalid syntax. Line {line_number}, file: {file}',
-                               f'Using "{self.separator}" as separator.'])
+                    Utils.abort([
+                        f'Invalid syntax. Line {line_number}, file: {file}',
+                        f'Using "{self.separator}" as separator.',
+                    ])
 
                 key = tmp[0].strip()
                 val = ''.join(tmp[1:]).lstrip()

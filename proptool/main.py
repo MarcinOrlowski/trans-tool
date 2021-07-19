@@ -15,6 +15,7 @@ from .check.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from .config import Config
 from .const import Const
 from .log import Log
+from .utils import Utils
 from .propfile import PropFile
 
 
@@ -69,14 +70,14 @@ class PropTool:
 
             tmp = Path(reference_path).name.split('.')
             if len(tmp) != 2:
-                Log.abort('Base filename format invalid. Must be "prefix.suffix".')
+                Utils.abort('Base filename format invalid. Must be "prefix.suffix".')
             name_prefix = tmp[0]
             name_suffix = tmp[1]
 
-            Log.level_push(f'Base: {reference_path}')
+            Log.push(f'Base: {reference_path}')
             reference_propfile = PropFile(config, reference_path)
             if not reference_propfile.loaded:
-                Log.abort(f'File not found: {reference_path}')
+                Utils.abort(f'File not found: {reference_path}')
 
             checks = [
                 TrailingWhiteChars,
@@ -101,14 +102,14 @@ class PropTool:
                     translation_propfile = PropFile(config, translation_path, lang)
 
                     trans_level_label = f'{lang.upper()}: {translation_path}'
-                    Log.level_push(trans_level_label, deferred = True)
+                    Log.push(trans_level_label, deferred = True)
                     if not translation_propfile.validate_and_fix(reference_propfile):
                         translation_propfile.report.dump()
                         errors += 1
-                    if Log.level_pop():
+                    if Log.pop():
                         Log.i(f'%ok%{trans_level_label}: OK')
 
-            Log.level_pop()
+            Log.pop()
 
         return 100 if errors else 0
 

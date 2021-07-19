@@ -10,17 +10,21 @@
 import sys
 from typing import List, Union
 
+# To avoid circular dependency, do NOT change this to:
+#  from log import Log
+import log
+
 
 # #################################################################################################
 
-class Util:
+class Utils:
     @staticmethod
     def error(msg: Union[str, List[str]] = 'Error') -> None:
         if type(msg) is not list:
             msg = [msg]
-        _ = [print(f'{line}') for line in msg]
+        _ = [log.Log.e(f'{line}') for line in msg]
 
     @staticmethod
-    def abort(msg: Union[str, List[str]] = 'Aborted') -> None:
-        Util.error(msg)
-        sys.exit(10)
+    def abort(msg: Union[str, List[str]] = 'Aborted', rc: int = 10) -> None:
+        Utils.error(msg)
+        sys.exit(rc)

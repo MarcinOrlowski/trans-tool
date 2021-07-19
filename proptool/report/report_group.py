@@ -41,13 +41,13 @@ class ReportGroup(list):
 
     def dump(self):
         if self.errors > 0:
-            Log.level_push_e(self.label)
+            Log.push_e(self.label)
         else:
-            Log.level_push_w(self.label)
+            Log.push_w(self.label)
 
         for entry in self:
             if isinstance(entry, Warn):
                 Log.w(entry.to_string())
             else:
                 Log.e(entry.to_string())
-        Log.level_pop()
+        Log.pop()

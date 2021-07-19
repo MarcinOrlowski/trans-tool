@@ -68,11 +68,11 @@ class Report:
             label = label[0].upper() + label[1:]
 
         if errors > 0:
-            Log.level_push_e(label)
+            Log.push_e(label)
         else:
-            Log.level_push_w(label)
+            Log.push_w(label)
 
         for entry in self.__groups:
             entry.dump()
 
-        Log.level_pop()
+        Log.pop()

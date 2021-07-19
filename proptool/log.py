@@ -20,10 +20,11 @@ from .config import Config
 class Log(object):
     # ---------------------------------------------------------------------------------------------------------------
 
-    # www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html
+    # https://www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html
     ANSI_BOLD = u'\u001b[1m'
     ANSI_UNDERLINE = u'\u001b[4m'
     ANSI_REVERSE = u'\u001b[7m'
+    ANSI_DIM = u'\u001b[2m'
 
     ANSI_BLACK = u'\u001b[30m'
     ANSI_BLACK_BRIGHT = u'\u001b[1;30m'
@@ -118,12 +119,12 @@ class Log(object):
     # ---------------------------------------------------------------------------------------------------------------
 
     @staticmethod
-    def level_init(message = None, color = None, ignore_quiet_switch = False):
+    def init(message = None, color = None, ignore_quiet_switch = False):
         Log.log_level = 0
-        Log.level_push(message, color, ignore_quiet_switch)
+        Log.push(message, color, ignore_quiet_switch)
 
     @staticmethod
-    def level_push(message = None, color = None, ignore_quiet_switch = False, deferred = False):
+    def push(message = None, color = None, ignore_quiet_switch = False, deferred = False):
         if Log.verbose_level == Log.VERBOSE_NONE and deferred:
             Log._flush_deferred_entry()
 
@@ -135,39 +136,39 @@ class Log(object):
         Log.log_level += 1
 
     @staticmethod
-    def level_push_e(message = None, color = None, ignore_quiet_switch = False, deferred = False):
-        Log.level_push(f'%error%%reverse%{message}', color, ignore_quiet_switch, deferred)
+    def push_e(message = None, color = None, ignore_quiet_switch = False, deferred = False):
+        Log.push(f'%error%%dim%%reverse%%white%{message}', color, ignore_quiet_switch, deferred)
 
     @staticmethod
-    def level_push_w(message = None, color = None, ignore_quiet_switch = False, deferred = False):
-        Log.level_push(f'%warn%%reverse%{message}', color, ignore_quiet_switch, deferred)
+    def push_w(message = None, color = None, ignore_quiet_switch = False, deferred = False):
+        Log.push(f'%warn%%reverse%%dim%{message}', color, ignore_quiet_switch, deferred)
 
     @staticmethod
-    def level_push_ok(message = None, color = None, ignore_quiet_switch = False, deferred = False):
-        Log.level_push(f'%ok%%reverse%{message}', color, ignore_quiet_switch, deferred)
+    def push_ok(message = None, color = None, ignore_quiet_switch = False, deferred = False):
+        Log.push(f'%ok%%reverse%%dim%{message}', color, ignore_quiet_switch, deferred)
 
     @staticmethod
-    def level_push_v(message = None, color = None, ignore_quiet_switch = False, deferred = False):
+    def push_v(message = None, color = None, ignore_quiet_switch = False, deferred = False):
         if Log.is_verbose():
-            Log.level_push(message, color, ignore_quiet_switch, deferred)
+            Log.push(message, color, ignore_quiet_switch, deferred)
 
     @staticmethod
-    def level_pop(messages = None, color = None, ignore_quiet_switch = False) -> bool:
+    def pop(messages = None, color = None, ignore_quiet_switch = False) -> bool:
         if messages is not None:
             Log.i(messages = messages, color = color, ignore_quiet_switch = ignore_quiet_switch)
 
         had_anything_deferred = Log._flush_deferred_entry()
 
         if Log.log_level == 0:
-            Log.abort('level_pop() called too many times')
+            Log.abort('pop() called too many times.')
         Log.log_level -= 1
 
         return had_anything_deferred
 
     @staticmethod
-    def level_pop_v(messages = None, color = None, ignore_quiet_switch = False):
+    def pop_v(messages = None, color = None, ignore_quiet_switch = False):
         if Log.is_verbose():
-            Log.level_pop(messages, color, ignore_quiet_switch)
+            Log.pop(messages, color, ignore_quiet_switch)
 
     # ---------------------------------------------------------------------------------------------------------------
 
@@ -274,7 +275,7 @@ class Log(object):
     @staticmethod
     def abort(messages = None):
         Log.e(messages)
-        Log.level_init('*** Aborted', Log.COLOR_ERROR, True)
+        Log.init('*** Aborted', Log.COLOR_ERROR, True)
 
         if Log.is_debug():
             Log.d('Related stacktrace below')
@@ -332,6 +333,8 @@ class Log(object):
         color_map = {
             'reset':         Log.ANSI_RESET,
             'reverse':       Log.ANSI_REVERSE,
+            'bold':          Log.ANSI_BOLD,
+            'dim':           Log.ANSI_DIM,
 
             'black':         Log.ANSI_BLACK,
             'black_bright':  Log.ANSI_BLACK_BRIGHT,
