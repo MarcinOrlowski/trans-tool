@@ -12,6 +12,7 @@ import os
 import re
 import sys
 from pathlib import PosixPath
+from typing import List
 
 from .config import Config
 
@@ -135,15 +136,15 @@ class Log(object):
 
     @staticmethod
     def level_push_e(message = None, color = None, ignore_quiet_switch = False, deferred = False):
-        Log.level_push(f'%error%%reverse%{message}', color, ignore_quiet_switch, deferred);
+        Log.level_push(f'%error%%reverse%{message}', color, ignore_quiet_switch, deferred)
 
     @staticmethod
     def level_push_w(message = None, color = None, ignore_quiet_switch = False, deferred = False):
-        Log.level_push(f'%warn%%reverse%{message}', color, ignore_quiet_switch, deferred);
+        Log.level_push(f'%warn%%reverse%{message}', color, ignore_quiet_switch, deferred)
 
     @staticmethod
     def level_push_ok(message = None, color = None, ignore_quiet_switch = False, deferred = False):
-        Log.level_push(f'%ok%%reverse%{message}', color, ignore_quiet_switch, deferred);
+        Log.level_push(f'%ok%%reverse%{message}', color, ignore_quiet_switch, deferred)
 
     @staticmethod
     def level_push_v(message = None, color = None, ignore_quiet_switch = False, deferred = False):
@@ -155,13 +156,13 @@ class Log(object):
         if messages is not None:
             Log.i(messages = messages, color = color, ignore_quiet_switch = ignore_quiet_switch)
 
-        had_anything_defered = Log._flush_deferred_entry()
+        had_anything_deferred = Log._flush_deferred_entry()
 
         if Log.log_level == 0:
             Log.abort('level_pop() called too many times')
         Log.log_level -= 1
 
-        return had_anything_defered
+        return had_anything_deferred
 
     @staticmethod
     def level_pop_v(messages = None, color = None, ignore_quiet_switch = False):
@@ -195,7 +196,7 @@ class Log(object):
 
         line = '=' * max_len
 
-        messages: str = []
+        messages: List[str] = []
 
         if top:
             messages.append(line)
@@ -306,7 +307,7 @@ class Log(object):
           message: string to be processed
 
         Returns:
-          message string witn ANSI codes striped or None
+          message string with ANSI codes striped or None
         """
         if message is not None:
             pattern = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
@@ -418,7 +419,7 @@ class Log(object):
     @staticmethod
     def _flush_deferred_entry() -> bool:
         """
-        Removes any defered log entry. Returns False if there was nothing
+        Removes any deferred log entry. Returns False if there was nothing
         defered to flush, True otherwise.
 
         :return:
