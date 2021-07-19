@@ -15,7 +15,7 @@ from .config import Config
 from .check.punctuation import Punctuation
 from .check.trailing_whitechars import TrailingWhiteChars
 from .entries import PropComment, PropTranslation, PropEmpty, PropEntry
-from .util import Util
+from .log import Log
 from .report.report import Report
 
 
@@ -70,9 +70,8 @@ class PropFile(list):
         :param reference:
         :return:
         """
-
         if not self.loaded:
-            Util.error(f'  File does not exist: {self.file}')
+            Log.e(f'  File does not exist: {self.file}')
             return False
 
         error_count = 0
@@ -116,26 +115,33 @@ class PropFile(list):
         error_count += punctuation_mismatch_count
 
         if error_count > 0:
-            Util.error(f'  Found {error_count} errors in "{self.file}":')
-            if missing_keys_count > 0:
-                Util.error(f'    Missing keys: {missing_keys_count}')
-                if self.config.verbose:
-                    Util.error([f'      {key}' for key in missing_keys])
-            if dangling_keys_count > 0:
-                Util.error(f'    Dangling keys: {dangling_keys_count}')
-                if self.config.verbose:
-                    Util.error([f'      {key}' for key in my_keys])
-            if trailing_chars_count > 0:
-                Util.error(f'    Trailing white characters: {trailing_chars_count}')
-                if self.config.verbose:
-                    Util.error([f'      {item.to_string()}' for item in trailing_chars_report])
-            if punctuation_mismatch_count > 0:
-                Util.error(f'    Punctuation mismatch: {punctuation_mismatch_count}')
-                if self.config.verbose:
-                    Util.error([f'      {item.to_string()}' for item in punctuation_mismatch_report])
+            # Log.level_push(f'Found {error_count} errors in "{self.file}":')
 
-        elif self.config.verbose:
-            print(f'  {self.file}: OK')
+            if missing_keys_count > 0:
+                Log.e(f'Missing keys: {missing_keys_count}')
+                if self.config.verbose:
+                    Log.e([f'{key}' for key in missing_keys])
+                Log.level_pop()
+
+            if dangling_keys_count > 0:
+                Log.level_push(f'Dangling keys: {dangling_keys_count}')
+                if self.config.verbose:
+                    Log.e([f'{key}' for key in my_keys])
+                Log.level_pop()
+
+            if trailing_chars_count > 0:
+                Log.level_push(f'Trailing white characters: {trailing_chars_count}')
+                if self.config.verbose:
+                    trailing_chars_report.dump()
+                Log.level_pop()
+
+            if punctuation_mismatch_count > 0:
+                Log.level_push(f'Punctuation mismatch: {punctuation_mismatch_count}')
+                if self.config.verbose:
+                    punctuation_mismatch_report.dump()
+                Log.level_pop()
+
+            # Log.level_pop()
 
         return error_count == 0
 
@@ -159,7 +165,7 @@ class PropFile(list):
             else:
                 raise RuntimeError(f'Unknown entry type: {type(item)}')
 
-        print(f'    Re-writing translation file: {self.file}')
+        Log.i(f'Re-writing translation file: {self.file}')
         with open(self.file, 'w') as fh:
             fh.writelines(synced)
 
@@ -177,8 +183,8 @@ class PropFile(list):
             return False
 
         comment_pattern = re.escape(self.config.comment_template).replace(
-            'COM', f'[{"".join(self.config.allowed_comment_markers)}]').replace(
-            'SEP', f'[{"".join(self.config.allowed_separators)}]')
+            'COM', f'[{"".join(Config.ALLOWED_COMMENT_MARKERS)}]').replace(
+            'SEP', f'[{"".join(Config.ALLOWED_SEPARATORS)}]')
         # NOTE: key pattern must be in () brackets to form a group used later!
         comment_pattern = comment_pattern.replace('KEY', '([a-zAz][a-zA-z0-9_.-]+)')
         comment_pattern = f'^{comment_pattern}'
@@ -201,7 +207,7 @@ class PropFile(list):
                 if line.strip() == '':
                     self.append(PropEmpty())
 
-                elif line[0] in self.config.allowed_comment_markers:
+                elif line[0] in Config.ALLOWED_COMMENT_MARKERS:
                     # Let's look for commented out keys.
                     match = re.compile(comment_pattern).match(line)
                     if match:
@@ -212,14 +218,14 @@ class PropFile(list):
                     if not self.separator:
                         # Let's look for used separator character
                         for i in range(len(line)):
-                            if line[i] in self.config.allowed_separators:
+                            if line[i] in Config.ALLOWED_SEPARATORS:
                                 self.separator = line[i]
                                 break
 
                     tmp: List[str] = line.split(self.separator)
                     if len(tmp) < 2:
-                        Util.abort([f'Invalid syntax. Line {line_number}, file: {file}',
-                                    f'Using "{self.separator}" as separator.'])
+                        Log.abort([f'Invalid syntax. Line {line_number}, file: {file}',
+                                   f'Using "{self.separator}" as separator.'])
 
                     key = tmp[0].strip()
                     val = ''.join(tmp[1:]).lstrip()

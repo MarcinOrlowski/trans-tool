@@ -11,15 +11,12 @@ from pathlib import Path
 
 from .config import Config
 from .const import Const
+from .log import Log
 from .propfile import PropFile
-from .util import Util
 from .check.trailing_whitechars import TrailingWhiteChars
 
 
 class PropTool:
-    def __init__(self):
-        self.config = Config(self._parse_args())
-
     def _parse_args(self) -> argparse:
         parser = argparse.ArgumentParser(
             prog = Const.APP_NAME.lower(),
@@ -43,18 +40,20 @@ class PropTool:
                            help = 'Controls strict validation mode.')
         group.add_argument('--sep', action = 'store', dest = 'separator', metavar = 'CHAR', nargs = 1, default = '=',
                            help = 'If specified, only given CHAR is considered a valid separator.'
-                                  + f'Must be one of the following: {", ".join(self.config.allowed_separators)}')
+                                  + f'Must be one of the following: {", ".join(Config.ALLOWED_SEPARATORS)}')
         group.add_argument('-c', '--com', action = 'store', dest = 'comment', metavar = 'CHAR', nargs = 1, default = '#',
                            help = 'If specified, only given CHAR is considered va alid comment marker. '
-                                  + f'Must be one of the following: {", ".join(self.config.allowed_comment_markers)}')
+                                  + f'Must be one of the following: {", ".join(Config.ALLOWED_COMMENT_MARKERS)}')
         group.add_argument('-t', '--tpl', action = 'store', dest = 'comment_template', metavar = 'TEMPLATE', nargs = 1,
-                           default = self.config.comment_template,
-                           help = f'Format of commented-out entries. Default: "{self.config.comment_template}"')
+                           default = Config.DEFAULT_COMMENT_TEMPLATE,
+                           help = f'Format of commented-out entries. Default: "{Config.DEFAULT_COMMENT_TEMPLATE}"')
 
         group = parser.add_argument_group('Other')
         group.add_argument('-q', '--quiet', action = 'store_true', dest = 'quiet')
         group.add_argument('-v', '--verbose', action = 'store_true', dest = 'verbose',
                            help = 'Produces more verbose reports')
+        group.add_argument('--debug', action = 'store_true', dest = 'debug',
+                           help = 'Enables debug output')
 
         return parser.parse_args()
 
@@ -67,15 +66,15 @@ class PropTool:
 
             tmp = Path(reference_path).name.split('.')
             if len(tmp) != 2:
-                Util.abort('Base filename format invalid. Must be "prefix.suffix".')
+                Log.abort('Base filename format invalid. Must be "prefix.suffix".')
             name_prefix = tmp[0]
             name_suffix = tmp[1]
 
+            Log.level_push(f'Base: {reference_path}')
             reference_propfile = PropFile(config, reference_path)
             if not reference_propfile.loaded:
-                Util.abort(f'File not found: {reference_path}')
+                Log.abort(f'File not found: {reference_path}')
 
-            print(f'Base: {reference_path}')
             ref_file_errors = 0
             reference_file_error_count = len(reference_propfile.duplicated_keys_report)
             ref_file_errors += reference_file_error_count
@@ -87,21 +86,31 @@ class PropTool:
             ref_file_errors += trailing_chars_count
 
             if ref_file_errors > 0:
-                Util.error(f'  Found {ref_file_errors} errors in reference file:')
+                Log.level_push(f'Found {ref_file_errors} errors in reference file:')
+
                 if reference_file_error_count > 0:
-                    Util.error(f'    Duplicated keys: {reference_file_error_count}')
+                    Log.e(f'Duplicated keys: {reference_file_error_count}')
                     if config.verbose:
-                        Util.error([f'      {item.to_string()}' for item in reference_propfile.duplicated_keys_report])
+                        Log.e([f'{item.to_string()}' for item in reference_propfile.duplicated_keys_report])
+                    Log.level_pop()
+
                 if trailing_chars_count > 0:
-                    Util.error(f'    Trailing white characters: {trailing_chars_count}')
+                    Log.level_push(f'Trailing white characters: {trailing_chars_count}')
                     if config.verbose:
-                        Util.error([f'      {item.to_string()}' for item in trailing_chars_report])
+                        Log.e([f'{item.to_string()}' for item in trailing_chars_report])
+                    Log.level_pop()
+
+                Log.level_pop()
             else:
                 for lang in config.languages:
                     translation_path = Path(reference_path.parent / f'{name_prefix}_{lang}.{name_suffix}')
                     translation_propfile = PropFile(config, translation_path, lang)
+                    Log.level_push(translation_path)
                     if not translation_propfile.validate_and_fix(reference_propfile):
                         errors += 1
+                    Log.level_pop()
+
+            Log.level_pop()
 
         return 100 if errors else 0
 

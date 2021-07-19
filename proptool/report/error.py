@@ -15,7 +15,4 @@ from .report import ReportItem
 # #################################################################################################
 
 class Error(ReportItem):
-
-    @overrides(ReportItem)
-    def type(self):
-        return 'E'
+    pass

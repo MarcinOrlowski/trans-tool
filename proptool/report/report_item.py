@@ -14,7 +14,4 @@ class ReportItem:
         self.msg = msg
 
     def to_string(self) -> str:
-        return f'{self.type()}: line {self.line}: {self.msg}'
-
-    def type(self) -> str:
-        raise NotImplemented
+        return f'Line {self.line}: {self.msg}'

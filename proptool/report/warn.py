@@ -14,6 +14,4 @@ from .report import ReportItem
 # #################################################################################################
 
 class Warn(ReportItem):
-    @overrides(ReportItem)
-    def type(self):
-        return 'W'
+    pass

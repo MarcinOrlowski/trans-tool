@@ -9,25 +9,29 @@
 
 import argparse
 from pathlib import Path
-from typing import List, Union
+from typing import List
 
 from .util import Util
 
 
 class Config:
-    def __init__(self, args: Union[argparse, None] = None):
+    ALLOWED_SEPARATORS: List[str] = ['=', ':']
+    ALLOWED_COMMENT_MARKERS: List[str] = ['#', '!']
+    DEFAULT_COMMENT_TEMPLATE: str = 'COM ==> KEY SEP'
+
+    def __init__(self, args: argparse = None):
         self.verbose: bool = False
         self.quiet: bool = False
         self.strict: bool = True
         self.fix: bool = False
         self.files: List[str] = []
         self.languages: List[str] = []
-        self.allowed_separators: List[str] = ['=', ':']
         self.separator: str = '='
         self.comment_marker: str = '#'
-        self.comment_template: str = 'COM ==> KEY SEP'
-        self.allowed_comment_markers: List[str] = ['#', '!']
+        self.comment_template: str = Config.DEFAULT_COMMENT_TEMPLATE
         self.punctuation_exception_langs: List[str] = []
+        self.debug = False
+        self.debug_verbose = 1  # Log.VERBOSE_NORMAL
 
         if args:
             self.verbose = args.verbose
@@ -41,14 +45,14 @@ class Config:
     def _from_args(self, args) -> None:
         # Separator character.
         separator = args.separator[0]
-        if separator not in self.allowed_separators:
-            Util.abort(f'Invalid separator. Must be one of the following: {self.allowed_separators}')
+        if separator not in Config.ALLOWED_SEPARATORS:
+            Util.abort(f'Invalid separator. Must be one of the following: {Config.ALLOWED_SEPARATORS}')
         self.separator = separator
 
         # Comment marker character.
         comment = args.comment[0]
-        if comment not in self.allowed_comment_markers:
-            Util.abort(f'Invalid comment marker. Must be one of the following: {self.allowed_comment_markers}')
+        if comment not in Config.ALLOWED_COMMENT_MARKERS:
+            Util.abort(f'Invalid comment marker. Must be one of the following: {Config.ALLOWED_COMMENT_MARKERS}')
         self.comment_marker = comment
 
         if args.punctuation_exception_langs is not None:

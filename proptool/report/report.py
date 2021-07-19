@@ -6,8 +6,8 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
-
 from .report_item import ReportItem
+from ..log import Log
 from ..report.error import Error
 from ..report.warn import Warn
 
@@ -29,3 +29,10 @@ class Report(list):
 
     def error(self, line: int, msg: str) -> None:
         self.append(Error(line, msg))
+
+    def dump(self):
+        for entry in self:
+            if isinstance(entry, Warn):
+                Log.w(entry.to_string())
+            else:
+                Log.e(entry.to_string())
