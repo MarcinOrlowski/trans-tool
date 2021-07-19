@@ -2,8 +2,9 @@
 
 `prop-tool` - Java *.properties file checker and syncing tool.
 
-This utility can be used to check if translation files stay in sync with base file. It can also create translation files adding
-missing keys based on the content of base file.
+This utility can be used to check your `*.properties` Java files to ensure correct syntax is used, all translation files are in sync
+with base file, ther're no missing keys or invalid punctuation and more. It can also create translation files adding missing keys
+based on the content of base file.
 
 ```bash
 $ prop-tool -b mark -l pl -v
@@ -22,6 +23,40 @@ Base: mark.properties
 Based on `*.properties`
 [file format docs](https://docs.oracle.com/cd/E23095_01/Platform.93/ATGProgGuide/html/s0204propertiesfileformat01.html).
 
+## Checks ##
+
+The main purpose of `prop-tool` is to ensure all property files are correct and that translation files are in sync with the
+reference file. For that reason you need to have at least two `*.properties` files to use `prop-tool`. One is your base language
+(usually English texts) used as reference and all the others are your translations. `prop-tool` performs several checks on both
+base (reference) file and each translation.
+
+For base file it executes following validators:
+
+* Syntax validation,
+* Trailing white characters: no trailing spaces nor tabs,
+
+For translation files, the following checks are performed:
+
+* Syntax validation,
+* Trailing white characters: no trailing spaces nor tabs,
+* Missing translation: keys found in base file, but missing in translation,
+* Dangling keys: keys found in translation file but not present in base file,
+* Empty translations: empty translations for non-empty text in base file,
+* Case check: ensures translation starts with the same character case (upper/lower) as entry in base file.
+* Punctuation: ensures translation ends with punctuation mark (`:`, `.`, `?`, `!`) if entry if base file ends that way.
+
+NOTE: as this is quite common that translation file may not be updated instantly, `prop-tool` considers key presence condition
+fulfilled also when given key exists in `B` file but is commented out and follow expected comment format:
+
+```
+# ==> KEY =
+```
+
+Default format can changed using `--tpl` argument.
+
+If you want to ensure that all keys are in fact translated, use `--strict` mode while checking. When running with `--strict` option,
+keys in commented out form are ignored.
+
 ## Installation ##
 
 You can install `prop-tool` from [PyPi](https://pypi.org/project/prop-tool/):
@@ -38,32 +73,15 @@ pip install --upgrade <FILE>.whl
 
 You may also want to setup [virtual environment](https://docs.python.org/3/library/venv.html) first.
 
-## Validation ##
-
-The main purpose of `prop-tool` is to ensure all property files are correct and that translation files are in sync with the
-reference file. For that reason you need to have at least two `*.properties` files to use `prop-tool`. One is your base language
-(usually English texts) used as reference and all the others are your translations. Translation file is in sync with base when:
-
-1. All keys present in base file are also present in translation file.
-1. There's no dangling keys (not existing in base) present in translation file.
-1. Trailing punctuation marks of translation match base strings.
-
-NOTE: as this is quite common that translation file may not be updated instantly, `prop-tool` considers key presence condition
-fulfilled also when given key exists in `B` file but is commented out and follow expected comment format:
-
-```
-# ==> KEY =
-```
-
-Default format can changed using `--tpl` argument.
-
-If you want to ensure that all keys are in fact translated, use `--strict` mode while checking. When running with `--strict` option,
-keys in commented out form are ignored.
-
 ## Fixing files ##
 
 You can use `prop-tool` to update your translation files by using `--fix` option. In such case `prop-tool` will completely rewrite
 translation files, adding missing keys (in commented out form).
+
+While content of written file is strongly based on base file Some normalization will be made
+
+* There will be no more than one empty consequent empty line written,
+* There will be no more than one consequent empty comment line (just comment marker) written.
 
 NOTE: Be aware that `--fix` do NOT update existing translation file but builds it completely using base file as reference and
 existing translations (if present). No other content of translation files (for example additional comments etc) will be preserved.
