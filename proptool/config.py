@@ -33,6 +33,12 @@ class Config:
         self.debug = False
         self.debug_verbose = 1  # Log.VERBOSE_NORMAL
 
+        self.checks = {
+            'KeyFormat': {
+                'pattern': r'([a-z][a-zA-Z0-9_.]*[a-zA-Z0-9]){3,}',
+            }
+        }
+
         if args:
             self.verbose = args.verbose
             self.quiet = args.quiet

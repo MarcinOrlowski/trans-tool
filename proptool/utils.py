@@ -10,13 +10,16 @@
 import sys
 from typing import List, Union
 
-from .log import Log
 
+# DO NOT use Log class in Utils. That causes some dependency issues which are NOT
+# worth solving.
 
 # #################################################################################################
 
 class Utils:
     @staticmethod
     def abort(msg: Union[str, List[str]] = 'Aborted', rc: int = 10) -> None:
-        Log.e(msg)
+        if type(msg) == str:
+            msg = [msg]
+        print(msg)
         sys.exit(rc)

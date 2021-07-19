@@ -13,7 +13,8 @@ from typing import List, Union
 
 from .check.empty_translations import EmptyTranslations
 from .check.dangling_keys import DanglingKeys
-from .check.missing_keys import MissingKeys
+from .check.key_format import KeyFormat
+from .check.missing_translation import MissingTranslation
 from .check.punctuation import Punctuation
 from .check.starts_with_the_same_case import StartsWithTheSameCase
 from .check.trailing_white_chars import TrailingWhiteChars
@@ -82,13 +83,14 @@ class PropFile(list):
             return False
 
         checks = [
-            MissingKeys,
+            MissingTranslation,
             DanglingKeys,
             TrailingWhiteChars,
             Punctuation,
             StartsWithTheSameCase,
             EmptyTranslations,
             WhiteCharsBeforeLinefeed,
+            KeyFormat,
         ]
         for validator in checks:
             # Each validator gets copy of the files, to prevent any potential destructive operation.

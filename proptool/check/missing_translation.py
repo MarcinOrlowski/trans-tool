@@ -15,18 +15,21 @@ from ..report.report_group import ReportGroup
 # #################################################################################################
 
 # noinspection PyUnresolvedReferences
-class MissingKeys(Check):
+class MissingTranslation(Check):
+    """
+    This check checks if given base key is also present in translation file.
+    """
 
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
         report = ReportGroup('Missing keys')
 
-        my_keys = translation_file.keys.copy()
+        translation_keys = translation_file.keys.copy()
         missing_keys: List[str] = []
         for key in reference_file.keys:
-            if key in my_keys:
-                my_keys.remove(key)
+            if key in translation_keys:
+                translation_keys.remove(key)
             else:
                 missing_keys.append(key)
 
@@ -39,6 +42,6 @@ class MissingKeys(Check):
                     missing_keys.remove(key)
 
         for key in missing_keys:
-            report.error(None, key)
+            report.warn(None, key)
 
         return report

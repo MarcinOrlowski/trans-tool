@@ -35,6 +35,7 @@ For base file it executes following validators:
 * Syntax validation: ensures use of allowed comment markers, key - value separators etc.
 * Trailing white characters: no trailing spaces nor tabs at the end of each line,
 * WhiteCharsBeforeLinefeed: ensures there's no space nor tab character placed before linefeed literals (`\n` and `\r`).
+* KeyFormat: ensures key string matches defined pattern.
 
 For translation files, the following checks are performed:
 
@@ -46,6 +47,7 @@ For translation files, the following checks are performed:
 * Case check: ensures translation starts with the same character case (upper/lower) as entry in base file,
 * Punctuation: ensures translation ends with punctuation mark (`:`, `.`, `?`, `!`) if entry if base file ends that way,
 * WhiteCharsBeforeLinefeed: ensures there's no space nor tab character placed before linefeed literals (`\n` and `\r`).
+* KeyFormat: ensures key string matches defined pattern.
 
 NOTE: as this is quite common that translation file may not be updated instantly, `prop-tool` considers key presence condition
 fulfilled also when given key exists in `B` file but is commented out and follow expected comment format:
