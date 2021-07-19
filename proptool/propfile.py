@@ -143,9 +143,9 @@ class PropFile(list):
                     break
 
                 # remove CRLF
-                if line[-1] == '\n':  # LF
+                if len(line) > 0 and line[-1] == '\n':  # LF
                     line = line[:-1]
-                if line[-1] == '\r':  # CR
+                if len(line) > 0 and line[-1] == '\r':  # CR
                     line = line[:-1]
 
                 # Skip empty lines
