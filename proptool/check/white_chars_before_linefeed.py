@@ -35,7 +35,7 @@ class WhiteCharsBeforeLinefeed(Check):
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
-        report = ReportGroup('Space before linefeed literal')
+        report = ReportGroup('White chars before linefeed literal')
 
         for idx, item in enumerate(translation_file):
             # We care translations only for now.
