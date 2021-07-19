@@ -5,12 +5,26 @@
 This utility can be used to check if translation files stay in sync with base file. It can also create translation files adding
 missing keys based on the content of base file.
 
+```bash
+$ proptool -b mark -l pl -v
+Base: mark.properties
+  Found 6 errors in "mark_pl.properties":
+    Trailing white characters: 3
+      W: line 2: In comment: 2
+      E: line 4: In "question" entry: 1
+      E: line 5: In "exclamation" entry: 1
+    Punctuation mismatch: 3
+      E: line 2: "question" ends with " ". Expected "?".
+      E: line 3: "exclamation" ends with " ". Expected "!".
+      E: line 4: "newline" ends with "". Expected "\n".
+```
+
 Based on `*.properties`
 [file format docs](https://docs.oracle.com/cd/E23095_01/Platform.93/ATGProgGuide/html/s0204propertiesfileformat01.html).
 
 ## Installation ##
 
-You can install `prop-tool` form [PyPi](https://pypi.org/project/prop-tool/) by using `pip`:
+You can install `prop-tool` from [PyPi](https://pypi.org/project/prop-tool/):
 
 ```bash
 pip install prop-tool
@@ -22,13 +36,17 @@ Alternatively, you can download `*.whl` archive and install it manually by issui
 pip install --upgrade <FILE>.whl
 ```
 
+You may also want to setup [virtual environment](https://docs.python.org/3/library/venv.html) first.
+
 ## Validation ##
 
-The main purpose of `prop-tool` is to ensure translation files are in sync. For that reason you need to have at least two
-`*.properties` files. One is your reference (aka base) and all the others are your translations. File is in sync with base when:
+The main purpose of `prop-tool` is to ensure all property files are correct and that translation files are in sync with the
+reference file. For that reason you need to have at least two `*.properties` files to use `prop-tool`. One is your base language
+(usually English texts) used as reference and all the others are your translations. Translation file is in sync with base when:
 
 1. All keys present in base file are also present in translation file.
 1. There's no dangling keys (not existing in base) present in translation file.
+1. Trailing punctuation marks of translation match base strings.
 
 NOTE: as this is quite common that translation file may not be updated instantly, `prop-tool` considers key presence condition
 fulfilled also when given key exists in `B` file but is commented out and follow expected comment format:
