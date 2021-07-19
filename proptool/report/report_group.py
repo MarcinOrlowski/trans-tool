@@ -18,6 +18,7 @@ from ..report.warn import Warn
 
 class ReportGroup(list):
     def __init__(self, label: str):
+        super().__init__()
         self.label = label
         self.warnings = 0
         self.errors = 0
