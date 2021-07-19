@@ -17,6 +17,17 @@ class Report:
     def __init__(self):
         self.__groups: List[ReportGroup] = []
 
+    @property
+    def errors(self) -> int:
+        """
+        Returns cumulative number of errors in whole report.
+        :return:
+        """
+        result = 0
+        for group in self.__groups:
+            result += group.errors
+        return result
+
     def add(self, report_group: ReportGroup, skip_empty: bool = True) -> None:
         item_cls = type(report_group)
         if not issubclass(item_cls, ReportGroup):

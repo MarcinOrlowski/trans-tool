@@ -91,18 +91,22 @@ class PropTool:
                 reference_propfile.report.add((validator(config)).check(None, copy.copy(reference_propfile)))
 
             if not reference_propfile.report.empty():
+                # There's something to fix, but not necessary critical.
                 reference_propfile.report.dump()
-            else:
+
+            # No errors, no problem. Warnings are just fine.
+            if reference_propfile.report.errors == 0:
                 for lang in config.languages:
                     translation_path = Path(reference_path.parent / f'{name_prefix}_{lang}.{name_suffix}')
                     translation_propfile = PropFile(config, translation_path, lang)
 
-                    Log.level_push(translation_path, deferred = True)
+                    trans_level_label = f'{lang.upper()}: {translation_path}'
+                    Log.level_push(trans_level_label, deferred = True)
                     if not translation_propfile.validate_and_fix(reference_propfile):
                         translation_propfile.report.dump()
                         errors += 1
                     if Log.level_pop():
-                        Log.i(f'%ok%{translation_path}: OK')
+                        Log.i(f'%ok%{trans_level_label}: OK')
 
             Log.level_pop()
 
