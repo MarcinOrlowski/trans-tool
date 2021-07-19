@@ -23,7 +23,6 @@ class Punctuation(Check):
     as original string.
     """
 
-    @staticmethod
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(config: Config, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:

@@ -22,7 +22,6 @@ class TrailingWhiteChars(Check):
     Checks if file has trailing white characters at the end of each line.
     """
 
-    @staticmethod
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(config: Config, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
