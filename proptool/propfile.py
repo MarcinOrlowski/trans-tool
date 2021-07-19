@@ -6,14 +6,16 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
-
+import copy
 import re
 from pathlib import Path
 from typing import List, Union
 
+from .check.empty_translations import EmptyTranslations
 from .check.dangling_keys import DanglingKeys
 from .check.missing_keys import MissingKeys
 from .check.punctuation import Punctuation
+from .check.starts_with_the_same_case import StartsWithTheSameCase
 from .check.trailing_whitechars import TrailingWhiteChars
 from .config import Config
 from .entries import PropComment, PropEmpty, PropEntry, PropTranslation
@@ -37,7 +39,7 @@ class PropFile(list):
         self.commented_out_keys: List[str] = []
         self.separator: str = config.separator
         self.loaded: bool = False
-        self.language = language
+        self.language: List[str] = language
 
         self.report = Report()
 
@@ -66,11 +68,11 @@ class PropFile(list):
 
     # #################################################################################################
 
-    def validate(self, reference: 'PropFile') -> bool:
+    def validate(self, reference_file: 'PropFile') -> bool:
         """
         Validates given PropFile against provided reference file.
 
-        :param reference:
+        :param reference_file:
         :return:
         """
         if not self.loaded:
@@ -78,13 +80,15 @@ class PropFile(list):
             return False
 
         checks = [
-            MissingKeys,
-            DanglingKeys,
-            TrailingWhiteChars,
-            Punctuation,
+            # MissingKeys,
+            # DanglingKeys,
+            # TrailingWhiteChars,
+            # Punctuation,
+            StartsWithTheSameCase,
+            # EmptyTranslations,
         ]
         for validator in checks:
-            self.report.add((validator(self.config)).check(reference, self))
+            self.report.add((validator(self.config)).check(copy.copy(reference_file), copy.copy(self)))
 
         # Check for space before \n
         # for item in self:
@@ -138,7 +142,7 @@ class PropFile(list):
         with open(file, 'r') as fh:
             line_number: int = 0
 
-            report_group = ReportGroup('Duplicated keys')
+            duplicated_keys = ReportGroup('Duplicated keys')
 
             while True:
                 line_number += 1
@@ -155,36 +159,37 @@ class PropFile(list):
                 # Skip empty lines
                 if line.strip() == '':
                     self.append(PropEmpty())
+                    continue
 
-                elif line[0] in Config.ALLOWED_COMMENT_MARKERS:
+                if line[0] in Config.ALLOWED_COMMENT_MARKERS:
                     # Let's look for commented out keys.
                     match = re.compile(comment_pattern).match(line)
                     if match:
                         self.commented_out_keys.append(match.group(1))
                     self.append(PropComment(line))
+                    continue
 
+                if not self.separator:
+                    # Let's look for used separator character
+                    for i in range(len(line)):
+                        if line[i] in Config.ALLOWED_SEPARATORS:
+                            self.separator = line[i]
+                            break
+
+                tmp: List[str] = line.split(self.separator)
+                if len(tmp) < 2:
+                    Log.abort([f'Invalid syntax. Line {line_number}, file: {file}',
+                               f'Using "{self.separator}" as separator.'])
+
+                key = tmp[0].strip()
+                val = ''.join(tmp[1:]).lstrip()
+                if key not in self.keys:
+                    self.keys.append(key)
+                    self.append(PropTranslation(key, val, self.separator))
                 else:
-                    if not self.separator:
-                        # Let's look for used separator character
-                        for i in range(len(line)):
-                            if line[i] in Config.ALLOWED_SEPARATORS:
-                                self.separator = line[i]
-                                break
+                    duplicated_keys.error(line_number, f'Duplicated key "{key}".')
 
-                    tmp: List[str] = line.split(self.separator)
-                    if len(tmp) < 2:
-                        Log.abort([f'Invalid syntax. Line {line_number}, file: {file}',
-                                   f'Using "{self.separator}" as separator.'])
-
-                    key = tmp[0].strip()
-                    val = ''.join(tmp[1:]).lstrip()
-                    if key not in self.keys:
-                        self.keys.append(key)
-                        self.append(PropTranslation(key, val, self.separator))
-                    else:
-                        report_group.error(line_number, f'Duplicated key "{key}".')
-
-            if not report_group.empty():
-                self.report.add(report_group)
+            if not duplicated_keys.empty():
+                self.report.add(duplicated_keys)
 
         return True

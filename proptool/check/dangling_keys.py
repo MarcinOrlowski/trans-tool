@@ -28,6 +28,6 @@ class DanglingKeys(Check):
                 my_keys.remove(key)
 
         for key in my_keys:
-            report.error(None, key)
+            report.error(None, f'Not present in base file: "{key}".')
 
         return report

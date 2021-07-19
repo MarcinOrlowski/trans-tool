@@ -24,9 +24,10 @@ class PropTranslation(PropEntry):
     Class representing valid translation entry.
     """
 
-    def __init__(self, key: str, value: str = None, separator: str = ':') -> None:
+    def __init__(self, key: str, value: str = None, separator: str = '=') -> None:
         key = key.strip()
         assert len(key) > 0
+        assert separator in [':', '=']
 
         self.key = key
         self.value = value

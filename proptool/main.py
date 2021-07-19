@@ -59,6 +59,7 @@ class PropTool:
 
     def main(self) -> int:
         config = Config(self._parse_args())
+        Log.configure(config)
 
         errors = 0
         for file_str in config.files:

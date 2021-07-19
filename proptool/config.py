@@ -39,6 +39,7 @@ class Config:
             self.strict = args.strict
             self.fix = args.fix
             self.languages = args.languages
+            self.debug = args.debug
 
             self._from_args(args)
 

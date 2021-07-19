@@ -255,7 +255,7 @@ class Log(object):
         if condition and messages is not None and Log.is_debug():
             postfix = Log._get_stacktrace_string()
             for message in Log._to_list(messages):
-                raw_msg = message + ' [DEBUG]'
+                raw_msg = f'[D] {message}'
                 message = Log._format_log_line(raw_msg, Log.COLOR_DEBUG, postfix)
                 postfix = ''
                 print(message)

@@ -27,13 +27,13 @@ class TrailingWhiteChars(Check):
         report = ReportGroup('Trailing white characters')
         for idx, item in enumerate(translation_file):
             if isinstance(item, (PropTranslation, PropComment)):
-                diff = len(item.value) - len(item.value.rstrip())
-                if diff == 0:
+                diff_count = len(item.value) - len(item.value.rstrip())
+                if diff_count == 0:
                     continue
 
                 if isinstance(item, PropTranslation):
-                    report.error(idx + 1, f'In "{item.key}" entry: {diff}')
+                    report.error(idx + 1, f'In "{item.key}" entry: {diff_count}.')
                 else:
-                    report.warn(idx + 1, f'In comment: {diff}')
+                    report.warn(idx + 1, f'In comment: {diff_count}.')
 
         return report
