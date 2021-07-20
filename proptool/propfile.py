@@ -11,6 +11,7 @@ import re
 from pathlib import Path
 from typing import List, Union
 
+from .check.brackets import Brackets
 from .check.dangling_keys import DanglingKeys
 from .check.empty_translations import EmptyTranslations
 from .check.key_format import KeyFormat
@@ -92,6 +93,7 @@ class PropFile(list):
             EmptyTranslations,
             WhiteCharsBeforeLinefeed,
             KeyFormat,
+            Brackets,
         ]
         for validator in checks:
             # Each validator gets copy of the files, to prevent any potential destructive operation.
