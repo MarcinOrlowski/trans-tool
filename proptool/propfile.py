@@ -46,8 +46,6 @@ class PropFile(list):
         self.separator: str = config.separator
         self.loaded: bool = False
 
-        # self.language: List[str] = [] if language is None else language
-
         self.report = Report(config)
 
         if file is not None:
