@@ -1,0 +1,38 @@
+#
+# prop-tool
+# Java *.properties file sync checker and syncing tool.
+#
+# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# https://github.com/MarcinOrlowski/prop-tool/
+#
+
+name: "Unit tests"
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master, dev ]
+
+jobs:
+  unittests:
+    name: "Unit testsc check"
+    runs-on: ubuntu-latest
+
+    steps:
+      # https://github.com/marketplace/actions/checkout
+      - name: "Checkout sources"
+        uses: actions/checkout@v2
+
+      # https://github.com/marketplace/actions/paths-changes-filter
+      - name: "Look for changed files..."
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            srcs:
+              - '**/*.py'
+
+      - name: "Running unit tests..."
+        if: steps.filter.outputs.srcs == 'true'
+        run: python -m unittest discover tests
