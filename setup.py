@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+"""
 #
 # prop-tool
 # Java *.properties file sync checker and syncing tool.
@@ -15,6 +16,7 @@
 # pip install --upgrade dist/prop_tool-1.1.0-py3-none-any.whl
 # twine upload dist/*
 #
+"""
 
 from proptool.const import Const
 from setuptools import setup, find_packages
@@ -38,23 +40,23 @@ setup(
         ],
     },
 
-    author = "Marcin Orlowski",
-    author_email = "mail@marcinOrlowski.com",
-    description = "prop-tool: Java *.properties file sync checker and syncing tool.",
+    author = 'Marcin Orlowski',
+    author_email = 'mail@marcinOrlowski.com',
+    description = 'prop-tool: Java *.properties file sync checker and syncing tool.',
     long_description = readme,
-    long_description_content_type = "text/markdown",
+    long_description_content_type = 'text/markdown',
     url = Const.APP_URL,
-    keywords = "java properties sync check validation",
+    keywords = 'java properties sync check validation',
     project_urls = {
-        "Bug Tracker":   "https://github.com/MarcinOrlowski/prop-tool/issues/",
-        "Documentation": "https://github.com/MarcinOrlowski/prop-tool/",
-        "Source Code":   "https://github.com/MarcinOrlowski/prop-tool/",
+        'Bug Tracker':   'https://github.com/MarcinOrlowski/prop-tool/issues/',
+        'Documentation': 'https://github.com/MarcinOrlowski/prop-tool/',
+        'Source Code':   'https://github.com/MarcinOrlowski/prop-tool/',
     },
     # https://choosealicense.com/
-    license = "MIT License",
+    license = 'MIT License',
     classifiers = [
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
+        'Programming Language :: Python :: 3',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
     ],
 )
