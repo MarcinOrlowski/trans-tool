@@ -16,7 +16,7 @@ on:
 
 jobs:
   unittests:
-    name: "Testing"
+    name: "Linting"
     runs-on: ubuntu-latest
 
     steps:

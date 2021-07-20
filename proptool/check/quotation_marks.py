@@ -66,8 +66,7 @@ class QuotationMarks(Check):
                     continue
 
                 if isinstance(item, PropTranslation):
-                    report.error(position,
-                                 f'"{item.key}": Quotation mark mismatch. Expected {popped.mark}, found {current_char}.')
+                    report.error(position, f'Quotation mark mismatch. Expected {popped.mark}, found {current_char}.', item.key)
                 else:
                     report.warn(position, f'Quotation mark mismatch. Expected {popped.mark}, found {current_char}.')
                 # Just show single error per line to avoid flooding.
@@ -80,7 +79,7 @@ class QuotationMarks(Check):
                     if isinstance(item, PropComment):
                         report.warn(position, f'No closing mark for {bracket.mark}.')
                     else:
-                        report.error(position, f'"{item.key}": No closing mark for {bracket.mark}.')
+                        report.error(position, f'No closing mark for {bracket.mark}.', item.key)
                     # Just show single error per line to avoid flooding.
                     break
 
