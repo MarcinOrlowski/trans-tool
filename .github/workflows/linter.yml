@@ -37,6 +37,6 @@ jobs:
       # https://wemake-python-stylegui.de/en/latest/pages/usage/integrations/github-actions.html
       - name: "Running linter..."
         if: steps.filter.outputs.srcs == 'true'
-        uses: wemake-services/wemake-python-styleguide@latest
+        uses: wemake-services/wemake-python-styleguide@0.15.3
         with:
           reporter: 'terminal'
