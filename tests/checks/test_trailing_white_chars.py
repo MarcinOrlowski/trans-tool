@@ -30,10 +30,10 @@ class TestTrailingWhiteChars(ChecksTestCase):
         self.do_single_test(PropTranslation('key', 'value'))
 
     def test_translation_with_trailing_white_chars(self):
-        self.do_single_test(PropTranslation('key', 'value  '), expected_errors = 1)
+        self.do_single_test(PropTranslation('key', 'value  '), exp_errors = 1)
 
     def test_comment_no_trailing_white_chars(self):
         self.do_single_test(PropComment('# value'))
 
     def test_comment_with_trailing_white_chars(self):
-        self.do_single_test(PropComment('# value  '), expected_warnings = 1)
+        self.do_single_test(PropComment('# value  '), exp_warnings = 1)

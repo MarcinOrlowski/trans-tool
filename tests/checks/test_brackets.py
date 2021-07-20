@@ -32,11 +32,11 @@ class TestBrackets(ChecksTestCase):
 
     def test_translation_with_faults(self):
         # Tests error handling when we have popping bracket and empty stack.
-        self.do_single_test(PropTranslation('key', '>'), expected_errors = 1)
+        self.do_single_test(PropTranslation('key', '>'), exp_errors = 1)
         # Tests the case where we done with checks and something left on stack.
-        self.do_single_test(PropTranslation('key', '(<>'), expected_errors = 1)
+        self.do_single_test(PropTranslation('key', '(<>'), exp_errors = 1)
         # Text the case where we have matches, but not in order.
-        self.do_single_test(PropTranslation('key', '<(>)'), expected_errors = 1)
+        self.do_single_test(PropTranslation('key', '<(>)'), exp_errors = 1)
 
     # #################################################################################################
 
@@ -45,8 +45,8 @@ class TestBrackets(ChecksTestCase):
 
     def test_comment_with_faults(self):
         # Tests error handling when we have popping bracket and empty stack.
-        self.do_single_test(PropComment('# foo]"  '), expected_warnings = 1)
+        self.do_single_test(PropComment('# foo]"  '), exp_warnings = 1)
         # Tests the case where we done with checks and something left on stack.
-        self.do_single_test(PropComment('# <fo[o]" '), expected_warnings = 1)
+        self.do_single_test(PropComment('# <fo[o]" '), exp_warnings = 1)
         # Text the case where we have matches, but not in order.
-        self.do_single_test(PropComment('# [foo <]>" '), expected_warnings = 1)
+        self.do_single_test(PropComment('# [foo <]>" '), exp_warnings = 1)

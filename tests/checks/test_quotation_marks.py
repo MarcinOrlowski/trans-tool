@@ -30,7 +30,7 @@ class TestQuotationMarks(ChecksTestCase):
         self.do_single_test(PropTranslation('key', '""'))
 
     def test_translation_with_faults(self):
-        self.do_single_test(PropTranslation('key', '"""'), expected_errors = 1)
+        self.do_single_test(PropTranslation('key', '"""'), exp_errors = 1)
 
     # #################################################################################################
 
@@ -38,4 +38,4 @@ class TestQuotationMarks(ChecksTestCase):
         self.do_single_test(PropComment('#  "foo" '))
 
     def test_comment_with_faults(self):
-        self.do_single_test(PropComment('# "foo `"  '), expected_warnings = 1)
+        self.do_single_test(PropComment('# "foo `"  '), exp_warnings = 1)
