@@ -38,5 +38,3 @@ jobs:
       - name: "Running linter..."
         if: steps.filter.outputs.srcs == 'true'
         uses: wemake-services/wemake-python-styleguide@0.15.3
-        with:
-          reporter: 'terminal'
