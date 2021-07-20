@@ -43,7 +43,7 @@ class WhiteCharsBeforeLinefeed(Check):
             if not isinstance(item, PropTranslation):
                 continue
 
-            for literal in {r'\n', r'\r'}:
+            for literal in (r'\n', r'\r'):
                 # Skip too short lines.
                 literal_len = len(literal)
                 if len(item.value.strip()) <= literal_len:

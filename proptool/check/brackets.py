@@ -79,7 +79,6 @@ class Brackets(Check):
                             bracket_idx = opening.index(popped.bracket)
                             expected = closing[bracket_idx]
                             if current_char != expected:
-                                item_key = None
                                 if isinstance(item, PropTranslation):
                                     report.error(position, f'Expected "{expected}", found "{current_char}".', item.key)
                                 else:

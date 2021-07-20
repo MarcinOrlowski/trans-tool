@@ -6,8 +6,7 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
-
-import sys
+from sys import exit
 from typing import List, Union
 
 
@@ -22,4 +21,4 @@ class Utils(object):
         if isinstance(msg, str):
             msg = [msg]
         print(msg)
-        sys.exit(rc)
+        exit(rc)

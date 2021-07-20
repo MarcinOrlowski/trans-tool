@@ -67,7 +67,7 @@ class Config(object):
                 self.punctuation_exception_langs = args.punctuation_exception_langs
 
             # Comment template.
-            for placeholder in {'COM', 'SEP', 'KEY'}:
+            for placeholder in ('COM', 'SEP', 'KEY'):
                 if args.comment_template.find(placeholder) == -1:
                     Utils.abort(f'Missing literal in comment template: {placeholder}')
             self.comment_template = args.comment_template

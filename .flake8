@@ -5,6 +5,9 @@
 # in venv
 # pip install wemake-python-styleguide
 # flake8 proptool/report/
+#
+# Refactoring hitns:
+# https://flake8.codes/wemake-python-styleguide/0.15.3/index.html
 
 max-line-length = 132
 
@@ -134,7 +137,8 @@ per-file-ignores =
     proptool/propfile.py: WPS201, WPS230,
 
     # WPS421 Found wrong function call: print
-    proptool/utils.py: WPS421,
+    # WPS100 Found wrong module name
+    proptool/utils.py: WPS421, WPS100,
 
     # S311 Standard pseudo-random generators are not suitable for security/cryptographic purposes.
     tests/*: S311,
