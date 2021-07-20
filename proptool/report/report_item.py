@@ -9,7 +9,7 @@
 from typing import Union
 
 
-class ReportItem:
+class ReportItem(object):
     def __init__(self, line: Union[str, None], msg: str) -> None:
         self.line = line
         self.msg = msg
@@ -17,5 +17,4 @@ class ReportItem:
     def to_string(self) -> str:
         if self.line:
             return f'Line {self.line}: {self.msg}'
-        else:
-            return f'{self.msg}'
+        return f'{self.msg}'

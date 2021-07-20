@@ -6,6 +6,7 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+
 from typing import Union
 
 from .report_item import ReportItem
@@ -23,24 +24,24 @@ class ReportGroup(list):
         self.warnings = 0
         self.errors = 0
 
-    def add(self, item: ReportItem) -> None:
-        item_cls = type(item)
+    def add(self, report_item: ReportItem) -> None:
+        item_cls = type(report_item)
         if not issubclass(item_cls, ReportItem):
             raise TypeError(f'Item must be instance of {ReportItem}. {item_cls} given.')
-        self.append(item)
+        self.append(report_item)
 
     def empty(self) -> bool:
         return (self.errors + self.warnings) == 0
 
     def warn(self, line: Union[str, int, None], msg: str) -> None:
-        if type(line) != str:
+        if not isinstance(line, str):
             line = str(line)
 
         self.append(Warn(line, msg))
         self.warnings += 1
 
     def error(self, line: Union[str, int, None], msg: str) -> None:
-        if type(line) != str:
+        if not isinstance(line, str):
             line = str(line)
         self.append(Error(line, msg))
         self.errors += 1

@@ -6,6 +6,7 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+
 from typing import List
 
 from ..config import Config
@@ -16,9 +17,9 @@ from .report_group import ReportGroup
 
 # #################################################################################################
 
-class Report:
+class Report(object):
     def __init__(self, config: Config):
-        self.__groups: List[ReportGroup] = []
+        self._groups: List[ReportGroup] = []
         self.config = config
 
     @property
@@ -27,10 +28,7 @@ class Report:
         Returns cumulative number of errors in whole report.
         :return:
         """
-        result = 0
-        for group in self.__groups:
-            result += group.errors
-        return result
+        return sum(group.errors for group in self._groups)
 
     @property
     def warnings(self) -> int:
@@ -38,10 +36,7 @@ class Report:
         Returns cumulative number of warnings in whole report.
         :return:
         """
-        result = 0
-        for group in self.__groups:
-            result += group.warnings
-        return result
+        return sum(group.warnings for group in self._groups)
 
     def is_fatal(self) -> bool:
         """
@@ -60,10 +55,10 @@ class Report:
             raise TypeError(f'Item must be instance of {ReportGroup}. {item_cls} given.')
         if skip_empty and report_group.empty():
             return
-        self.__groups.append(report_group)
+        self._groups.append(report_group)
 
     def empty(self) -> bool:
-        return len(self.__groups) == 0
+        return not self._groups
 
     def dump(self):
         errors = self.errors
@@ -89,7 +84,7 @@ class Report:
         else:
             Log.push_w(label)
 
-        for entry in self.__groups:
+        for entry in self._groups:
             entry.dump(self.config.fatal)
 
         Log.pop()
