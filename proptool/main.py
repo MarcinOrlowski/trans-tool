@@ -57,6 +57,8 @@ class PropTool:
         group.add_argument('-q', '--quiet', action = 'store_true', dest = 'quiet')
         group.add_argument('-v', '--verbose', action = 'store_true', dest = 'verbose',
                            help = 'Produces more verbose reports')
+        group.add_argument('-nc', '--no-color', action = 'store_true', dest = 'no_color',
+                           help = 'Disables use of ANSI colors.')
         group.add_argument('--debug', action = 'store_true', dest = 'debug',
                            help = 'Enables debug output')
 

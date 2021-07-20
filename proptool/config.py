@@ -30,8 +30,10 @@ class Config:
         self.comment_marker: str = '#'
         self.comment_template: str = Config.DEFAULT_COMMENT_TEMPLATE
         self.punctuation_exception_langs: List[str] = []
+
         self.debug = False
         self.debug_verbose = 1  # Log.VERBOSE_NORMAL
+        self.no_color = False
 
         self.checks = {
             'KeyFormat': {
@@ -46,6 +48,7 @@ class Config:
             self.fix = args.fix
             self.languages = args.languages
             self.debug = args.debug
+            self.no_color = args.no_color
 
             self._from_args(args)
 
