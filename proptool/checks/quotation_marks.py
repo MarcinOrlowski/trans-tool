@@ -38,21 +38,18 @@ class QuotationMarks(Check):
     def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
         report = ReportGroup('Quotation marks')
 
+        # NOTE: we do not support apostrophe, because i.e. in English it can be used in sentence: "Dogs' food"
+        # Not sure how to deal with this (and I do not want to do dictionary match)
+        supported_marks: List[str] = {'"', '`'}
+
         for line_idx, item in enumerate(translation_file):
             # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
             if not isinstance(item, (PropTranslation, PropComment)):
                 continue
 
-            # NOTE: we do not support apostrophe, because i.e. in English it can be used in sentence: "Dogs' food"
-            # Not sure how to deal with this (and I do not want to do dictionary match)
-            marks: List[str] = ['"', '`']
-
             stack: List[Mark] = []
-            has_errors = False
             for pos, current_char in enumerate(item.value):
-                position: str = f'{line_idx + 1}:{pos + 1}'
-
-                if current_char not in marks:
+                if current_char not in supported_marks:
                     continue
 
                 if not stack:
@@ -60,27 +57,22 @@ class QuotationMarks(Check):
                     stack.append(Mark(pos, current_char))
                     continue
 
-                popped = stack.pop()
-                if popped.mark == current_char:
+                # If stack is not empty then we see if the last item is a match. If not,
+                # we assume this attempt to nest the quotation marks. If that's not the case
+                # we will catch that later anyway as we will have it left on stack.
+                if stack[-1].mark == current_char:
                     # It it matches our mark, then it's the right one :)
+                    stack.pop()
                     continue
+                stack.append(Mark(pos, current_char))
 
+            for quotation_mark in stack:
+                position: str = f'{line_idx + 1}:{quotation_mark.pos + 1}'
                 if isinstance(item, PropTranslation):
-                    report.error(position, f'Quotation mark mismatch. Expected {popped.mark}, found {current_char}.', item.key)
+                    report.error(position, f'No paired mark for {quotation_mark.mark}.', item.key)
                 else:
-                    report.warn(position, f'Quotation mark mismatch. Expected {popped.mark}, found {current_char}.')
+                    report.warn(position, f'No paired mark for {quotation_mark.mark}.')
                 # Just show single error per line to avoid flooding.
-                has_errors = True
                 break
-
-            if not has_errors:
-                for bracket in stack:
-                    position: str = f'{line_idx + 1}:{bracket.pos + 1}'
-                    if isinstance(item, PropComment):
-                        report.warn(position, f'No closing mark for {bracket.mark}.')
-                    else:
-                        report.error(position, f'No closing mark for {bracket.mark}.', item.key)
-                    # Just show single error per line to avoid flooding.
-                    break
 
         return report

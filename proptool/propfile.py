@@ -33,7 +33,7 @@ from .utils import Utils
 # #################################################################################################
 
 class PropFile(list):
-    def __init__(self, config: Config, file: Path, language: List[str] = None):
+    def __init__(self, config: Config, file: Union[Path, None] = None, language: List[str] = None):
         super().__init__()
 
         self.config: Config = config
@@ -46,7 +46,7 @@ class PropFile(list):
         self.separator: str = config.separator
         self.loaded: bool = False
 
-        self.language: List[str] = [] if language is None else language
+        # self.language: List[str] = [] if language is None else language
 
         self.report = Report(config)
 

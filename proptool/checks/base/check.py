@@ -18,6 +18,8 @@ from ...report.report import Report
 # noinspection PyUnresolvedReferences
 class Check(ABC):
     def __init__(self, config: Config):
+        if not isinstance(config, Config):
+            raise ValueError('Invalid type of config passed.')
         self.config = config
 
     @abstractmethod
