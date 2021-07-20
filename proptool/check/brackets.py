@@ -57,7 +57,7 @@ class Brackets(Check):
                 elif current_char in closing:
                     if stack:
                         if isinstance(item, PropTranslation):
-                            report.error(position, f'"{item.key}": No opening bracket matching "{current_char}".')
+                            report.error(position, f'No opening bracket matching "{current_char}".', item.key)
                         else:
                             report.warn(position, f'No opening bracket matching "{current_char}".')
                         # Just show single error per line to avoid flooding.
@@ -68,7 +68,7 @@ class Brackets(Check):
                         # Check if what we popped from the stack is one of opening brackets.
                         if popped.bracket not in opening:
                             if isinstance(item, PropTranslation):
-                                report.error(position, f'"{item.key}: No opening bracket matching "{current_char}".')
+                                report.error(position, f'No opening bracket matching "{current_char}".', item.key)
                             else:
                                 report.warn(position, f'No opening bracket matching "{current_char}".')
                             # Just show single error per line to avoid flooding.
@@ -80,9 +80,10 @@ class Brackets(Check):
                             expected = closing[bracket_idx]
                             if current_char != expected:
                                 if isinstance(item, PropTranslation):
-                                    report.error(position, f'"{item.key}: Incorrect type. Expected "{expected}", found "{current_char}".')
+                                    report.error(position, f'Incorrect type. Expected "{expected}", found "{current_char}".',
+                                                 item.key)
                                 else:
-                                    report.error(position, f'"Incorrect type. Expected "{expected}", found "{current_char}".')
+                                    report.error(position, f'Incorrect type. Expected "{expected}", found "{current_char}".')
                                 # Just show single error per line to avoid flooding.
                                 has_errors = True
                                 break
@@ -93,7 +94,7 @@ class Brackets(Check):
                     if isinstance(item, PropComment):
                         report.warn(position, f'No closing bracket for "{bracket.bracket}"')
                     else:
-                        report.error(position, f'"{item.key}": No closing bracket for "{bracket.bracket}".')
+                        report.error(position, f'No closing bracket for "{bracket.bracket}".', item.key)
                     # Just show single error per line to avoid flooding.
                     break
 

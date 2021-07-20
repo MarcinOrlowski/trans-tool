@@ -66,7 +66,7 @@ class FormattingValues(Check):
                 continue
 
             if len(trans_items) != len(ref_items):
-                report.error(idx + 1, f'"{item.key}": Expected {len(ref_items)} formatters, found {len(trans_items)}.')
+                report.error(idx + 1, f'Expected {len(ref_items)} formatters, found {len(trans_items)}.', item.key)
                 continue
 
             # Count matches, let's check the order now.
@@ -77,8 +77,8 @@ class FormattingValues(Check):
                 if ref_pop.formatter == trans_pop.formatter:
                     continue
 
-                report.error(f'{idx + 1}:{trans_pop.pos + 1}',
-                             f'"{item.key}": Expected "{ref_pop.formatter}", found "{trans_pop.formatter}".')
+                pos = f'{idx + 1}:{trans_pop.pos + 1}'
+                report.error(pos, f'Expected "{ref_pop.formatter}", found "{trans_pop.formatter}".', item.key)
                 break
 
         return report

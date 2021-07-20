@@ -33,17 +33,17 @@ class ReportGroup(list):
     def empty(self) -> bool:
         return (self.errors + self.warnings) == 0
 
-    def warn(self, line: Union[str, int, None], msg: str) -> None:
+    def warn(self, line: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> None:
         if not isinstance(line, str):
             line = str(line)
 
-        self.append(Warn(line, msg))
+        self.append(Warn(line, msg, trans_key))
         self.warnings += 1
 
-    def error(self, line: Union[str, int, None], msg: str) -> None:
+    def error(self, line: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> None:
         if isinstance(line, int):
             line = str(line)
-        self.append(Error(line, msg))
+        self.append(Error(line, msg, trans_key))
         self.errors += 1
 
     def dump(self, show_warnings_as_errors: bool = False):

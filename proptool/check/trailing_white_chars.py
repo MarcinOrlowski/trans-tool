@@ -33,8 +33,8 @@ class TrailingWhiteChars(Check):
                     continue
 
                 if isinstance(item, PropTranslation):
-                    report.error(idx + 1, f'In "{item.key}" entry: {diff_count}.')
+                    report.error(idx + 1, f'Trailing white chars: {diff_count}.', item.key)
                 else:
-                    report.warn(idx + 1, f'In comment: {diff_count}.')
+                    report.warn(idx + 1, f'Trailing white chars in comment: {diff_count}.')
 
         return report
