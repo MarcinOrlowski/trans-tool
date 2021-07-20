@@ -13,7 +13,7 @@ Base: mark.properties
     Brackets
       W: Line 3:16: No closing bracket for "<"
   PL: brackets_pl.properties
-    Errors: 6, warnings: 2
+    Errors: 8, warnings: 3
       Sentence starts with different letter case.
         E: Line 8: "missingClosing" starts with lower-cased character. Expected UPPER-cased.
       Trailing white characters
@@ -26,6 +26,10 @@ Base: mark.properties
         E: Line 2:1: "missingClosing": No closing bracket for "(".
         W: Line 3:16: No closing bracket for "<"
         E: Line 4:4: "missingOpening": No opening bracket matching ")".
+      Quotation marks
+        E: Line 12:5: "missingSingle": Quotation mark mismatch. Expected ", found `.
+        E: Line 13:5: "remaining": Quotation mark mismatch. Expected ", found `.
+        W: Line 14:11: No closing mark for ".
 ```
 
 Based on `*.properties`
@@ -45,6 +49,7 @@ For base file it executes following validators:
 * WhiteCharsBeforeLinefeed: ensures there's no space nor tab character placed before linefeed literals (`\n` and `\r`).
 * KeyFormat: ensures key string matches defined pattern.
 * Brackets: ensures all brackets opened are closed and there's no unpaired bracket.
+* QuotationMarks: ensures all quotation marks are unpaired.
 
 For translation files, the following checks are performed:
 
@@ -58,6 +63,7 @@ For translation files, the following checks are performed:
 * WhiteCharsBeforeLinefeed: ensures there's no space nor tab character placed before linefeed literals (`\n` and `\r`).
 * KeyFormat: ensures key string matches defined pattern.
 * Brackets: ensures all brackets opened are closed and there's no unpaired bracket.
+* QuotationMarks: ensures all quotation marks are unpaired.
 
 NOTE: as this is quite common that translation file may not be updated instantly, `prop-tool` considers key presence condition
 fulfilled also when given key exists in `B` file but is commented out and follow expected comment format:

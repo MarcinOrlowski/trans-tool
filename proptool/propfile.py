@@ -17,6 +17,7 @@ from .check.empty_translations import EmptyTranslations
 from .check.key_format import KeyFormat
 from .check.missing_translation import MissingTranslation
 from .check.punctuation import Punctuation
+from .check.quotation_marks import QuotationMarks
 from .check.starts_with_the_same_case import StartsWithTheSameCase
 from .check.trailing_white_chars import TrailingWhiteChars
 from .check.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
@@ -94,6 +95,7 @@ class PropFile(list):
             WhiteCharsBeforeLinefeed,
             KeyFormat,
             Brackets,
+            QuotationMarks,
         ]
         for validator in checks:
             # Each validator gets copy of the files, to prevent any potential destructive operation.

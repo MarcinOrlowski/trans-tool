@@ -8,6 +8,8 @@
   * Added `KeyFormat` check.
   * Added `Punctuation` check.
   * Added `EmptyTranslations` check.
+  * Added `Brackets` check.
+  * Added `QuotationMarks` check.
 
 * v1.1.0 (2021-07-19)
   * String format for commented-out entries can now be configured.
