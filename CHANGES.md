@@ -1,5 +1,14 @@
 # Changelog #
 
+* @dev
+  * Reworked report formatting.
+  * Added `--fatal` to make warnings fatal as errors.
+  * Added `WhiteCharsBeforeLinefeed` check.
+  * Added `StartsWithTheSameCase` check.
+  * Added `KeyFormat` check.
+  * Added `Punctuation` check.
+  * Added `EmptyTranslations` check.
+
 * v1.1.0 (2021-07-19)
   * String format for commented-out entries can now be configured.
   * Added option to specify comment character.
