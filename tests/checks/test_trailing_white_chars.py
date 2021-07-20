@@ -6,29 +6,23 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
-from fake_config import FakeConfig
+from checks.checks_test_case import ChecksTestCase
+from proptool.checks.base.check import Check
 from proptool.checks.trailing_white_chars import TrailingWhiteChars
-from proptool.entries import PropComment, PropEntry, PropTranslation
-from proptool.propfile import PropFile
-from test_case import TestCase
+from proptool.config import Config
+from proptool.entries import PropComment, PropTranslation
+from proptool.overrides import overrides
 
 
 # #################################################################################################
 
-class TestTrailingWhiteChars(TestCase):
+class TestTrailingWhiteChars(ChecksTestCase):
 
-    def setUp(self):
-        self.config = FakeConfig()
-        self.checker = TrailingWhiteChars(self.config)
+    @overrides(ChecksTestCase)
+    def get_checker(self, config: Config) -> Check:
+        return TrailingWhiteChars(config)
 
-    def do_single_test(self, entry: PropEntry, expected_errors: int = 0, expected_warnings: int = 0):
-        prop_file = PropFile(self.config)
-        prop_file.loaded = True
-        prop_file.append(entry)
-
-        report = self.checker.check(None, prop_file)
-        self.assertEqual(expected_errors, report.errors)
-        self.assertEqual(expected_warnings, report.warnings)
+    # #################################################################################################
 
     def test_translation_no_trailing_white_chars(self):
         self.do_single_test(PropTranslation('key', 'value'))
