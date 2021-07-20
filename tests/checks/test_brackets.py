@@ -14,6 +14,8 @@ from proptool.entries import PropComment, PropTranslation
 from proptool.overrides import overrides
 
 
+# TODO: Test handling other types than PropTranslation, PropComment
+
 # #################################################################################################
 
 class TestBrackets(ChecksTestCase):

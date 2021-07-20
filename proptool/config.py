@@ -37,7 +37,7 @@ class Config(object):
 
         self.checks = {
             'KeyFormat': {
-                'pattern': r'([a-z][a-zA-Z0-9_.]*[a-zA-Z0-9]){2,}',
+                'pattern': r'^[a-z]+[a-zA-Z0-9_.]*[a-zA-Z0-9]+$',
             },
         }
 
