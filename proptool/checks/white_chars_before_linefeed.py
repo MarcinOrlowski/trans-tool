@@ -23,6 +23,7 @@ class WhiteCharsBeforeLinefeed(Check):
 
     def _scan(self, report: ReportGroup, idx: int, item: PropTranslation, literal: str) -> bool:
         literal_len = len(literal)
+        # Let's crawl backward and see what's there...
         for pos in range(len(item.value) - literal_len, 0, -1):
             if item.value[pos:(pos + 2)] == literal:
                 pre = item.value[pos - 1]
