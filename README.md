@@ -9,15 +9,23 @@ based on the content of base file.
 ```bash
 $ prop-tool -b mark -l pl -v
 Base: mark.properties
-  Found 6 errors in "mark_pl.properties":
-    Trailing white characters: 3
-      W: line 2: In comment: 2
-      E: line 4: In "question" entry: 1
-      E: line 5: In "exclamation" entry: 1
-    Punctuation mismatch: 3
-      E: line 2: "question" ends with " ". Expected "?".
-      E: line 3: "exclamation" ends with " ". Expected "!".
-      E: line 4: "newline" ends with "". Expected "\n".
+  Warnings: 1
+    Brackets
+      W: Line 3:16: No closing bracket for "<"
+  PL: brackets_pl.properties
+    Errors: 6, warnings: 2
+      Sentence starts with different letter case.
+        E: Line 8: "missingClosing" starts with lower-cased character. Expected UPPER-cased.
+      Trailing white characters
+        W: line 2: In comment: 2
+        E: line 4: In "question" entry: 1
+      Punctuation mismatch
+        E: line 3: "exclamation" ends with " ". Expected "!".
+        E: line 4: "newline" ends with "". Expected "\n".
+      Bracket mismatch
+        E: Line 2:1: "missingClosing": No closing bracket for "(".
+        W: Line 3:16: No closing bracket for "<"
+        E: Line 4:4: "missingOpening": No opening bracket matching ")".
 ```
 
 Based on `*.properties`
@@ -36,18 +44,20 @@ For base file it executes following validators:
 * Trailing white characters: no trailing spaces nor tabs at the end of each line,
 * WhiteCharsBeforeLinefeed: ensures there's no space nor tab character placed before linefeed literals (`\n` and `\r`).
 * KeyFormat: ensures key string matches defined pattern.
+* Brackets: ensures all brackets opened are closed and there's no unpaired bracket.
 
 For translation files, the following checks are performed:
 
 * Syntax validation: ensures use of allowed comment markers, key - value separators etc.
 * Trailing white characters: no trailing spaces nor tabs at the end of each line.
-* Missing translation: keys found in base file, but missing in translation,
-* Dangling keys: keys found in translation file but not present in base file,
-* Empty translations: empty translations for non-empty text in base file,
-* Case check: ensures translation starts with the same character case (upper/lower) as entry in base file,
-* Punctuation: ensures translation ends with punctuation mark (`:`, `.`, `?`, `!`) if entry if base file ends that way,
+* Missing translation: keys found in base file, but missing in translation.
+* Dangling keys: keys found in translation file but not present in base file.
+* Empty translations: empty translations for non-empty text in base file.
+* Case check: ensures translation starts with the same character case (upper/lower) as entry in base file.
+* Punctuation: ensures translation ends with punctuation mark (`:`, `.`, `?`, `!`) if entry if base file ends that way.
 * WhiteCharsBeforeLinefeed: ensures there's no space nor tab character placed before linefeed literals (`\n` and `\r`).
 * KeyFormat: ensures key string matches defined pattern.
+* Brackets: ensures all brackets opened are closed and there's no unpaired bracket.
 
 NOTE: as this is quite common that translation file may not be updated instantly, `prop-tool` considers key presence condition
 fulfilled also when given key exists in `B` file but is commented out and follow expected comment format:

@@ -48,6 +48,7 @@ class Brackets(Check):
             closing: List[str] = [')', ']', '>', '}']
 
             stack: List[Bracket] = []
+            has_errors = False
             for i in range(len(item.value)):
                 position: str = f'{idx + 1}:{i + 1}'
 
@@ -62,6 +63,7 @@ class Brackets(Check):
                         else:
                             report.warn(position, f'No opening bracket matching "{current_char}".')
                         # Just show single error per line to avoid flooding.
+                        has_errors = True
                         break
                     else:
                         popped: Bracket = stack.pop()
@@ -72,6 +74,7 @@ class Brackets(Check):
                             else:
                                 report.warn(position, f'No opening bracket matching "{current_char}".')
                             # Just show single error per line to avoid flooding.
+                            has_errors = True
                             break
                         else:
                             # Check if this is the right closing bracket type for what we popped from the stack
@@ -84,15 +87,17 @@ class Brackets(Check):
                                 else:
                                     report.error(position, f'"Incorrect type. Expected "{expected}", found "{current_char}".')
                                 # Just show single error per line to avoid flooding.
+                                has_errors = True
                                 break
 
-            for bracket in stack:
-                position: str = f'{idx + 1}:{bracket.pos + 1}'
-                if isinstance(item, PropComment):
-                    report.warn(position, f'No closing bracket for "{bracket.bracket}"')
-                else:
-                    report.error(position, f'"{item.key}": No closing bracket for "{bracket.bracket}".')
-                # Just show single error per line to avoid flooding.
-                break
+            if not has_errors:
+                for bracket in stack:
+                    position: str = f'{idx + 1}:{bracket.pos + 1}'
+                    if isinstance(item, PropComment):
+                        report.warn(position, f'No closing bracket for "{bracket.bracket}"')
+                    else:
+                        report.error(position, f'"{item.key}": No closing bracket for "{bracket.bracket}".')
+                    # Just show single error per line to avoid flooding.
+                    break
 
         return report
