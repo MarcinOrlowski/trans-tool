@@ -133,3 +133,7 @@ per-file-ignores =
 
     # WPS421 Found wrong function call: print
     proptool/utils.py: WPS421,
+
+    # S311 Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+    # I003 isort expected 1 blank line in imports, found 0
+    tests/*: S311, I003,

@@ -28,12 +28,12 @@ class TestReportGroup(TestCase):
         self.assertEqual(0, self.rg.warnings)
         self.assertEqual(0, self.rg.errors)
 
-    def test_add_wrongItemType(self):
+    def test_add_wrong_item_type(self):
         wrong_item = True
         with self.assertRaises(TypeError):
             self.rg.add(wrong_item)
 
-    def test_add_correctItemType(self):
+    def test_add_correct_item_type(self):
         types = [
             ReportItem,
             Error,

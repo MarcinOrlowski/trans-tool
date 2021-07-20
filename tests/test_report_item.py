@@ -15,7 +15,7 @@ from test_case import TestCase
 
 class TestReportItem(TestCase):
 
-    def test_to_string_withLineNumber(self):
+    def test_to_string_with_line_number(self):
         line = random.randint(1, 100)
         msg = self.get_random_string()
 
@@ -23,7 +23,7 @@ class TestReportItem(TestCase):
         ri = ReportItem(line, msg)
         self.assertEqual(expected, ri.to_string())
 
-    def test_to_string_withoutLineNumber(self):
+    def test_to_string_without_line_number(self):
         msg = self.get_random_string()
 
         ri = ReportItem(None, msg)
