@@ -1,0 +1,62 @@
+[flake8]
+#
+# flake8 config file docs: https://flake8.pycqa.org/en/latest/user/configuration.html
+#
+# in venv
+# pip install wemake-python-styleguide
+# flake8 proptool/report/
+
+max-line-length = 100
+
+exclude =
+    .git,
+    __pycache__,
+    # This contains our built documentation
+    build,
+    dist
+
+# it's not a bug that we aren't using all of hacking
+ignore =
+    # D205 1 blank line required between summary line and description
+    D205,
+    # D400 First line should end with a period
+    D400,
+    # RST213 Inline emphasis start-string without end-string.
+    RST213,
+    # WPS300 Found local folder import
+    WPS300,
+    # I004 isort found an unexpected blank line in imports
+    I004,
+    # I001 isort found an import in the wrong position
+    I001,
+    # WPS600 Found subclassing a builtin: list
+    WPS600,
+    # WPS305 Found `f` string
+    WPS305,
+    # D401 First line should be in imperative mood
+    D401,
+    # WPS336 Found explicit string concatenation
+    WPS336,
+
+    # WPS420 Found wrong keyword: pass
+    WPS420,
+    # WPS604 Found incorrect node inside `class` body
+    WPS604
+
+    # D101 Missing docstring in public class
+    D101,
+    # D102 Missing docstring in public method
+    D102,
+    # D107 Missing docstring in __init__
+    D107,
+    # DAR201 Missing "Returns" in Docstring: - return
+    DAR201
+
+per-file-ignores =
+    # WPS420 Found wrong keyword: pass
+    proptool/report/error.py: WPS420,
+    proptool/report/warn.py: WPS420,
+
+    # WPS604 Found incorrect node inside `class` body
+    proptool/report/error.py: WPS604,
+    proptool/report/warn.py: WPS604,
