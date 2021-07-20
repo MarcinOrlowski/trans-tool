@@ -8,13 +8,10 @@
 """
 import random
 
-from proptool.propfile import PropFile
-
 from checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.dangling_keys import DanglingKeys
 from proptool.config import Config
-from proptool.entries import PropTranslation
 from proptool.overrides import overrides
 
 
@@ -30,7 +27,7 @@ class TestDanglingKeys(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_translation_with_faults(self):
+    def test_translation_no_faults(self):
         # generate some keys for translation file
         cnt_min = 20
         cnt_max = 40
