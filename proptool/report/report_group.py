@@ -45,14 +45,18 @@ class ReportGroup(list):
         self.append(Error(line, msg))
         self.errors += 1
 
-    def dump(self):
-        if self.errors > 0:
+    def dump(self, show_warnings_as_errors: bool = False):
+        if show_warnings_as_errors:
+            Log.push_e(self.label)
+        elif self.errors > 0:
             Log.push_e(self.label)
         else:
             Log.push_w(self.label)
 
         for entry in self:
-            if isinstance(entry, Warn):
+            if show_warnings_as_errors:
+                Log.e(entry.to_string())
+            elif isinstance(entry, Warn):
                 Log.w(entry.to_string())
             else:
                 Log.e(entry.to_string())

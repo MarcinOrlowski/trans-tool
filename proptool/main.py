@@ -52,6 +52,8 @@ class PropTool:
         group.add_argument('-t', '--tpl', action = 'store', dest = 'comment_template', metavar = 'TEMPLATE', nargs = 1,
                            default = Config.DEFAULT_COMMENT_TEMPLATE,
                            help = f'Format of commented-out entries. Default: "{Config.DEFAULT_COMMENT_TEMPLATE}"')
+        group.add_argument('-f', '--fatal', action = 'store_true', dest = 'fatal',
+                           help = 'All warnings are fatal (as errors)')
 
         group = parser.add_argument_group('Other')
         group.add_argument('-q', '--quiet', action = 'store_true', dest = 'quiet')
@@ -101,7 +103,7 @@ class PropTool:
                 reference_propfile.report.dump()
 
             # No errors, no problem. Warnings are just fine.
-            if reference_propfile.report.errors == 0:
+            if not reference_propfile.report.is_fatal():
                 for lang in config.languages:
                     translation_path = Path(reference_path.parent / f'{name_prefix}_{lang}.{name_suffix}')
                     translation_propfile = PropFile(config, translation_path, lang)

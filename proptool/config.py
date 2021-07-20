@@ -20,20 +20,20 @@ class Config:
     DEFAULT_COMMENT_TEMPLATE: str = 'COM ==> KEY SEP'
 
     def __init__(self, args: argparse = None):
-        self.verbose: bool = False
-        self.quiet: bool = False
-        self.strict: bool = True
-        self.fix: bool = False
-        self.files: List[str] = []
-        self.languages: List[str] = []
-        self.separator: str = '='
         self.comment_marker: str = '#'
         self.comment_template: str = Config.DEFAULT_COMMENT_TEMPLATE
-        self.punctuation_exception_langs: List[str] = []
-
         self.debug = False
         self.debug_verbose = 1  # Log.VERBOSE_NORMAL
+        self.fatal = False
+        self.files: List[str] = []
+        self.fix: bool = False
+        self.languages: List[str] = []
         self.no_color = False
+        self.punctuation_exception_langs: List[str] = []
+        self.quiet: bool = False
+        self.separator: str = '='
+        self.strict: bool = True
+        self.verbose: bool = False
 
         self.checks = {
             'KeyFormat': {
@@ -42,40 +42,38 @@ class Config:
         }
 
         if args:
-            self.verbose = args.verbose
-            self.quiet = args.quiet
-            self.strict = args.strict
+            self.debug = args.debug
+            self.fatal = args.fatal
             self.fix = args.fix
             self.languages = args.languages
-            self.debug = args.debug
             self.no_color = args.no_color
+            self.quiet = args.quiet
+            self.strict = args.strict
+            self.verbose = args.verbose
 
-            self._from_args(args)
+            # Separator character.
+            separator = args.separator[0]
+            if separator not in Config.ALLOWED_SEPARATORS:
+                Utils.abort(f'Invalid separator. Must be one of the following: {Config.ALLOWED_SEPARATORS}')
+            self.separator = separator
 
-    def _from_args(self, args) -> None:
-        # Separator character.
-        separator = args.separator[0]
-        if separator not in Config.ALLOWED_SEPARATORS:
-            Utils.abort(f'Invalid separator. Must be one of the following: {Config.ALLOWED_SEPARATORS}')
-        self.separator = separator
+            # Comment marker character.
+            comment = args.comment[0]
+            if comment not in Config.ALLOWED_COMMENT_MARKERS:
+                Utils.abort(f'Invalid comment marker. Must be one of the following: {Config.ALLOWED_COMMENT_MARKERS}')
+            self.comment_marker = comment
 
-        # Comment marker character.
-        comment = args.comment[0]
-        if comment not in Config.ALLOWED_COMMENT_MARKERS:
-            Utils.abort(f'Invalid comment marker. Must be one of the following: {Config.ALLOWED_COMMENT_MARKERS}')
-        self.comment_marker = comment
+            if args.punctuation_exception_langs is not None:
+                self.punctuation_exception_langs = args.punctuation_exception_langs
 
-        if args.punctuation_exception_langs is not None:
-            self.punctuation_exception_langs = args.punctuation_exception_langs
+            # Comment template.
+            for key in ['COM', 'SEP', 'KEY']:
+                if args.comment_template.find(key) == -1:
+                    Utils.abort(f'Missing literal in comment template: {key}')
+            self.comment_template = args.comment_template
 
-        # Comment template.
-        for key in ['COM', 'SEP', 'KEY']:
-            if args.comment_template.find(key) == -1:
-                Utils.abort(f'Missing literal in comment template: {key}')
-        self.comment_template = args.comment_template
-
-        # base files
-        for file in args.files:
-            if file[-11:] != '.properties':
-                file += '.properties'
-            self.files.append(str(Path(file)))
+            # base files
+            for file in args.files:
+                if file[-11:] != '.properties':
+                    file += '.properties'
+                self.files.append(str(Path(file)))

@@ -45,7 +45,7 @@ class PropFile(list):
 
         self.language: List[str] = [] if language is None else language
 
-        self.report = Report()
+        self.report = Report(config)
 
         if file is not None:
             self.loaded = self._load(file)

@@ -8,6 +8,7 @@
 """
 from typing import List
 
+from ..config import Config
 from ..log import Log
 
 from .report_group import ReportGroup
@@ -16,8 +17,9 @@ from .report_group import ReportGroup
 # #################################################################################################
 
 class Report:
-    def __init__(self):
+    def __init__(self, config: Config):
         self.__groups: List[ReportGroup] = []
+        self.config = config
 
     @property
     def errors(self) -> int:
@@ -41,6 +43,17 @@ class Report:
             result += group.warnings
         return result
 
+    def is_fatal(self) -> bool:
+        """
+        Helper to determine if report contains fatal errors.
+
+        :return:
+        """
+        cnt = self.errors
+        if self.config.fatal:
+            cnt + self.warnings
+        return cnt > 0
+
     def add(self, report_group: ReportGroup, skip_empty: bool = True) -> None:
         item_cls = type(report_group)
         if not issubclass(item_cls, ReportGroup):
@@ -55,6 +68,10 @@ class Report:
     def dump(self):
         errors = self.errors
         warnings = self.warnings
+
+        if self.config.fatal:
+            errors += warnings
+            warnings = 0
 
         label = ''
         sep = ''
@@ -73,6 +90,6 @@ class Report:
             Log.push_w(label)
 
         for entry in self.__groups:
-            entry.dump()
+            entry.dump(self.config.fatal)
 
         Log.pop()
