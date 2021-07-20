@@ -22,27 +22,28 @@ from .utils import Utils
 from .propfile import PropFile
 
 
-class PropTool:
+class PropTool(object):
     @staticmethod
     def _parse_args() -> argparse:
         parser = argparse.ArgumentParser(
             prog = Const.APP_NAME.lower(),
-            description = f'{Const.APP_NAME} v{Const.APP_VERSION} * Copyright 2021 by Marcin Orlowski.\n' +
-                          'Java properties file checker and syncing tool.\n' +
-                          f'{Const.APP_URL}',
+            description = f'{Const.APP_NAME} v{Const.APP_VERSION}'
+                          + ' * Copyright 2021 by Marcin Orlowski.\n'
+                          + 'Java properties file checker and syncing tool.\n'
+                          + f'{Const.APP_URL}',
             formatter_class = argparse.RawTextHelpFormatter)
 
         group = parser.add_argument_group('Options')
         # group.add_argument('--config', action = 'store', dest = 'config', nargs = 1, metavar = 'FILE',
         #                    help = 'Use specified config file. Note command line arguments can override config!')
         group.add_argument('-b', '--base', action = 'store', dest = 'files', nargs = '+', metavar = 'FILE',
-                           help = f'List of base files to check.')
+                           help = 'List of base files to check.')
         group.add_argument('-l', '--lang', action = 'store', dest = 'languages', nargs = '+', metavar = 'LANG', required = True,
-                           help = f'List of languages to check (space separated if more than one, i.e. "de pl").')
+                           help = 'List of languages to check (space separated if more than one, i.e. "de pl").')
         group.add_argument('--fix', action = 'store_true', dest = 'fix',
-                           help = "Updated translation files in-place. No backup!")
+                           help = 'Updated translation files in-place. No backup!')
         group.add_argument('--pe', '--punctuation-exception', dest = 'punctuation_exception_langs', nargs = '*', metavar = 'LANG',
-                           help = f'List of languages for which punctuation mismatch should not be checked for, i.e. "jp"')
+                           help = 'List of languages for which punctuation mismatch should not be checked for, i.e. "jp"')
         group.add_argument('-s', '--strict', action = 'store_true', dest = 'strict',
                            help = 'Controls strict validation mode.')
         group.add_argument('--sep', action = 'store', dest = 'separator', metavar = 'CHAR', nargs = 1, default = '=',
@@ -125,7 +126,7 @@ class PropTool:
         return 100 if errors else 0
 
 
-class Main:
+class Main(object):
     @staticmethod
     def start() -> int:
         app = PropTool()

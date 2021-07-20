@@ -62,7 +62,8 @@ class PropFile(list):
         :param key: Translation key to look for.
         :return: Instance of PropTranslation or None.
         """
-        for item in list(filter(lambda entry: isinstance(entry, PropTranslation), self)):
+        translations = list(filter(lambda entry: isinstance(entry, PropTranslation), self))
+        for item in translations:
             if item.key == key:
                 return item
         return None
@@ -132,10 +133,9 @@ class PropFile(list):
         """
         Loads and parses *.properties file.
 
-        :param file:
+        :param file: File to load.
         :return:
         """
-
         if not file.exists():
             return False
 
@@ -158,9 +158,9 @@ class PropFile(list):
                     break
 
                 # remove CRLF
-                if len(line) > 0 and line[-1] == '\n':  # LF
+                if line and line[-1] == '\n':  # LF
                     line = line[:-1]
-                if len(line) > 0 and line[-1] == '\r':  # CR
+                if line and line[-1] == '\r':  # CR
                     line = line[:-1]
 
                 # Skip empty lines
@@ -178,9 +178,9 @@ class PropFile(list):
 
                 if not self.separator:
                     # Let's look for used separator character
-                    for i in range(len(line)):
-                        if line[i] in Config.ALLOWED_SEPARATORS:
-                            self.separator = line[i]
+                    for _, single_char in enumerate(line):
+                        if single_char in Config.ALLOWED_SEPARATORS:
+                            self.separator = single_char
                             break
 
                 tmp: List[str] = line.split(self.separator)

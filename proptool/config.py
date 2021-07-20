@@ -14,7 +14,7 @@ from typing import List
 from .utils import Utils
 
 
-class Config:
+class Config(object):
     ALLOWED_SEPARATORS: List[str] = ['=', ':']
     ALLOWED_COMMENT_MARKERS: List[str] = ['#', '!']
     DEFAULT_COMMENT_TEMPLATE: str = 'COM ==> KEY SEP'
@@ -38,7 +38,7 @@ class Config:
         self.checks = {
             'KeyFormat': {
                 'pattern': r'([a-z][a-zA-Z0-9_.]*[a-zA-Z0-9]){2,}',
-            }
+            },
         }
 
         if args:
@@ -67,13 +67,15 @@ class Config:
                 self.punctuation_exception_langs = args.punctuation_exception_langs
 
             # Comment template.
-            for key in ['COM', 'SEP', 'KEY']:
-                if args.comment_template.find(key) == -1:
-                    Utils.abort(f'Missing literal in comment template: {key}')
+            for placeholder in ['COM', 'SEP', 'KEY']:
+                if args.comment_template.find(placeholder) == -1:
+                    Utils.abort(f'Missing literal in comment template: {placeholder}')
             self.comment_template = args.comment_template
 
             # base files
+            suffix = '.properties'
+            suffix_len = len(suffix)
             for file in args.files:
-                if file[-11:] != '.properties':
-                    file += '.properties'
+                if file[suffix_len * -1:] != suffix:
+                    file += suffix
                 self.files.append(str(Path(file)))

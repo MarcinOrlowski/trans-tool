@@ -16,10 +16,10 @@ from typing import List, Union
 
 # #################################################################################################
 
-class Utils:
+class Utils(object):
     @staticmethod
     def abort(msg: Union[str, List[str]] = 'Aborted', rc: int = 10) -> None:
-        if type(msg) == str:
+        if isinstance(msg, str):
             msg = [msg]
         print(msg)
         sys.exit(rc)

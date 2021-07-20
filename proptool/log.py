@@ -19,7 +19,7 @@ from .config import Config
 
 # #################################################################################################
 
-class Ansi:
+class Ansi(object):
     # https://www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html
     RESET = u'\u001b[0m'
     BOLD = u'\u001b[1m'
@@ -48,16 +48,13 @@ class Ansi:
 
     @staticmethod
     def strip(message: Union[str, None]) -> str:
-        """Removes all ANSI control codes from given message string
+        """
+        Removes all ANSI control codes from given message string.
 
-        Args:
-          message: string to be processed
-
-        Returns:
-          message string with ANSI codes striped or None
+        :param message: string to filter
+        :return: message string with ANSI codes striped or None
         """
         if message is not None:
-            import re
             pattern = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
             return pattern.sub('', message)
 
@@ -124,10 +121,10 @@ class Log(object):
     # #################################################################################################
 
     @staticmethod
-    def init(message: Union[str, None] = None, color: Union[str, None] = None, quiet_switch = False) -> None:
+    def init(message: Union[str, None] = None, color: Union[str, None] = None, ignore_quiet = False) -> None:
         Log.log_level = 0
         Log.log_entries = []
-        Log.push(message, color, quiet_switch)
+        Log.push(message, color, ignore_quiet)
 
     @staticmethod
     def push(message: Union[str, None] = None, color: Union[str, None] = None, ignore_quiet = False, deferred = False) -> None:
@@ -215,14 +212,14 @@ class Log(object):
     def w(message = None, condition: bool = True, prefix: str = 'W: ') -> None:
         if condition and message is not None:
             messages = Log._to_list(message)
-            _ = [Log._log(prefix + Ansi.strip(msg), Log.COLOR_WARN, True) for msg in messages]
+            Log._log([prefix + Ansi.strip(msg) for msg in messages], Log.COLOR_WARN, ignore_quiet = True)
 
     # error
     @staticmethod
     def e(messages = None, condition: bool = True, prefix: str = 'E: ') -> None:
         if condition and messages is not None:
             messages = Log._to_list(messages)
-            _ = [Log._log(prefix + Ansi.strip(message), Log.COLOR_ERROR, True) for message in messages]
+            Log._log([prefix + Ansi.strip(message) for message in messages], Log.COLOR_ERROR, ignore_quiet = True)
 
     # debug
     # NOTE: debug entries are not stored in action log
@@ -232,20 +229,15 @@ class Log(object):
             postfix = Log._get_stacktrace_string()
             for message in Log._to_list(messages):
                 raw_msg = f'[D] {message}'
-                message = Log._format_log_line(raw_msg, Log.COLOR_DEBUG, postfix)
+                print(Log._format_log_line(raw_msg, Log.COLOR_DEBUG, postfix))
                 postfix = ''
-                print(message)
 
     # #################################################################################################
 
     @staticmethod
-    def get_entries() -> List[str]:
-        return Log.log_entries
-
-    @staticmethod
     def abort(messages = None) -> None:
         Log.e(messages)
-        Log.init('*** Aborted', Log.COLOR_ERROR, True)
+        Log.init('*** Aborted', Log.COLOR_ERROR, ignore_quiet = True)
 
         if not Log.debug:
             sys.exit(1)
@@ -270,15 +262,12 @@ class Log(object):
 
     @staticmethod
     def substitute_ansi(message) -> str:
-        """Replaces color code placeholder with ANSI values.
-
-        Args:
-          message: message to process
-
-        Returns:
-          message with placeholders replaced with ANSI codes
         """
+        Replaces color code placeholder with ANSI values.
 
+        :param message: message: message to process
+        :return: message with placeholders replaced with ANSI codes
+        """
         if not issubclass(type(message), str):
             message = str(message)
 
@@ -365,8 +354,7 @@ class Log(object):
 
             postfix = Log._get_stacktrace_string()
             for message in Log._to_list(Log._dict_to_list(messages, '%green%')):
-                use_message = False if Log.skip_empty_lines and message else True
-                if use_message:
+                if not Log.skip_empty_lines and message:
                     message = Log._format_log_line(message, color, postfix)
                     Log._log_raw(message, ignore_quiet, add_to_history)
                     postfix = ''

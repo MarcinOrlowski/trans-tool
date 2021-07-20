@@ -9,11 +9,13 @@
 
 
 def overrides(contract) -> callable:
+    """
+    Introduces @overrides decorator. Source: https://stackoverflow.com/a/8313042
+
+    :param contract: Class of method being overridden
+    :return:
+    """
     def overrider(method):
-        """
-        Introduces @overrides decorator.
-        Source: https://stackoverflow.com/a/8313042
-        """
         assert method.__name__ in dir(contract), f"No '{method.__name__}()' to override in '{contract.__name__}' class"
         return method
 

@@ -41,6 +41,16 @@ ignore =
     D200,
     # WPS237 Found a too complex `f` string
     WPS237,
+    # WPS302 Found unicode string prefix
+    WPS302,
+    # WPS115 Found upper-case constant in a class
+    WPS115,
+    # WPS360 Found an unnecessary use of a raw string
+    WPS360,
+    # WPS602 Found using `@staticmethod`
+    WPS602,
+    # E251 unexpected spaces around keyword / parameter equals
+    E251,
 
     # WPS420 Found wrong keyword: pass
     WPS420,
@@ -69,6 +79,10 @@ ignore =
     F821,
     # I005 isort found an unexpected missing import
     I005,
+    # E241 multiple spaces after ':'
+    E241,
+    # DAR101 Missing parameter(s) in Docstring
+    DAR101,
 
     # WPS226 Found string constant over-use: " > 3
     WPS226,
@@ -76,12 +90,46 @@ ignore =
     WPS220,
     # WPS110 Found wrong variable name: item
     WPS110,
+    # WPS605 Found method without arguments
+    WPS605,
+
+    # WPS319 Found bracket in wrong position
+    # WPS318 Found extra indentation
+    WPS319, WPS318
 
 per-file-ignores =
     # WPS420 Found wrong keyword: pass
-    proptool/report/error.py: WPS420,
-    proptool/report/warn.py: WPS420,
-
     # WPS604 Found incorrect node inside `class` body
-    proptool/report/error.py: WPS604,
-    proptool/report/warn.py: WPS604,
+    proptool/report/error.py: WPS420, WPS604,
+    proptool/report/warn.py: WPS420, WPS604,
+
+    # WPS230 Found too many public instance attributes
+    proptool/config.py: WPS230,
+
+    # WPS214 Found too many methods
+    # WPS437 Found protected attribute usage
+    # WPS111 Found too short name
+    # WPS317 Found incorrect multi-line parameters
+    # WPS421 Found wrong function call: print
+    # WPS518 Found implicit `enumerate()` call
+    # WPS323 Found `%` string formatting
+    proptool/log.py: WPS214, WPS437, WPS111, WPS317, WPS421, WPS518, WPS323,
+
+    # WPS201 Found module with too many imports: 13 > 12
+    # WPS213 Found too many expressions: 13 > 9
+    # WPS317 Found incorrect multi-line parameters
+    # W503 line break before binary operator
+    # WPS323 Found `%` string formatting
+    proptool/main.py: WPS201, WPS213, WPS317, W503, WPS323,
+
+    # WPS430 Found nested function: overrider
+    # S101 Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.
+    # WPS421 Found wrong function call: dir
+    proptool/overrides.py: WPS430, S101, WPS421,
+
+    # WPS201 Found module with too many imports: 21 > 12
+    # WPS230 Found too many public instance attributes
+    proptool/propfile.py: WPS201, WPS230,
+
+    # WPS421 Found wrong function call: print
+    proptool/utils.py: WPS421,
