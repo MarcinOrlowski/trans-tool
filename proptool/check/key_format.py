@@ -38,6 +38,6 @@ class KeyFormat(Check):
                 continue
 
             if compiled_pattern.match(item.key) is None:
-                report.error(line_number + 1, f'Key format not match.', item.key)
+                report.error(line_number + 1, 'Invalid key name format.', item.key)
 
         return report

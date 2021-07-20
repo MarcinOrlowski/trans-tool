@@ -33,7 +33,7 @@ class Punctuation(Check):
             if not isinstance(item, PropTranslation):
                 continue
 
-            for last_char in ['.', '?', '!', ':', r'\n']:
+            for last_char in {'.', '?', '!', ':', r'\n'}:
                 last_char_len = len(last_char)
 
                 ref_last_char = item.value[(last_char_len * -1):]

@@ -45,6 +45,6 @@ class EmptyTranslations(Check):
             if ref.value.strip() == '':
                 continue
 
-            report.warn(idx + 1, f'Empty string.', item.key)
+            report.warn(idx + 1, 'Empty string.', item.key)
 
         return report

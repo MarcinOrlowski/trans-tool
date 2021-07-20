@@ -28,7 +28,7 @@ class PropTranslation(PropEntry):
         key = key.strip()
         if not key:
             raise ValueError('No empty key allowed.')
-        if separator not in [':', '=']:
+        if separator not in {':', '='}:
             raise ValueError(f'Invalid separator character: "{separator}".')
 
         self.key = key
@@ -51,7 +51,7 @@ class PropComment(PropEntry):
         if value:
             raise ValueError('Value cannot be empty.')
         marker = value[0]
-        if marker not in ['!', '#']:
+        if marker not in {'!', '#'}:
             raise ValueError(f'Invalid comment marker: "{marker}".')
         self.value = value
 

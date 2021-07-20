@@ -26,7 +26,7 @@ class WhiteCharsBeforeLinefeed(Check):
         for pos in range(len(item.value) - literal_len, 0, -1):
             if item.value[pos:(pos + 2)] == literal:
                 pre = item.value[pos - 1]
-                if pre in [' ', '\t']:
+                if pre in {' ', '\t'}:
                     what = 'SPACE' if pre == ' ' else 'TAB'
                     report.warn(f'{idx + 1}:{pos}', f'Contains {what} character before "{literal}" literal.', item.key)
                     return True
@@ -43,7 +43,7 @@ class WhiteCharsBeforeLinefeed(Check):
             if not isinstance(item, PropTranslation):
                 continue
 
-            for literal in [r'\n', r'\r']:
+            for literal in {r'\n', r'\r'}:
                 # Skip too short lines.
                 literal_len = len(literal)
                 if len(item.value.strip()) <= literal_len:
