@@ -14,6 +14,7 @@ from typing import List, Union
 from .check.brackets import Brackets
 from .check.dangling_keys import DanglingKeys
 from .check.empty_translations import EmptyTranslations
+from .check.formatting_values import FormattingValues
 from .check.key_format import KeyFormat
 from .check.missing_translation import MissingTranslation
 from .check.punctuation import Punctuation
@@ -96,6 +97,7 @@ class PropFile(list):
             KeyFormat,
             Brackets,
             QuotationMarks,
+            FormattingValues,
         ]
         for validator in checks:
             # Each validator gets copy of the files, to prevent any potential destructive operation.
