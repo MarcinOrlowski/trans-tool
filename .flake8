@@ -6,7 +6,7 @@
 # pip install wemake-python-styleguide
 # flake8 proptool/report/
 
-max-line-length = 100
+max-line-length = 132
 
 exclude =
     .git,
@@ -37,12 +37,18 @@ ignore =
     D401,
     # WPS336 Found explicit string concatenation
     WPS336,
+    # D200 One-line docstring should fit on one line with quotes
+    D200,
+    # WPS237 Found a too complex `f` string
+    WPS237,
 
     # WPS420 Found wrong keyword: pass
     WPS420,
     # WPS604 Found incorrect node inside `class` body
     WPS604
 
+    # WPS338 Found incorrect order of methods in a class
+    WPS338,
     # D101 Missing docstring in public class
     D101,
     # D102 Missing docstring in public method
@@ -50,7 +56,26 @@ ignore =
     # D107 Missing docstring in __init__
     D107,
     # DAR201 Missing "Returns" in Docstring: - return
-    DAR201
+    DAR201,
+    # WPS210 Found too many local variables: 14 > 5
+    WPS210,
+    # WPS231 Found function with too much cognitive complexity: 83 > 12
+    WPS231,
+    # WPS232 Found module cognitive complexity that is too high: 27.7 > 8
+    WPS232,
+    # WPS221 Found line with high Jones Complexity: 17 > 14
+    WPS221,
+    # F821 undefined name 'PropFile'
+    F821,
+    # I005 isort found an unexpected missing import
+    I005,
+
+    # WPS226 Found string constant over-use: " > 3
+    WPS226,
+    # WPS220 Found too deep nesting: 28 > 20
+    WPS220,
+    # WPS110 Found wrong variable name: item
+    WPS110,
 
 per-file-ignores =
     # WPS420 Found wrong keyword: pass

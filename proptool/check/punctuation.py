@@ -17,7 +17,7 @@ from ..report.report_group import ReportGroup
 
 # noinspection PyUnresolvedReferences
 class Punctuation(Check):
-    """
+    r"""
     This check verifies translation ends with the same punctuation marks or special characters (\n)
     as original string.
     """
@@ -33,7 +33,7 @@ class Punctuation(Check):
             if not isinstance(item, PropTranslation):
                 continue
 
-            for last_char in ['.', '?', '!', ':', '\\n']:
+            for last_char in ['.', '?', '!', ':', r'\n']:
                 last_char_len = len(last_char)
 
                 ref_last_char = item.value[(last_char_len * -1):]

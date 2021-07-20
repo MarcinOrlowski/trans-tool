@@ -17,12 +17,11 @@ from ..report.report_group import ReportGroup
 
 # noinspection PyUnresolvedReferences
 class WhiteCharsBeforeLinefeed(Check):
-    """
+    r"""
     This check ensures there's no space before "\n", "\r" literals.
     """
 
-    @staticmethod
-    def __scan(report: ReportGroup, idx: int, item: PropTranslation, literal: str) -> bool:
+    def _scan(self, report: ReportGroup, idx: int, item: PropTranslation, literal: str) -> bool:
         literal_len = len(literal)
         for pos in range(len(item.value) - literal_len, 0, -1):
             if item.value[pos:(pos + 2)] == literal:
@@ -44,13 +43,13 @@ class WhiteCharsBeforeLinefeed(Check):
             if not isinstance(item, PropTranslation):
                 continue
 
-            for literal in ['\\n', '\\r']:
+            for literal in [r'\n', r'\r']:
                 # Skip too short lines.
                 literal_len = len(literal)
                 if len(item.value.strip()) <= literal_len:
                     continue
 
-                if self.__scan(report, idx, item, literal):
+                if self._scan(report, idx, item, literal):
                     break
 
         return report

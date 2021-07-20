@@ -27,21 +27,21 @@ class MissingTranslation(Check):
 
         translation_keys = translation_file.keys.copy()
         missing_keys: List[str] = []
-        for key in reference_file.keys:
-            if key in translation_keys:
-                translation_keys.remove(key)
+        for ref_key in reference_file.keys:
+            if ref_key in translation_keys:
+                translation_keys.remove(ref_key)
             else:
-                missing_keys.append(key)
+                missing_keys.append(ref_key)
 
         # Commented out keys are also considered present in the translation unless
         # we run in strict check mode.
         if not self.config.strict:
             commented_out_keys = translation_file.commented_out_keys.copy()
-            for key in commented_out_keys:
-                if key in missing_keys:
-                    missing_keys.remove(key)
+            for comm_key in commented_out_keys:
+                if comm_key in missing_keys:
+                    missing_keys.remove(comm_key)
 
-        for key in missing_keys:
-            report.warn(None, key)
+        for missing_key in missing_keys:
+            report.warn(None, missing_key)
 
         return report

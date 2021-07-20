@@ -22,12 +22,12 @@ class DanglingKeys(Check):
     def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
         report = ReportGroup('Dangling keys')
 
-        my_keys = translation_file.keys.copy()
-        for key in reference_file.keys:
-            if key in my_keys:
-                my_keys.remove(key)
+        translation_keys = translation_file.keys.copy()
+        for ref_key in reference_file.keys:
+            if ref_key in translation_keys:
+                translation_keys.remove(ref_key)
 
-        for key in my_keys:
-            report.error(None, f'Not present in base file: "{key}".')
+        for trans_key in translation_keys:
+            report.error(None, f'Not present in base file: "{trans_key}".')
 
         return report

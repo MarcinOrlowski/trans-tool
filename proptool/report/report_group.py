@@ -41,7 +41,7 @@ class ReportGroup(list):
         self.warnings += 1
 
     def error(self, line: Union[str, int, None], msg: str) -> None:
-        if not isinstance(line, str):
+        if isinstance(line, int):
             line = str(line)
         self.append(Error(line, msg))
         self.errors += 1

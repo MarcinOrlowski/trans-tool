@@ -17,7 +17,7 @@ from ..report.report_group import ReportGroup
 
 # #################################################################################################
 
-class Bracket:
+class Bracket(object):
     def __init__(self, pos: int, bracket: str):
         self.pos = pos
         self.bracket = bracket
@@ -30,7 +30,7 @@ class Brackets(Check):
     opened brackets are closed.
     """
 
-    def __check_line(self, item: PropEntry):
+    def _check_line(self, item: PropEntry):
         pass
 
     @overrides(Check)
@@ -49,15 +49,13 @@ class Brackets(Check):
 
             stack: List[Bracket] = []
             has_errors = False
-            for i in range(len(item.value)):
-                position: str = f'{idx + 1}:{i + 1}'
-
-                current_char = item.value[i]
+            for char_idx, current_char in enumerate(item.value):
+                position: str = f'{idx + 1}:{char_idx + 1}'
 
                 if current_char in opening:
-                    stack.append(Bracket(i, current_char))
+                    stack.append(Bracket(char_idx, current_char))
                 elif current_char in closing:
-                    if len(stack) == 0:
+                    if stack:
                         if isinstance(item, PropTranslation):
                             report.error(position, f'"{item.key}": No opening bracket matching "{current_char}".')
                         else:
@@ -82,8 +80,7 @@ class Brackets(Check):
                             expected = closing[bracket_idx]
                             if current_char != expected:
                                 if isinstance(item, PropTranslation):
-                                    report.error(position,
-                                                 f'"{item.key}: Incorrect type. Expected "{expected}", found "{current_char}".')
+                                    report.error(position, f'"{item.key}: Incorrect type. Expected "{expected}", found "{current_char}".')
                                 else:
                                     report.error(position, f'"Incorrect type. Expected "{expected}", found "{current_char}".')
                                 # Just show single error per line to avoid flooding.

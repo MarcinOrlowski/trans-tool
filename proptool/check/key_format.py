@@ -27,7 +27,7 @@ class KeyFormat(Check):
     def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
 
         pattern = self.config.checks['KeyFormat']['pattern']
-        p = re.compile(pattern)
+        compiled_pattern = re.compile(pattern)
 
         report = ReportGroup(f'Key naming pattern: {pattern}')
 
@@ -37,7 +37,7 @@ class KeyFormat(Check):
             if not isinstance(item, PropTranslation):
                 continue
 
-            if p.match(item.key) is None:
+            if compiled_pattern.match(item.key) is None:
                 report.error(line_number + 1, f'"{item.key}" key does not match.')
 
         return report

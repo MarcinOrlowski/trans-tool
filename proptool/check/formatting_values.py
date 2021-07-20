@@ -19,7 +19,7 @@ from ..report.report_group import ReportGroup
 
 # #################################################################################################
 
-class Formatter:
+class Formatter(object):
     def __init__(self, pos: int, formatter: str):
         self.pos = pos
         self.formatter = formatter
@@ -36,8 +36,8 @@ class FormattingValues(Check):
         # https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html
         # %[argument_index$][flags][width][.precision]conversion
         result = []
-        for m in re.finditer(r'(%[a-zA-Z0-9$#+.(-]+)', item):
-            result.append(Formatter(m.start(), m.group(1)))
+        for match in re.finditer('(%[a-zA-Z0-9$#+.(-]+)', item):
+            result.append(Formatter(match.start(), match.group(1)))
         return result
 
     @overrides(Check)
@@ -61,7 +61,7 @@ class FormattingValues(Check):
             ref_items = self._parse(ref.value)
             trans_items = self._parse(item.value)
 
-            if len(ref_items) == 0 and len(trans_items) == 0:
+            if not ref_items and not trans_items:
                 # Nothing to check here.
                 continue
 
@@ -70,7 +70,7 @@ class FormattingValues(Check):
                 continue
 
             # Count matches, let's check the order now.
-            while len(ref_items) > 0:
+            while ref_items:
                 ref_pop = ref_items.pop(0)
                 trans_pop = trans_items.pop(0)
 

@@ -17,7 +17,7 @@ from ..report.report_group import ReportGroup
 
 # #################################################################################################
 
-class Mark:
+class Mark(object):
     def __init__(self, pos: int, mark: str):
         self.pos = pos
         self.mark = mark
@@ -30,7 +30,7 @@ class QuotationMarks(Check):
     opened marks got their closing pair.
     """
 
-    def __check_line(self, item: PropEntry):
+    def _check_line(self, item: PropEntry):
         pass
 
     @overrides(Check)
@@ -38,7 +38,7 @@ class QuotationMarks(Check):
     def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
         report = ReportGroup('Quotation marks')
 
-        for idx, item in enumerate(translation_file):
+        for line_idx, item in enumerate(translation_file):
             # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
             if not isinstance(item, (PropTranslation, PropComment)):
                 continue
@@ -49,17 +49,15 @@ class QuotationMarks(Check):
 
             stack: List[Mark] = []
             has_errors = False
-            for i in range(len(item.value)):
-                position: str = f'{idx + 1}:{i + 1}'
-
-                current_char = item.value[i]
+            for pos, current_char in enumerate(item.value):
+                position: str = f'{line_idx + 1}:{pos + 1}'
 
                 if current_char not in marks:
                     continue
 
-                if len(stack) == 0:
+                if not stack:
                     # If stack is empty, push our mark and move on
-                    stack.append(Mark(i, current_char))
+                    stack.append(Mark(pos, current_char))
                     continue
 
                 popped = stack.pop()
@@ -78,7 +76,7 @@ class QuotationMarks(Check):
 
             if not has_errors:
                 for bracket in stack:
-                    position: str = f'{idx + 1}:{bracket.pos + 1}'
+                    position: str = f'{line_idx + 1}:{bracket.pos + 1}'
                     if isinstance(item, PropComment):
                         report.warn(position, f'No closing mark for {bracket.mark}.')
                     else:
