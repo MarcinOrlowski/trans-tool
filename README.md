@@ -70,7 +70,7 @@ For translation files, the following checks are performed:
 NOTE: as this is quite common that translation file may not be updated instantly, `prop-tool` considers key presence condition
 fulfilled also when given key exists in `B` file but is commented out and follow expected comment format:
 
-```
+```bash
 # ==> KEY =
 ```
 
@@ -165,7 +165,7 @@ prop-tool --base gui --lang es --fix --tpl "COM >~=-> KEY SEP"
 ## Limitations ##
 
 * As of now `prop-tool` do not handle multiline entries.
-* `FormattingValues` check will do not support positional placeholders, formats using ` ` (space) for leading positive numbers.
+* `FormattingValues` check will do not support positional placeholders, formats using space leading positive numbers.
 
 ## License ##
 
