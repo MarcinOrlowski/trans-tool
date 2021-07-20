@@ -10,6 +10,7 @@
   * Added `EmptyTranslations` check.
   * Added `Brackets` check.
   * Added `QuotationMarks` check.
+  * Added `FormattingValues` check.
 
 * v1.1.0 (2021-07-19)
   * String format for commented-out entries can now be configured.
