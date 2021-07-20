@@ -51,7 +51,7 @@ class Report:
         """
         cnt = self.errors
         if self.config.fatal:
-            cnt + self.warnings
+            cnt += self.warnings
         return cnt > 0
 
     def add(self, report_group: ReportGroup, skip_empty: bool = True) -> None:
