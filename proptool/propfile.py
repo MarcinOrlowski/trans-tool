@@ -11,17 +11,17 @@ import re
 from pathlib import Path
 from typing import List, Union
 
-from .check.brackets import Brackets
-from .check.dangling_keys import DanglingKeys
-from .check.empty_translations import EmptyTranslations
-from .check.formatting_values import FormattingValues
-from .check.key_format import KeyFormat
-from .check.missing_translation import MissingTranslation
-from .check.punctuation import Punctuation
-from .check.quotation_marks import QuotationMarks
-from .check.starts_with_the_same_case import StartsWithTheSameCase
-from .check.trailing_white_chars import TrailingWhiteChars
-from .check.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
+from .checks.brackets import Brackets
+from .checks.dangling_keys import DanglingKeys
+from .checks.empty_translations import EmptyTranslations
+from .checks.formatting_values import FormattingValues
+from .checks.key_format import KeyFormat
+from .checks.missing_translation import MissingTranslation
+from .checks.punctuation import Punctuation
+from .checks.quotation_marks import QuotationMarks
+from .checks.starts_with_the_same_case import StartsWithTheSameCase
+from .checks.trailing_white_chars import TrailingWhiteChars
+from .checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from .config import Config
 from .entries import PropComment, PropEmpty, PropTranslation
 from .log import Log
