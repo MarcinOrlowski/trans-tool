@@ -22,12 +22,9 @@ class DanglingKeys(Check):
     def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
         report = ReportGroup('Dangling keys')
 
-        translation_keys = translation_file.keys.copy()
-        for ref_key in reference_file.keys:
-            if ref_key in translation_keys:
-                translation_keys.remove(ref_key)
-
-        for trans_key in translation_keys:
+        # Remove all keys that are present in both files and see what left.
+        dangling_keys = list(filter(lambda key: key not in reference_file.keys, translation_file.keys))
+        for trans_key in dangling_keys:
             report.error(None, f'Not present in base file: "{trans_key}".')
 
         return report
