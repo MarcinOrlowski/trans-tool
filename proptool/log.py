@@ -17,46 +17,62 @@ from typing import List, Union
 from .config import Config
 
 
-class Log(object):
-    # ---------------------------------------------------------------------------------------------------------------
-
+class Ansi:
     # https://www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html
-    ANSI_BOLD = u'\u001b[1m'
-    ANSI_UNDERLINE = u'\u001b[4m'
-    ANSI_REVERSE = u'\u001b[7m'
-    ANSI_DIM = u'\u001b[2m'
+    RESET = u'\u001b[0m'
+    BOLD = u'\u001b[1m'
+    DIM = u'\u001b[2m'
+    UNDERLINE = u'\u001b[4m'
+    REVERSE = u'\u001b[7m'
 
-    ANSI_BLACK = u'\u001b[30m'
-    ANSI_BLACK_BRIGHT = u'\u001b[1;30m'
-    ANSI_RED = u'\u001b[31m'
-    ANSI_RED_BRIGHT = u'\u001b[1;31m'
-    ANSI_GREEN = u'\u001b[32m'
-    ANSI_GREEN_BRIGHT = u'\u001b[1;32m'
-    ANSI_YELLOW = u'\u001b[33m'
-    ANSI_YELLOW_BRIGHT = u'\u001b[1;33m'
-    ANSI_BLUE = u'\u001b[34m'
-    ANSI_BLUE_BRIGHT = u'\u001b[1;34m'
-    ANSI_MAGENTA = u'\u001b[35m'
-    ANSI_MAGENTA_BRIGHT = u'\u001b[1;35m'
-    ANSI_CYAN = u'\u001b[36m'
-    ANSI_CYAN_BRIGHT = u'\u001b[1;36m'
-    ANSI_WHITE = u'\u001b[37m'
-    ANSI_WHITE_BRIGHT = u'\u001b[1;37m'
+    BLACK = u'\u001b[30m'
+    BLACK_BRIGHT = u'\u001b[30;1m'
+    RED = u'\u001b[31m'
+    GREEN = u'\u001b[32m'
+    YELLOW = u'\u001b[33m'
+    BLUE = u'\u001b[34m'
+    MAGENTA = u'\u001b[35m'
+    CYAN = u'\u001b[36m'
+    WHITE = u'\u001b[37m'
 
-    ANSI_BG_MAGENTA = u'\u001b[45m'
-    ANSI_BG_CYAN = u'\u001b[46m'
+    BG_BLACK = u'\u001b[40m'
+    BG_RED = u'\u001b[41m'
+    BG_GREEN = u'\u001b[42m'
+    BG_YELLOW = u'\u001b[43m'
+    BG_BLUE = u'\u001b[44m'
+    BG_MAGENTA = u'\u001b[45m'
+    BG_CYAN = u'\u001b[46m'
+    BG_WHITE = u'\u001b[47m'
 
-    ANSI_RESET = u'\u001b[0m'
+    @staticmethod
+    def strip(message: Union[str, None]) -> str:
+        """Removes all ANSI control codes from given message string
 
-    COLOR_ERROR = ANSI_RED
-    COLOR_WARN = ANSI_YELLOW
-    COLOR_NOTICE = ANSI_CYAN
+        Args:
+          message: string to be processed
+
+        Returns:
+          message string with ANSI codes striped or None
+        """
+        if message is not None:
+            import re
+            pattern = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
+            return pattern.sub('', message)
+
+        return ''
+
+
+class Log(object):
+    COLOR_ERROR = Ansi.RED
+    COLOR_WARN = Ansi.YELLOW
+    COLOR_NOTICE = Ansi.CYAN
     COLOR_INFO = None
-    COLOR_OK = ANSI_GREEN
-    COLOR_DEBUG = ANSI_REVERSE
-    COLOR_BANNER = (ANSI_WHITE + ANSI_REVERSE)
+    COLOR_OK = Ansi.GREEN
+    COLOR_DEBUG = Ansi.REVERSE
+    COLOR_BANNER = (Ansi.WHITE + Ansi.REVERSE)
 
     # ---------------------------------------------------------------------------------------------------------------
+
     deferred_log_level = None
     deferred_log_entry = None
     last_log_entry_level = 0
@@ -139,17 +155,17 @@ class Log(object):
     @staticmethod
     def push_e(message: Union[str, None] = None, color: Union[str, None] = None, ignore_quiet_switch = False,
                deferred = False) -> None:
-        Log.push(f'%error%%dim%%reverse%%white%{message}', color, ignore_quiet_switch, deferred)
+        Log.push(f'%bg_error%{message}', color, ignore_quiet_switch, deferred)
 
     @staticmethod
     def push_w(message: Union[str, None] = None, color: Union[str, None] = None, ignore_quiet_switch = False,
                deferred = False) -> None:
-        Log.push(f'%warn%%reverse%%dim%{message}', color, ignore_quiet_switch, deferred)
+        Log.push(f'%bg_warn%{message}', color, ignore_quiet_switch, deferred)
 
     @staticmethod
     def push_ok(message: Union[str, None] = None, color: Union[str, None] = None, ignore_quiet_switch = False,
                 deferred = False) -> None:
-        Log.push(f'%ok%%reverse%%dim%{message}', color, ignore_quiet_switch, deferred)
+        Log.push(f'%bg_ok%{message}', color, ignore_quiet_switch, deferred)
 
     @staticmethod
     def push_v(message: Union[str, None] = None, color: Union[str, None] = None, ignore_quiet_switch = False,
@@ -247,14 +263,14 @@ class Log(object):
     def w(message = None, condition: bool = True, prefix: str = 'W: ') -> None:
         if condition and message is not None:
             messages = Log._to_list(message)
-            _ = [Log._log(prefix + Log.strip_ansi(msg), Log.COLOR_WARN, True) for msg in messages]
+            _ = [Log._log(prefix + Ansi.strip(msg), Log.COLOR_WARN, True) for msg in messages]
 
     # error
     @staticmethod
     def e(messages = None, condition: bool = True, prefix: str = 'E: ') -> None:
         if condition and messages is not None:
             messages = Log._to_list(messages)
-            _ = [Log._log(prefix + Log.strip_ansi(message), Log.COLOR_ERROR, True) for message in messages]
+            _ = [Log._log(prefix + Ansi.strip(message), Log.COLOR_ERROR, True) for message in messages]
 
     # debug
     # NOTE: debug entries are not stored in action log
@@ -308,22 +324,6 @@ class Log(object):
         return msg
 
     @staticmethod
-    def strip_ansi(message: Union[str, None]) -> str:
-        """Removes all ANSI control codes from given message string
-
-        Args:
-          message: string to be processed
-
-        Returns:
-          message string with ANSI codes striped or None
-        """
-        if message is not None:
-            pattern = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
-            return pattern.sub('', message)
-
-        return ''
-
-    @staticmethod
     def substitute_ansi(message) -> str:
         """Replaces color code placeholder with ANSI values.
 
@@ -338,30 +338,40 @@ class Log(object):
             message = str(message)
 
         color_map = {
-            'reset':         Log.ANSI_RESET,
-            'reverse':       Log.ANSI_REVERSE,
-            'bold':          Log.ANSI_BOLD,
-            'dim':           Log.ANSI_DIM,
+            'reset':        Ansi.RESET,
+            'reverse':      Ansi.REVERSE,
+            'bold':         Ansi.BOLD,
+            'dim':          Ansi.DIM,
 
-            'black':         Log.ANSI_BLACK,
-            'black_bright':  Log.ANSI_BLACK_BRIGHT,
-            'red':           Log.ANSI_RED,
-            'green':         Log.ANSI_GREEN,
-            'green_bright':  Log.ANSI_GREEN_BRIGHT,
-            'yellow':        Log.ANSI_YELLOW,
-            'yellow_bright': Log.ANSI_YELLOW_BRIGHT,
-            'blue':          Log.ANSI_BLUE,
-            'magenta':       Log.ANSI_MAGENTA,
-            'cyan':          Log.ANSI_CYAN,
-            'white':         Log.ANSI_WHITE,
+            'black':        Ansi.BLACK,
+            'black_bright': Ansi.BLACK_BRIGHT,
+            'red':          Ansi.RED,
+            'green':        Ansi.GREEN,
+            'yellow':       Ansi.YELLOW,
+            'blue':         Ansi.BLUE,
+            'magenta':      Ansi.MAGENTA,
+            'cyan':         Ansi.CYAN,
+            'white':        Ansi.WHITE,
 
-            'error':         Log.ANSI_RED,
-            'warn':          Log.ANSI_YELLOW,
-            'notice':        Log.ANSI_CYAN,
-            'info':          None,
-            'ok':            Log.ANSI_GREEN,
-            'debug':         Log.ANSI_REVERSE,
-            'banner':        (Log.ANSI_WHITE + Log.ANSI_REVERSE),
+            'bg_black':     Ansi.BG_BLACK,
+            'bg_red':       Ansi.BG_RED,
+            'bg_green':     Ansi.BG_GREEN,
+            'bg_yellow':    Ansi.BG_YELLOW,
+            'bg_blue':      Ansi.BG_BLUE,
+            'bg_magenta':   Ansi.BG_MAGENTA,
+            'bg_cyan':      Ansi.BG_CYAN,
+            'bg_white':     Ansi.BG_WHITE,
+
+            'error':        Ansi.RED,
+            'bg_error':     (Ansi.BG_RED + Ansi.WHITE),
+            'warn':         Ansi.YELLOW,
+            'bg_warn':      (Ansi.BG_YELLOW + Ansi.BLACK + Ansi.DIM),
+            'notice':       Ansi.CYAN,
+            'info':         None,
+            'ok':           Ansi.GREEN,
+            'bg_ok':        (Ansi.BG_GREEN + Ansi.WHITE),
+            'debug':        Ansi.REVERSE,
+            'banner':       (Ansi.WHITE + Ansi.REVERSE),
         }
 
         for (key, color) in color_map.items():
@@ -377,7 +387,7 @@ class Log(object):
 
         Args:
           message: message to format
-          color: COLOR_xxx or ANSI_xxx color code to use if line should be colored
+          color: COLOR_xxx or Ansi.xxx color code to use if line should be colored
           stacktrace_postfix:
 
         Returns:
@@ -392,13 +402,13 @@ class Log(object):
             if color is not None:
                 message = color + message
 
-            message += Log.ANSI_RESET
+            message += Ansi.RESET
 
             if stacktrace_postfix is not None:
                 message += stacktrace_postfix
 
             if Log.no_color:
-                message = Log.strip_ansi(message)
+                message = Ansi.strip(message)
 
         return message
 
