@@ -27,15 +27,15 @@ class TestQuotationMarks(ChecksTestCase):
     # #################################################################################################
 
     def test_translation_no_faults(self):
-        self.do_single_test(PropTranslation('key', '""'))
+        self.check_single_file(PropTranslation('key', '""'))
 
     def test_translation_with_faults(self):
-        self.do_single_test(PropTranslation('key', '"""'), exp_errors = 1)
+        self.check_single_file(PropTranslation('key', '"""'), exp_errors = 1)
 
     # #################################################################################################
 
     def test_comment_no_faults(self):
-        self.do_single_test(PropComment('#  "foo" '))
+        self.check_single_file(PropComment('#  "foo" '))
 
     def test_comment_with_faults(self):
-        self.do_single_test(PropComment('# "foo `"  '), exp_warnings = 1)
+        self.check_single_file(PropComment('# "foo `"  '), exp_warnings = 1)

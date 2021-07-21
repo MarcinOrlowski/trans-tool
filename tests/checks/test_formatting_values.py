@@ -41,7 +41,7 @@ class TestFormattingValues(ChecksTestCase):
             key = self.get_random_string()
             ref_file.append(PropTranslation(key, test_case[0]))
             trans_file.append(PropTranslation(key, test_case[1]))
-            self.do_test(ref_file, trans_file)
+            self.check(ref_file, trans_file)
 
     def test_with_faults(self):
         tests = [
@@ -64,4 +64,4 @@ class TestFormattingValues(ChecksTestCase):
             ref_file.append(PropTranslation(key, test_case[0]))
             trans_file.append(PropTranslation(key, test_case[1]))
             # This checker always return one error (if there's any fault).
-            self.do_test(ref_file, trans_file, exp_errors = 1)
+            self.check(ref_file, trans_file, exp_errors = 1)

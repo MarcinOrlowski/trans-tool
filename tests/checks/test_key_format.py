@@ -27,20 +27,20 @@ class TestKeyFormat(ChecksTestCase):
     # #################################################################################################
 
     def test_translation_no_faults(self):
-        self.do_single_test(PropTranslation('validKey', 'foo'))
-        self.do_single_test(PropTranslation('valid123Key', 'foo'))
-        self.do_single_test(PropTranslation('validKey123', 'foo'))
-        self.do_single_test(PropTranslation('valid.Key', 'foo'))
-        self.do_single_test(PropTranslation('valid_Key', 'foo'))
+        self.check_single_file(PropTranslation('validKey', 'foo'))
+        self.check_single_file(PropTranslation('valid123Key', 'foo'))
+        self.check_single_file(PropTranslation('validKey123', 'foo'))
+        self.check_single_file(PropTranslation('valid.Key', 'foo'))
+        self.check_single_file(PropTranslation('valid_Key', 'foo'))
 
     def test_translation_with_faults(self):
         # Too short key name
-        self.do_single_test(PropTranslation('k', 'foo'), exp_errors = 1)
+        self.check_single_file(PropTranslation('k', 'foo'), exp_errors = 1)
         # starts capitalized
-        self.do_single_test(PropTranslation('INVALIDkey', 'foo'), exp_errors = 1)
+        self.check_single_file(PropTranslation('INVALIDkey', 'foo'), exp_errors = 1)
         # has underscore at the end
-        self.do_single_test(PropTranslation('invalidKey_', 'foo'), exp_errors = 1)
+        self.check_single_file(PropTranslation('invalidKey_', 'foo'), exp_errors = 1)
         # has dot at the end
-        self.do_single_test(PropTranslation('invalidKey.', 'foo'), exp_errors = 1)
+        self.check_single_file(PropTranslation('invalidKey.', 'foo'), exp_errors = 1)
         # starts with digits
-        self.do_single_test(PropTranslation('666keys.', 'foo'), exp_errors = 1)
+        self.check_single_file(PropTranslation('666keys.', 'foo'), exp_errors = 1)

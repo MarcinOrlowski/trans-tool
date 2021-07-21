@@ -27,26 +27,26 @@ class TestBrackets(ChecksTestCase):
     # #################################################################################################
 
     def test_translation_no_faults(self):
-        self.do_single_test(PropTranslation('key', '<({[]})>'))
-        self.do_single_test(PropTranslation('key', '<()foo ({a[v]b}d <barr> )> '))
+        self.check_single_file(PropTranslation('key', '<({[]})>'))
+        self.check_single_file(PropTranslation('key', '<()foo ({a[v]b}d <barr> )> '))
 
     def test_translation_with_faults(self):
         # Tests error handling when we have popping bracket and empty stack.
-        self.do_single_test(PropTranslation('key', '>'), exp_errors = 1)
+        self.check_single_file(PropTranslation('key', '>'), exp_errors = 1)
         # Tests the case where we done with checks and something left on stack.
-        self.do_single_test(PropTranslation('key', '(<>'), exp_errors = 1)
+        self.check_single_file(PropTranslation('key', '(<>'), exp_errors = 1)
         # Text the case where we have matches, but not in order.
-        self.do_single_test(PropTranslation('key', '<(>)'), exp_errors = 1)
+        self.check_single_file(PropTranslation('key', '<(>)'), exp_errors = 1)
 
     # #################################################################################################
 
     def test_comment_no_faults(self):
-        self.do_single_test(PropComment('# (foo) '))
+        self.check_single_file(PropComment('# (foo) '))
 
     def test_comment_with_faults(self):
         # Tests error handling when we have popping bracket and empty stack.
-        self.do_single_test(PropComment('# foo]"  '), exp_warnings = 1)
+        self.check_single_file(PropComment('# foo]"  '), exp_warnings = 1)
         # Tests the case where we done with checks and something left on stack.
-        self.do_single_test(PropComment('# <fo[o]" '), exp_warnings = 1)
+        self.check_single_file(PropComment('# <fo[o]" '), exp_warnings = 1)
         # Text the case where we have matches, but not in order.
-        self.do_single_test(PropComment('# [foo <]>" '), exp_warnings = 1)
+        self.check_single_file(PropComment('# [foo <]>" '), exp_warnings = 1)

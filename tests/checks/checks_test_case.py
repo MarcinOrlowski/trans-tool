@@ -31,14 +31,14 @@ class ChecksTestCase(TestCase):
     def get_checker(self, config: Config) -> Check:
         raise NotImplementedError
 
-    def do_single_test(self, entry: PropEntry, exp_errors: int = 0, exp_warnings: int = 0) -> None:
+    def check_single_file(self, entry: PropEntry, exp_errors: int = 0, exp_warnings: int = 0) -> None:
         prop_file = PropFile(self.config)
         prop_file.loaded = True
         prop_file.items.append(entry)
 
-        self.do_test(None, prop_file, exp_errors, exp_warnings)
+        self.check(None, prop_file, exp_errors, exp_warnings)
 
-    def do_test(self, reference: PropFile, translation: PropFile, exp_errors: int = 0, exp_warnings: int = 0) -> None:
+    def check(self, reference: PropFile, translation: PropFile, exp_errors: int = 0, exp_warnings: int = 0) -> None:
         report = self.checker.check(reference, translation)
 
         self.assertEqual(exp_errors, report.errors)

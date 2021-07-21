@@ -41,7 +41,7 @@ class TestStartsWithTheSameCase(ChecksTestCase):
             ref_file.append(PropTranslation(key, value))
             trans_file.append(PropTranslation(key, value))
 
-        self.do_test(ref_file, trans_file)
+        self.check(ref_file, trans_file)
 
     def test_with_faults(self):
         cnt_min = 20
@@ -65,4 +65,4 @@ class TestStartsWithTheSameCase(ChecksTestCase):
                     trans_value = trans_value[0].upper() + trans_value
             ref_file.append(PropTranslation(key, ref_value))
             trans_file.append(PropTranslation(key, trans_value))
-        self.do_test(ref_file, trans_file, exp_warnings = expected_faults)
+        self.check(ref_file, trans_file, exp_warnings = expected_faults)

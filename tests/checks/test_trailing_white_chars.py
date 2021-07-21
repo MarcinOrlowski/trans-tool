@@ -27,13 +27,13 @@ class TestTrailingWhiteChars(ChecksTestCase):
     # #################################################################################################
 
     def test_translation_no_trailing_white_chars(self):
-        self.do_single_test(PropTranslation('key', 'value'))
+        self.check_single_file(PropTranslation('key', 'value'))
 
     def test_translation_with_trailing_white_chars(self):
-        self.do_single_test(PropTranslation('key', 'value  '), exp_errors = 1)
+        self.check_single_file(PropTranslation('key', 'value  '), exp_errors = 1)
 
     def test_comment_no_trailing_white_chars(self):
-        self.do_single_test(PropComment('# value'))
+        self.check_single_file(PropComment('# value'))
 
     def test_comment_with_trailing_white_chars(self):
-        self.do_single_test(PropComment('# value  '), exp_warnings = 1)
+        self.check_single_file(PropComment('# value  '), exp_warnings = 1)
