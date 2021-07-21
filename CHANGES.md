@@ -1,6 +1,6 @@
 # Changelog #
 
-* @dev
+* v1.2.0 (2021-07-21)
   * Reworked report formatting.
   * Added `--fatal` to make warnings fatal as errors.
   * Added `WhiteCharsBeforeLinefeed` check.
@@ -12,6 +12,8 @@
   * Added `QuotationMarks` check.
   * Added `FormattingValues` check.
   * Added unit tests.
+  * Added `--version` support.
+
 
 * v1.1.0 (2021-07-19)
   * String format for commented-out entries can now be configured.

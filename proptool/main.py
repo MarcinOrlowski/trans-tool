@@ -8,6 +8,7 @@
 """
 import argparse
 import copy
+import sys
 from pathlib import Path
 
 from .checks.brackets import Brackets
@@ -66,10 +67,24 @@ class PropTool(object):
                            help = 'Enables debug output')
         group.add_argument('-nc', '--no-color', action = 'store_true', dest = 'no_color',
                            help = 'Disables use of ANSI colors.')
+        group.add_argument('--version', action = 'store_true', dest = 'show_version',
+                           help = 'Displays application version details and quits.')
 
         return parser.parse_args()
 
+    def show_version(self):
+        Log.i([
+            f'{Const.APP_NAME} v{Const.APP_VERSION} * Copyright 2021 by Marcin Orlowski.',
+            'Java properties file checker and syncing tool.',
+            f'{Const.APP_URL}',
+        ])
+
     def main(self) -> int:
+        # Cannot rely on argparse here as we have required arguments there.
+        if '--version' in sys.argv:
+            self.show_version()
+            return 0
+
         config = Config(self._parse_args())
         Log.configure(config)
 
