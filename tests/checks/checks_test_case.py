@@ -11,7 +11,7 @@ from typing import List, Union
 
 from proptool.checks.base.check import Check
 from proptool.config import Config
-from proptool.prop.entries import PropComment, PropItem, PropTranslation
+from proptool.prop.items import PropComment, PropItem, PropTranslation
 from proptool.prop.file import PropFile
 from test_case import TestCase
 

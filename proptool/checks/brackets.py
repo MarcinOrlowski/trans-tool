@@ -10,7 +10,7 @@
 from typing import List
 
 from .base.check import Check
-from proptool.prop.entries import PropComment, PropTranslation
+from proptool.prop.items import PropComment, PropTranslation
 from proptool.decorators.overrides import overrides
 from proptool.report.group import ReportGroup
 
