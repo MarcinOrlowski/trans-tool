@@ -26,25 +26,6 @@ class TestReportGroup(TestCase):
         self.assertEqual(0, self.rg.warnings)
         self.assertEqual(0, self.rg.errors)
 
-    # def test_add_wrong_item_type(self):
-    #     wrong_item = True
-    #     with self.assertRaises(TypeError):
-    #         self.rg.add(wrong_item)
-    #
-    # def test_add_correct_item_type(self):
-    #     types = [
-    #         ReportItem,
-    #         Error,
-    #         Warn,
-    #     ]
-    #     for single_type in types:
-    #         line = random.randint(1, 100)
-    #         msg = self.get_random_string()
-    #         item = single_type(line, msg)
-    #         self.rg.add(item)
-    #
-    #     self.assertEqual(len(types), len(self.rg))
-
     def test_empty(self):
         self.rg.errors = random.randint(1, 100)
         self.rg.warnings = 0
