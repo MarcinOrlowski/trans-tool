@@ -83,9 +83,6 @@ class Blank(PropItem):
     Class representing empty line.
     """
 
-    def __init__(self) -> None:
-        super().__init__()
-
     @overrides(PropItem)
     def to_string(self) -> str:
         return ''

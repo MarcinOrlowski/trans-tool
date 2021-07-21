@@ -58,6 +58,8 @@ ignore =
     I003,
     # WPS615 Found unpythonic getter or setter
     WPS615,
+    #WPS238 Found too many raises in a function: 5 > 3
+    WPS238,
 
     # WPS420 Found wrong keyword: pass
     WPS420,
@@ -144,4 +146,6 @@ per-file-ignores =
 
     # S311 Standard pseudo-random generators are not suitable for security/cryptographic purposes.
     # WPS323 Found `%` string formatting
-    tests/*: S311, WPS323,
+    # WPS214 Found too many methods
+    # WPS432 Found magic number
+    tests/*: S311, WPS323, WPS214, WPS432

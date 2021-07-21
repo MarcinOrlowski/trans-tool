@@ -35,7 +35,6 @@ class TestReportItem(TestCase):
     def test_translation_invalid_key(self):
         with self.assertRaises(ValueError):
             value = self.get_random_string()
-            Translation(False, value)
             Translation(123, value)
             Translation(None, value)
             Translation('', value)
@@ -45,13 +44,12 @@ class TestReportItem(TestCase):
         with self.assertRaises(ValueError):
             key = self.get_random_string()
             Translation(key, 1234)
-            Translation(key, False)
 
     def test_translation_invalid_separator(self):
         with self.assertRaises(ValueError):
             key = self.get_random_string()
             value = self.get_random_string()
-            Translation(key, value, False)
+            Translation(key, value, None)
             Translation(key, value, '-')
             Translation(key, value, '')
 

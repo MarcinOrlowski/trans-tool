@@ -9,7 +9,7 @@
 import random
 
 from proptool.report.group import ReportGroup
-from proptool.report.items import Warn, Error
+from proptool.report.items import Error, Warn
 from test_case import TestCase
 
 
