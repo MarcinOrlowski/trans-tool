@@ -26,13 +26,8 @@ from .propfile import PropFile
 class PropTool(object):
     @staticmethod
     def _parse_args() -> argparse:
-        parser = argparse.ArgumentParser(
-            prog = Const.APP_NAME.lower(),
-            description = f'{Const.APP_NAME} v{Const.APP_VERSION}'
-                          + ' * Copyright 2021 by Marcin Orlowski.\n'
-                          + 'Java properties file checker and syncing tool.\n'
-                          + f'{Const.APP_URL}',
-            formatter_class = argparse.RawTextHelpFormatter)
+        parser = argparse.ArgumentParser(prog = Const.APP_NAME.lower(), formatter_class = argparse.RawTextHelpFormatter,
+                                         description = '\n'.join(Const.APP_DESCRIPTION))
 
         group = parser.add_argument_group('Options')
         # group.add_argument('--config', action = 'store', dest = 'config', nargs = 1, metavar = 'FILE',
@@ -72,17 +67,10 @@ class PropTool(object):
 
         return parser.parse_args()
 
-    def show_version(self):
-        Log.i([
-            f'{Const.APP_NAME} v{Const.APP_VERSION} * Copyright 2021 by Marcin Orlowski.',
-            'Java properties file checker and syncing tool.',
-            f'{Const.APP_URL}',
-        ])
-
     def main(self) -> int:
         # Cannot rely on argparse here as we have required arguments there.
         if '--version' in sys.argv:
-            self.show_version()
+            Log.banner(Const.APP_DESCRIPTION)
             return 0
 
         config = Config(self._parse_args())
