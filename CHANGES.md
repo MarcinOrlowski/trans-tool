@@ -11,6 +11,7 @@
   * Added `Brackets` check.
   * Added `QuotationMarks` check.
   * Added `FormattingValues` check.
+  * Added unit tests.
 
 * v1.1.0 (2021-07-19)
   * String format for commented-out entries can now be configured.
