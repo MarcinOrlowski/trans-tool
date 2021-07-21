@@ -99,12 +99,12 @@ class PropTool(object):
                 QuotationMarks,
             ]
             for validator in checks:
-                # Almost any check validates translation against reference file, so we cannot use all here,
-                # but we can use those which in fact do not need reference file. For them we pass our base
-                # file as translation which will do the trick.
+                # Almost any check validates translation against reference file, so we cannot use all checks here,
+                # but there are some that process single file independently so they in fact do not need any reference
+                # file. For them we pass our base file as translation which will do the trick.
                 #
                 # Each validator gets copy of the files, to prevent any potential destructive operation.
-                reference_propfile.report.add((validator(config)).check(None, copy.copy(reference_propfile)))
+                reference_propfile.report.add((validator(config)).check(copy.copy(reference_propfile)))
 
             if not reference_propfile.report.empty():
                 # There's something to fix, but not necessary critical.

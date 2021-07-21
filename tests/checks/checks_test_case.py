@@ -36,10 +36,11 @@ class ChecksTestCase(TestCase):
         prop_file.loaded = True
         prop_file.items.append(entry)
 
-        self.check(None, prop_file, exp_errors, exp_warnings)
+        self.check(prop_file, exp_errors = exp_errors, exp_warnings = exp_warnings)
 
-    def check(self, reference: PropFile, translation: PropFile, exp_errors: int = 0, exp_warnings: int = 0) -> None:
-        report = self.checker.check(reference, translation)
+    def check(self, translation: PropFile, reference: Union[PropFile, None] = None,
+              exp_errors: int = 0, exp_warnings: int = 0) -> None:
+        report = self.checker.check(translation, reference)
 
         self.assertEqual(exp_errors, report.errors)
         self.assertEqual(exp_warnings, report.warnings)
