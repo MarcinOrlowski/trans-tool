@@ -11,7 +11,7 @@ from proptool.checks.base.check import Check
 from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from proptool.config import Config
 from proptool.prop_entries import PropTranslation
-from proptool.overrides import overrides
+from proptool.decorators.overrides import overrides
 
 
 # TODO: Test handling other types than PropTranslation, PropComment

@@ -13,7 +13,7 @@ from proptool.checks.base.check import Check
 from proptool.checks.missing_translation import MissingTranslation
 from proptool.config import Config
 from proptool.prop_entries import PropComment
-from proptool.overrides import overrides
+from proptool.decorators.overrides import overrides
 
 
 # TODO: Test handling other types than PropTranslation, PropComment

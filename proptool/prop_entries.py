@@ -7,7 +7,7 @@
 #
 """
 
-from .overrides import overrides
+from .decorators.overrides import overrides
 
 
 # #################################################################################################
