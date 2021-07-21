@@ -26,16 +26,28 @@ class PropItem(object):
 
 class Translation(PropItem):
     """
-    Class representing valid translation entry.
+    Class representing a translation entry.
     """
 
-    def __init__(self, key: str, value: str = None, separator: str = '=') -> None:
-        key = key.strip()
+    def __init__(self, key: str, value: Union[str, None] = None, separator: str = '=') -> None:
         if not key:
             raise ValueError('No empty key allowed.')
+        if not isinstance(key, str):
+            raise ValueError('Key must be a string.')
+        key = key.strip()
+        if not key:
+            raise ValueError('Key must be non-empty string.')
+
+        # TODO: validate key against KeyFormat's pattern
+
+        if value is not None and not isinstance(value, str):
+            raise ValueError('Value must be a string or None.')
+
+        # TODO: default separators should be moved to consts
         if separator not in {':', '='}:
             raise ValueError(f'Invalid separator character: "{separator}".')
         super().__init__(value, key)
+        self.separator = separator
 
     @overrides(PropItem)
     def to_string(self) -> str:
@@ -46,12 +58,14 @@ class Translation(PropItem):
 
 class Comment(PropItem):
     """
-    Class representing line comment.
+    Class representing a line comment.
     """
 
     def __init__(self, value: str) -> None:
         if not value:
             raise ValueError('Value cannot be empty.')
+        if not isinstance(value, str):
+            raise ValueError('Value must be a string.')
         marker = value[0]
         if marker not in {'!', '#'}:
             raise ValueError(f'Invalid comment marker: "{marker}".')
