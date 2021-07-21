@@ -132,11 +132,11 @@ per-file-ignores =
     # WPS430 Found nested function: overrider
     # S101 Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.
     # WPS421 Found wrong function call: dir
-    proptool/overrides.py: WPS430, S101, WPS421,
+    proptool/decorators/overrides.py: WPS430, S101, WPS421,
 
     # WPS201 Found module with too many imports: 21 > 12
     # WPS230 Found too many public instance attributes
-    proptool/prop/prop_file.py: WPS201, WPS230,
+    proptool/prop/file.py: WPS201, WPS230,
 
     # WPS421 Found wrong function call: print
     # WPS100 Found wrong module name
