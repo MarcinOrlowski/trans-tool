@@ -13,7 +13,7 @@ from proptool.checks.base.check import Check
 from proptool.config import Config
 from proptool.prop.items import Comment, PropItem, Translation
 from proptool.prop.file import PropFile
-from test_case import TestCase
+from tests.test_case import TestCase
 
 
 # #################################################################################################

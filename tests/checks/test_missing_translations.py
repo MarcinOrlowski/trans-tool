@@ -8,7 +8,7 @@
 """
 import random
 
-from checks.checks_test_case import ChecksTestCase
+from tests.checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.missing_translation import MissingTranslation
 from proptool.config import Config

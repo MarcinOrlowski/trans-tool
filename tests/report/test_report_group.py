@@ -10,7 +10,7 @@ import random
 
 from proptool.report.group import ReportGroup
 from proptool.report.items import Error, Warn
-from test_case import TestCase
+from tests.test_case import TestCase
 
 
 # #################################################################################################

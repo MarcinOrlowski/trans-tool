@@ -8,7 +8,7 @@
 """
 from proptool.config import Config
 from proptool.prop.items import Blank, Comment, PropItem, Translation
-from test_case import TestCase
+from tests.test_case import TestCase
 
 
 class TestReportItem(TestCase):

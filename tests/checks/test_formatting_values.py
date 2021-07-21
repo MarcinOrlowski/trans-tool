@@ -7,7 +7,7 @@
 #
 """
 
-from checks.checks_test_case import ChecksTestCase
+from tests.checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.formatting_values import FormattingValues
 from proptool.config import Config

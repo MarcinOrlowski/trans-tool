@@ -8,7 +8,7 @@
 """
 
 from proptool.report.items import ReportItem
-from test_case import TestCase
+from tests.test_case import TestCase
 
 
 class TestReportItem(TestCase):

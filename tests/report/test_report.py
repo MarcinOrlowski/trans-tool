@@ -9,7 +9,7 @@
 
 from proptool.config import Config
 from proptool.report.report import Report
-from test_case import TestCase
+from tests.test_case import TestCase
 
 
 # #################################################################################################
