@@ -2,6 +2,10 @@
 
 `prop-tool` - Java *.properties file checker and syncing tool.
 
+[![Unit tests](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/unittests.yml/badge.svg?branch=master)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/unittests.yml)
+[![Code lint](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/linter.yml/badge.svg?branch=master)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/linter.yml)
+[![MD Lint](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/markdown.yml/badge.svg?branch=master)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/markdown.yml)
+
 This utility can be used to check your `*.properties` Java files to ensure correct syntax is used, all translation files are in sync
 with base file, there are no missing keys or invalid punctuation and more. It can also create translation files adding missing keys
 based on the content of base file.
