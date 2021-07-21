@@ -12,7 +12,7 @@ from checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.missing_translation import MissingTranslation
 from proptool.config import Config
-from proptool.entries import PropComment, PropTranslation
+from proptool.entries import PropComment
 from proptool.overrides import overrides
 
 
@@ -66,7 +66,7 @@ class TestMissingTranslations(ChecksTestCase):
 
         # We expect warnings in strict mode
         trans_file.config.strict = True
-        self.do_test(ref_file, trans_file, exp_warnings =  len(remaining_keys))
+        self.do_test(ref_file, trans_file, exp_warnings = len(remaining_keys))
 
     def test_translation_with_faults(self):
         # generate some keys for reference file

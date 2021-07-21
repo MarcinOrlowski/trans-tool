@@ -81,7 +81,7 @@ class TestEmptyTranslations(ChecksTestCase):
         # Now, make some translations empty.
         how_many = random.randint(1, cnt_min)
         removed_keys = []
-        for idx in range(how_many):
+        for _ in range(how_many):
             idx_to_remove = random.randint(0, len(ref_file.items) - 1)
             removed_keys.append(ref_file.items[idx_to_remove].key)
             del ref_file.items[idx_to_remove]
