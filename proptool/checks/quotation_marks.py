@@ -10,9 +10,9 @@
 from typing import List
 
 from .base.check import Check
-from ..prop.prop_entries import PropComment, PropTranslation, PropEntry
-from ..decorators.overrides import overrides
-from ..report.report_group import ReportGroup
+from proptool.prop.prop_entries import PropComment, PropTranslation, PropEntry
+from proptool.decorators.overrides import overrides
+from proptool.report.report_group import ReportGroup
 
 
 # #################################################################################################

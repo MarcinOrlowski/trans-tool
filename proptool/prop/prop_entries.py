@@ -7,7 +7,7 @@
 #
 """
 
-from ..decorators.overrides import overrides
+from proptool.decorators.overrides import overrides
 
 
 # #################################################################################################

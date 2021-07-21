@@ -9,8 +9,8 @@
 
 from typing import List
 
-from ..config import Config
-from ..log import Log
+from proptool.config import Config
+from proptool.log import Log
 
 from .report_group import ReportGroup
 
