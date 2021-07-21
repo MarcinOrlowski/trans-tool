@@ -64,7 +64,7 @@ class Comment(PropItem):
 
 # #################################################################################################
 
-class PropBlank(PropItem):
+class Blank(PropItem):
     """
     Class representing empty line.
     """
