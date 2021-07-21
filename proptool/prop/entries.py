@@ -13,7 +13,7 @@ from proptool.decorators.overrides import overrides
 
 # #################################################################################################
 
-class PropEntry(object):
+class PropItem(object):
     def __init__(self, value: Union[str, None] = None, key: Union[str, None] = None):
         self.value = value
         self.key = key
@@ -24,7 +24,7 @@ class PropEntry(object):
 
 # #################################################################################################
 
-class PropTranslation(PropEntry):
+class PropTranslation(PropItem):
     """
     Class representing valid translation entry.
     """
@@ -37,14 +37,14 @@ class PropTranslation(PropEntry):
             raise ValueError(f'Invalid separator character: "{separator}".')
         super().__init__(value, key)
 
-    @overrides(PropEntry)
+    @overrides(PropItem)
     def to_string(self) -> str:
         return f'{self.key} {self.separator} {self.value}'
 
 
 # #################################################################################################
 
-class PropComment(PropEntry):
+class PropComment(PropItem):
     """
     Class representing line comment.
     """
@@ -57,14 +57,14 @@ class PropComment(PropEntry):
             raise ValueError(f'Invalid comment marker: "{marker}".')
         super().__init__(value)
 
-    @overrides(PropEntry)
+    @overrides(PropItem)
     def to_string(self) -> str:
         return self.value
 
 
 # #################################################################################################
 
-class PropBlank(PropEntry):
+class PropBlank(PropItem):
     """
     Class representing empty line.
     """
@@ -72,6 +72,6 @@ class PropBlank(PropEntry):
     def __init__(self) -> None:
         super().__init__()
 
-    @overrides(PropEntry)
+    @overrides(PropItem)
     def to_string(self) -> str:
         return ''

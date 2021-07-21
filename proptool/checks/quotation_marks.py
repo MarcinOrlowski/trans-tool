@@ -10,7 +10,7 @@
 from typing import List
 
 from .base.check import Check
-from proptool.prop.entries import PropComment, PropTranslation, PropEntry
+from proptool.prop.entries import PropComment, PropTranslation, PropItem
 from proptool.decorators.overrides import overrides
 from proptool.report.group import ReportGroup
 
@@ -30,7 +30,7 @@ class QuotationMarks(Check):
     opened marks got their closing pair.
     """
 
-    def _check_line(self, item: PropEntry):
+    def _check_line(self, item: PropItem):
         pass
 
     @overrides(Check)

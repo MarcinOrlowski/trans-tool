@@ -11,7 +11,7 @@ from typing import List, Union
 
 from proptool.checks.base.check import Check
 from proptool.config import Config
-from proptool.prop.entries import PropComment, PropEntry, PropTranslation
+from proptool.prop.entries import PropComment, PropItem, PropTranslation
 from proptool.prop.file import PropFile
 from test_case import TestCase
 
@@ -31,7 +31,7 @@ class ChecksTestCase(TestCase):
     def get_checker(self, config: Config) -> Check:
         raise NotImplementedError
 
-    def check_single_file(self, entry: PropEntry, exp_errors: int = 0, exp_warnings: int = 0) -> None:
+    def check_single_file(self, entry: PropItem, exp_errors: int = 0, exp_warnings: int = 0) -> None:
         prop_file = PropFile(self.config)
         prop_file.loaded = True
         prop_file.items.append(entry)
@@ -44,7 +44,7 @@ class ChecksTestCase(TestCase):
         self.assertEqual(exp_errors, report.errors)
         self.assertEqual(exp_warnings, report.warnings)
 
-    def build_prepfile(self, contents: Union[List[str], List[PropEntry]]) -> PropFile:
+    def build_prepfile(self, contents: Union[List[str], List[PropItem]]) -> PropFile:
         prep_file = PropFile(self.config)
         prep_file.loaded = True
 
