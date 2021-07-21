@@ -11,7 +11,7 @@ from checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.formatting_values import FormattingValues
 from proptool.config import Config
-from proptool.entries import PropTranslation
+from proptool.prop_entries import PropTranslation
 from proptool.overrides import overrides
 from proptool.prop_file import PropFile
 

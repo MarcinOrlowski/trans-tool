@@ -10,7 +10,7 @@ from checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.brackets import Brackets
 from proptool.config import Config
-from proptool.entries import PropComment, PropTranslation
+from proptool.prop_entries import PropComment, PropTranslation
 from proptool.overrides import overrides
 
 

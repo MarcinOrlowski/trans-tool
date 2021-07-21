@@ -23,7 +23,7 @@ from .checks.starts_with_the_same_case import StartsWithTheSameCase
 from .checks.trailing_white_chars import TrailingWhiteChars
 from .checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from .config import Config
-from .entries import PropComment, PropEmpty, PropEntry, PropTranslation
+from .prop_entries import PropComment, PropEmpty, PropEntry, PropTranslation
 from .log import Log
 from .report.report import Report
 from .report.report_group import ReportGroup

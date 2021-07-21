@@ -136,7 +136,7 @@ per-file-ignores =
 
     # WPS201 Found module with too many imports: 21 > 12
     # WPS230 Found too many public instance attributes
-    proptool/propfile.py: WPS201, WPS230,
+    proptool/prop_file.py: WPS201, WPS230,
 
     # WPS421 Found wrong function call: print
     # WPS100 Found wrong module name
