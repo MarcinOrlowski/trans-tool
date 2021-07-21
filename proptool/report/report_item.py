@@ -10,13 +10,19 @@ from typing import Union
 
 
 class ReportItem(object):
-    def __init__(self, line: Union[str, None], msg: str, trans_key: Union[str, None] = None) -> None:
-        self.line = line
+    def __init__(self, position: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> None:
+        if isinstance(position, int):
+            position = str(position)
+
+        self.position = position
         self.msg = msg
         self.trans_key = trans_key
 
     def to_string(self) -> str:
-        trans_key = f'"{self.trans_key}":' if self.trans_key else ''
-        if self.line:
-            return f'Line {self.line}:{trans_key} {self.msg}'.strip()
-        return f'{trans_key} {self.msg}'.strip()
+        # Note trailing space!
+        line = f'Line {self.position}: ' if self.position else ''
+        if self.trans_key:
+            # Note trailing space!
+            line += f'"{self.trans_key}": '
+        line += self.msg
+        return line.strip()

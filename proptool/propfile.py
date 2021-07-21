@@ -103,7 +103,7 @@ class PropFile(object):
         :return:
         """
         if not self.loaded:
-            Log.e(f'  File does not exist: {self.file}')
+            Log.e(f'File does not exist: {self.file}')
             return False
 
         checks = [
