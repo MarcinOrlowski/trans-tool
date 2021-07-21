@@ -10,5 +10,5 @@
 
 class Const(object):
     APP_NAME: str = 'prop-tool'
-    APP_VERSION: str = '1.1.0'
+    APP_VERSION: str = '1.2.0'
     APP_URL: str = 'https://github.com/MarcinOrlowski/prop-tool/'
