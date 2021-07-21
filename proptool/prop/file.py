@@ -26,7 +26,7 @@ from proptool.config import Config
 from proptool.prop.entries import PropComment, PropEmpty, PropEntry, PropTranslation
 from proptool.log import Log
 from proptool.report.report import Report
-from proptool.report.report_group import ReportGroup
+from proptool.report.group import ReportGroup
 from proptool.utils import Utils
 
 

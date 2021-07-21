@@ -7,7 +7,7 @@
 #
 """
 
-from .report_item import ReportItem
+from .item import ReportItem
 
 
 # #################################################################################################

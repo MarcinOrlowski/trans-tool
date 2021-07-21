@@ -9,7 +9,7 @@
 
 from typing import Union
 
-from .report_item import ReportItem
+from .item import ReportItem
 from proptool.log import Log
 from proptool.report.error import Error
 from proptool.report.warn import Warn

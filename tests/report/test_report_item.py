@@ -7,7 +7,7 @@
 #
 """
 
-from proptool.report.report_item import ReportItem
+from proptool.report.item import ReportItem
 from test_case import TestCase
 
 

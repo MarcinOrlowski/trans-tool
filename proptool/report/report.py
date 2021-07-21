@@ -12,7 +12,7 @@ from typing import List
 from proptool.config import Config
 from proptool.log import Log
 
-from .report_group import ReportGroup
+from .group import ReportGroup
 
 
 # #################################################################################################
