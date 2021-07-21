@@ -16,6 +16,6 @@ class TestCase(unittest.TestCase):
         for _ in range(count):
             single_char = chr(random.randint(ord('A'), ord('Z')))
             if random.randint(0, 1):
-                single_char.lower()
+                single_char = single_char.lower()
             prefix += single_char
         return prefix
