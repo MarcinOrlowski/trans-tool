@@ -32,7 +32,7 @@ class Brackets(Check):
 
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
-    def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
+    def check(self, translation_file: 'PropFile', reference_file: 'PropFile' = None) -> ReportGroup:
         report = ReportGroup('Brackets')
 
         # Keep matching brackets at the same positions!

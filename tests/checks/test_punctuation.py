@@ -46,7 +46,7 @@ class TestPunctuation(ChecksTestCase):
             trans_file.append(Translation(key, value))
             punct_idx += 1
 
-        self.check(ref_file, trans_file)
+        self.check(trans_file, ref_file)
 
     def test_with_faults(self):
         # generate some keys for translation file
@@ -73,4 +73,4 @@ class TestPunctuation(ChecksTestCase):
             ref_file.append(Translation(key, ref_value))
             trans_file.append(Translation(key, trans_value))
             punct_idx += 1
-        self.check(ref_file, trans_file, exp_warnings = expected_faults)
+        self.check(trans_file, ref_file, exp_warnings = expected_faults)

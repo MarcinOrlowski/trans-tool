@@ -35,7 +35,7 @@ class TestEmptyTranslations(ChecksTestCase):
         keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
         ref_file = self.build_prepfile(keys)
         trans_file = self.build_prepfile(keys)
-        self.check(ref_file, trans_file)
+        self.check(trans_file, ref_file)
 
     def test_if_both_are_empty(self):
         # Checks handling of empty string when matching reference string is
@@ -67,7 +67,7 @@ class TestEmptyTranslations(ChecksTestCase):
                 processed -= 1
 
         # We expect no problems.
-        self.check(ref_file, trans_file)
+        self.check(trans_file, ref_file)
 
     def test_translation_with_dangling_keys(self):
         # Checks if translation dangling keys will be silently skipped.
@@ -95,7 +95,7 @@ class TestEmptyTranslations(ChecksTestCase):
             trans_file.items[trans_idx] = trans
 
         # We expect no problems.
-        self.check(ref_file, trans_file)
+        self.check(trans_file, ref_file)
 
     def test_translation_with_faults(self):
         # generate some keys for file
@@ -118,4 +118,4 @@ class TestEmptyTranslations(ChecksTestCase):
                 trans_file.items[idx] = trans
                 processed -= 1
 
-        self.check(ref_file, trans_file, exp_warnings = how_many)
+        self.check(trans_file, ref_file, exp_warnings = how_many)

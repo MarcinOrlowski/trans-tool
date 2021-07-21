@@ -35,7 +35,7 @@ class TestMissingTranslations(ChecksTestCase):
         keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
         ref_file = self.build_prepfile(keys)
         trans_file = self.build_prepfile(keys)
-        self.check(ref_file, trans_file)
+        self.check(trans_file, ref_file)
 
     def test_translation_with_keys_in_comments(self):
         # Checks if we have no issues reported when running
@@ -62,11 +62,11 @@ class TestMissingTranslations(ChecksTestCase):
 
         # We expect no issues in non-strict mode
         trans_file.config.strict = False
-        self.check(ref_file, trans_file)
+        self.check(trans_file, ref_file)
 
         # We expect warnings in strict mode
         trans_file.config.strict = True
-        self.check(ref_file, trans_file, exp_warnings = len(remaining_keys))
+        self.check(trans_file, ref_file, exp_warnings = len(remaining_keys))
 
     def test_translation_with_faults(self):
         # generate some keys for reference file
@@ -80,4 +80,4 @@ class TestMissingTranslations(ChecksTestCase):
 
         ref_file = self.build_prepfile(ref_keys)
         trans_file = self.build_prepfile(trans_keys)
-        self.check(ref_file, trans_file, exp_warnings = how_many_less)
+        self.check(trans_file, ref_file, exp_warnings = how_many_less)
