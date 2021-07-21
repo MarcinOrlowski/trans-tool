@@ -40,6 +40,7 @@ class ChecksTestCase(TestCase):
 
     def do_test(self, reference: PropFile, translation: PropFile, exp_errors: int = 0, exp_warnings: int = 0) -> None:
         report = self.checker.check(reference, translation)
+
         self.assertEqual(exp_errors, report.errors)
         self.assertEqual(exp_warnings, report.warnings)
 

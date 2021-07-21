@@ -37,7 +37,7 @@ class EmptyTranslations(Check):
                 continue
 
             # Get reference string. Skip if not found (dangling key?)
-            ref = reference_file.find_by_key(item.key)
+            ref: PropTranslation = reference_file.find_by_key(item.key)
             if not ref:
                 continue
 
