@@ -9,10 +9,9 @@
 
 from typing import Union
 
-from .item import ReportItem
+from .items import ReportItem
 from proptool.log import Log
-from proptool.report.error import Error
-from proptool.report.warn import Warn
+from proptool.report.items import Warn, Error
 
 
 # #################################################################################################

@@ -9,6 +9,8 @@
 from typing import Union
 
 
+# #################################################################################################
+
 class ReportItem(object):
     def __init__(self, position: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> None:
         if isinstance(position, int):
@@ -26,3 +28,15 @@ class ReportItem(object):
             line += f'"{self.trans_key}": '
         line += self.msg
         return line.strip()
+
+
+# #################################################################################################
+
+class Error(ReportItem):
+    pass
+
+
+# #################################################################################################
+
+class Warn(ReportItem):
+    pass
