@@ -34,6 +34,7 @@ jobs:
         filters: |
           docs:
             - '**/*.md'
+            - '*.md'
 
     # https://github.com/marketplace/actions/my-markdown-linter
     - name: "Running markdown linter..."
