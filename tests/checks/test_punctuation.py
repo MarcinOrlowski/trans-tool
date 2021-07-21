@@ -14,7 +14,7 @@ from proptool.checks.punctuation import Punctuation
 from proptool.config import Config
 from proptool.entries import PropTranslation
 from proptool.overrides import overrides
-from proptool.propfile import PropFile
+from proptool.prop_file import PropFile
 
 
 # TODO: Test handling other types than PropTranslation, PropComment
