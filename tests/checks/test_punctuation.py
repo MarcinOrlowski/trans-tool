@@ -12,9 +12,9 @@ from checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.punctuation import Punctuation
 from proptool.config import Config
-from proptool.entries import PropTranslation
-from proptool.overrides import overrides
-from proptool.propfile import PropFile
+from proptool.prop.entries import PropTranslation
+from proptool.decorators.overrides import overrides
+from proptool.prop.file import PropFile
 
 
 # TODO: Test handling other types than PropTranslation, PropComment

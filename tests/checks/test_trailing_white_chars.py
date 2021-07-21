@@ -10,8 +10,8 @@ from checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.trailing_white_chars import TrailingWhiteChars
 from proptool.config import Config
-from proptool.entries import PropComment, PropTranslation
-from proptool.overrides import overrides
+from proptool.prop.entries import PropComment, PropTranslation
+from proptool.decorators.overrides import overrides
 
 
 # TODO: Test handling other types than PropTranslation, PropComment

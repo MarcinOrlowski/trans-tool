@@ -9,9 +9,9 @@
 import re
 
 from .base.check import Check
-from ..entries import PropTranslation
-from ..overrides import overrides
-from ..report.report_group import ReportGroup
+from proptool.prop.entries import PropTranslation
+from proptool.decorators.overrides import overrides
+from proptool.report.group import ReportGroup
 
 
 # #################################################################################################

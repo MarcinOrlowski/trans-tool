@@ -8,8 +8,8 @@
 """
 
 from .base.check import Check
-from ..overrides import overrides
-from ..report.report_group import ReportGroup
+from proptool.decorators.overrides import overrides
+from proptool.report.group import ReportGroup
 
 
 # #################################################################################################

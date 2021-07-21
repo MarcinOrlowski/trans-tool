@@ -6,11 +6,3 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
-
-from .item import ReportItem
-
-
-# #################################################################################################
-
-class Warn(ReportItem):
-    pass
