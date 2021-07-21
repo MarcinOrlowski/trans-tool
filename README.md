@@ -2,25 +2,82 @@
 
 `prop-tool` - Java *.properties file checker and syncing tool.
 
-This utility can be used to check if translation files stay in sync with base file. It can also create translation files adding
-missing keys based on the content of base file.
+This utility can be used to check your `*.properties` Java files to ensure correct syntax is used, all translation files are in sync
+with base file, there are no missing keys or invalid punctuation and more. It can also create translation files adding missing keys
+based on the content of base file.
 
 ```bash
-$ proptool -b mark -l pl -v
+$ prop-tool -b mark -l pl -v
 Base: mark.properties
-  Found 6 errors in "mark_pl.properties":
-    Trailing white characters: 3
-      W: line 2: In comment: 2
-      E: line 4: In "question" entry: 1
-      E: line 5: In "exclamation" entry: 1
-    Punctuation mismatch: 3
-      E: line 2: "question" ends with " ". Expected "?".
-      E: line 3: "exclamation" ends with " ". Expected "!".
-      E: line 4: "newline" ends with "". Expected "\n".
+  Warnings: 1
+    Brackets
+      W: Line 3:16: No closing bracket for "<"
+  PL: brackets_pl.properties
+    Errors: 8, warnings: 3
+      Sentence starts with different letter case.
+        E: Line 8: "missingClosing" starts with lower-cased character. Expected UPPER-cased.
+      Trailing white characters
+        W: line 2: In comment: 2
+        E: line 4: In "question" entry: 1
+      Punctuation mismatch
+        E: line 3: "exclamation" ends with " ". Expected "!".
+        E: line 4: "newline" ends with "". Expected "\n".
+      Bracket mismatch
+        E: Line 2:1: "missingClosing": No closing bracket for "(".
+        W: Line 3:16: No closing bracket for "<"
+        E: Line 4:4: "missingOpening": No opening bracket matching ")".
+      Quotation marks
+        E: Line 12:5: "missingSingle": Quotation mark mismatch. Expected ", found `.
+        E: Line 13:5: "remaining": Quotation mark mismatch. Expected ", found `.
+        W: Line 14:11: No closing mark for ".
 ```
 
 Based on `*.properties`
 [file format docs](https://docs.oracle.com/cd/E23095_01/Platform.93/ATGProgGuide/html/s0204propertiesfileformat01.html).
+
+## Checks ##
+
+The main purpose of `prop-tool` is to ensure all property files are correct and that translation files are in sync with the
+reference file. For that reason you need to have at least two `*.properties` files to use `prop-tool`. One is your base language
+(usually English texts) used as reference and all the others are your translations. `prop-tool` performs several checks on both
+base (reference) file and each translation.
+
+For base file it executes following validators:
+
+* Syntax: ensures use of allowed comment markers, key - value separators etc.
+* TrailingWhiteChars: no trailing spaces nor tabs at the end of each line.
+* WhiteCharsBeforeLinefeed: ensures there's no space nor tab character placed before linefeed literals (`\n` and `\r`).
+* KeyFormat: ensures key string matches defined pattern.
+* Brackets: ensures all brackets opened are closed and there's no unpaired bracket.
+* QuotationMarks: ensures all quotation marks are unpaired.
+
+For translation files, the following checks are performed:
+
+* Syntax: ensures use of allowed comment markers, key - value separators etc.
+* TrailingWhiteChars: no trailing spaces nor tabs at the end of each line.
+* MissingTranslation: keys found in base file, but missing in translation.
+* DanglingKeys: keys found in translation file but not present in base file.
+* EmptyTranslations: empty translations for non-empty text in base file.
+* StartsWithTheSameCase: ensures translation starts with the same character case (upper/lower) as entry in base file.
+* Punctuation: ensures translation ends with punctuation mark (`:`, `.`, `?`, `!`) if entry if base file ends that way.
+* WhiteCharsBeforeLinefeed: ensures there's no space nor tab character placed before linefeed literals (`\n` and `\r`).
+* KeyFormat: ensures key string matches defined pattern.
+* Brackets: ensures all brackets opened are closed and there's no unpaired bracket.
+* QuotationMarks: ensures all quotation marks are unpaired.
+* FormattingValues: ensures all formatting values (i.e. `%s`, `%d`) present in base file are also present in translation, and the
+  order is correct.
+
+NOTE: as this is quite common that translation file may not be updated instantly, `prop-tool` considers key presence condition
+fulfilled also when given key exists in `B` file but is commented out and follow expected comment format:
+
+```bash
+# ==> KEY =
+```
+
+Default format can changed using `--tpl` argument.
+
+If you want to ensure that all keys are in fact translated, use `--strict` mode while checking. When running with `--strict` option,
+keys in commented out form are ignored.
 
 ## Installation ##
 
@@ -38,32 +95,15 @@ pip install --upgrade <FILE>.whl
 
 You may also want to setup [virtual environment](https://docs.python.org/3/library/venv.html) first.
 
-## Validation ##
-
-The main purpose of `prop-tool` is to ensure all property files are correct and that translation files are in sync with the
-reference file. For that reason you need to have at least two `*.properties` files to use `prop-tool`. One is your base language
-(usually English texts) used as reference and all the others are your translations. Translation file is in sync with base when:
-
-1. All keys present in base file are also present in translation file.
-1. There's no dangling keys (not existing in base) present in translation file.
-1. Trailing punctuation marks of translation match base strings.
-
-NOTE: as this is quite common that translation file may not be updated instantly, `prop-tool` considers key presence condition
-fulfilled also when given key exists in `B` file but is commented out and follow expected comment format:
-
-```
-# ==> KEY =
-```
-
-Default format can changed using `--tpl` argument.
-
-If you want to ensure that all keys are in fact translated, use `--strict` mode while checking. When running with `--strict` option,
-keys in commented out form are ignored.
-
 ## Fixing files ##
 
 You can use `prop-tool` to update your translation files by using `--fix` option. In such case `prop-tool` will completely rewrite
 translation files, adding missing keys (in commented out form).
+
+While content of written file is strongly based on base file Some normalization will be made
+
+* There will be no more than one empty consequent empty line written,
+* There will be no more than one consequent empty comment line (just comment marker) written.
 
 NOTE: Be aware that `--fix` do NOT update existing translation file but builds it completely using base file as reference and
 existing translations (if present). No other content of translation files (for example additional comments etc) will be preserved.
@@ -125,6 +165,7 @@ prop-tool --base gui --lang es --fix --tpl "COM >~=-> KEY SEP"
 ## Limitations ##
 
 * As of now `prop-tool` do not handle multiline entries.
+* `FormattingValues` check will do not support positional placeholders, formats using space leading positive numbers.
 
 ## License ##
 

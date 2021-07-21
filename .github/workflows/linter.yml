@@ -1,0 +1,40 @@
+#
+# prop-tool
+# Java *.properties file sync checker and syncing tool.
+#
+# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# https://github.com/MarcinOrlowski/prop-tool/
+#
+
+name: "Code lint"
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master, dev ]
+
+jobs:
+  unittests:
+    name: "Linting"
+    runs-on: ubuntu-latest
+
+    steps:
+      # https://github.com/marketplace/actions/checkout
+      - name: "Checkout sources"
+        uses: actions/checkout@v2
+
+      # https://github.com/marketplace/actions/paths-changes-filter
+      - name: "Look for changed files..."
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            srcs:
+              - '**/*.py'
+
+      # https://github.com/marketplace/actions/wemake-python-styleguide
+      # https://wemake-python-stylegui.de/en/latest/pages/usage/integrations/github-actions.html
+      - name: "Running linter..."
+        if: steps.filter.outputs.srcs == 'true'
+        uses: wemake-services/wemake-python-styleguide@0.15.3

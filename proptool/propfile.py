@@ -1,40 +1,60 @@
-#
+"""
 # prop-tool
 # Java *.properties file sync checker and syncing tool.
 #
 # Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/prop-tool/
 #
-
+"""
+import copy
 import re
 from pathlib import Path
 from typing import List, Union
 
-from .app import App
-from .check.punctuation import Punctuation
-from .check.trailing_whitechars import TrailingWhiteChars
-from .entries import PropComment, PropTranslation, PropEmpty, PropEntry
-from .util import Util
+from .checks.brackets import Brackets
+from .checks.dangling_keys import DanglingKeys
+from .checks.empty_translations import EmptyTranslations
+from .checks.formatting_values import FormattingValues
+from .checks.key_format import KeyFormat
+from .checks.missing_translation import MissingTranslation
+from .checks.punctuation import Punctuation
+from .checks.quotation_marks import QuotationMarks
+from .checks.starts_with_the_same_case import StartsWithTheSameCase
+from .checks.trailing_white_chars import TrailingWhiteChars
+from .checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
+from .config import Config
+from .entries import PropComment, PropEmpty, PropEntry, PropTranslation
+from .log import Log
 from .report.report import Report
+from .report.report_group import ReportGroup
+from .utils import Utils
 
 
 # #################################################################################################
 
-class PropFile(list):
-    def __init__(self, app: App, file: Path, language: str = None):
+class PropFile(object):
+    def __init__(self, config: Config, file: Union[Path, None] = None, language: List[str] = None):
         super().__init__()
+
+        self.config: Config = config
 
         self.file: Path = file
         # All the keys of 'regular' translations
         self.keys: List[str] = []
         # All the keys in form `# ==> KEY =` that we found.
         self.commented_out_keys: List[str] = []
-        self.app: App = app
-        self.separator: str = app.separator
+        self.separator: str = config.separator
         self.loaded: bool = False
-        self.language = language
+        self.items: List[PropEntry] = []
 
-        self.duplicated_keys_report = Report()
+        self.report = Report(config)
+
+        comment_pattern = re.escape(self.config.comment_template).replace(
+            'COM', f'[{"".join(Config.ALLOWED_COMMENT_MARKERS)}]').replace(
+            'SEP', f'[{"".join(Config.ALLOWED_SEPARATORS)}]')
+        # NOTE: key pattern must be in () brackets to form a group used later!
+        comment_pattern = comment_pattern.replace('KEY', '([a-zAz][a-zA-z0-9_.-]+)')
+        self.comment_pattern = f'^{comment_pattern}'
 
         if file is not None:
             self.loaded = self._load(file)
@@ -48,107 +68,72 @@ class PropFile(list):
         :param key: Translation key to look for.
         :return: Instance of PropTranslation or None.
         """
-        for item in list(filter(lambda entry: isinstance(entry, PropTranslation), self)):
+        translations = list(filter(lambda entry: isinstance(entry, PropTranslation), self.items))
+        for item in translations:
             if item.key == key:
                 return item
         return None
 
     # #################################################################################################
 
+    def append(self, item: PropEntry):
+        if isinstance(item, PropTranslation):
+            self.keys.append(item.key)
+            self.items.append(item)
+        elif isinstance(item, PropComment):
+            # Let's look for commented out keys.
+            match = re.compile(self.comment_pattern).match(item.value)
+            if match:
+                self.commented_out_keys.append(match.group(1))
+            self.items.append(item)
+
+    # #################################################################################################
+
     def validate_and_fix(self, reference: 'PropFile') -> None:
-        if not self.validate(reference) and self.app.fix:
+        if not self.validate(reference) and self.config.fix:
             self.fix(reference)
 
     # #################################################################################################
 
-    def validate(self, reference: 'PropFile') -> bool:
+    def validate(self, reference_file: 'PropFile') -> bool:
         """
         Validates given PropFile against provided reference file.
 
-        :param reference:
+        :param reference_file:
         :return:
         """
-
         if not self.loaded:
-            Util.error(f'  File does not exist: {self.file}')
+            Log.e(f'  File does not exist: {self.file}')
             return False
 
-        error_count = 0
+        checks = [
+            MissingTranslation,
+            DanglingKeys,
+            TrailingWhiteChars,
+            Punctuation,
+            StartsWithTheSameCase,
+            EmptyTranslations,
+            WhiteCharsBeforeLinefeed,
+            KeyFormat,
+            Brackets,
+            QuotationMarks,
+            FormattingValues,
+        ]
+        for validator in checks:
+            # Each validator gets copy of the files, to prevent any potential destructive operation.
+            self.report.add((validator(self.config)).check(copy.copy(reference_file), copy.copy(self)))
 
-        my_keys = self.keys.copy()
-        missing_keys: List[str] = []
-
-        # Check if we have all reference keys present.
-        for key in reference.keys:
-            if key in my_keys:
-                my_keys.remove(key)
-            else:
-                missing_keys.append(key)
-
-        # Commented out keys are also considered present in the translation unless
-        # we run in strict check mode.
-        if not self.app.strict:
-            commented_out_keys = self.commented_out_keys.copy()
-            for key in commented_out_keys:
-                if key in missing_keys:
-                    missing_keys.remove(key)
-
-        # Check for trailing white chars
-        trailing_chars_report = TrailingWhiteChars.check(self.app, self)
-
-        # Check for punctuation marks
-        punctuation_mismatch_report = Punctuation.check(self.app, reference, self)
-
-        # Check for space before \n
-        # for item in self:
-
-        missing_keys_count = len(missing_keys)
-        error_count += missing_keys_count
-        dangling_keys_count = len(my_keys)
-        error_count += dangling_keys_count
-
-        trailing_chars_count = len(trailing_chars_report)
-        error_count += trailing_chars_count
-
-        punctuation_mismatch_count = len(punctuation_mismatch_report)
-        error_count += punctuation_mismatch_count
-
-        if error_count > 0:
-            Util.error(f'  Found {error_count} errors in "{self.file}":')
-            if missing_keys_count > 0:
-                Util.error(f'    Missing keys: {missing_keys_count}')
-                if self.app.verbose:
-                    Util.error([f'      {key}' for key in missing_keys])
-            if dangling_keys_count > 0:
-                Util.error(f'    Dangling keys: {dangling_keys_count}')
-                if self.app.verbose:
-                    Util.error([f'      {key}' for key in my_keys])
-            if trailing_chars_count > 0:
-                Util.error(f'    Trailing white characters: {trailing_chars_count}')
-                if self.app.verbose:
-                    Util.error([f'      {item.to_string()}' for item in trailing_chars_report])
-            if punctuation_mismatch_count > 0:
-                Util.error(f'    Punctuation mismatch: {punctuation_mismatch_count}')
-                if self.app.verbose:
-                    Util.error([f'      {item.to_string()}' for item in punctuation_mismatch_report])
-
-        elif self.app.verbose:
-            print(f'  {self.file}: OK')
-
-        return error_count == 0
+        return self.report.empty()
 
     # #################################################################################################
 
     def fix(self, reference: 'PropFile') -> None:
-        synced: List[PropEntry] = []
+        synced: List[str] = []
 
-        comment_pattern = self.app.comment_template.replace('COM', self.app.comment_marker).replace('SEP', self.separator)
-        for item in reference:
+        comment_pattern = self.config.comment_template.replace('COM', self.config.comment_marker).replace('SEP', self.separator)
+        for item in reference.items:
             if isinstance(item, PropTranslation):
                 if item.key in self.keys:
-                    translated = self.find_by_key(item.key)
-                    if not translated:
-                        raise RuntimeError(f'Unable to find translation of {item.key}')
                     synced.append(self.find_by_key(item.key).to_string() + '\n')
                 else:
                     synced.append(comment_pattern.replace('KEY', item.key) + '\n')
@@ -157,7 +142,7 @@ class PropFile(list):
             else:
                 raise RuntimeError(f'Unknown entry type: {type(item)}')
 
-        print(f'    Re-writing translation file: {self.file}')
+        Log.i(f'Re-writing translation file: {self.file}')
         with open(self.file, 'w') as fh:
             fh.writelines(synced)
 
@@ -167,22 +152,17 @@ class PropFile(list):
         """
         Loads and parses *.properties file.
 
-        :param file:
+        :param file: File to load.
         :return:
         """
-
         if not file.exists():
             return False
 
-        comment_pattern = re.escape(self.app.comment_template).replace(
-            'COM', f'[{"".join(self.app.allowed_comment_markers)}]').replace(
-            'SEP', f'[{"".join(self.app.allowed_separators)}]')
-        # NOTE: key pattern must be in () brackets to form a group used later!
-        comment_pattern = comment_pattern.replace('KEY', '([a-zAz][a-zA-z0-9_.-]+)')
-        comment_pattern = f'^{comment_pattern}'
-
         with open(file, 'r') as fh:
             line_number: int = 0
+
+            duplicated_keys = ReportGroup('Duplicated keys')
+
             while True:
                 line_number += 1
                 line: str = fh.readline()
@@ -190,52 +170,42 @@ class PropFile(list):
                     break
 
                 # remove CRLF
-                if line[-1] == '\n':  # LF
+                if line and line[-1] == '\n':  # LF
                     line = line[:-1]
-                if line[-1] == '\r':  # CR
+                if line and line[-1] == '\r':  # CR
                     line = line[:-1]
 
                 # Skip empty lines
                 if line.strip() == '':
                     self.append(PropEmpty())
+                    continue
 
-                elif line[0] in self.app.allowed_comment_markers:
-                    # Let's look for commented out keys.
-                    match = re.compile(comment_pattern).match(line)
-                    if match:
-                        self.commented_out_keys.append(match.group(1))
+                if line[0] in Config.ALLOWED_COMMENT_MARKERS:
                     self.append(PropComment(line))
+                    continue
 
-                # elif line[0] in self.app.allowed_comment_markers:
-                #     # Only single subsequent 'empty' comment line allowed.
-                #     if line == self.app.comment_marker and previous_line is not None and previous_line == self.app.comment_marker:
-                #         continue
-                #
-                #     # Let's look for commented out keys.
-                #     match = re.compile(comment_pattern).match(line)
-                #     if match:
-                #         self.commented_out_keys.append(match.group(1))
-                #     addComment(line)
+                if not self.separator:
+                    # Let's look for used separator character
+                    for _, single_char in enumerate(line):
+                        if single_char in Config.ALLOWED_SEPARATORS:
+                            self.separator = single_char
+                            break
 
+                tmp: List[str] = line.split(self.separator)
+                if len(tmp) < 2:
+                    Utils.abort([
+                        f'Invalid syntax. Line {line_number}, file: {file}',
+                        f'Using "{self.separator}" as separator.',
+                    ])
+
+                key = tmp[0].strip()
+                val = ''.join(tmp[1:]).lstrip()
+                if key not in self.keys:
+                    self.append(PropTranslation(key, val, self.separator))
                 else:
-                    if not self.separator:
-                        # Let's look for used separator character
-                        for i in range(len(line)):
-                            if line[i] in self.app.allowed_separators:
-                                self.separator = line[i]
-                                break
+                    duplicated_keys.error(line_number, f'Duplicated key "{key}".')
 
-                    tmp: List[str] = line.split(self.separator)
-                    if len(tmp) < 2:
-                        Util.abort([f'Invalid syntax. Line {line_number}, file: {file}',
-                                    f'Using "{self.separator}" as separator.'])
-
-                    key = tmp[0].strip()
-                    val = ''.join(tmp[1:]).lstrip()
-                    if key not in self.keys:
-                        self.keys.append(key)
-                        self.append(PropTranslation(key, val, self.separator))
-                    else:
-                        self.duplicated_keys_report.error(line_number, f'Duplicated key "{key}".')
+            if not duplicated_keys.empty():
+                self.report.add(duplicated_keys)
 
         return True

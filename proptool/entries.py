@@ -1,19 +1,20 @@
-#
+"""
 # prop-tool
 # Java *.properties file sync checker and syncing tool.
 #
 # Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/prop-tool/
 #
+"""
 
 from .overrides import overrides
 
 
 # #################################################################################################
 
-class PropEntry:
+class PropEntry(object):
     def to_string(self) -> str:
-        raise NotImplemented
+        raise NotImplementedError
 
 
 # #################################################################################################
@@ -23,9 +24,12 @@ class PropTranslation(PropEntry):
     Class representing valid translation entry.
     """
 
-    def __init__(self, key: str, value: str = None, separator: str = ':') -> None:
+    def __init__(self, key: str, value: str = None, separator: str = '=') -> None:
         key = key.strip()
-        assert len(key) > 0
+        if not key:
+            raise ValueError('No empty key allowed.')
+        if separator not in {':', '='}:
+            raise ValueError(f'Invalid separator character: "{separator}".')
 
         self.key = key
         self.value = value
@@ -44,9 +48,11 @@ class PropComment(PropEntry):
     """
 
     def __init__(self, value: str) -> None:
-        value = value
-        assert len(value) > 0
-        assert value[0] in ['!', '#']
+        if not value:
+            raise ValueError('Value cannot be empty.')
+        marker = value[0]
+        if marker not in {'!', '#'}:
+            raise ValueError(f'Invalid comment marker: "{marker}".')
         self.value = value
 
     @overrides(PropEntry)

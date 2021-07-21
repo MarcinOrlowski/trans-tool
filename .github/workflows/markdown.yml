@@ -1,0 +1,46 @@
+#
+# prop-tool
+# Java *.properties file sync checker and syncing tool.
+#
+# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# https://github.com/MarcinOrlowski/prop-tool/
+#
+# Runs markdownlint on all *.md files
+#
+
+name: "MD Lint"
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master, dev ]
+
+jobs:
+  markdown_lint:
+    name: "Markdown linter"
+    runs-on: ubuntu-latest
+
+    steps:
+    # https://github.com/marketplace/actions/checkout
+    - name: "Checkout sources"
+      uses: actions/checkout@v2
+
+    # https://github.com/marketplace/actions/paths-changes-filter
+    - name: "Look for changed doc related files..."
+      uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          docs:
+            - '**/*.md'
+
+    # https://github.com/marketplace/actions/my-markdown-linter
+    - name: "Running markdown linter..."
+      uses: ruzickap/action-my-markdown-linter@v1
+      if: steps.filter.outputs.docs == 'true'
+      with:
+        # LICENSE is externally sourced and we're not going to fix it.
+        exclude: "LICENSE.md"
+        config_file: .markdownlint.yaml
+

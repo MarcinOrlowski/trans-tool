@@ -1,37 +1,39 @@
-#
+"""
 # prop-tool
 # Java *.properties file sync checker and syncing tool.
 #
 # Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/prop-tool/
 #
+"""
 
-from .check import Check
-from ..app import App
+from .base.check import Check
 from ..entries import PropTranslation
 from ..overrides import overrides
-from ..report.report import Report
+from ..report.report_group import ReportGroup
 
 
 # #################################################################################################
 
+# noinspection PyUnresolvedReferences
 class Punctuation(Check):
-    """
+    r"""
     This check verifies translation ends with the same punctuation marks or special characters (\n)
     as original string.
     """
 
-    @staticmethod
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
-    def check(app: App, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> Report:
-        report = Report()
-        for idx, item in enumerate(reference_file):
+    def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
+        report = ReportGroup('Punctuation mismatch')
+
+        for idx, item in enumerate(reference_file.items):
             # We care translations only for now.
+
             if not isinstance(item, PropTranslation):
                 continue
 
-            for last_char in ['.', '?', '!', ':', '\\n']:
+            for last_char in self.config.checks['Punctuation']['chars']:
                 last_char_len = len(last_char)
 
                 ref_last_char = item.value[(last_char_len * -1):]
@@ -40,7 +42,7 @@ class Punctuation(Check):
                     if translation:
                         trans_last_char = translation.value[(last_char_len * -1):]
                         if trans_last_char != ref_last_char:
-                            report.error(idx + 1, f'"{item.key}" ends with "{trans_last_char}". Expected "{ref_last_char}".')
+                            report.warn(idx + 1, f'Ends with "{trans_last_char}". Expected "{ref_last_char}".', item.key)
                     break
 
         return report
