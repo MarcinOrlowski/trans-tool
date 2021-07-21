@@ -12,7 +12,7 @@ from checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.empty_translations import EmptyTranslations
 from proptool.config import Config
-from proptool.prop.items import PropTranslation
+from proptool.prop.items import Translation
 from proptool.decorators.overrides import overrides
 
 
@@ -54,13 +54,13 @@ class TestEmptyTranslations(ChecksTestCase):
         while processed > 0:
             idx = random.randint(0, key_cnt - 1)
 
-            ref: PropTranslation = ref_file.items[idx]
+            ref: Translation = ref_file.items[idx]
             if ref.value != '':
                 max_spaces = 3
                 ref.value = ' ' * random.randint(0, max_spaces)
                 ref_file.items[idx] = ref
 
-                trans: PropTranslation = trans_file.items[idx]
+                trans: Translation = trans_file.items[idx]
                 trans.value = ''
                 trans_file.items[idx] = trans
 
@@ -112,7 +112,7 @@ class TestEmptyTranslations(ChecksTestCase):
         processed = how_many
         while processed > 0:
             idx = random.randint(0, key_cnt - 1)
-            trans: PropTranslation = trans_file.items[idx]
+            trans: Translation = trans_file.items[idx]
             if trans.value != '':
                 trans.value = ''
                 trans_file.items[idx] = trans

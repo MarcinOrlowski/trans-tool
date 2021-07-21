@@ -12,7 +12,7 @@ from checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.punctuation import Punctuation
 from proptool.config import Config
-from proptool.prop.items import PropTranslation
+from proptool.prop.items import Translation
 from proptool.decorators.overrides import overrides
 from proptool.prop.file import PropFile
 
@@ -42,8 +42,8 @@ class TestPunctuation(ChecksTestCase):
         trans_file = PropFile(self.config)
         for key in keys:
             value = self.get_random_string() + marks[punct_idx % len(marks)]
-            ref_file.append(PropTranslation(key, value))
-            trans_file.append(PropTranslation(key, value))
+            ref_file.append(Translation(key, value))
+            trans_file.append(Translation(key, value))
             punct_idx += 1
 
         self.check(ref_file, trans_file)
@@ -70,7 +70,7 @@ class TestPunctuation(ChecksTestCase):
                 trans_value += marks[punct_idx % len(marks)]
             else:
                 expected_faults += 1
-            ref_file.append(PropTranslation(key, ref_value))
-            trans_file.append(PropTranslation(key, trans_value))
+            ref_file.append(Translation(key, ref_value))
+            trans_file.append(Translation(key, trans_value))
             punct_idx += 1
         self.check(ref_file, trans_file, exp_warnings = expected_faults)

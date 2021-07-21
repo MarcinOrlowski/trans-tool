@@ -23,7 +23,7 @@ from proptool.checks.starts_with_the_same_case import StartsWithTheSameCase
 from proptool.checks.trailing_white_chars import TrailingWhiteChars
 from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from proptool.config import Config
-from proptool.prop.items import PropComment, PropBlank, PropItem, PropTranslation
+from proptool.prop.items import PropComment, PropBlank, PropItem, Translation
 from proptool.log import Log
 from proptool.report.report import Report
 from proptool.report.group import ReportGroup
@@ -61,14 +61,14 @@ class PropFile(object):
 
     # #################################################################################################
 
-    def find_by_key(self, key: str) -> Union[PropTranslation, None]:
+    def find_by_key(self, key: str) -> Union[Translation, None]:
         """
         Returns translation entry referenced by given key or None.
 
         :param key: Translation key to look for.
         :return: Instance of PropTranslation or None.
         """
-        translations = list(filter(lambda entry: isinstance(entry, PropTranslation), self.items))
+        translations = list(filter(lambda entry: isinstance(entry, Translation), self.items))
         for item in translations:
             if item.key == key:
                 return item
@@ -77,7 +77,7 @@ class PropFile(object):
     # #################################################################################################
 
     def append(self, item: PropItem):
-        if isinstance(item, PropTranslation):
+        if isinstance(item, Translation):
             self.keys.append(item.key)
             self.items.append(item)
         elif isinstance(item, PropComment):
@@ -132,7 +132,7 @@ class PropFile(object):
 
         comment_pattern = self.config.comment_template.replace('COM', self.config.comment_marker).replace('SEP', self.separator)
         for item in reference.items:
-            if isinstance(item, PropTranslation):
+            if isinstance(item, Translation):
                 if item.key in self.keys:
                     synced.append(self.find_by_key(item.key).to_string() + '\n')
                 else:
@@ -201,7 +201,7 @@ class PropFile(object):
                 key = tmp[0].strip()
                 val = ''.join(tmp[1:]).lstrip()
                 if key not in self.keys:
-                    self.append(PropTranslation(key, val, self.separator))
+                    self.append(Translation(key, val, self.separator))
                 else:
                     duplicated_keys.error(line_number, f'Duplicated key "{key}".')
 

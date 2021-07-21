@@ -24,7 +24,7 @@ class PropItem(object):
 
 # #################################################################################################
 
-class PropTranslation(PropItem):
+class Translation(PropItem):
     """
     Class representing valid translation entry.
     """

@@ -8,7 +8,7 @@
 """
 
 from .base.check import Check
-from proptool.prop.items import PropTranslation
+from proptool.prop.items import Translation
 from proptool.decorators.overrides import overrides
 from proptool.report.group import ReportGroup
 
@@ -29,7 +29,7 @@ class Punctuation(Check):
 
         for idx, item in enumerate(reference_file.items):
             # We care translations only for now.
-            if not isinstance(item, PropTranslation):
+            if not isinstance(item, Translation):
                 continue
 
             for last_char in self.config.checks['Punctuation']['chars']:

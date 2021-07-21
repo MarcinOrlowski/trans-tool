@@ -10,7 +10,7 @@ from checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from proptool.config import Config
-from proptool.prop.items import PropTranslation
+from proptool.prop.items import Translation
 from proptool.decorators.overrides import overrides
 
 
@@ -27,13 +27,13 @@ class TestWhiteCharsBeforeLinefeed(ChecksTestCase):
     # #################################################################################################
 
     def test_translation_no_faults(self):
-        self.check_single_file(PropTranslation('key', r'This is\nall\nOK'))
+        self.check_single_file(Translation('key', r'This is\nall\nOK'))
 
     def test_translation_string_too_short(self):
         # Checks behavior when the string is too short to fit space and litera,
-        self.check_single_file(PropTranslation('key', r' X'))
-        self.check_single_file(PropTranslation('key', r'\n'))
+        self.check_single_file(Translation('key', r' X'))
+        self.check_single_file(Translation('key', r'\n'))
 
     def test_translation_with_faults(self):
         self.check_single_file(
-            PropTranslation('key', r'This is NOT \n OK.'), exp_warnings = 1)
+            Translation('key', r'This is NOT \n OK.'), exp_warnings = 1)

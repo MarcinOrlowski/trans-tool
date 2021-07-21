@@ -11,7 +11,7 @@ from checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.formatting_values import FormattingValues
 from proptool.config import Config
-from proptool.prop.items import PropTranslation
+from proptool.prop.items import Translation
 from proptool.decorators.overrides import overrides
 from proptool.prop.file import PropFile
 
@@ -39,8 +39,8 @@ class TestFormattingValues(ChecksTestCase):
             trans_file = PropFile(self.config)
 
             key = self.get_random_string()
-            ref_file.append(PropTranslation(key, test_case[0]))
-            trans_file.append(PropTranslation(key, test_case[1]))
+            ref_file.append(Translation(key, test_case[0]))
+            trans_file.append(Translation(key, test_case[1]))
             self.check(ref_file, trans_file)
 
     def test_with_faults(self):
@@ -61,7 +61,7 @@ class TestFormattingValues(ChecksTestCase):
             trans_file = PropFile(self.config)
 
             key = self.get_random_string()
-            ref_file.append(PropTranslation(key, test_case[0]))
-            trans_file.append(PropTranslation(key, test_case[1]))
+            ref_file.append(Translation(key, test_case[0]))
+            trans_file.append(Translation(key, test_case[1]))
             # This checker always return one error (if there's any fault).
             self.check(ref_file, trans_file, exp_errors = 1)

@@ -10,7 +10,7 @@ from checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.quotation_marks import QuotationMarks
 from proptool.config import Config
-from proptool.prop.items import PropComment, PropTranslation
+from proptool.prop.items import PropComment, Translation
 from proptool.decorators.overrides import overrides
 
 
@@ -27,10 +27,10 @@ class TestQuotationMarks(ChecksTestCase):
     # #################################################################################################
 
     def test_translation_no_faults(self):
-        self.check_single_file(PropTranslation('key', '""'))
+        self.check_single_file(Translation('key', '""'))
 
     def test_translation_with_faults(self):
-        self.check_single_file(PropTranslation('key', '"""'), exp_errors = 1)
+        self.check_single_file(Translation('key', '"""'), exp_errors = 1)
 
     # #################################################################################################
 

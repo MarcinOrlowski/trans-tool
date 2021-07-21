@@ -8,7 +8,7 @@
 """
 
 from .base.check import Check
-from proptool.prop.items import PropTranslation
+from proptool.prop.items import Translation
 from proptool.decorators.overrides import overrides
 from proptool.report.group import ReportGroup
 
@@ -29,7 +29,7 @@ class EmptyTranslations(Check):
         for idx, item in enumerate(translation_file.items):
             # We care translations only for now.
             # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
-            if not isinstance(item, PropTranslation):
+            if not isinstance(item, Translation):
                 continue
 
             # If translation is not empty, skip it.
@@ -37,7 +37,7 @@ class EmptyTranslations(Check):
                 continue
 
             # Get reference string. Skip if not found (dangling key?)
-            ref: PropTranslation = reference_file.find_by_key(item.key)
+            ref: Translation = reference_file.find_by_key(item.key)
             if not ref:
                 continue
 
