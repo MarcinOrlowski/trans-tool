@@ -34,7 +34,7 @@ class ChecksTestCase(TestCase):
     def do_single_test(self, entry: PropEntry, exp_errors: int = 0, exp_warnings: int = 0) -> None:
         prop_file = PropFile(self.config)
         prop_file.loaded = True
-        prop_file.append(entry)
+        prop_file.items.append(entry)
 
         self.do_test(None, prop_file, exp_errors, exp_warnings)
 
@@ -51,12 +51,9 @@ class ChecksTestCase(TestCase):
         for item in contents:
             if isinstance(item, str):
                 prep_file.keys.append(item)
-                prep_file.append(PropTranslation(item, self.get_random_string()))
+                prep_file.items.append(PropTranslation(item, self.get_random_string()))
                 continue
-            elif isinstance(item, PropTranslation):
-                prep_file.keys.append(item.key)
-                prep_file.append(item)
-            elif isinstance(item, PropComment):
+            elif isinstance(item, (PropTranslation, PropComment)):
                 prep_file.append(item)
             else:
                 raise RuntimeError(f'Unsupported content type: {type(item)}')

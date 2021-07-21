@@ -32,7 +32,7 @@ class Config(object):
         self.punctuation_exception_langs: List[str] = []
         self.quiet: bool = False
         self.separator: str = '='
-        self.strict: bool = True
+        self.strict: bool = False
         self.verbose: bool = False
 
         self.checks = {

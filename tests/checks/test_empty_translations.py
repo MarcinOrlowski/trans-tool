@@ -54,15 +54,15 @@ class TestEmptyTranslations(ChecksTestCase):
         while processed > 0:
             idx = random.randint(0, key_cnt - 1)
 
-            ref: PropTranslation = ref_file[idx]
+            ref: PropTranslation = ref_file.items[idx]
             if ref.value != '':
                 max_spaces = 3
                 ref.value = ' ' * random.randint(0, max_spaces)
-                ref_file[idx] = ref
+                ref_file.items[idx] = ref
 
-                trans: PropTranslation = trans_file[idx]
+                trans: PropTranslation = trans_file.items[idx]
                 trans.value = ''
-                trans_file[idx] = trans
+                trans_file.items[idx] = trans
 
                 processed -= 1
 
@@ -82,17 +82,17 @@ class TestEmptyTranslations(ChecksTestCase):
         how_many = random.randint(1, cnt_min)
         removed_keys = []
         for idx in range(how_many):
-            idx_to_remove = random.randint(0, len(ref_file) - 1)
-            removed_keys.append(ref_file[idx_to_remove].key)
-            del ref_file[idx_to_remove]
+            idx_to_remove = random.randint(0, len(ref_file.items) - 1)
+            removed_keys.append(ref_file.items[idx_to_remove].key)
+            del ref_file.items[idx_to_remove]
 
         # We also need to make these dangling entries empty string
         # otherwise it will be filtered earlier.
         for removed_key in removed_keys:
             trans = trans_file.find_by_key(removed_key)
-            trans_idx = trans_file.index(trans)
+            trans_idx = trans_file.items.index(trans)
             trans.value = ''
-            trans_file[trans_idx] = trans
+            trans_file.items[trans_idx] = trans
 
         # We expect no problems.
         self.do_test(ref_file, trans_file)
@@ -112,10 +112,10 @@ class TestEmptyTranslations(ChecksTestCase):
         processed = how_many
         while processed > 0:
             idx = random.randint(0, key_cnt - 1)
-            trans: PropTranslation = trans_file[idx]
+            trans: PropTranslation = trans_file.items[idx]
             if trans.value != '':
                 trans.value = ''
-                trans_file[idx] = trans
+                trans_file.items[idx] = trans
                 processed -= 1
 
         self.do_test(ref_file, trans_file, exp_warnings = how_many)

@@ -42,7 +42,7 @@ class QuotationMarks(Check):
         # Not sure how to deal with this (and I do not want to do dictionary match)
         supported_marks: List[str] = {'"', '`'}
 
-        for line_idx, item in enumerate(translation_file):
+        for line_idx, item in enumerate(translation_file.items):
             # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
             if not isinstance(item, (PropTranslation, PropComment)):
                 continue
