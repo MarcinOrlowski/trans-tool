@@ -10,7 +10,7 @@ from checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.brackets import Brackets
 from proptool.config import Config
-from proptool.prop.items import PropComment, Translation
+from proptool.prop.items import Comment, Translation
 from proptool.decorators.overrides import overrides
 
 
@@ -41,12 +41,12 @@ class TestBrackets(ChecksTestCase):
     # #################################################################################################
 
     def test_comment_no_faults(self):
-        self.check_single_file(PropComment('# (foo) '))
+        self.check_single_file(Comment('# (foo) '))
 
     def test_comment_with_faults(self):
         # Tests error handling when we have popping bracket and empty stack.
-        self.check_single_file(PropComment('# foo]"  '), exp_warnings = 1)
+        self.check_single_file(Comment('# foo]"  '), exp_warnings = 1)
         # Tests the case where we done with checks and something left on stack.
-        self.check_single_file(PropComment('# <fo[o]" '), exp_warnings = 1)
+        self.check_single_file(Comment('# <fo[o]" '), exp_warnings = 1)
         # Text the case where we have matches, but not in order.
-        self.check_single_file(PropComment('# [foo <]>" '), exp_warnings = 1)
+        self.check_single_file(Comment('# [foo <]>" '), exp_warnings = 1)

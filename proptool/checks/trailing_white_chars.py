@@ -8,7 +8,7 @@
 """
 
 from proptool.decorators.overrides import overrides
-from proptool.prop.items import PropComment, Translation
+from proptool.prop.items import Comment, Translation
 from proptool.report.group import ReportGroup
 from .base.check import Check
 
@@ -27,7 +27,7 @@ class TrailingWhiteChars(Check):
         report = ReportGroup('Trailing white characters')
         for idx, item in enumerate(translation_file.items):
             # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
-            if not isinstance(item, (Translation, PropComment)):
+            if not isinstance(item, (Translation, Comment)):
                 continue
             diff_count = len(item.value) - len(item.value.rstrip())
             if diff_count > 0:

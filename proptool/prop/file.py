@@ -23,7 +23,7 @@ from proptool.checks.starts_with_the_same_case import StartsWithTheSameCase
 from proptool.checks.trailing_white_chars import TrailingWhiteChars
 from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from proptool.config import Config
-from proptool.prop.items import PropComment, PropBlank, PropItem, Translation
+from proptool.prop.items import Comment, PropBlank, PropItem, Translation
 from proptool.log import Log
 from proptool.report.report import Report
 from proptool.report.group import ReportGroup
@@ -80,7 +80,7 @@ class PropFile(object):
         if isinstance(item, Translation):
             self.keys.append(item.key)
             self.items.append(item)
-        elif isinstance(item, PropComment):
+        elif isinstance(item, Comment):
             # Let's look for commented out keys.
             match = re.compile(self.comment_pattern).match(item.value)
             if match:
@@ -137,7 +137,7 @@ class PropFile(object):
                     synced.append(self.find_by_key(item.key).to_string() + '\n')
                 else:
                     synced.append(comment_pattern.replace('KEY', item.key) + '\n')
-            elif isinstance(item, (PropBlank, PropComment)):
+            elif isinstance(item, (PropBlank, Comment)):
                 synced.append(item.to_string() + '\n')
             else:
                 raise RuntimeError(f'Unknown entry type: {type(item)}')
@@ -181,7 +181,7 @@ class PropFile(object):
                     continue
 
                 if line[0] in Config.ALLOWED_COMMENT_MARKERS:
-                    self.append(PropComment(line))
+                    self.append(Comment(line))
                     continue
 
                 if not self.separator:

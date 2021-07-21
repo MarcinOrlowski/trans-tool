@@ -12,7 +12,7 @@ from checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.missing_translation import MissingTranslation
 from proptool.config import Config
-from proptool.prop.items import PropComment
+from proptool.prop.items import Comment
 from proptool.decorators.overrides import overrides
 
 
@@ -58,7 +58,7 @@ class TestMissingTranslations(ChecksTestCase):
         for key in remaining_keys:
             comment = self.config.DEFAULT_COMMENT_TEMPLATE
             comment = comment.replace('SEP', trans_file.separator).replace('COM', self.config.comment_marker).replace('KEY', key)
-            trans_file.append(PropComment(comment))
+            trans_file.append(Comment(comment))
 
         # We expect no issues in non-strict mode
         trans_file.config.strict = False

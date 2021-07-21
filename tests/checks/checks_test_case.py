@@ -11,7 +11,7 @@ from typing import List, Union
 
 from proptool.checks.base.check import Check
 from proptool.config import Config
-from proptool.prop.items import PropComment, PropItem, Translation
+from proptool.prop.items import Comment, PropItem, Translation
 from proptool.prop.file import PropFile
 from test_case import TestCase
 
@@ -53,7 +53,7 @@ class ChecksTestCase(TestCase):
                 prep_file.keys.append(item)
                 prep_file.items.append(Translation(item, self.get_random_string()))
                 continue
-            elif isinstance(item, (Translation, PropComment)):
+            elif isinstance(item, (Translation, Comment)):
                 prep_file.append(item)
             else:
                 raise RuntimeError(f'Unsupported content type: {type(item)}')

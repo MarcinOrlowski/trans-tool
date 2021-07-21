@@ -44,7 +44,7 @@ class Translation(PropItem):
 
 # #################################################################################################
 
-class PropComment(PropItem):
+class Comment(PropItem):
     """
     Class representing line comment.
     """
