@@ -24,11 +24,22 @@ class ReportGroup(list):
         self.warnings = 0
         self.errors = 0
 
-    def add(self, report_item: ReportItem) -> None:
-        item_cls = type(report_item)
-        if not issubclass(item_cls, ReportItem):
-            raise TypeError(f'Item must be instance of {ReportItem}. {item_cls} given.')
-        self.append(report_item)
+    def create(self, position: Union[str, None], msg: str, trans_key: Union[str, None] = None) -> None:
+        """
+        Helper to create either Error() or Warn() items that share the message (to remove duplicated code and logic).
+        If trans_key is None, it is assumed report message relates
+        to comment issue which by default gets reported as Warn(). If translation key is present
+        such offence is reported as Error.
+
+        :param position:
+        :param msg:
+        :param trans_key:
+        :return:
+        """
+        if trans_key is None:
+            self.warn(position, msg)
+        else:
+            self.error(position, msg, trans_key)
 
     def empty(self) -> bool:
         return (self.errors + self.warnings) == 0

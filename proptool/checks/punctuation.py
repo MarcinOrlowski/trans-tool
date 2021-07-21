@@ -29,7 +29,6 @@ class Punctuation(Check):
 
         for idx, item in enumerate(reference_file.items):
             # We care translations only for now.
-
             if not isinstance(item, PropTranslation):
                 continue
 

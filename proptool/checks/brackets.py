@@ -35,14 +35,14 @@ class Brackets(Check):
     def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
         report = ReportGroup('Brackets')
 
+        # Keep matching brackets at the same positions!
+        opening: List[str] = ['(', '[', '<', '{']
+        closing: List[str] = [')', ']', '>', '}']
+
         for idx, item in enumerate(translation_file.items):
             # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
             if not isinstance(item, (PropTranslation, PropComment)):
                 continue
-
-            # Keep matching brackets at the same positions!
-            opening: List[str] = ['(', '[', '<', '{']
-            closing: List[str] = [')', ']', '>', '}']
 
             stack: List[Bracket] = []
             has_errors = False
@@ -59,10 +59,7 @@ class Brackets(Check):
 
                     if not stack:
                         # If stack is empty, then we had more closing brackets than opening ones.
-                        if isinstance(item, PropTranslation):
-                            report.error(position, f'No opening bracket matching "{current_char}".', item.key)
-                        else:
-                            report.warn(position, f'No opening bracket matching "{current_char}".')
+                        report.create(position, f'No opening character matching "{current_char}".', item.key)
                         # Just show single error per line to avoid flooding.
                         has_errors = True
                         break
@@ -74,10 +71,7 @@ class Brackets(Check):
                         continue
 
                     # This is not the bracket we were looking for...
-                    if isinstance(item, PropTranslation):
-                        report.error(position, f'Expected "{expected}", found "{current_char}".', item.key)
-                    else:
-                        report.warn(position, f'Expected "{expected}", found "{current_char}".')
+                    report.create(position, f'Expected "{expected}", found "{current_char}".', item.key)
                     # Just show single error per line to avoid flooding.
                     has_errors = True
                     break
@@ -85,10 +79,7 @@ class Brackets(Check):
             if not has_errors:
                 for bracket in stack:
                     position: str = f'{idx + 1}:{bracket.pos + 1}'
-                    if isinstance(item, PropTranslation):
-                        report.error(position, f'No closing bracket for "{bracket.bracket}" found.', item.key)
-                    else:
-                        report.warn(position, f'No closing bracket for "{bracket.bracket}" found.')
+                    report.create(position, f'No closing character for "{bracket.bracket}" found.', item.key)
                     # Just show single error per line to avoid flooding.
                     break
 

@@ -68,10 +68,7 @@ class QuotationMarks(Check):
 
             for quotation_mark in stack:
                 position: str = f'{line_idx + 1}:{quotation_mark.pos + 1}'
-                if isinstance(item, PropTranslation):
-                    report.error(position, f'No paired mark for {quotation_mark.mark}.', item.key)
-                else:
-                    report.warn(position, f'No paired mark for {quotation_mark.mark}.')
+                report.create(position, f'No paired mark for {quotation_mark.mark}.', item.key)
                 # Just show single error per line to avoid flooding.
                 break
 

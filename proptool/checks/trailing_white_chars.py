@@ -7,10 +7,10 @@
 #
 """
 
-from .base.check import Check
-from proptool.prop.entries import PropComment, PropTranslation
 from proptool.decorators.overrides import overrides
+from proptool.prop.entries import PropComment, PropTranslation
 from proptool.report.group import ReportGroup
+from .base.check import Check
 
 
 # #################################################################################################
@@ -27,14 +27,10 @@ class TrailingWhiteChars(Check):
         report = ReportGroup('Trailing white characters')
         for idx, item in enumerate(translation_file.items):
             # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
-            if isinstance(item, (PropTranslation, PropComment)):
-                diff_count = len(item.value) - len(item.value.rstrip())
-                if diff_count == 0:
-                    continue
-
-                if isinstance(item, PropTranslation):
-                    report.error(idx + 1, f'Trailing white chars: {diff_count}.', item.key)
-                else:
-                    report.warn(idx + 1, f'Trailing white chars in comment: {diff_count}.')
+            if not isinstance(item, (PropTranslation, PropComment)):
+                continue
+            diff_count = len(item.value) - len(item.value.rstrip())
+            if diff_count > 0:
+                report.create(idx + 1, f'Trailing white chars: {diff_count}.', item.key)
 
         return report

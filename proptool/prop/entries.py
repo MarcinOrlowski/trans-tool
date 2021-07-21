@@ -6,6 +6,7 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+from typing import Union
 
 from proptool.decorators.overrides import overrides
 
@@ -13,6 +14,10 @@ from proptool.decorators.overrides import overrides
 # #################################################################################################
 
 class PropEntry(object):
+    def __init__(self, value: Union[str, None] = None, key: Union[str, None] = None):
+        self.value = value
+        self.key = key
+
     def to_string(self) -> str:
         raise NotImplementedError
 
@@ -30,10 +35,7 @@ class PropTranslation(PropEntry):
             raise ValueError('No empty key allowed.')
         if separator not in {':', '='}:
             raise ValueError(f'Invalid separator character: "{separator}".')
-
-        self.key = key
-        self.value = value
-        self.separator = separator
+        super().__init__(value, key)
 
     @overrides(PropEntry)
     def to_string(self) -> str:
@@ -53,7 +55,7 @@ class PropComment(PropEntry):
         marker = value[0]
         if marker not in {'!', '#'}:
             raise ValueError(f'Invalid comment marker: "{marker}".')
-        self.value = value
+        super().__init__(value)
 
     @overrides(PropEntry)
     def to_string(self) -> str:
@@ -68,7 +70,7 @@ class PropEmpty(PropEntry):
     """
 
     def __init__(self) -> None:
-        pass
+        super().__init__()
 
     @overrides(PropEntry)
     def to_string(self) -> str:
