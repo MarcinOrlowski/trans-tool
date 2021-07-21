@@ -23,7 +23,7 @@ from proptool.checks.starts_with_the_same_case import StartsWithTheSameCase
 from proptool.checks.trailing_white_chars import TrailingWhiteChars
 from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from proptool.config import Config
-from proptool.prop.entries import PropComment, PropEmpty, PropEntry, PropTranslation
+from proptool.prop.entries import PropComment, PropBlank, PropEntry, PropTranslation
 from proptool.log import Log
 from proptool.report.report import Report
 from proptool.report.group import ReportGroup
@@ -137,7 +137,7 @@ class PropFile(object):
                     synced.append(self.find_by_key(item.key).to_string() + '\n')
                 else:
                     synced.append(comment_pattern.replace('KEY', item.key) + '\n')
-            elif isinstance(item, (PropEmpty, PropComment)):
+            elif isinstance(item, (PropBlank, PropComment)):
                 synced.append(item.to_string() + '\n')
             else:
                 raise RuntimeError(f'Unknown entry type: {type(item)}')
@@ -177,7 +177,7 @@ class PropFile(object):
 
                 # Skip empty lines
                 if line.strip() == '':
-                    self.append(PropEmpty())
+                    self.append(PropBlank())
                     continue
 
                 if line[0] in Config.ALLOWED_COMMENT_MARKERS:
