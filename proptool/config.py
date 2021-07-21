@@ -39,6 +39,9 @@ class Config(object):
             'KeyFormat': {
                 'pattern': r'^[a-z]+[a-zA-Z0-9_.]*[a-zA-Z0-9]+$',
             },
+            'Punctuation': {
+                'chars': ['.', '?', '!', ':', r'\n'],
+            },
         }
 
         if args:

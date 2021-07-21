@@ -27,13 +27,13 @@ class Punctuation(Check):
     def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
         report = ReportGroup('Punctuation mismatch')
 
-        for idx, item in enumerate(reference_file):
+        for idx, item in enumerate(reference_file.items):
             # We care translations only for now.
 
             if not isinstance(item, PropTranslation):
                 continue
 
-            for last_char in ('.', '?', '!', ':', r'\n'):
+            for last_char in self.config.checks['Punctuation']['chars']:
                 last_char_len = len(last_char)
 
                 ref_last_char = item.value[(last_char_len * -1):]
@@ -42,7 +42,7 @@ class Punctuation(Check):
                     if translation:
                         trans_last_char = translation.value[(last_char_len * -1):]
                         if trans_last_char != ref_last_char:
-                            report.error(idx + 1, f'Ends with "{trans_last_char}". Expected "{ref_last_char}".', item.key)
+                            report.warn(idx + 1, f'Ends with "{trans_last_char}". Expected "{ref_last_char}".', item.key)
                     break
 
         return report
