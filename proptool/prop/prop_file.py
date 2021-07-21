@@ -11,23 +11,23 @@ import re
 from pathlib import Path
 from typing import List, Union
 
-from .checks.brackets import Brackets
-from .checks.dangling_keys import DanglingKeys
-from .checks.empty_translations import EmptyTranslations
-from .checks.formatting_values import FormattingValues
-from .checks.key_format import KeyFormat
-from .checks.missing_translation import MissingTranslation
-from .checks.punctuation import Punctuation
-from .checks.quotation_marks import QuotationMarks
-from .checks.starts_with_the_same_case import StartsWithTheSameCase
-from .checks.trailing_white_chars import TrailingWhiteChars
-from .checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
-from .config import Config
-from .prop_entries import PropComment, PropEmpty, PropEntry, PropTranslation
-from .log import Log
-from .report.report import Report
-from .report.report_group import ReportGroup
-from .utils import Utils
+from ..checks.brackets import Brackets
+from ..checks.dangling_keys import DanglingKeys
+from ..checks.empty_translations import EmptyTranslations
+from ..checks.formatting_values import FormattingValues
+from ..checks.key_format import KeyFormat
+from ..checks.missing_translation import MissingTranslation
+from ..checks.punctuation import Punctuation
+from ..checks.quotation_marks import QuotationMarks
+from ..checks.starts_with_the_same_case import StartsWithTheSameCase
+from ..checks.trailing_white_chars import TrailingWhiteChars
+from ..checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
+from ..config import Config
+from ..prop.prop_entries import PropComment, PropEmpty, PropEntry, PropTranslation
+from ..log import Log
+from ..report.report import Report
+from ..report.report_group import ReportGroup
+from ..utils import Utils
 
 
 # #################################################################################################

@@ -20,7 +20,7 @@ from .config import Config
 from .const import Const
 from .log import Log
 from .utils import Utils
-from .prop_file import PropFile
+from .prop.prop_file import PropFile
 
 
 class PropTool(object):

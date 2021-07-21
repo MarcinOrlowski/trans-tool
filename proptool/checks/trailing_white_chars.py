@@ -8,7 +8,7 @@
 """
 
 from .base.check import Check
-from ..prop_entries import PropComment, PropTranslation
+from ..prop.prop_entries import PropComment, PropTranslation
 from ..decorators.overrides import overrides
 from ..report.report_group import ReportGroup
 

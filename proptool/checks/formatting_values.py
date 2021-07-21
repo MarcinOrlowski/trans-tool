@@ -12,7 +12,7 @@ import re
 from typing import List
 
 from .base.check import Check
-from ..prop_entries import PropTranslation
+from ..prop.prop_entries import PropTranslation
 from ..decorators.overrides import overrides
 from ..report.report_group import ReportGroup
 
