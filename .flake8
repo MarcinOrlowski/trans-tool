@@ -56,6 +56,8 @@ ignore =
     E251,
     # I003 isort expected 1 blank line in imports, found
     I003,
+    # WPS615 Found unpythonic getter or setter
+    WPS615,
 
     # WPS420 Found wrong keyword: pass
     WPS420,
@@ -141,4 +143,5 @@ per-file-ignores =
     proptool/utils.py: WPS421, WPS100,
 
     # S311 Standard pseudo-random generators are not suitable for security/cryptographic purposes.
-    tests/*: S311,
+    # WPS323 Found `%` string formatting
+    tests/*: S311, WPS323,

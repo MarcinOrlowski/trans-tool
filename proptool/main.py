@@ -10,11 +10,11 @@ import argparse
 import copy
 from pathlib import Path
 
-from .check.brackets import Brackets
-from .check.key_format import KeyFormat
-from .check.trailing_white_chars import TrailingWhiteChars
-from .check.quotation_marks import QuotationMarks
-from .check.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
+from .checks.brackets import Brackets
+from .checks.key_format import KeyFormat
+from .checks.trailing_white_chars import TrailingWhiteChars
+from .checks.quotation_marks import QuotationMarks
+from .checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from .config import Config
 from .const import Const
 from .log import Log

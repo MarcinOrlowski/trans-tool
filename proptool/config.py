@@ -32,12 +32,15 @@ class Config(object):
         self.punctuation_exception_langs: List[str] = []
         self.quiet: bool = False
         self.separator: str = '='
-        self.strict: bool = True
+        self.strict: bool = False
         self.verbose: bool = False
 
         self.checks = {
             'KeyFormat': {
-                'pattern': r'([a-z][a-zA-Z0-9_.]*[a-zA-Z0-9]){2,}',
+                'pattern': r'^[a-z]+[a-zA-Z0-9_.]*[a-zA-Z0-9]+$',
+            },
+            'Punctuation': {
+                'chars': ['.', '?', '!', ':', r'\n'],
             },
         }
 

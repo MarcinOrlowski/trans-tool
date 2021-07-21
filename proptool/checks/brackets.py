@@ -10,7 +10,7 @@
 from typing import List
 
 from .base.check import Check
-from ..entries import PropComment, PropTranslation, PropEntry
+from ..entries import PropComment, PropTranslation
 from ..overrides import overrides
 from ..report.report_group import ReportGroup
 
@@ -30,15 +30,12 @@ class Brackets(Check):
     opened brackets are closed.
     """
 
-    def _check_line(self, item: PropEntry):
-        pass
-
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
         report = ReportGroup('Brackets')
 
-        for idx, item in enumerate(translation_file):
+        for idx, item in enumerate(translation_file.items):
             # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
             if not isinstance(item, (PropTranslation, PropComment)):
                 continue
@@ -53,9 +50,15 @@ class Brackets(Check):
                 position: str = f'{idx + 1}:{char_idx + 1}'
 
                 if current_char in opening:
+                    # Every opening brace is pushed to the stack.
                     stack.append(Bracket(char_idx, current_char))
-                elif current_char in closing:
-                    if stack:
+                    continue
+
+                if current_char in closing:
+                    # Every closing brace should take its own pair off the stack
+
+                    if not stack:
+                        # If stack is empty, then we had more closing brackets than opening ones.
                         if isinstance(item, PropTranslation):
                             report.error(position, f'No opening bracket matching "{current_char}".', item.key)
                         else:
@@ -63,29 +66,21 @@ class Brackets(Check):
                         # Just show single error per line to avoid flooding.
                         has_errors = True
                         break
+
+                    # Check if what we are about to pop from the stack and see if our current_char matches.
+                    expected = closing[opening.index(stack[-1].bracket)]
+                    if current_char == expected:
+                        stack.pop()
+                        continue
+
+                    # This is not the bracket we were looking for...
+                    if isinstance(item, PropTranslation):
+                        report.error(position, f'Expected "{expected}", found "{current_char}".', item.key)
                     else:
-                        popped: Bracket = stack.pop()
-                        # Check if what we popped from the stack is one of opening brackets.
-                        if popped.bracket not in opening:
-                            if isinstance(item, PropTranslation):
-                                report.error(position, f'No opening bracket matching "{current_char}" found.', item.key)
-                            else:
-                                report.warn(position, f'No opening bracket matching "{current_char}" found.')
-                            # Just show single error per line to avoid flooding.
-                            has_errors = True
-                            break
-                        else:
-                            # Check if this is the right closing bracket type for what we popped from the stack
-                            bracket_idx = opening.index(popped.bracket)
-                            expected = closing[bracket_idx]
-                            if current_char != expected:
-                                if isinstance(item, PropTranslation):
-                                    report.error(position, f'Expected "{expected}", found "{current_char}".', item.key)
-                                else:
-                                    report.warn(position, f'Expected "{expected}", found "{current_char}".')
-                                # Just show single error per line to avoid flooding.
-                                has_errors = True
-                                break
+                        report.warn(position, f'Expected "{expected}", found "{current_char}".')
+                    # Just show single error per line to avoid flooding.
+                    has_errors = True
+                    break
 
             if not has_errors:
                 for bracket in stack:

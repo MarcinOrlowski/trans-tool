@@ -23,6 +23,7 @@ class WhiteCharsBeforeLinefeed(Check):
 
     def _scan(self, report: ReportGroup, idx: int, item: PropTranslation, literal: str) -> bool:
         literal_len = len(literal)
+        # Let's crawl backward and see what's there...
         for pos in range(len(item.value) - literal_len, 0, -1):
             if item.value[pos:(pos + 2)] == literal:
                 pre = item.value[pos - 1]
@@ -37,7 +38,7 @@ class WhiteCharsBeforeLinefeed(Check):
     def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
         report = ReportGroup('White chars before linefeed literal')
 
-        for idx, item in enumerate(translation_file):
+        for idx, item in enumerate(translation_file.items):
             # We care translations only for now.
             # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
             if not isinstance(item, PropTranslation):

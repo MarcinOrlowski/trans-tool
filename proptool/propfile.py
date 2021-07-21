@@ -11,19 +11,19 @@ import re
 from pathlib import Path
 from typing import List, Union
 
-from .check.brackets import Brackets
-from .check.dangling_keys import DanglingKeys
-from .check.empty_translations import EmptyTranslations
-from .check.formatting_values import FormattingValues
-from .check.key_format import KeyFormat
-from .check.missing_translation import MissingTranslation
-from .check.punctuation import Punctuation
-from .check.quotation_marks import QuotationMarks
-from .check.starts_with_the_same_case import StartsWithTheSameCase
-from .check.trailing_white_chars import TrailingWhiteChars
-from .check.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
+from .checks.brackets import Brackets
+from .checks.dangling_keys import DanglingKeys
+from .checks.empty_translations import EmptyTranslations
+from .checks.formatting_values import FormattingValues
+from .checks.key_format import KeyFormat
+from .checks.missing_translation import MissingTranslation
+from .checks.punctuation import Punctuation
+from .checks.quotation_marks import QuotationMarks
+from .checks.starts_with_the_same_case import StartsWithTheSameCase
+from .checks.trailing_white_chars import TrailingWhiteChars
+from .checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from .config import Config
-from .entries import PropComment, PropEmpty, PropTranslation
+from .entries import PropComment, PropEmpty, PropEntry, PropTranslation
 from .log import Log
 from .report.report import Report
 from .report.report_group import ReportGroup
@@ -32,8 +32,8 @@ from .utils import Utils
 
 # #################################################################################################
 
-class PropFile(list):
-    def __init__(self, config: Config, file: Path, language: List[str] = None):
+class PropFile(object):
+    def __init__(self, config: Config, file: Union[Path, None] = None, language: List[str] = None):
         super().__init__()
 
         self.config: Config = config
@@ -45,10 +45,16 @@ class PropFile(list):
         self.commented_out_keys: List[str] = []
         self.separator: str = config.separator
         self.loaded: bool = False
-
-        self.language: List[str] = [] if language is None else language
+        self.items: List[PropEntry] = []
 
         self.report = Report(config)
+
+        comment_pattern = re.escape(self.config.comment_template).replace(
+            'COM', f'[{"".join(Config.ALLOWED_COMMENT_MARKERS)}]').replace(
+            'SEP', f'[{"".join(Config.ALLOWED_SEPARATORS)}]')
+        # NOTE: key pattern must be in () brackets to form a group used later!
+        comment_pattern = comment_pattern.replace('KEY', '([a-zAz][a-zA-z0-9_.-]+)')
+        self.comment_pattern = f'^{comment_pattern}'
 
         if file is not None:
             self.loaded = self._load(file)
@@ -62,11 +68,24 @@ class PropFile(list):
         :param key: Translation key to look for.
         :return: Instance of PropTranslation or None.
         """
-        translations = list(filter(lambda entry: isinstance(entry, PropTranslation), self))
+        translations = list(filter(lambda entry: isinstance(entry, PropTranslation), self.items))
         for item in translations:
             if item.key == key:
                 return item
         return None
+
+    # #################################################################################################
+
+    def append(self, item: PropEntry):
+        if isinstance(item, PropTranslation):
+            self.keys.append(item.key)
+            self.items.append(item)
+        elif isinstance(item, PropComment):
+            # Let's look for commented out keys.
+            match = re.compile(self.comment_pattern).match(item.value)
+            if match:
+                self.commented_out_keys.append(match.group(1))
+            self.items.append(item)
 
     # #################################################################################################
 
@@ -112,7 +131,7 @@ class PropFile(list):
         synced: List[str] = []
 
         comment_pattern = self.config.comment_template.replace('COM', self.config.comment_marker).replace('SEP', self.separator)
-        for item in reference:
+        for item in reference.items:
             if isinstance(item, PropTranslation):
                 if item.key in self.keys:
                     synced.append(self.find_by_key(item.key).to_string() + '\n')
@@ -139,13 +158,6 @@ class PropFile(list):
         if not file.exists():
             return False
 
-        comment_pattern = re.escape(self.config.comment_template).replace(
-            'COM', f'[{"".join(Config.ALLOWED_COMMENT_MARKERS)}]').replace(
-            'SEP', f'[{"".join(Config.ALLOWED_SEPARATORS)}]')
-        # NOTE: key pattern must be in () brackets to form a group used later!
-        comment_pattern = comment_pattern.replace('KEY', '([a-zAz][a-zA-z0-9_.-]+)')
-        comment_pattern = f'^{comment_pattern}'
-
         with open(file, 'r') as fh:
             line_number: int = 0
 
@@ -169,10 +181,6 @@ class PropFile(list):
                     continue
 
                 if line[0] in Config.ALLOWED_COMMENT_MARKERS:
-                    # Let's look for commented out keys.
-                    match = re.compile(comment_pattern).match(line)
-                    if match:
-                        self.commented_out_keys.append(match.group(1))
                     self.append(PropComment(line))
                     continue
 
@@ -193,7 +201,6 @@ class PropFile(list):
                 key = tmp[0].strip()
                 val = ''.join(tmp[1:]).lstrip()
                 if key not in self.keys:
-                    self.keys.append(key)
                     self.append(PropTranslation(key, val, self.separator))
                 else:
                     duplicated_keys.error(line_number, f'Duplicated key "{key}".')

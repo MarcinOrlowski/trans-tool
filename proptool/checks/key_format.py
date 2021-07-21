@@ -6,9 +6,10 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+import re
 
 from .base.check import Check
-from ..entries import PropComment, PropTranslation
+from ..entries import PropTranslation
 from ..overrides import overrides
 from ..report.report_group import ReportGroup
 
@@ -16,25 +17,26 @@ from ..report.report_group import ReportGroup
 # #################################################################################################
 
 # noinspection PyUnresolvedReferences
-class TrailingWhiteChars(Check):
+class KeyFormat(Check):
     """
-    Checks if file has trailing white characters at the end of each line.
+    This check verifies that translation keys follow specified naming convention.
     """
 
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
-        report = ReportGroup('Trailing white characters')
-        for idx, item in enumerate(translation_file):
-            # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
-            if isinstance(item, (PropTranslation, PropComment)):
-                diff_count = len(item.value) - len(item.value.rstrip())
-                if diff_count == 0:
-                    continue
+        pattern = self.config.checks['KeyFormat']['pattern']
+        compiled_pattern = re.compile(pattern)
 
-                if isinstance(item, PropTranslation):
-                    report.error(idx + 1, f'Trailing white chars: {diff_count}.', item.key)
-                else:
-                    report.warn(idx + 1, f'Trailing white chars in comment: {diff_count}.')
+        report = ReportGroup(f'Key naming pattern: {pattern}')
+
+        for line_number, item in enumerate(translation_file.items):
+            # We care translations only for now.
+            # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
+            if not isinstance(item, PropTranslation):
+                continue
+
+            if compiled_pattern.match(item.key) is None:
+                report.error(line_number + 1, 'Invalid key name format.', item.key)
 
         return report

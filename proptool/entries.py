@@ -48,7 +48,7 @@ class PropComment(PropEntry):
     """
 
     def __init__(self, value: str) -> None:
-        if value:
+        if not value:
             raise ValueError('Value cannot be empty.')
         marker = value[0]
         if marker not in {'!', '#'}:
