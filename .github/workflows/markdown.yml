@@ -14,7 +14,7 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    branches: [ master, develop ]
+    branches: [ master, dev ]
 
 jobs:
   markdown_lint:
@@ -34,7 +34,6 @@ jobs:
         filters: |
           docs:
             - '**/*.md'
-            - '*.md'
 
     # https://github.com/marketplace/actions/my-markdown-linter
     - name: "Running markdown linter..."
