@@ -11,9 +11,9 @@ from checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.formatting_values import FormattingValues
 from proptool.config import Config
-from proptool.prop.prop_entries import PropTranslation
+from proptool.prop.entries import PropTranslation
 from proptool.decorators.overrides import overrides
-from proptool.prop.prop_file import PropFile
+from proptool.prop.file import PropFile
 
 
 # TODO: Test handling other types than PropTranslation

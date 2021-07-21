@@ -23,7 +23,7 @@ from proptool.checks.starts_with_the_same_case import StartsWithTheSameCase
 from proptool.checks.trailing_white_chars import TrailingWhiteChars
 from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from proptool.config import Config
-from proptool.prop.prop_entries import PropComment, PropEmpty, PropEntry, PropTranslation
+from proptool.prop.entries import PropComment, PropEmpty, PropEntry, PropTranslation
 from proptool.log import Log
 from proptool.report.report import Report
 from proptool.report.report_group import ReportGroup

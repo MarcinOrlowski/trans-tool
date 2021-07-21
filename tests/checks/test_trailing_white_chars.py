@@ -10,7 +10,7 @@ from checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.trailing_white_chars import TrailingWhiteChars
 from proptool.config import Config
-from proptool.prop.prop_entries import PropComment, PropTranslation
+from proptool.prop.entries import PropComment, PropTranslation
 from proptool.decorators.overrides import overrides
 
 
