@@ -6,6 +6,7 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+import random
 from abc import abstractmethod
 from typing import List, Union
 
@@ -43,19 +44,25 @@ class ChecksTestCase(TestCase):
         self.assertEqual(exp_errors, report.errors)
         self.assertEqual(exp_warnings, report.warnings)
 
-    def build_prepfile(self, contents: Union[List[str], List[PropItem]]) -> PropFile:
+    # #################################################################################################
+
+    def build_prepfile(self, contents: Union[List[str], List[PropItem]], lower: bool = False) -> PropFile:
         prep_file = PropFile(self.config)
         prep_file.loaded = True
 
         for item in contents:
             if isinstance(item, str):
                 prep_file.keys.append(item)
-                prep_file.items.append(Translation(item, self.get_random_string()))
+                value = self.get_random_string()
+                if lower:
+                    value = value.lower()
+                prep_file.items.append(Translation(item, value))
                 continue
             elif isinstance(item, (Translation, Comment)):
                 prep_file.append(item)
             else:
                 raise RuntimeError(f'Unsupported content type: {type(item)}')
+
         return prep_file
 
     # #################################################################################################
@@ -82,4 +89,22 @@ class ChecksTestCase(TestCase):
         trans_file.append(Blank())
         trans_file.append(Comment(self.config.ALLOWED_COMMENT_MARKERS[0] + self.get_random_string()))
 
+        self.check(trans_file, ref_file)
+
+    def check_skipping_of_dangling_keys(self) -> None:
+        """
+        Tests if dangling translatin keys are silently skipped.
+        """
+        # generate some keys for translation file
+        cnt_min = 20
+        cnt_max = 40
+        trans_keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
+
+        # have less keys for reference file
+        upper_bound = 10
+        how_many_less = random.randint(1, upper_bound)
+        ref_keys = trans_keys[:(how_many_less * -1)]
+
+        ref_file = self.build_prepfile(ref_keys)
+        trans_file = self.build_prepfile(trans_keys)
         self.check(trans_file, ref_file)

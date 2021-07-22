@@ -66,3 +66,6 @@ class TestFormattingValues(ChecksTestCase):
 
     def test_handling_of_unsupported_types(self) -> None:
         self.check_skipping_blank_and_comment()
+
+    def test_handling_of_dangling_translation_keys(self) -> None:
+        self.check_skipping_of_dangling_keys()
