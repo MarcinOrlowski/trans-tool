@@ -38,8 +38,10 @@ class ChecksTestCase(TestCase):
         self.check(prop_file, exp_errors = exp_errors, exp_warnings = exp_warnings)
 
     def check(self, translation: PropFile, reference: Union[PropFile, None] = None,
-              exp_errors: int = 0, exp_warnings: int = 0) -> None:
+              exp_errors: int = 0, exp_warnings: int = 0, dump = False) -> None:
         report = self.checker.check(translation, reference)
+        if dump:
+            report.dump()
 
         self.assertEqual(exp_errors, report.errors)
         self.assertEqual(exp_warnings, report.warnings)
@@ -93,7 +95,7 @@ class ChecksTestCase(TestCase):
 
     def check_skipping_of_dangling_keys(self) -> None:
         """
-        Tests if dangling translatin keys are silently skipped.
+        Tests if dangling translation keys are silently skipped.
         """
         # generate some keys for translation file
         cnt_min = 20
@@ -105,6 +107,6 @@ class ChecksTestCase(TestCase):
         how_many_less = random.randint(1, upper_bound)
         ref_keys = trans_keys[:(how_many_less * -1)]
 
-        ref_file = self.build_prepfile(ref_keys)
-        trans_file = self.build_prepfile(trans_keys)
+        ref_file = self.build_prepfile(ref_keys, True)
+        trans_file = self.build_prepfile(trans_keys, True)
         self.check(trans_file, ref_file)

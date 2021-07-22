@@ -55,6 +55,6 @@ class StartsWithTheSameCase(Check):
                     expected = 'lower-cased'
                     found = 'UPPER-cased'
 
-                report.warn(idx + 1, f'Starts with {found} character. Expected {expected}.', item.key)
+                report.warn(idx + 1, f'Value starts with {found} character. Expected {expected}.', item.key)
 
         return report
