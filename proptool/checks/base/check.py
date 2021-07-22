@@ -14,8 +14,6 @@ from proptool.config import Config
 from proptool.report.report import Report
 
 
-# #################################################################################################
-
 # noinspection PyUnresolvedReferences
 class Check(ABC):
     def __init__(self, config: Config):
