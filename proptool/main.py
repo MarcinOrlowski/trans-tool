@@ -6,21 +6,23 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+
 import argparse
 import copy
 import sys
 from pathlib import Path
 
-from .checks.brackets import Brackets
-from .checks.key_format import KeyFormat
-from .checks.trailing_white_chars import TrailingWhiteChars
-from .checks.quotation_marks import QuotationMarks
-from .checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
+from proptool.checks.brackets import Brackets
+from proptool.checks.key_format import KeyFormat
+from proptool.checks.quotation_marks import QuotationMarks
+from proptool.checks.trailing_white_chars import TrailingWhiteChars
+from proptool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
+from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
+from proptool.prop.file import PropFile
 from .config import Config
 from .const import Const
 from .log import Log
 from .utils import Utils
-from .prop.file import PropFile
 
 
 class PropTool(object):
@@ -97,6 +99,7 @@ class PropTool(object):
                 KeyFormat,
                 Brackets,
                 QuotationMarks,
+                TypesettingQuotationMarks,
             ]
             for validator in checks:
                 # Almost any check validates translation against reference file, so we cannot use all checks here,

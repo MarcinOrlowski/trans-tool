@@ -20,6 +20,8 @@ exclude =
 
 # it's not a bug that we aren't using all of hacking
 ignore =
+    # WPS211 Found too many arguments: 6 > 5
+    WPS211,
     # WPS317 Found incorrect multi-line parameters
     WPS317,
     # D205 1 blank line required between summary line and description
@@ -60,7 +62,7 @@ ignore =
     I003,
     # WPS615 Found unpythonic getter or setter
     WPS615,
-    #WPS238 Found too many raises in a function: 5 > 3
+    # WPS238 Found too many raises in a function: 5 > 3
     WPS238,
 
     # WPS420 Found wrong keyword: pass
@@ -150,4 +152,5 @@ per-file-ignores =
     # WPS323 Found `%` string formatting
     # WPS214 Found too many methods
     # WPS432 Found magic number
-    tests/*: S311, WPS323, WPS214, WPS432
+    # WPS609 Found direct magic attribute usage: __abstractmethods__
+    tests/*: S311, WPS323, WPS214, WPS432, WPS609

@@ -6,6 +6,7 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+
 import copy
 import re
 from pathlib import Path
@@ -21,12 +22,13 @@ from proptool.checks.punctuation import Punctuation
 from proptool.checks.quotation_marks import QuotationMarks
 from proptool.checks.starts_with_the_same_case import StartsWithTheSameCase
 from proptool.checks.trailing_white_chars import TrailingWhiteChars
+from proptool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
 from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from proptool.config import Config
-from proptool.prop.items import Comment, Blank, PropItem, Translation
 from proptool.log import Log
-from proptool.report.report import Report
+from proptool.prop.items import Blank, Comment, PropItem, Translation
 from proptool.report.group import ReportGroup
+from proptool.report.report import Report
 from proptool.utils import Utils
 
 
@@ -120,6 +122,7 @@ class PropFile(object):
             KeyFormat,
             Brackets,
             QuotationMarks,
+            TypesettingQuotationMarks,
             FormattingValues,
         ]
         for validator in checks:
