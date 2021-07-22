@@ -51,3 +51,22 @@ class TestBrackets(ChecksTestCase):
 
     def test_handling_of_unsupported_types(self) -> None:
         self.check_single_file(Blank())
+
+    # #################################################################################################
+
+    def test_opening_and_closing_lists(self) -> None:
+        """
+        Checks if lists defining opening and closing markers are sane.
+        """
+        checker: Brackets = self.get_checker()
+
+        self.assertEqual(len(checker.opening), len(checker.closing))
+        self.assertNotEqual([], checker.opening)
+        self.assertNotEqual([], checker.closing)
+        self.assertNotEqual(checker.opening, checker.closing)
+
+        # ensure no marker is in both lists
+        for marker in checker.opening:
+            self.assertFalse(marker in checker.closing)
+        for marker in checker.closing:
+            self.assertFalse(marker in checker.opening)
