@@ -6,6 +6,7 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+
 from sys import exit
 from typing import List, Union
 

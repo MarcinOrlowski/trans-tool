@@ -9,10 +9,10 @@
 
 from typing import List
 
+from proptool.decorators.overrides import overrides
+from proptool.prop.items import Comment, Translation
+from proptool.report.group import ReportGroup
 from .base.check import Check
-from ..entries import PropComment, PropTranslation, PropEntry
-from ..overrides import overrides
-from ..report.report_group import ReportGroup
 
 
 # #################################################################################################
@@ -30,12 +30,9 @@ class QuotationMarks(Check):
     opened marks got their closing pair.
     """
 
-    def _check_line(self, item: PropEntry):
-        pass
-
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
-    def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
+    def check(self, translation_file: 'PropFile', reference_file: 'PropFile' = None) -> ReportGroup:
         report = ReportGroup('Quotation marks')
 
         # NOTE: we do not support apostrophe, because i.e. in English it can be used in sentence: "Dogs' food"
@@ -44,7 +41,7 @@ class QuotationMarks(Check):
 
         for line_idx, item in enumerate(translation_file.items):
             # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
-            if not isinstance(item, (PropTranslation, PropComment)):
+            if not isinstance(item, (Translation, Comment)):
                 continue
 
             stack: List[Mark] = []
@@ -68,10 +65,7 @@ class QuotationMarks(Check):
 
             for quotation_mark in stack:
                 position: str = f'{line_idx + 1}:{quotation_mark.pos + 1}'
-                if isinstance(item, PropTranslation):
-                    report.error(position, f'No paired mark for {quotation_mark.mark}.', item.key)
-                else:
-                    report.warn(position, f'No paired mark for {quotation_mark.mark}.')
+                report.create(position, f'No paired mark for {quotation_mark.mark}.', item.key)
                 # Just show single error per line to avoid flooding.
                 break
 

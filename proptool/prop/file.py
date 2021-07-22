@@ -6,28 +6,30 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+
 import copy
 import re
 from pathlib import Path
 from typing import List, Union
 
-from .checks.brackets import Brackets
-from .checks.dangling_keys import DanglingKeys
-from .checks.empty_translations import EmptyTranslations
-from .checks.formatting_values import FormattingValues
-from .checks.key_format import KeyFormat
-from .checks.missing_translation import MissingTranslation
-from .checks.punctuation import Punctuation
-from .checks.quotation_marks import QuotationMarks
-from .checks.starts_with_the_same_case import StartsWithTheSameCase
-from .checks.trailing_white_chars import TrailingWhiteChars
-from .checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
-from .config import Config
-from .entries import PropComment, PropEmpty, PropEntry, PropTranslation
-from .log import Log
-from .report.report import Report
-from .report.report_group import ReportGroup
-from .utils import Utils
+from proptool.checks.brackets import Brackets
+from proptool.checks.dangling_keys import DanglingKeys
+from proptool.checks.empty_translations import EmptyTranslations
+from proptool.checks.formatting_values import FormattingValues
+from proptool.checks.key_format import KeyFormat
+from proptool.checks.missing_translation import MissingTranslation
+from proptool.checks.punctuation import Punctuation
+from proptool.checks.quotation_marks import QuotationMarks
+from proptool.checks.starts_with_the_same_case import StartsWithTheSameCase
+from proptool.checks.trailing_white_chars import TrailingWhiteChars
+from proptool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
+from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
+from proptool.config import Config
+from proptool.log import Log
+from proptool.prop.items import Blank, Comment, PropItem, Translation
+from proptool.report.group import ReportGroup
+from proptool.report.report import Report
+from proptool.utils import Utils
 
 
 # #################################################################################################
@@ -45,7 +47,7 @@ class PropFile(object):
         self.commented_out_keys: List[str] = []
         self.separator: str = config.separator
         self.loaded: bool = False
-        self.items: List[PropEntry] = []
+        self.items: List[PropItem] = []
 
         self.report = Report(config)
 
@@ -61,14 +63,14 @@ class PropFile(object):
 
     # #################################################################################################
 
-    def find_by_key(self, key: str) -> Union[PropTranslation, None]:
+    def find_by_key(self, key: str) -> Union[Translation, None]:
         """
         Returns translation entry referenced by given key or None.
 
         :param key: Translation key to look for.
         :return: Instance of PropTranslation or None.
         """
-        translations = list(filter(lambda entry: isinstance(entry, PropTranslation), self.items))
+        translations = list(filter(lambda entry: isinstance(entry, Translation), self.items))
         for item in translations:
             if item.key == key:
                 return item
@@ -76,16 +78,19 @@ class PropFile(object):
 
     # #################################################################################################
 
-    def append(self, item: PropEntry):
-        if isinstance(item, PropTranslation):
+    def append(self, item: PropItem):
+        if not issubclass(type(item), PropItem):
+            raise ValueError('Item must subclass PropItem.')
+
+        if isinstance(item, Translation):
             self.keys.append(item.key)
-            self.items.append(item)
-        elif isinstance(item, PropComment):
+        elif isinstance(item, Comment):
             # Let's look for commented out keys.
             match = re.compile(self.comment_pattern).match(item.value)
             if match:
                 self.commented_out_keys.append(match.group(1))
-            self.items.append(item)
+
+        self.items.append(item)
 
     # #################################################################################################
 
@@ -103,7 +108,7 @@ class PropFile(object):
         :return:
         """
         if not self.loaded:
-            Log.e(f'  File does not exist: {self.file}')
+            Log.e(f'File does not exist: {self.file}')
             return False
 
         checks = [
@@ -117,6 +122,7 @@ class PropFile(object):
             KeyFormat,
             Brackets,
             QuotationMarks,
+            TypesettingQuotationMarks,
             FormattingValues,
         ]
         for validator in checks:
@@ -132,12 +138,12 @@ class PropFile(object):
 
         comment_pattern = self.config.comment_template.replace('COM', self.config.comment_marker).replace('SEP', self.separator)
         for item in reference.items:
-            if isinstance(item, PropTranslation):
+            if isinstance(item, Translation):
                 if item.key in self.keys:
                     synced.append(self.find_by_key(item.key).to_string() + '\n')
                 else:
                     synced.append(comment_pattern.replace('KEY', item.key) + '\n')
-            elif isinstance(item, (PropEmpty, PropComment)):
+            elif isinstance(item, (Blank, Comment)):
                 synced.append(item.to_string() + '\n')
             else:
                 raise RuntimeError(f'Unknown entry type: {type(item)}')
@@ -177,11 +183,11 @@ class PropFile(object):
 
                 # Skip empty lines
                 if line.strip() == '':
-                    self.append(PropEmpty())
+                    self.append(Blank())
                     continue
 
                 if line[0] in Config.ALLOWED_COMMENT_MARKERS:
-                    self.append(PropComment(line))
+                    self.append(Comment(line))
                     continue
 
                 if not self.separator:
@@ -201,7 +207,7 @@ class PropFile(object):
                 key = tmp[0].strip()
                 val = ''.join(tmp[1:]).lstrip()
                 if key not in self.keys:
-                    self.append(PropTranslation(key, val, self.separator))
+                    self.append(Translation(key, val, self.separator))
                 else:
                     duplicated_keys.error(line_number, f'Duplicated key "{key}".')
 

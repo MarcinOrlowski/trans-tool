@@ -7,18 +7,14 @@
 #
 """
 
-from checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.formatting_values import FormattingValues
 from proptool.config import Config
-from proptool.entries import PropTranslation
-from proptool.overrides import overrides
-from proptool.propfile import PropFile
+from proptool.decorators.overrides import overrides
+from proptool.prop.file import PropFile
+from proptool.prop.items import Translation
+from tests.checks.checks_test_case import ChecksTestCase
 
-
-# TODO: Test handling other types than PropTranslation
-
-# #################################################################################################
 
 class TestFormattingValues(ChecksTestCase):
 
@@ -28,7 +24,7 @@ class TestFormattingValues(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_no_faults(self):
+    def test_no_faults(self) -> None:
         tests = [
             ('This %s foo %d %s', 'This 123 %s %d llorem bar %s ipsum.'),
             ('This has no %% formatters', 'Tricky one'),
@@ -39,11 +35,11 @@ class TestFormattingValues(ChecksTestCase):
             trans_file = PropFile(self.config)
 
             key = self.get_random_string()
-            ref_file.append(PropTranslation(key, test_case[0]))
-            trans_file.append(PropTranslation(key, test_case[1]))
-            self.do_test(ref_file, trans_file)
+            ref_file.append(Translation(key, test_case[0]))
+            trans_file.append(Translation(key, test_case[1]))
+            self.check(trans_file, ref_file)
 
-    def test_with_faults(self):
+    def test_with_faults(self) -> None:
         tests = [
             # Tests various types of formatters count mismatch
             ('This %s foo %s', 'This 123 %s %d llorem bar %s ipsum.'),
@@ -61,7 +57,15 @@ class TestFormattingValues(ChecksTestCase):
             trans_file = PropFile(self.config)
 
             key = self.get_random_string()
-            ref_file.append(PropTranslation(key, test_case[0]))
-            trans_file.append(PropTranslation(key, test_case[1]))
+            ref_file.append(Translation(key, test_case[0]))
+            trans_file.append(Translation(key, test_case[1]))
             # This checker always return one error (if there's any fault).
-            self.do_test(ref_file, trans_file, exp_errors = 1)
+            self.check(trans_file, ref_file, exp_errors = 1)
+
+    # #################################################################################################
+
+    def test_handling_of_unsupported_types(self) -> None:
+        self.check_skipping_blank_and_comment()
+
+    def test_handling_of_dangling_translation_keys(self) -> None:
+        self.check_skipping_of_dangling_keys()

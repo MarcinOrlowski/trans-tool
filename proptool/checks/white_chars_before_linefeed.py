@@ -7,10 +7,10 @@
 #
 """
 
+from proptool.decorators.overrides import overrides
+from proptool.prop.items import Translation
+from proptool.report.group import ReportGroup
 from .base.check import Check
-from ..entries import PropTranslation
-from ..overrides import overrides
-from ..report.report_group import ReportGroup
 
 
 # #################################################################################################
@@ -21,7 +21,7 @@ class WhiteCharsBeforeLinefeed(Check):
     This check ensures there's no space before "\n", "\r" literals.
     """
 
-    def _scan(self, report: ReportGroup, idx: int, item: PropTranslation, literal: str) -> bool:
+    def _scan(self, report: ReportGroup, idx: int, item: Translation, literal: str) -> bool:
         literal_len = len(literal)
         # Let's crawl backward and see what's there...
         for pos in range(len(item.value) - literal_len, 0, -1):
@@ -35,13 +35,13 @@ class WhiteCharsBeforeLinefeed(Check):
 
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
-    def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
+    def check(self, translation_file: 'PropFile', reference_file: 'PropFile' = None) -> ReportGroup:
         report = ReportGroup('White chars before linefeed literal')
 
         for idx, item in enumerate(translation_file.items):
             # We care translations only for now.
             # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
-            if not isinstance(item, PropTranslation):
+            if not isinstance(item, Translation):
                 continue
 
             for literal in (r'\n', r'\r'):

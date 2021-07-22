@@ -9,20 +9,18 @@
 
 from proptool.config import Config
 from proptool.report.report import Report
-from test_case import TestCase
+from tests.test_case import TestCase
 
-
-# #################################################################################################
 
 class TestReport(TestCase):
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.config = Config()
         self.report = Report(self.config)
 
-    def test_init(self):
+    def test_init(self) -> None:
         self.assertEqual(0, self.report.warnings)
         self.assertEqual(0, self.report.errors)
 
-    def test_empty(self):
+    def test_empty(self) -> None:
         self.assertTrue(self.report.empty())

@@ -8,8 +8,8 @@
 """
 
 from .base.check import Check
-from ..overrides import overrides
-from ..report.report_group import ReportGroup
+from proptool.decorators.overrides import overrides
+from proptool.report.group import ReportGroup
 
 
 # #################################################################################################
@@ -19,9 +19,10 @@ class DanglingKeys(Check):
 
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
-    def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
-        report = ReportGroup('Dangling keys')
+    def check(self, translation_file: 'PropFile', reference_file: 'PropFile' = None) -> ReportGroup:
+        self.need_both_files(translation_file, reference_file)
 
+        report = ReportGroup('Dangling keys')
         # Remove all keys that are present in both files and see what left.
         dangling_keys = list(filter(lambda key: key not in reference_file.keys, translation_file.keys))
         for trans_key in dangling_keys:

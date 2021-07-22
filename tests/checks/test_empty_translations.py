@@ -8,17 +8,13 @@
 """
 import random
 
-from checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.empty_translations import EmptyTranslations
 from proptool.config import Config
-from proptool.entries import PropTranslation
-from proptool.overrides import overrides
+from proptool.decorators.overrides import overrides
+from proptool.prop.items import Translation
+from tests.checks.checks_test_case import ChecksTestCase
 
-
-# TODO: Test handling other types than PropTranslation, PropComment
-
-# #################################################################################################
 
 class TestEmptyTranslations(ChecksTestCase):
 
@@ -28,16 +24,16 @@ class TestEmptyTranslations(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_no_faults(self):
+    def test_no_faults(self) -> None:
         # generate some keys for translation file
         cnt_min = 20
         cnt_max = 40
         keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
         ref_file = self.build_prepfile(keys)
         trans_file = self.build_prepfile(keys)
-        self.do_test(ref_file, trans_file)
+        self.check(trans_file, ref_file)
 
-    def test_if_both_are_empty(self):
+    def test_if_both_are_empty(self) -> None:
         # Checks handling of empty string when matching reference string is
         # also empty or string containing just spaces (which is strip()ed)
         # generate some keys for file
@@ -54,22 +50,22 @@ class TestEmptyTranslations(ChecksTestCase):
         while processed > 0:
             idx = random.randint(0, key_cnt - 1)
 
-            ref: PropTranslation = ref_file.items[idx]
+            ref: Translation = ref_file.items[idx]
             if ref.value != '':
                 max_spaces = 3
                 ref.value = ' ' * random.randint(0, max_spaces)
                 ref_file.items[idx] = ref
 
-                trans: PropTranslation = trans_file.items[idx]
+                trans: Translation = trans_file.items[idx]
                 trans.value = ''
                 trans_file.items[idx] = trans
 
                 processed -= 1
 
         # We expect no problems.
-        self.do_test(ref_file, trans_file)
+        self.check(trans_file, ref_file)
 
-    def test_translation_with_dangling_keys(self):
+    def test_translation_with_dangling_keys(self) -> None:
         # Checks if translation dangling keys will be silently skipped.
         cnt_min = 10
         cnt_max = 20
@@ -95,9 +91,9 @@ class TestEmptyTranslations(ChecksTestCase):
             trans_file.items[trans_idx] = trans
 
         # We expect no problems.
-        self.do_test(ref_file, trans_file)
+        self.check(trans_file, ref_file)
 
-    def test_translation_with_faults(self):
+    def test_translation_with_faults(self) -> None:
         # generate some keys for file
         cnt_min = 10
         cnt_max = 20
@@ -112,10 +108,15 @@ class TestEmptyTranslations(ChecksTestCase):
         processed = how_many
         while processed > 0:
             idx = random.randint(0, key_cnt - 1)
-            trans: PropTranslation = trans_file.items[idx]
+            trans: Translation = trans_file.items[idx]
             if trans.value != '':
                 trans.value = ''
                 trans_file.items[idx] = trans
                 processed -= 1
 
-        self.do_test(ref_file, trans_file, exp_warnings = how_many)
+        self.check(trans_file, ref_file, exp_warnings = how_many)
+
+    # #################################################################################################
+
+    def test_handling_of_unsupported_types(self) -> None:
+        self.check_skipping_blank_and_comment()

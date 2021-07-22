@@ -8,46 +8,23 @@
 """
 import random
 
-from proptool.report.report_group import ReportGroup
-from proptool.report.report_item import ReportItem
-from proptool.report.error import Error
-from proptool.report.warn import Warn
-from test_case import TestCase
+from proptool.report.group import ReportGroup
+from proptool.report.items import Error, Warn
+from tests.test_case import TestCase
 
-
-# #################################################################################################
 
 class TestReportGroup(TestCase):
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.label = self.get_random_string()
         self.rg = ReportGroup(self.label)
 
-    def test_init(self):
+    def test_init(self) -> None:
         self.assertEqual(self.label, self.rg.label)
         self.assertEqual(0, self.rg.warnings)
         self.assertEqual(0, self.rg.errors)
 
-    def test_add_wrong_item_type(self):
-        wrong_item = True
-        with self.assertRaises(TypeError):
-            self.rg.add(wrong_item)
-
-    def test_add_correct_item_type(self):
-        types = [
-            ReportItem,
-            Error,
-            Warn,
-        ]
-        for single_type in types:
-            line = random.randint(1, 100)
-            msg = self.get_random_string()
-            item = single_type(line, msg)
-            self.rg.add(item)
-
-        self.assertEqual(len(types), len(self.rg))
-
-    def test_empty(self):
+    def test_empty(self) -> None:
         self.rg.errors = random.randint(1, 100)
         self.rg.warnings = 0
         self.assertFalse(self.rg.empty())
@@ -64,7 +41,7 @@ class TestReportGroup(TestCase):
         self.rg.warnings = 0
         self.assertTrue(self.rg.empty())
 
-    def test_warn(self):
+    def test_warn(self) -> None:
         line = random.randint(1, 100)
         msg = self.get_random_string()
         self.rg.warn(line, msg)
@@ -75,7 +52,7 @@ class TestReportGroup(TestCase):
         self.assertEqual(1, self.rg.warnings)
         self.assertEqual(0, self.rg.errors)
 
-    def test_error(self):
+    def test_error(self) -> None:
         line = random.randint(1, 100)
         msg = self.get_random_string()
         self.rg.error(line, msg)

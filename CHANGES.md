@@ -1,5 +1,11 @@
 # Changelog #
 
+* v1.3.0 (2021-07-22)
+  * Added `TypesettingQuotationMarks` check.
+  * Various checkers' code improvements.
+  * Added more unit tests.
+  * Rephrased some report messages for clarity.
+
 * v1.2.0 (2021-07-21)
   * Reworked report formatting.
   * Added `--fatal` to make warnings fatal as errors.

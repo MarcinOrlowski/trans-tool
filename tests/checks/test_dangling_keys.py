@@ -8,16 +8,12 @@
 """
 import random
 
-from checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.dangling_keys import DanglingKeys
 from proptool.config import Config
-from proptool.overrides import overrides
+from proptool.decorators.overrides import overrides
+from tests.checks.checks_test_case import ChecksTestCase
 
-
-# TODO: Test handling other types than PropTranslation, PropComment
-
-# #################################################################################################
 
 class TestDanglingKeys(ChecksTestCase):
 
@@ -27,16 +23,16 @@ class TestDanglingKeys(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_translation_no_faults(self):
+    def test_translation_no_faults(self) -> None:
         # generate some keys for translation file
         cnt_min = 20
         cnt_max = 40
         keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
         ref_file = self.build_prepfile(keys)
         trans_file = self.build_prepfile(keys)
-        self.do_test(ref_file, trans_file)
+        self.check(trans_file, ref_file)
 
-    def test_translation_with_faults(self):
+    def test_translation_with_faults(self) -> None:
         # generate some keys for translation file
         cnt_min = 20
         cnt_max = 40
@@ -49,4 +45,9 @@ class TestDanglingKeys(ChecksTestCase):
 
         ref_file = self.build_prepfile(ref_keys)
         trans_file = self.build_prepfile(trans_keys)
-        self.do_test(ref_file, trans_file, exp_errors = how_many_less)
+        self.check(trans_file, ref_file, exp_errors = how_many_less)
+
+    # #################################################################################################
+
+    def test_handling_of_unsupported_types(self) -> None:
+        self.check_skipping_blank_and_comment()

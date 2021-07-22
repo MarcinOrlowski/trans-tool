@@ -8,17 +8,13 @@
 """
 import random
 
-from checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.missing_translation import MissingTranslation
 from proptool.config import Config
-from proptool.entries import PropComment
-from proptool.overrides import overrides
+from proptool.decorators.overrides import overrides
+from proptool.prop.items import Comment
+from tests.checks.checks_test_case import ChecksTestCase
 
-
-# TODO: Test handling other types than PropTranslation, PropComment
-
-# #################################################################################################
 
 class TestMissingTranslations(ChecksTestCase):
 
@@ -28,16 +24,16 @@ class TestMissingTranslations(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_no_faults(self):
+    def test_no_faults(self) -> None:
         # generate some keys for translation file
         cnt_min = 20
         cnt_max = 40
         keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
         ref_file = self.build_prepfile(keys)
         trans_file = self.build_prepfile(keys)
-        self.do_test(ref_file, trans_file)
+        self.check(trans_file, ref_file)
 
-    def test_translation_with_keys_in_comments(self):
+    def test_translation_with_keys_in_comments(self) -> None:
         # Checks if we have no issues reported when running
         # in non-strict mode and having some keys in comments.
 
@@ -58,17 +54,17 @@ class TestMissingTranslations(ChecksTestCase):
         for key in remaining_keys:
             comment = self.config.DEFAULT_COMMENT_TEMPLATE
             comment = comment.replace('SEP', trans_file.separator).replace('COM', self.config.comment_marker).replace('KEY', key)
-            trans_file.append(PropComment(comment))
+            trans_file.append(Comment(comment))
 
         # We expect no issues in non-strict mode
         trans_file.config.strict = False
-        self.do_test(ref_file, trans_file)
+        self.check(trans_file, ref_file)
 
         # We expect warnings in strict mode
         trans_file.config.strict = True
-        self.do_test(ref_file, trans_file, exp_warnings = len(remaining_keys))
+        self.check(trans_file, ref_file, exp_warnings = len(remaining_keys))
 
-    def test_translation_with_faults(self):
+    def test_translation_with_faults(self) -> None:
         # generate some keys for reference file
         cnt_min = 20
         cnt_max = 40
@@ -80,4 +76,9 @@ class TestMissingTranslations(ChecksTestCase):
 
         ref_file = self.build_prepfile(ref_keys)
         trans_file = self.build_prepfile(trans_keys)
-        self.do_test(ref_file, trans_file, exp_warnings = how_many_less)
+        self.check(trans_file, ref_file, exp_warnings = how_many_less)
+
+    # #################################################################################################
+
+    def test_handling_of_unsupported_types(self) -> None:
+        self.check_skipping_blank_and_comment()

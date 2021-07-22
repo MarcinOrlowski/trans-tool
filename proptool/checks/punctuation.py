@@ -8,9 +8,9 @@
 """
 
 from .base.check import Check
-from ..entries import PropTranslation
-from ..overrides import overrides
-from ..report.report_group import ReportGroup
+from proptool.prop.items import Translation
+from proptool.decorators.overrides import overrides
+from proptool.report.group import ReportGroup
 
 
 # #################################################################################################
@@ -19,18 +19,19 @@ from ..report.report_group import ReportGroup
 class Punctuation(Check):
     r"""
     This check verifies translation ends with the same punctuation marks or special characters (\n)
-    as original string.
+    as reference string.
     """
 
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
-    def check(self, reference_file: 'PropFile', translation_file: 'PropFile' = None) -> ReportGroup:
+    def check(self, translation_file: 'PropFile', reference_file: 'PropFile' = None) -> ReportGroup:
+        self.need_both_files(translation_file, reference_file)
+
         report = ReportGroup('Punctuation mismatch')
 
         for idx, item in enumerate(reference_file.items):
             # We care translations only for now.
-
-            if not isinstance(item, PropTranslation):
+            if not isinstance(item, Translation):
                 continue
 
             for last_char in self.config.checks['Punctuation']['chars']:
