@@ -8,7 +8,7 @@
 [![MD Lint](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/markdown.yml/badge.svg?branch=master)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/markdown.yml)
 [![codecov](https://codecov.io/gh/MarcinOrlowski/prop-tool/branch/master/graph/badge.svg?token=3THKJKSQ1G)](https://codecov.io/gh/MarcinOrlowski/prop-tool)
 
-[dev](https://github.com/MarcinOrlowski/prop-tool/tree/dev): 
+[dev](https://github.com/MarcinOrlowski/prop-tool/tree/dev):
 [![Unit tests](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/unittests.yml/badge.svg?branch=dev)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/unittests.yml)
 [![Code lint](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/linter.yml/badge.svg?branch=dev)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/linter.yml)
 [![MD Lint](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/markdown.yml/badge.svg?branch=dev)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/markdown.yml)
@@ -57,27 +57,30 @@ base (reference) file and each translation.
 For base file it executes following validators:
 
 * Syntax: ensures use of allowed comment markers, key - value separators etc.
-* TrailingWhiteChars: no trailing spaces nor tabs at the end of each line.
-* WhiteCharsBeforeLinefeed: ensures there's no space nor tab character placed before linefeed literals (`\n` and `\r`).
-* KeyFormat: ensures key string matches defined pattern.
 * Brackets: ensures all brackets opened are closed and there's no unpaired bracket.
+* KeyFormat: ensures key string matches defined pattern.
 * QuotationMarks: ensures all quotation marks are unpaired.
+* TrailingWhiteChars: no trailing spaces nor tabs at the end of each line.
+* TypesettingQuotationMarks: ensures that typesetting quotation marks (where you have separate quote opening and closing characters) are paired and properly nested.
+* WhiteCharsBeforeLinefeed: ensures there's no space nor tab character placed before linefeed literals (`\n` and `\r`).
 
 For translation files, the following checks are performed:
 
 * Syntax: ensures use of allowed comment markers, key - value separators etc.
-* TrailingWhiteChars: no trailing spaces nor tabs at the end of each line.
-* MissingTranslation: keys found in base file, but missing in translation.
+* Brackets: ensures all brackets opened are closed and there's no unpaired bracket.
 * DanglingKeys: keys found in translation file but not present in base file.
 * EmptyTranslations: empty translations for non-empty text in base file.
-* StartsWithTheSameCase: ensures translation starts with the same character case (upper/lower) as entry in base file.
-* Punctuation: ensures translation ends with punctuation mark (`:`, `.`, `?`, `!`) if entry if base file ends that way.
-* WhiteCharsBeforeLinefeed: ensures there's no space nor tab character placed before linefeed literals (`\n` and `\r`).
-* KeyFormat: ensures key string matches defined pattern.
-* Brackets: ensures all brackets opened are closed and there's no unpaired bracket.
-* QuotationMarks: ensures all quotation marks are unpaired.
 * FormattingValues: ensures all formatting values (i.e. `%s`, `%d`) present in base file are also present in translation, and the
   order is correct.
+* KeyFormat: ensures key string matches defined pattern.
+* MissingTranslation: keys found in base file, but missing in translation.
+* Punctuation: ensures translation ends with punctuation mark (`:`, `.`, `?`, `!`) if entry in base file ends that way.
+* QuotationMarks: ensures all quotation marks are unpaired.
+* StartsWithTheSameCase: ensures translation starts with the same character case (upper/lower) as entry in base file.
+* TrailingWhiteChars: no trailing spaces nor tabs at the end of each line.
+* TypesettingQuotationMarks: ensures that typesetting quotation marks (where you have separate quote opening and closing
+  characters) are paired and properly nested.
+* WhiteCharsBeforeLinefeed: ensures there's no space nor tab character placed before linefeed literals (`\n` and `\r`).
 
 NOTE: as this is quite common that translation file may not be updated instantly, `prop-tool` considers key presence condition
 fulfilled also when given key exists in `B` file but is commented out and follow expected comment format:
@@ -178,6 +181,8 @@ prop-tool --base gui --lang es --fix --tpl "COM >~=-> KEY SEP"
 
 * As of now `prop-tool` do not handle multiline entries.
 * `FormattingValues` check will do not support positional placeholders, formats using space leading positive numbers.
+* `TypesettingQuotationMarks` is not covering all possible pairs yet due
+  to [limitations of current implementation](https://github.com/MarcinOrlowski/prop-tool/issues/19).
 
 ## License ##
 

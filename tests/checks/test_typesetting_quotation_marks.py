@@ -7,45 +7,40 @@
 #
 """
 from proptool.checks.base.check import Check
-from proptool.checks.brackets import Brackets
+from proptool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
 from proptool.config import Config
 from proptool.decorators.overrides import overrides
 from proptool.prop.items import Blank, Comment, Translation
 from tests.checks.checks_test_case import ChecksTestCase
 
 
-class TestBrackets(ChecksTestCase):
+class ChecksBrackets(ChecksTestCase):
 
     @overrides(ChecksTestCase)
     def get_checker(self, config: Config) -> Check:
-        return Brackets(config)
+        return TypesettingQuotationMarks(config)
 
     # #################################################################################################
 
     def test_translation_no_faults(self) -> None:
-        self.check_single_file(Translation('key', '<({[]})>'))
-        self.check_single_file(Translation('key', '<()foo ({a[v]b}d <barr> )> '))
+        self.check_single_file(Translation('key', '‘«„ “»’'))
 
     def test_translation_with_faults(self) -> None:
-        # Tests error handling when we have popping bracket and empty stack.
-        self.check_single_file(Translation('key', '>'), exp_errors = 1)
-        # Tests the case where we done with checks and something left on stack.
-        self.check_single_file(Translation('key', '(<>'), exp_errors = 1)
-        # Text the case where we have matches, but not in order.
-        self.check_single_file(Translation('key', '<(>)'), exp_errors = 1)
+        for mark in self.checker.opening + self.checker.closing:
+            self.check_single_file(Translation('key', mark), exp_errors = 1)
 
     # #################################################################################################
 
     def test_comment_no_faults(self) -> None:
-        self.check_single_file(Comment('# (foo) '))
+        self.check_single_file(Comment('# „ foo “ '))
 
     def test_comment_with_faults(self) -> None:
-        # Tests error handling when we have popping bracket and empty stack.
-        self.check_single_file(Comment('# foo]"  '), exp_warnings = 1)
+        # Tests error handling when we have closing (popping) marker and empty stack.
+        self.check_single_file(Comment('# foo“  '), exp_warnings = 1)
         # Tests the case where we done with checks and something left on stack.
-        self.check_single_file(Comment('# <fo[o]" '), exp_warnings = 1)
+        self.check_single_file(Comment('# „ «foo» '), exp_warnings = 1)
         # Text the case where we have matches, but not in order.
-        self.check_single_file(Comment('# [foo <]>" '), exp_warnings = 1)
+        self.check_single_file(Comment('# « „ foo» “ '), exp_warnings = 1)
 
     # #################################################################################################
 
@@ -58,7 +53,7 @@ class TestBrackets(ChecksTestCase):
         """
         Checks if lists defining opening and closing markers are sane.
         """
-        checker: Brackets = self.get_checker()
+        checker: TypesettingQuotationMarks = self.get_checker(self.config)
 
         self.assertEqual(len(checker.opening), len(checker.closing))
         self.assertNotEqual([], checker.opening)
@@ -66,7 +61,7 @@ class TestBrackets(ChecksTestCase):
         self.assertNotEqual(checker.opening, checker.closing)
 
         # ensure no marker is in both lists
-        for marker in checker.opening:
-            self.assertFalse(marker in checker.closing)
-        for marker in checker.closing:
-            self.assertFalse(marker in checker.opening)
+        for pos, marker in enumerate(checker.opening):
+            self.assertFalse(marker in checker.closing, f'Marker {marker} (position: {pos}) is present in closing too.')
+        for pos, marker in enumerate(checker.closing):
+            self.assertFalse(marker in checker.opening, f'Marker {marker} (position: {pos}) is present in opening too.')

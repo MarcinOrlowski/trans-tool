@@ -13,14 +13,15 @@ from pathlib import Path
 
 from .checks.brackets import Brackets
 from .checks.key_format import KeyFormat
-from .checks.trailing_white_chars import TrailingWhiteChars
 from .checks.quotation_marks import QuotationMarks
+from .checks.trailing_white_chars import TrailingWhiteChars
+from .checks.typesetting_quotation_marks import TypesettingQuotationMarks
 from .checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from .config import Config
 from .const import Const
 from .log import Log
-from .utils import Utils
 from .prop.file import PropFile
+from .utils import Utils
 
 
 class PropTool(object):
@@ -97,6 +98,7 @@ class PropTool(object):
                 KeyFormat,
                 Brackets,
                 QuotationMarks,
+                TypesettingQuotationMarks
             ]
             for validator in checks:
                 # Almost any check validates translation against reference file, so we cannot use all checks here,
