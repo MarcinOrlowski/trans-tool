@@ -6,6 +6,7 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+
 from typing import Union
 
 from proptool.decorators.overrides import overrides
