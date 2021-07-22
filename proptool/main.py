@@ -99,7 +99,7 @@ class PropTool(object):
                 KeyFormat,
                 Brackets,
                 QuotationMarks,
-                TypesettingQuotationMarks
+                TypesettingQuotationMarks,
             ]
             for validator in checks:
                 # Almost any check validates translation against reference file, so we cannot use all checks here,

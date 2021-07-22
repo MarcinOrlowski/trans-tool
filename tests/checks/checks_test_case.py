@@ -107,6 +107,6 @@ class ChecksTestCase(TestCase):
         how_many_less = random.randint(1, upper_bound)
         ref_keys = trans_keys[:(how_many_less * -1)]
 
-        ref_file = self.build_prepfile(ref_keys, True)
-        trans_file = self.build_prepfile(trans_keys, True)
+        ref_file = self.build_prepfile(ref_keys, lower = True)
+        trans_file = self.build_prepfile(trans_keys, lower = True)
         self.check(trans_file, ref_file)

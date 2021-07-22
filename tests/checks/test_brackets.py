@@ -66,7 +66,7 @@ class ChecksBrackets(ChecksTestCase):
         self.assertNotEqual(checker.opening, checker.closing)
 
         # ensure no marker is in both lists
-        for marker in checker.opening:
-            self.assertFalse(marker in checker.closing)
-        for marker in checker.closing:
-            self.assertFalse(marker in checker.opening)
+        for op_idx, op_marker in enumerate(checker.opening):
+            self.assertFalse(op_marker in checker.closing, f'Marker {op_marker} (position: {op_idx}) is present in closing too.')
+        for cl_idx, cl_marker in enumerate(checker.closing):
+            self.assertFalse(cl_marker in checker.opening, f'Marker {cl_marker} (position: {cl_idx}) is present in opening too.')
