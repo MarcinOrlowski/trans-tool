@@ -19,12 +19,14 @@ from proptool.report.group import ReportGroup
 class Punctuation(Check):
     r"""
     This check verifies translation ends with the same punctuation marks or special characters (\n)
-    as original string.
+    as reference string.
     """
 
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(self, translation_file: 'PropFile', reference_file: 'PropFile' = None) -> ReportGroup:
+        self.need_both_files(translation_file, reference_file)
+
         report = ReportGroup('Punctuation mismatch')
 
         for idx, item in enumerate(reference_file.items):
