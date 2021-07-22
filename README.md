@@ -1,3 +1,5 @@
+![prop-tool logo](artwork/prop-tool-logo.png)
+
 # prop-tool #
 
 `prop-tool` - Java *.properties file checker and syncing tool.
