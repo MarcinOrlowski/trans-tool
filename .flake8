@@ -20,6 +20,8 @@ exclude =
 
 # it's not a bug that we aren't using all of hacking
 ignore =
+    # WPS317 Found incorrect multi-line parameters
+    WPS317,
     # D205 1 blank line required between summary line and description
     D205,
     # D400 First line should end with a period
