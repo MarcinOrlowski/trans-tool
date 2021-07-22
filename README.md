@@ -61,7 +61,8 @@ For base file it executes following validators:
 * KeyFormat: ensures key string matches defined pattern.
 * QuotationMarks: ensures all quotation marks are unpaired.
 * TrailingWhiteChars: no trailing spaces nor tabs at the end of each line.
-* TypesettingQuotationMarks: ensures that typesetting quotation marks (where you have separate quote opening and closing characters) are paired and properly nested.
+* TypesettingQuotationMarks: ensures that typesetting quotation marks (where you have separate quote opening and closing characters)
+  are paired and properly nested.
 * WhiteCharsBeforeLinefeed: ensures there's no space nor tab character placed before linefeed literals (`\n` and `\r`).
 
 For translation files, the following checks are performed:
