@@ -12,7 +12,7 @@ from typing import List
 
 class Const(object):
     APP_NAME: str = 'prop-tool'
-    APP_VERSION: str = '1.2.0'
+    APP_VERSION: str = '1.3.0'
     APP_URL: str = 'https://github.com/MarcinOrlowski/prop-tool/'
 
     APP_DESCRIPTION: List[str] = [

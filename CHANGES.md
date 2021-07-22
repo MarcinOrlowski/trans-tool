@@ -1,6 +1,6 @@
 # Changelog #
 
-* dev
+* v1.3.0 (2021-07-22)
   * Added `TypesettingQuotationMarks` check.
   * Various checkers' code improvements.
   * Added more unit tests.
