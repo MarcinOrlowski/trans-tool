@@ -13,47 +13,73 @@ from tests.test_case import TestCase
 
 class TestReportItem(TestCase):
 
-    def test_base_constructor_args_none(self):
+    def test_base_constructor_args_none(self) -> None:
         item = PropItem()
         self.assertIsNone(item.key)
         self.assertIsNone(item.value)
 
-    def test_base_constructor_args(self):
+    def test_base_constructor_args(self) -> None:
         key = self.get_random_string()
         value = self.get_random_string()
         item = PropItem(value, key)
         self.assertEqual(key, item.key)
         self.assertEqual(value, item.value)
 
-    def test_base_to_string_not_implemented(self):
+    def test_base_to_string_not_implemented(self) -> None:
         item = PropItem()
         with self.assertRaises(NotImplementedError):
             item.to_string()
 
     # #################################################################################################
 
-    def test_translation_invalid_key(self):
+    def test_translation_invalid_key_type(self) -> None:
+        """
+        Tests handing of invalid key type.
+        """
+        value = self.get_random_string()
         with self.assertRaises(ValueError):
-            value = self.get_random_string()
             Translation(123, value)
+        with self.assertRaises(ValueError):
             Translation(None, value)
+
+    def test_translation_invalid_empty_key(self) -> None:
+        """
+        Tests handling of empty key.
+        """
+        value = self.get_random_string()
+        with self.assertRaises(ValueError):
             Translation('', value)
+
+    def test_translation_invalid_empty_key_after_strip(self) -> None:
+        """
+        Tests handling of non-empty key that gets empty once strip()'ed.
+        """
+        value = self.get_random_string()
+        with self.assertRaises(ValueError):
             Translation('   ', value)
 
-    def test_translation_invalid_value(self):
+    def test_translation_invalid_value_type(self) -> None:
+        key = self.get_random_string()
+        value = self.get_random_string()
         with self.assertRaises(ValueError):
             key = self.get_random_string()
             Translation(key, 1234)
-
-    def test_translation_invalid_separator(self):
         with self.assertRaises(ValueError):
-            key = self.get_random_string()
-            value = self.get_random_string()
             Translation(key, value, None)
+
+    def test_translation_invalid_separator(self) -> None:
+        key = self.get_random_string()
+        value = self.get_random_string()
+        with self.assertRaises(ValueError):
             Translation(key, value, '-')
+
+    def test_translation_invalid_empty_separator(self) -> None:
+        key = self.get_random_string()
+        value = self.get_random_string()
+        with self.assertRaises(ValueError):
             Translation(key, value, '')
 
-    def test_translation_to_string(self):
+    def test_translation_to_string(self) -> None:
         config = Config()
         for separator in config.ALLOWED_SEPARATORS:
             key = self.get_random_string()
@@ -64,7 +90,7 @@ class TestReportItem(TestCase):
 
     # #################################################################################################
 
-    def test_comment_constructor(self):
+    def test_comment_constructor(self) -> None:
         config = Config()
         for marker in config.ALLOWED_COMMENT_MARKERS:
             value = f'{marker} {self.get_random_string()}'
@@ -72,14 +98,20 @@ class TestReportItem(TestCase):
             self.assertEqual(value, item.value)
             self.assertIsNone(item.key)
 
-    def test_comment_invalid_value(self):
+    def test_comment_invalid_value(self) -> None:
         with self.assertRaises(ValueError):
-            # Invalid type
+            # Invalid value type
             Comment(1234)
-            # Empty string (lacks comment marker)
+
+        with self.assertRaises(ValueError):
+            # Empty value
             Comment('')
 
-    def test_comment_to_string(self):
+        with self.assertRaises(ValueError):
+            # No valid comment marker
+            Comment('No marker')
+
+    def test_comment_to_string(self) -> None:
         config = Config()
         for marker in config.ALLOWED_COMMENT_MARKERS:
             value = f'{marker} {self.get_random_string()}'
@@ -88,11 +120,11 @@ class TestReportItem(TestCase):
 
     # #################################################################################################
 
-    def test_blank_constructor(self):
+    def test_blank_constructor(self) -> None:
         item = Blank()
         self.assertIsNone(item.key)
         self.assertIsNone(item.value)
 
-    def test_blank_to_string(self):
+    def test_blank_to_string(self) -> None:
         item = Blank()
         self.assertEqual('', item.to_string())

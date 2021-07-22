@@ -62,10 +62,10 @@ class Comment(PropItem):
     """
 
     def __init__(self, value: str) -> None:
-        if not value:
-            raise ValueError('Value cannot be empty.')
         if not isinstance(value, str):
             raise ValueError('Value must be a string.')
+        if not value:
+            raise ValueError('Value cannot be empty.')
         marker = value[0]
         if marker not in {'!', '#'}:
             raise ValueError(f'Invalid comment marker: "{marker}".')
