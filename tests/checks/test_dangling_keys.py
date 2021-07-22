@@ -8,11 +8,11 @@
 """
 import random
 
-from tests.checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.dangling_keys import DanglingKeys
 from proptool.config import Config
 from proptool.decorators.overrides import overrides
+from tests.checks.checks_test_case import ChecksTestCase
 
 
 # TODO: Test handling other types than PropTranslation, PropComment
@@ -50,3 +50,8 @@ class TestDanglingKeys(ChecksTestCase):
         ref_file = self.build_prepfile(ref_keys)
         trans_file = self.build_prepfile(trans_keys)
         self.check(trans_file, ref_file, exp_errors = how_many_less)
+
+    # #################################################################################################
+
+    def test_handling_of_unsupported_types(self):
+        self.check_skipping_blank_and_comment()

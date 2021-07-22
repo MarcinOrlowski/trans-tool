@@ -8,15 +8,13 @@
 """
 import random
 
-from tests.checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.empty_translations import EmptyTranslations
 from proptool.config import Config
-from proptool.prop.items import Translation
 from proptool.decorators.overrides import overrides
+from proptool.prop.items import Translation
+from tests.checks.checks_test_case import ChecksTestCase
 
-
-# TODO: Test handling other types than PropTranslation, PropComment
 
 # #################################################################################################
 
@@ -119,3 +117,8 @@ class TestEmptyTranslations(ChecksTestCase):
                 processed -= 1
 
         self.check(trans_file, ref_file, exp_warnings = how_many)
+
+    # #################################################################################################
+
+    def test_handling_of_unsupported_types(self):
+        self.check_skipping_blank_and_comment()

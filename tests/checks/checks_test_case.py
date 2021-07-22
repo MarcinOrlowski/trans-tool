@@ -11,8 +11,8 @@ from typing import List, Union
 
 from proptool.checks.base.check import Check
 from proptool.config import Config
-from proptool.prop.items import Comment, PropItem, Translation
 from proptool.prop.file import PropFile
+from proptool.prop.items import Blank, Comment, PropItem, Translation
 from tests.test_case import TestCase
 
 
@@ -59,3 +59,29 @@ class ChecksTestCase(TestCase):
             else:
                 raise RuntimeError(f'Unsupported content type: {type(item)}')
         return prep_file
+
+    # #################################################################################################
+
+    def check_skipping_blank(self):
+        """
+        Checks if Blank items are skipped correctly. Used to test checker with two PropFiles needed.
+        """
+        ref_file = PropFile(self.config)
+        ref_file.append(Blank())
+        trans_file = PropFile(self.config)
+        trans_file.append(Blank())
+
+        self.check(trans_file, ref_file)
+
+    def check_skipping_blank_and_comment(self):
+        """
+        Checks if Blank and Comment items are skipped correctly. Used to test checker with two PropFiles needed.
+        """
+        ref_file = PropFile(self.config)
+        ref_file.append(Blank())
+        ref_file.append(Comment(self.config.ALLOWED_COMMENT_MARKERS[0] + self.get_random_string()))
+        trans_file = PropFile(self.config)
+        trans_file.append(Blank())
+        trans_file.append(Comment(self.config.ALLOWED_COMMENT_MARKERS[0] + self.get_random_string()))
+
+        self.check(trans_file, ref_file)

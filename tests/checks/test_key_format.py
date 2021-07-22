@@ -6,15 +6,13 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
-from tests.checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.key_format import KeyFormat
 from proptool.config import Config
-from proptool.prop.items import Translation
 from proptool.decorators.overrides import overrides
+from proptool.prop.items import Translation
+from tests.checks.checks_test_case import ChecksTestCase
 
-
-# TODO: Test handling other types than PropTranslation, PropComment
 
 # #################################################################################################
 
@@ -44,3 +42,8 @@ class TestKeyFormat(ChecksTestCase):
         self.check_single_file(Translation('invalidKey.', 'foo'), exp_errors = 1)
         # starts with digits
         self.check_single_file(Translation('666keys.', 'foo'), exp_errors = 1)
+
+    # #################################################################################################
+
+    def test_handling_of_unsupported_types(self):
+        self.check_skipping_blank_and_comment()

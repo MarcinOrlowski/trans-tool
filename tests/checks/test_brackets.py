@@ -6,15 +6,13 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
-from tests.checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.brackets import Brackets
 from proptool.config import Config
-from proptool.prop.items import Comment, Translation
 from proptool.decorators.overrides import overrides
+from proptool.prop.items import Blank, Comment, Translation
+from tests.checks.checks_test_case import ChecksTestCase
 
-
-# TODO: Test handling other types than PropTranslation, PropComment
 
 # #################################################################################################
 
@@ -50,3 +48,8 @@ class TestBrackets(ChecksTestCase):
         self.check_single_file(Comment('# <fo[o]" '), exp_warnings = 1)
         # Text the case where we have matches, but not in order.
         self.check_single_file(Comment('# [foo <]>" '), exp_warnings = 1)
+
+    # #################################################################################################
+
+    def test_handling_of_unsupported_types(self):
+        self.check_single_file(Blank())

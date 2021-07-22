@@ -9,10 +9,10 @@
 
 from typing import List
 
-from .base.check import Check
-from proptool.prop.items import Comment, Translation, PropItem
 from proptool.decorators.overrides import overrides
+from proptool.prop.items import Comment, Translation
 from proptool.report.group import ReportGroup
+from .base.check import Check
 
 
 # #################################################################################################
@@ -29,9 +29,6 @@ class QuotationMarks(Check):
     Checks if quotation marks are used in translation and if so, ensures proper nesting and checks if all
     opened marks got their closing pair.
     """
-
-    def _check_line(self, item: PropItem):
-        pass
 
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!

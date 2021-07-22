@@ -77,15 +77,18 @@ class PropFile(object):
     # #################################################################################################
 
     def append(self, item: PropItem):
+        if not issubclass(type(item), PropItem):
+            raise ValueError('Item must subclass PropItem.')
+
         if isinstance(item, Translation):
             self.keys.append(item.key)
-            self.items.append(item)
         elif isinstance(item, Comment):
             # Let's look for commented out keys.
             match = re.compile(self.comment_pattern).match(item.value)
             if match:
                 self.commented_out_keys.append(match.group(1))
-            self.items.append(item)
+
+        self.items.append(item)
 
     # #################################################################################################
 

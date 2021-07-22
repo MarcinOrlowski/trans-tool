@@ -6,12 +6,12 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
-from tests.checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.trailing_white_chars import TrailingWhiteChars
 from proptool.config import Config
-from proptool.prop.items import Comment, Translation
 from proptool.decorators.overrides import overrides
+from proptool.prop.items import Comment, Translation
+from tests.checks.checks_test_case import ChecksTestCase
 
 
 # TODO: Test handling other types than PropTranslation, PropComment
@@ -37,3 +37,8 @@ class TestTrailingWhiteChars(ChecksTestCase):
 
     def test_comment_with_trailing_white_chars(self):
         self.check_single_file(Comment('# value  '), exp_warnings = 1)
+
+    # #################################################################################################
+
+    def test_handling_of_unsupported_types(self):
+        self.check_skipping_blank()

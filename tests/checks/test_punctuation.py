@@ -8,16 +8,14 @@
 """
 import random
 
-from tests.checks.checks_test_case import ChecksTestCase
 from proptool.checks.base.check import Check
 from proptool.checks.punctuation import Punctuation
 from proptool.config import Config
-from proptool.prop.items import Translation
 from proptool.decorators.overrides import overrides
 from proptool.prop.file import PropFile
+from proptool.prop.items import Translation
+from tests.checks.checks_test_case import ChecksTestCase
 
-
-# TODO: Test handling other types than PropTranslation, PropComment
 
 # #################################################################################################
 
@@ -74,3 +72,8 @@ class TestPunctuation(ChecksTestCase):
             trans_file.append(Translation(key, trans_value))
             punct_idx += 1
         self.check(trans_file, ref_file, exp_warnings = expected_faults)
+
+    # #################################################################################################
+
+    def test_handling_of_unsupported_types(self):
+        self.check_skipping_blank()
