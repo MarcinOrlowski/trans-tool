@@ -16,11 +16,9 @@ from proptool.prop.items import Blank, Comment, PropItem, Translation
 from tests.test_case import TestCase
 
 
-# #################################################################################################
-
 class ChecksTestCase(TestCase):
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.config: Config = Config()
         checker = self.get_checker(self.config)
         if not issubclass(type(checker), Check):
@@ -62,7 +60,7 @@ class ChecksTestCase(TestCase):
 
     # #################################################################################################
 
-    def check_skipping_blank(self):
+    def check_skipping_blank(self) -> None:
         """
         Checks if Blank items are skipped correctly. Used to test checker with two PropFiles needed.
         """
@@ -73,7 +71,7 @@ class ChecksTestCase(TestCase):
 
         self.check(trans_file, ref_file)
 
-    def check_skipping_blank_and_comment(self):
+    def check_skipping_blank_and_comment(self) -> None:
         """
         Checks if Blank and Comment items are skipped correctly. Used to test checker with two PropFiles needed.
         """

@@ -15,10 +15,6 @@ from proptool.decorators.overrides import overrides
 from tests.checks.checks_test_case import ChecksTestCase
 
 
-# TODO: Test handling other types than PropTranslation, PropComment
-
-# #################################################################################################
-
 class TestDanglingKeys(ChecksTestCase):
 
     @overrides(ChecksTestCase)
@@ -27,7 +23,7 @@ class TestDanglingKeys(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_translation_no_faults(self):
+    def test_translation_no_faults(self) -> None:
         # generate some keys for translation file
         cnt_min = 20
         cnt_max = 40
@@ -36,7 +32,7 @@ class TestDanglingKeys(ChecksTestCase):
         trans_file = self.build_prepfile(keys)
         self.check(trans_file, ref_file)
 
-    def test_translation_with_faults(self):
+    def test_translation_with_faults(self) -> None:
         # generate some keys for translation file
         cnt_min = 20
         cnt_max = 40
@@ -53,5 +49,5 @@ class TestDanglingKeys(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_handling_of_unsupported_types(self):
+    def test_handling_of_unsupported_types(self) -> None:
         self.check_skipping_blank_and_comment()

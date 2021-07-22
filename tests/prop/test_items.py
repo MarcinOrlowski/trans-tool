@@ -42,7 +42,7 @@ class TestReportItem(TestCase):
         with self.assertRaises(ValueError):
             Translation(None, value)
 
-    def test_translation_invalid_empty_key(self) -> None:
+    def test_translation_empty_key(self) -> None:
         """
         Tests handling of empty key.
         """
@@ -50,7 +50,7 @@ class TestReportItem(TestCase):
         with self.assertRaises(ValueError):
             Translation('', value)
 
-    def test_translation_invalid_empty_key_after_strip(self) -> None:
+    def test_translation_empty_key_after_strip(self) -> None:
         """
         Tests handling of non-empty key that gets empty once strip()'ed.
         """
@@ -73,7 +73,7 @@ class TestReportItem(TestCase):
         with self.assertRaises(ValueError):
             Translation(key, value, '-')
 
-    def test_translation_invalid_empty_separator(self) -> None:
+    def test_translation_empty_separator(self) -> None:
         key = self.get_random_string()
         value = self.get_random_string()
         with self.assertRaises(ValueError):

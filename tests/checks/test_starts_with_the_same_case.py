@@ -17,10 +17,6 @@ from proptool.prop.items import Translation
 from tests.checks.checks_test_case import ChecksTestCase
 
 
-# TODO: Test handling other types than PropTranslation
-
-# #################################################################################################
-
 class TestStartsWithTheSameCase(ChecksTestCase):
 
     @overrides(ChecksTestCase)
@@ -29,7 +25,7 @@ class TestStartsWithTheSameCase(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_no_faults(self):
+    def test_no_faults(self) -> None:
         cnt_min = 20
         cnt_max = 40
         keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
@@ -43,7 +39,7 @@ class TestStartsWithTheSameCase(ChecksTestCase):
 
         self.check(trans_file, ref_file)
 
-    def test_with_faults(self):
+    def test_with_faults(self) -> None:
         cnt_min = 20
         cnt_max = 40
         keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
@@ -69,5 +65,5 @@ class TestStartsWithTheSameCase(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_handling_of_unsupported_types(self):
+    def test_handling_of_unsupported_types(self) -> None:
         self.check_skipping_blank_and_comment()

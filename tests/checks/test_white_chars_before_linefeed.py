@@ -14,10 +14,6 @@ from proptool.prop.items import Translation
 from tests.checks.checks_test_case import ChecksTestCase
 
 
-# TODO: Test handling other types than PropTranslation, PropComment
-
-# #################################################################################################
-
 class TestWhiteCharsBeforeLinefeed(ChecksTestCase):
 
     @overrides(ChecksTestCase)
@@ -26,19 +22,19 @@ class TestWhiteCharsBeforeLinefeed(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_translation_no_faults(self):
+    def test_translation_no_faults(self) -> None:
         self.check_single_file(Translation('key', r'This is\nall\nOK'))
 
-    def test_translation_string_too_short(self):
+    def test_translation_string_too_short(self) -> None:
         # Checks behavior when the string is too short to fit space and litera,
         self.check_single_file(Translation('key', r' X'))
         self.check_single_file(Translation('key', r'\n'))
 
-    def test_translation_with_faults(self):
+    def test_translation_with_faults(self) -> None:
         self.check_single_file(
             Translation('key', r'This is NOT \n OK.'), exp_warnings = 1)
 
     # #################################################################################################
 
-    def test_handling_of_unsupported_types(self):
+    def test_handling_of_unsupported_types(self) -> None:
         self.check_skipping_blank_and_comment()

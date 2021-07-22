@@ -14,8 +14,6 @@ from proptool.prop.items import Translation
 from tests.checks.checks_test_case import ChecksTestCase
 
 
-# #################################################################################################
-
 class TestKeyFormat(ChecksTestCase):
 
     @overrides(ChecksTestCase)
@@ -24,14 +22,14 @@ class TestKeyFormat(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_translation_no_faults(self):
+    def test_translation_no_faults(self) -> None:
         self.check_single_file(Translation('validKey', 'foo'))
         self.check_single_file(Translation('valid123Key', 'foo'))
         self.check_single_file(Translation('validKey123', 'foo'))
         self.check_single_file(Translation('valid.Key', 'foo'))
         self.check_single_file(Translation('valid_Key', 'foo'))
 
-    def test_translation_with_faults(self):
+    def test_translation_with_faults(self) -> None:
         # Too short key name
         self.check_single_file(Translation('k', 'foo'), exp_errors = 1)
         # starts capitalized
@@ -45,5 +43,5 @@ class TestKeyFormat(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_handling_of_unsupported_types(self):
+    def test_handling_of_unsupported_types(self) -> None:
         self.check_skipping_blank_and_comment()

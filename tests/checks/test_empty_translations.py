@@ -16,8 +16,6 @@ from proptool.prop.items import Translation
 from tests.checks.checks_test_case import ChecksTestCase
 
 
-# #################################################################################################
-
 class TestEmptyTranslations(ChecksTestCase):
 
     @overrides(ChecksTestCase)
@@ -26,7 +24,7 @@ class TestEmptyTranslations(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_no_faults(self):
+    def test_no_faults(self) -> None:
         # generate some keys for translation file
         cnt_min = 20
         cnt_max = 40
@@ -35,7 +33,7 @@ class TestEmptyTranslations(ChecksTestCase):
         trans_file = self.build_prepfile(keys)
         self.check(trans_file, ref_file)
 
-    def test_if_both_are_empty(self):
+    def test_if_both_are_empty(self) -> None:
         # Checks handling of empty string when matching reference string is
         # also empty or string containing just spaces (which is strip()ed)
         # generate some keys for file
@@ -67,7 +65,7 @@ class TestEmptyTranslations(ChecksTestCase):
         # We expect no problems.
         self.check(trans_file, ref_file)
 
-    def test_translation_with_dangling_keys(self):
+    def test_translation_with_dangling_keys(self) -> None:
         # Checks if translation dangling keys will be silently skipped.
         cnt_min = 10
         cnt_max = 20
@@ -95,7 +93,7 @@ class TestEmptyTranslations(ChecksTestCase):
         # We expect no problems.
         self.check(trans_file, ref_file)
 
-    def test_translation_with_faults(self):
+    def test_translation_with_faults(self) -> None:
         # generate some keys for file
         cnt_min = 10
         cnt_max = 20
@@ -120,5 +118,5 @@ class TestEmptyTranslations(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_handling_of_unsupported_types(self):
+    def test_handling_of_unsupported_types(self) -> None:
         self.check_skipping_blank_and_comment()

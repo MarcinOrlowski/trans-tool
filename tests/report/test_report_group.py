@@ -13,20 +13,18 @@ from proptool.report.items import Error, Warn
 from tests.test_case import TestCase
 
 
-# #################################################################################################
-
 class TestReportGroup(TestCase):
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.label = self.get_random_string()
         self.rg = ReportGroup(self.label)
 
-    def test_init(self):
+    def test_init(self) -> None:
         self.assertEqual(self.label, self.rg.label)
         self.assertEqual(0, self.rg.warnings)
         self.assertEqual(0, self.rg.errors)
 
-    def test_empty(self):
+    def test_empty(self) -> None:
         self.rg.errors = random.randint(1, 100)
         self.rg.warnings = 0
         self.assertFalse(self.rg.empty())
@@ -43,7 +41,7 @@ class TestReportGroup(TestCase):
         self.rg.warnings = 0
         self.assertTrue(self.rg.empty())
 
-    def test_warn(self):
+    def test_warn(self) -> None:
         line = random.randint(1, 100)
         msg = self.get_random_string()
         self.rg.warn(line, msg)
@@ -54,7 +52,7 @@ class TestReportGroup(TestCase):
         self.assertEqual(1, self.rg.warnings)
         self.assertEqual(0, self.rg.errors)
 
-    def test_error(self):
+    def test_error(self) -> None:
         line = random.randint(1, 100)
         msg = self.get_random_string()
         self.rg.error(line, msg)

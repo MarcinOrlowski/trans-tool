@@ -16,10 +16,6 @@ from proptool.prop.items import Comment
 from tests.checks.checks_test_case import ChecksTestCase
 
 
-# TODO: Test handling other types than PropTranslation, PropComment
-
-# #################################################################################################
-
 class TestMissingTranslations(ChecksTestCase):
 
     @overrides(ChecksTestCase)
@@ -28,7 +24,7 @@ class TestMissingTranslations(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_no_faults(self):
+    def test_no_faults(self) -> None:
         # generate some keys for translation file
         cnt_min = 20
         cnt_max = 40
@@ -37,7 +33,7 @@ class TestMissingTranslations(ChecksTestCase):
         trans_file = self.build_prepfile(keys)
         self.check(trans_file, ref_file)
 
-    def test_translation_with_keys_in_comments(self):
+    def test_translation_with_keys_in_comments(self) -> None:
         # Checks if we have no issues reported when running
         # in non-strict mode and having some keys in comments.
 
@@ -68,7 +64,7 @@ class TestMissingTranslations(ChecksTestCase):
         trans_file.config.strict = True
         self.check(trans_file, ref_file, exp_warnings = len(remaining_keys))
 
-    def test_translation_with_faults(self):
+    def test_translation_with_faults(self) -> None:
         # generate some keys for reference file
         cnt_min = 20
         cnt_max = 40
@@ -84,5 +80,5 @@ class TestMissingTranslations(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_handling_of_unsupported_types(self):
+    def test_handling_of_unsupported_types(self) -> None:
         self.check_skipping_blank_and_comment()

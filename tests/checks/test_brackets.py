@@ -14,8 +14,6 @@ from proptool.prop.items import Blank, Comment, Translation
 from tests.checks.checks_test_case import ChecksTestCase
 
 
-# #################################################################################################
-
 class TestBrackets(ChecksTestCase):
 
     @overrides(ChecksTestCase)
@@ -24,11 +22,11 @@ class TestBrackets(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_translation_no_faults(self):
+    def test_translation_no_faults(self) -> None:
         self.check_single_file(Translation('key', '<({[]})>'))
         self.check_single_file(Translation('key', '<()foo ({a[v]b}d <barr> )> '))
 
-    def test_translation_with_faults(self):
+    def test_translation_with_faults(self) -> None:
         # Tests error handling when we have popping bracket and empty stack.
         self.check_single_file(Translation('key', '>'), exp_errors = 1)
         # Tests the case where we done with checks and something left on stack.
@@ -38,10 +36,10 @@ class TestBrackets(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_comment_no_faults(self):
+    def test_comment_no_faults(self) -> None:
         self.check_single_file(Comment('# (foo) '))
 
-    def test_comment_with_faults(self):
+    def test_comment_with_faults(self) -> None:
         # Tests error handling when we have popping bracket and empty stack.
         self.check_single_file(Comment('# foo]"  '), exp_warnings = 1)
         # Tests the case where we done with checks and something left on stack.
@@ -51,5 +49,5 @@ class TestBrackets(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_handling_of_unsupported_types(self):
+    def test_handling_of_unsupported_types(self) -> None:
         self.check_single_file(Blank())

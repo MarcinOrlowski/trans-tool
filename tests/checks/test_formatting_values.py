@@ -16,8 +16,6 @@ from proptool.prop.items import Translation
 from tests.checks.checks_test_case import ChecksTestCase
 
 
-# #################################################################################################
-
 class TestFormattingValues(ChecksTestCase):
 
     @overrides(ChecksTestCase)
@@ -26,7 +24,7 @@ class TestFormattingValues(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_no_faults(self):
+    def test_no_faults(self) -> None:
         tests = [
             ('This %s foo %d %s', 'This 123 %s %d llorem bar %s ipsum.'),
             ('This has no %% formatters', 'Tricky one'),
@@ -41,7 +39,7 @@ class TestFormattingValues(ChecksTestCase):
             trans_file.append(Translation(key, test_case[1]))
             self.check(trans_file, ref_file)
 
-    def test_with_faults(self):
+    def test_with_faults(self) -> None:
         tests = [
             # Tests various types of formatters count mismatch
             ('This %s foo %s', 'This 123 %s %d llorem bar %s ipsum.'),
@@ -66,5 +64,5 @@ class TestFormattingValues(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_handling_of_unsupported_types(self):
+    def test_handling_of_unsupported_types(self) -> None:
         self.check_skipping_blank_and_comment()

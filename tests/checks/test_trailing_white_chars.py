@@ -14,10 +14,6 @@ from proptool.prop.items import Comment, Translation
 from tests.checks.checks_test_case import ChecksTestCase
 
 
-# TODO: Test handling other types than PropTranslation, PropComment
-
-# #################################################################################################
-
 class TestTrailingWhiteChars(ChecksTestCase):
 
     @overrides(ChecksTestCase)
@@ -26,19 +22,19 @@ class TestTrailingWhiteChars(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_translation_no_trailing_white_chars(self):
+    def test_translation_no_trailing_white_chars(self) -> None:
         self.check_single_file(Translation('key', 'value'))
 
-    def test_translation_with_trailing_white_chars(self):
+    def test_translation_with_trailing_white_chars(self) -> None:
         self.check_single_file(Translation('key', 'value  '), exp_errors = 1)
 
-    def test_comment_no_trailing_white_chars(self):
+    def test_comment_no_trailing_white_chars(self) -> None:
         self.check_single_file(Comment('# value'))
 
-    def test_comment_with_trailing_white_chars(self):
+    def test_comment_with_trailing_white_chars(self) -> None:
         self.check_single_file(Comment('# value  '), exp_warnings = 1)
 
     # #################################################################################################
 
-    def test_handling_of_unsupported_types(self):
+    def test_handling_of_unsupported_types(self) -> None:
         self.check_skipping_blank()

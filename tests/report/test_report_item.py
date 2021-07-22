@@ -13,7 +13,7 @@ from tests.test_case import TestCase
 
 class TestReportItem(TestCase):
 
-    def test_to_string_with_position(self):
+    def test_to_string_with_position(self) -> None:
         position = self.get_random_string(count = 5)
         msg = self.get_random_string()
 
@@ -21,13 +21,13 @@ class TestReportItem(TestCase):
         ri = ReportItem(position, msg)
         self.assertEqual(expected, ri.to_string())
 
-    def test_to_string_without_position(self):
+    def test_to_string_without_position(self) -> None:
         msg = self.get_random_string()
 
         ri = ReportItem(None, msg)
         self.assertEqual(msg, ri.to_string())
 
-    def test_to_string_with_trans_key(self):
+    def test_to_string_with_trans_key(self) -> None:
         trans_key = self.get_random_string()
         msg = self.get_random_string()
 
@@ -36,7 +36,7 @@ class TestReportItem(TestCase):
         ri = ReportItem(None, msg, trans_key)
         self.assertEqual(expected, ri.to_string())
 
-    def test_to_string_with_trans_key_and_position(self):
+    def test_to_string_with_trans_key_and_position(self) -> None:
         trans_key = self.get_random_string()
         position = self.get_random_string(count = 5)
         msg = self.get_random_string()
