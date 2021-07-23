@@ -10,7 +10,7 @@ import random
 
 from proptool.checks.base.check import Check
 from proptool.checks.missing_translation import MissingTranslation
-from proptool.config import Config
+from proptool.config.config import Config
 from proptool.decorators.overrides import overrides
 from proptool.prop.items import Comment
 from tests.checks.checks_test_case import ChecksTestCase

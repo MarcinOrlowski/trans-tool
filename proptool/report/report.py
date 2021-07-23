@@ -9,7 +9,7 @@
 
 from typing import List
 
-from proptool.config import Config
+from proptool.config.config import Config
 from proptool.log import Log
 
 from .group import ReportGroup

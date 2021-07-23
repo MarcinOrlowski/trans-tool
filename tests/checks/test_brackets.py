@@ -8,7 +8,7 @@
 """
 from proptool.checks.base.check import Check
 from proptool.checks.brackets import Brackets
-from proptool.config import Config
+from proptool.config.config import Config
 from proptool.decorators.overrides import overrides
 from proptool.prop.items import Blank, Comment, Translation
 from tests.checks.checks_test_case import ChecksTestCase

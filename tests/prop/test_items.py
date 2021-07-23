@@ -6,7 +6,7 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
-from proptool.config import Config
+from proptool.config.config import Config
 from proptool.prop.items import Blank, Comment, PropItem, Translation
 from tests.test_case import TestCase
 

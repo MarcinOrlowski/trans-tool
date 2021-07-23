@@ -10,7 +10,7 @@
 from abc import ABC, abstractmethod
 from typing import Union
 
-from proptool.config import Config
+from proptool.config.config import Config
 from proptool.report.report import Report
 
 

@@ -9,7 +9,7 @@
 
 from proptool.checks.base.check import Check
 from proptool.checks.formatting_values import FormattingValues
-from proptool.config import Config
+from proptool.config.config import Config
 from proptool.decorators.overrides import overrides
 from proptool.prop.file import PropFile
 from proptool.prop.items import Translation

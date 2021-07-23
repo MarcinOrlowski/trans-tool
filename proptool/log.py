@@ -14,7 +14,7 @@ import sys
 from pathlib import PosixPath
 from typing import List, Union
 
-from .config import Config
+from proptool.config.config import Config
 
 
 # #################################################################################################
@@ -82,7 +82,7 @@ class Log(object):
 
     buffer_enabled: bool = True
     debug = False
-    no_color: bool = False
+    color: bool = False
     quiet: bool = False
     skip_empty_lines: bool = False
     verbose: bool = False
@@ -93,7 +93,7 @@ class Log(object):
     def configure(cls, config: Config) -> None:
         cls.buffer_enabled = True
         cls.debug = config.debug
-        cls.no_color = config.no_color
+        cls.color = config.color
         cls.quiet = False
         cls.skip_empty_lines = False
         cls.verbose = config.verbose
@@ -341,7 +341,7 @@ class Log(object):
             if stacktrace_postfix is not None:
                 message += stacktrace_postfix
 
-            if Log.no_color:
+            if Log.color:
                 message = Ansi.strip(message)
 
         return message

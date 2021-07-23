@@ -11,7 +11,7 @@ from abc import abstractmethod
 from typing import List, Union
 
 from proptool.checks.base.check import Check
-from proptool.config import Config
+from proptool.config.config import Config
 from proptool.prop.file import PropFile
 from proptool.prop.items import Blank, Comment, PropItem, Translation
 from tests.test_case import TestCase
