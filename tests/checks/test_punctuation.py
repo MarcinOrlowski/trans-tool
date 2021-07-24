@@ -7,6 +7,7 @@
 #
 """
 import random
+from typing import Union
 
 from proptool.checks.base.check import Check
 from proptool.checks.punctuation import Punctuation
@@ -20,7 +21,7 @@ from tests.checks.checks_test_case import ChecksTestCase
 class TestPunctuation(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Config) -> Check:
+    def get_checker(self, config: Union[Config, None] = None) -> Check:
         return Punctuation(config)
 
     # #################################################################################################

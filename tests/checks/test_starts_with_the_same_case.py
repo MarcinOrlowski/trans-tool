@@ -7,6 +7,7 @@
 #
 """
 import random
+from typing import Union
 
 from proptool.checks.base.check import Check
 from proptool.checks.starts_with_the_same_case import StartsWithTheSameCase
@@ -14,13 +15,14 @@ from proptool.config.config import Config
 from proptool.decorators.overrides import overrides
 from proptool.prop.file import PropFile
 from proptool.prop.items import Translation
+from proptool.utils import Utils
 from tests.checks.checks_test_case import ChecksTestCase
 
 
 class TestStartsWithTheSameCase(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Config) -> Check:
+    def get_checker(self, config: Union[Config, None] = None) -> Check:
         return StartsWithTheSameCase(config)
 
     # #################################################################################################
@@ -56,9 +58,9 @@ class TestStartsWithTheSameCase(ChecksTestCase):
             if random.randint(0, 1) == 1:
                 expected_faults += 1
                 if ref_value[0].isupper():
-                    trans_value = trans_value[0].lower() + trans_value
+                    trans_value = Utils.lower_first(trans_value)
                 else:
-                    trans_value = trans_value[0].upper() + trans_value
+                    trans_value = Utils.upper_first(trans_value)
             ref_file.append(Translation(key, ref_value))
             trans_file.append(Translation(key, trans_value))
         self.check(trans_file, ref_file, exp_warnings = expected_faults)

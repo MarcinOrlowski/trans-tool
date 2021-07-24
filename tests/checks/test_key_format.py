@@ -6,6 +6,8 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+from typing import Union
+
 from proptool.checks.base.check import Check
 from proptool.checks.key_format import KeyFormat
 from proptool.config.config import Config
@@ -17,7 +19,7 @@ from tests.checks.checks_test_case import ChecksTestCase
 class TestKeyFormat(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Config) -> Check:
+    def get_checker(self, config: Union[Config, None] = None) -> Check:
         return KeyFormat(config)
 
     # #################################################################################################

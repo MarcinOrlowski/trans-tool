@@ -6,6 +6,8 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+from typing import Union
+
 from proptool.checks.base.check import Check
 from proptool.checks.brackets import Brackets
 from proptool.config.config import Config
@@ -17,7 +19,7 @@ from tests.checks.checks_test_case import ChecksTestCase
 class ChecksBrackets(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Config) -> Check:
+    def get_checker(self, config: Union[Config, None] = None) -> Check:
         return Brackets(config)
 
     # #################################################################################################
@@ -58,15 +60,16 @@ class ChecksBrackets(ChecksTestCase):
         """
         Checks if lists defining opening and closing markers are sane.
         """
-        checker: Brackets = self.get_checker(self.config)
+        checker: Brackets = self.get_checker(None)
+        config = checker.get_default_config()
 
-        self.assertEqual(len(checker.opening), len(checker.closing))
-        self.assertNotEqual([], checker.opening)
-        self.assertNotEqual([], checker.closing)
-        self.assertNotEqual(checker.opening, checker.closing)
+        self.assertEqual(len(config['opening']), len(config['closing']))
+        self.assertNotEqual([], config['opening'])
+        self.assertNotEqual([], config['closing'])
+        self.assertNotEqual(config['opening'], config['closing'])
 
         # ensure no marker is in both lists
-        for op_idx, op_marker in enumerate(checker.opening):
-            self.assertFalse(op_marker in checker.closing, f'Marker {op_marker} (position: {op_idx}) is present in closing too.')
-        for cl_idx, cl_marker in enumerate(checker.closing):
-            self.assertFalse(cl_marker in checker.opening, f'Marker {cl_marker} (position: {cl_idx}) is present in opening too.')
+        for op_idx, op_marker in enumerate(config['opening']):
+            self.assertFalse(op_marker in config['closing'], f'Marker {op_marker} (position: {op_idx}) is present in closing too.')
+        for cl_idx, cl_marker in enumerate(config['closing']):
+            self.assertFalse(cl_marker in config['opening'], f'Marker {cl_marker} (position: {cl_idx}) is present in opening too.')
