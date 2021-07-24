@@ -67,3 +67,4 @@ class Utils(object):
                 src_str = src_str[0:end_pos]
 
         return src_str
+
