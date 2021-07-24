@@ -8,16 +8,19 @@
 """
 
 import copy
+import importlib
+import inspect
 import sys
 from pathlib import Path
 
+from proptool.checks.base.check import Check
 from proptool.checks.brackets import Brackets
 from proptool.checks.key_format import KeyFormat
 from proptool.checks.quotation_marks import QuotationMarks
 from proptool.checks.trailing_white_chars import TrailingWhiteChars
 from proptool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
 from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
-from proptool.config_builder import ConfigBuilder
+from proptool.config.config_builder import ConfigBuilder
 from proptool.prop.file import PropFile
 from .const import Const
 from .log import Log
@@ -53,7 +56,7 @@ class PropTool(object):
             if not reference_propfile.loaded:
                 Utils.abort(f'File not found: {reference_path}')
 
-            checks = [
+            check_modules = [
                 TrailingWhiteChars,
                 WhiteCharsBeforeLinefeed,
                 KeyFormat,
@@ -61,7 +64,7 @@ class PropTool(object):
                 QuotationMarks,
                 TypesettingQuotationMarks,
             ]
-            for validator in checks:
+            for validator in check_modules:
                 # Almost any check validates translation against reference file, so we cannot use all checks here,
                 # but there are some that process single file independently so they in fact do not need any reference
                 # file. For them we pass our base file as translation which will do the trick.
