@@ -19,9 +19,9 @@ class Check(ABC):
     DEFAULT_CHECK_CONFIG = {}
 
     def __init__(self, config: Union[Config, None] = None):
-        if config:
+        if config is not None:
             if not isinstance(config, Config):
-                raise ValueError(f'Configuration object must be instance of Config ("{type(self.config)}" given).')
+                raise ValueError(f'Configuration object must be instance of Config ("{type(config)}" given).')
         self.config = config
 
     @abstractmethod

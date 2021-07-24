@@ -6,13 +6,12 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+from typing import Dict, List
 
-from typing import List
-
-from .base.check import Check
-from proptool.prop.items import Comment, Translation
 from proptool.decorators.overrides import overrides
+from proptool.prop.items import Comment, Translation
 from proptool.report.group import ReportGroup
+from .base.check import Check
 
 
 # #################################################################################################
@@ -32,13 +31,14 @@ class Brackets(Check):
 
     report_title = 'Brackets'
 
-    # Keep matching elements at the same positions (and in order preserving container!)
-    opening: List[str] = ['(', '[', '<', '{']
-    closing: List[str] = [')', ']', '>', '}']
-
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(self, translation: 'PropFile', reference: 'PropFile' = None) -> ReportGroup:
+        self.need_valid_config()
+
+        opening = self.config.checks[self.__class__.__name__]['opening']
+        closing = self.config.checks[self.__class__.__name__]['closing']
+
         report = ReportGroup(self.report_title)
 
         for idx, item in enumerate(translation.items):
@@ -51,12 +51,12 @@ class Brackets(Check):
             for char_idx, current_char in enumerate(item.value):
                 position: str = f'{idx + 1}:{char_idx + 1}'
 
-                if current_char in self.opening:
+                if current_char in opening:
                     # Every opening brace is pushed to the stack.
                     stack.append(Bracket(char_idx, current_char))
                     continue
 
-                if current_char in self.closing:
+                if current_char in closing:
                     # Every closing brace should take its own pair off the stack
 
                     if not stack:
@@ -67,7 +67,7 @@ class Brackets(Check):
                         break
 
                     # Check if what we are about to pop from the stack and see if our current_char matches.
-                    expected = self.closing[self.opening.index(stack[-1].bracket)]
+                    expected = closing[opening.index(stack[-1].bracket)]
                     if current_char == expected:
                         stack.pop()
                         continue
@@ -85,3 +85,11 @@ class Brackets(Check):
                 report.create(position, f'No closing character for "{bracket.bracket}" found.', item.key)
 
         return report
+
+    @overrides(Check)
+    def get_default_config(self) -> Dict:
+        return {
+            # Keep matching elements at the same positions
+            'opening': ['(', '[', '<', '{'],
+            'closing': [')', ']', '>', '}'],
+        }

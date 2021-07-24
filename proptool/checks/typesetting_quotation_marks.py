@@ -7,8 +7,9 @@
 #
 """
 
-from typing import List
+from typing import Dict, List
 
+from proptool.decorators.overrides import overrides
 from proptool.report.group import ReportGroup
 from .brackets import Brackets
 
@@ -22,10 +23,17 @@ class TypesettingQuotationMarks(Brackets):
 
     report_title = ReportGroup('Print Quotation Marks')
 
-    # Keep matching elements at the same positions (and in order preserving container!)
-    # List based on:
-    # * https://www.overleaf.com/learn/latex/Typesetting_quotations#Reference_guide
-    # * https://en.wikipedia.org/wiki/Quotation_mark
-    # BUG: https://github.com/MarcinOrlowski/prop-tool/issues/19
     opening: List[str] = ['‘', '«', '„', '「', '《']
     closing: List[str] = ['’', '»', '“', '」', '》']
+
+    @overrides(Brackets)
+    def get_default_config(self) -> Dict:
+        return {
+            # Keep matching elements at the same positions
+            # List based on:
+            # * https://www.overleaf.com/learn/latex/Typesetting_quotations#Reference_guide
+            # * https://en.wikipedia.org/wiki/Quotation_mark
+            # BUG: https://github.com/MarcinOrlowski/prop-tool/issues/19
+            'opening': ['‘', '«', '„', '「', '《'],
+            'closing': ['’', '»', '“', '」', '》'],
+        }

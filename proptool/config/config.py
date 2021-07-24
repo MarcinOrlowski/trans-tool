@@ -7,7 +7,7 @@
 #
 """
 
-from typing import List
+from typing import Dict, List
 
 
 class Config(object):
@@ -38,3 +38,6 @@ class Config(object):
         self.checks = {
 
         }
+
+    def add_checker_config(self, key: str, config: Dict) -> None:
+        self.checks[key] = config

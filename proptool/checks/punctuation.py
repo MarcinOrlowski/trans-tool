@@ -6,11 +6,12 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+from typing import Dict
 
-from .base.check import Check
-from proptool.prop.items import Translation
 from proptool.decorators.overrides import overrides
+from proptool.prop.items import Translation
 from proptool.report.group import ReportGroup
+from .base.check import Check
 
 
 # #################################################################################################
@@ -25,6 +26,7 @@ class Punctuation(Check):
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(self, translation_file: 'PropFile', reference_file: 'PropFile' = None) -> ReportGroup:
+        self.need_valid_config()
         self.need_both_files(translation_file, reference_file)
 
         report = ReportGroup('Punctuation mismatch')
@@ -47,3 +49,9 @@ class Punctuation(Check):
                     break
 
         return report
+
+    @overrides(Check)
+    def get_default_config(self) -> Dict:
+        return {
+            'chars': ['.', '?', '!', ':', r'\n'],
+        }

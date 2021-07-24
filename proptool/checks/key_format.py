@@ -7,11 +7,12 @@
 #
 """
 import re
+from typing import Dict
 
-from .base.check import Check
-from proptool.prop.items import Translation
 from proptool.decorators.overrides import overrides
+from proptool.prop.items import Translation
 from proptool.report.group import ReportGroup
+from .base.check import Check
 
 
 # #################################################################################################
@@ -25,6 +26,8 @@ class KeyFormat(Check):
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(self, translation_file: 'PropFile', reference_file: 'PropFile' = None) -> ReportGroup:
+        self.need_valid_config()
+
         pattern = self.config.checks['KeyFormat']['pattern']
         compiled_pattern = re.compile(pattern)
 
@@ -40,3 +43,9 @@ class KeyFormat(Check):
                 report.error(line_number + 1, 'Invalid key name format.', item.key)
 
         return report
+
+    @overrides(Check)
+    def get_default_config(self) -> Dict:
+        return {
+            'pattern': "^[a-z]+[a-zA-Z0-9_.]*[a-zA-Z0-9]+$",
+        }
