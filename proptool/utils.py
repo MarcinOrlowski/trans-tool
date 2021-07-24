@@ -68,3 +68,14 @@ class Utils(object):
 
         return src_str
 
+    @staticmethod
+    def upper_first(src_str: str) -> str:
+        if src_str:
+            return src_str[0].upper() + src_str[1:]
+        return src_str
+
+    @staticmethod
+    def lower_first(src_str: str) -> str:
+        if src_str:
+            return src_str[0].lower() + src_str[1:]
+        return src_str
