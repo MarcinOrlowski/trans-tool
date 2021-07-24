@@ -36,7 +36,7 @@ class Config(object):
         self.comment_template: str = Config.DEFAULT_COMMENT_TEMPLATE
 
         self.checks = {
-
+            # empty set
         }
 
     def add_checker_config(self, key: str, config: Dict) -> None:

@@ -47,5 +47,5 @@ class KeyFormat(Check):
     @overrides(Check)
     def get_default_config(self) -> Dict:
         return {
-            'pattern': "^[a-z]+[a-zA-Z0-9_.]*[a-zA-Z0-9]+$",
+            'pattern': r'^[a-z]+[a-zA-Z0-9_.]*[a-zA-Z0-9]+$',
         }

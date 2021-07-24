@@ -32,6 +32,8 @@ class Utils(object):
         :param target_list: list to add data to
         :param items: data item(s) to add to list
         :return:
+
+        raises TypeError
         """
         if isinstance(items, str):
             items = [str]
@@ -64,7 +66,7 @@ class Utils(object):
                 src_str = src_str[1:]
             end_pos = src_str.rfind('"')
             if end_pos != -1:
-                src_str = src_str[0:end_pos]
+                src_str = src_str[:end_pos]
 
         return src_str
 

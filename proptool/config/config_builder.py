@@ -7,8 +7,13 @@
 #
 """
 import argparse
+import importlib
+import inspect
+from os import listdir
 from pathlib import Path
 
+import proptool.checks
+from proptool.checks.base.check import Check
 from proptool.config.config import Config
 from proptool.config.config_reader import ConfigReader
 from proptool.const import Const
@@ -31,22 +36,14 @@ class ConfigBuilder(object):
         # get default config
         config = Config()
 
-        # Set up checks' default configs
-        import proptool.checks
-        from os import listdir
-
         # Set default configuration options for each checker.
         check_dir = Path(proptool.checks.__file__).parent
-        check_modules = [f for f in listdir(check_dir) if f[:2] != '__' and (check_dir / f).is_file()]
+        check_modules = [file for file in listdir(check_dir) if file[:2] != '__' and (check_dir / file).is_file()]
         for check_file_name in check_modules:
-            import importlib
             module = importlib.import_module(f'.{check_file_name[:-3]}', proptool.checks.__name__)
-            import inspect
-            for name, obj in inspect.getmembers(module, inspect.isclass):
-                from proptool.checks.base.check import Check
+            for _, obj in inspect.getmembers(module, inspect.isclass):
                 if issubclass(obj, Check) and obj.__name__ != Check.__name__:
                     config.checks[obj.__name__] = obj.get_default_config(obj)
-        print('%r' % config.checks)
 
         # Handler CLI args so we can see if there's config file to load
         args = ConfigBuilder._parse_args()
@@ -84,9 +81,11 @@ class ConfigBuilder(object):
         :return:
         """
         if args.__getattribute__(option):
-            config.__setattr__(option, True)
+            val = True
         elif args.__getattribute__(f'no_{option}'):
-            config.__setattr__(option, False)
+            val = False
+        config.__setattr__(option, val)
+
         return config
 
     @staticmethod

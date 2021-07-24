@@ -6,7 +6,7 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
-import configparser
+import collections
 from configparser import ConfigParser
 from pathlib import Path
 from typing import Dict, List
@@ -31,14 +31,13 @@ class ConfigReader(object):
         :param config_file_name: Path to valid config INI file.
         :return: Instance of Config with fields containing
         """
-
         if not config_file_name.exists():
             Log.abort(f'Config file not found {config_file_name}')
 
         # noinspection PyBroadException
         try:
             self.parser.read(config_file_name)
-        except:
+        except Exception:
             # noinspection PyUnresolvedReferences
             Log.abort(f'Failed parsing config INI file: {config_file_name}')
 
@@ -79,12 +78,11 @@ class ConfigReader(object):
     def _merge_if_exists(self, config: ConfigParser, merge_into: List[str], config_section: str, config_option: str) -> List[str]:
         if config.has_option(config_section, config_option):
             return self._merge_list(merge_into, config_section, config_option)
-        else:
-            return merge_into
+        return merge_into
 
-    # ***************************************************************************
+    # #################################################################################################
 
-    def __merge_dict(self, old_dict: Dict, ini_parser: ConfigParser, section: str) -> Dict:
+    def _merge_dict(self, old_dict: Dict, ini_parser: ConfigParser, section: str) -> Dict:
         result = old_dict
 
         if ini_parser.has_section(section):
@@ -92,33 +90,29 @@ class ConfigReader(object):
             if new_dict is None:
                 return result
 
-            for k, v in new_dict.items():
-                v = Utils.remove_quotes(v)
+            for key, value in new_dict.items():
+                value = Utils.remove_quotes(value)
 
                 # if key starts with "DEL " then value does not matter and such key is REMOVED from internal storage
-                if k[0:4] == 'DEL ':
-                    key = k[4:]
+                if key[:4] == 'DEL ':
+                    key = key[4:]
                     if key in result:
                         if not section_name_shown:
-                            # Log.level_push('%%yellow_bright%%**WARN**%r map' % section)
                             section_name_shown = True
                         del result[key]
                     continue
 
-                if k in old_dict and result[k] != v:
+                if key in old_dict and result[key] != value:
                     if not section_name_shown:
-                        # Log.level_push('%%yellow_bright%%**WARN**%r map' % section)
                         section_name_shown = True
-                result[k] = v
+                result[key] = value
 
         return result
 
     # #################################################################################################
 
-    def __sanitize_dict(self, src_dict: Dict) -> Dict:
-        import collections
-
+    def _sanitize_dict(self, src_dict: Dict) -> Dict:
         tmp = collections.OrderedDict()
-        for (k, v) in src_dict.items():
-            tmp[Utils.remove_quotes(k)] = Utils.remove_quotes(v)
+        for key, value in src_dict.items():
+            tmp[Utils.remove_quotes(key)] = Utils.remove_quotes(value)
         return tmp
