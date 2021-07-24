@@ -8,12 +8,9 @@
 """
 
 import copy
-import importlib
-import inspect
 import sys
 from pathlib import Path
 
-from proptool.checks.base.check import Check
 from proptool.checks.brackets import Brackets
 from proptool.checks.key_format import KeyFormat
 from proptool.checks.quotation_marks import QuotationMarks
@@ -94,10 +91,6 @@ class PropTool(object):
 
         return 100 if errors else 0
 
-
-# #################################################################################################
-
-class Main(object):
     @staticmethod
     def start() -> int:
         app = PropTool()
