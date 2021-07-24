@@ -36,10 +36,5 @@ class Config(object):
         self.comment_template: str = Config.DEFAULT_COMMENT_TEMPLATE
 
         self.checks = {
-            'KeyFormat':   {
-                'pattern': r'^[a-z]+[a-zA-Z0-9_.]*[a-zA-Z0-9]+$',
-            },
-            'Punctuation': {
-                'chars': ['.', '?', '!', ':', r'\n'],
-            },
+
         }

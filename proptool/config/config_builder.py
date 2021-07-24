@@ -18,7 +18,7 @@ from proptool.utils import Utils
 
 class ConfigBuilder(object):
     # List of options that can be either turned on or off.
-    _onoff_pairs = [
+    _on_off_pairs = [
         'fatal',
         'strict',
         'quiet',
@@ -31,8 +31,25 @@ class ConfigBuilder(object):
         # get default config
         config = Config()
 
-        args = ConfigBuilder._parse_args()
+        # Set up checks' default configs
+        import proptool.checks
+        from os import listdir
 
+        # Set default configuration options for each checker.
+        check_dir = Path(proptool.checks.__file__).parent
+        check_modules = [f for f in listdir(check_dir) if f[:2] != '__' and (check_dir / f).is_file()]
+        for check_file_name in check_modules:
+            import importlib
+            module = importlib.import_module(f'.{check_file_name[:-3]}', proptool.checks.__name__)
+            import inspect
+            for name, obj in inspect.getmembers(module, inspect.isclass):
+                from proptool.checks.base.check import Check
+                if issubclass(obj, Check) and obj.__name__ != Check.__name__:
+                    config.checks[obj.__name__] = obj.get_default_config(obj)
+        print('%r' % config.checks)
+
+        # Handler CLI args so we can see if there's config file to load
+        args = ConfigBuilder._parse_args()
         if args.config_file:
             config_file = Path(args.config_file[0])
             # override with loaded user config file
@@ -76,7 +93,7 @@ class ConfigBuilder(object):
     def _set_from_args(config: Config, args) -> Config:
         # At this point it is assumed that args are in valid state (i.e. no mutually exclusive options are both set etc).
 
-        for option in ConfigBuilder._onoff_pairs:
+        for option in ConfigBuilder._on_off_pairs:
             config = ConfigBuilder._set_on_off_option(config, args, option)
 
         config.fix = args.fix
@@ -166,7 +183,7 @@ class ConfigBuilder(object):
         args = parser.parse_args()
 
         # Check use of mutually exclusive pairs
-        for key in ConfigBuilder._onoff_pairs:
+        for key in ConfigBuilder._on_off_pairs:
             if args.__getattribute__(key) and args.__getattribute__(f'no_{key}'):
                 parser.error(f'You cannot use "--{key}" and "--no-{key}" at the same time.')
 
