@@ -22,7 +22,7 @@ class ReportGroup(list):
         self.warnings = 0
         self.errors = 0
 
-    def create(self, position: Union[str, None], msg: str, trans_key: Union[str, None] = None) -> None:
+    def create(self, position: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> None:
         """
         Helper to create either Error() or Warn() items that share the message (to remove duplicated code and logic).
         If trans_key is None, it is assumed report message relates

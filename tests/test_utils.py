@@ -88,11 +88,14 @@ class TestUtils(TestCase):
 
         # These shall not pass
         with self.assertRaises(TypeError):
+            # noinspection PyTypeChecker
             Utils.add_if_not_in_list([], 123)
         with self.assertRaises(TypeError):
             wrong_type = False
+            # noinspection PyTypeChecker
             Utils.add_if_not_in_list([], wrong_type)
         with self.assertRaises(TypeError):
+            # noinspection PyTypeChecker
             Utils.add_if_not_in_list([], {})
 
     # #################################################################################################
@@ -175,6 +178,7 @@ class TestUtils(TestCase):
 
     def test_remove_quotes_with_unsupported_arg(self) -> None:
         with self.assertRaises(TypeError):
+            # noinspection PyTypeChecker
             Utils.remove_quotes(123)
 
     # #################################################################################################

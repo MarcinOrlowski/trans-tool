@@ -63,8 +63,8 @@ class ConfigReader(object):
             if self.parser.has_option(main_section, single_bool):
                 config.__setattr__(single_bool, self.parser.get(main_section, single_bool))
 
-        config.files = self._merge_if_exists(self.parser, config.files, main_section, 'files')
-        config.languages = self._merge_if_exists(self.parser, config.languages, main_section, 'languages')
+        self._merge_if_exists(self.parser, config.files, main_section, 'files')
+        self._merge_if_exists(self.parser, config.languages, main_section, 'languages')
 
         if config.debug:
             for attr_name in dir(config):
@@ -75,36 +75,22 @@ class ConfigReader(object):
 
     # #################################################################################################
 
-    def _merge_if_exists(self, config: ConfigParser, merge_into: List[str], config_section: str, config_option: str) -> List[str]:
-        if config.has_option(config_section, config_option):
-            return self._merge_list(merge_into, config_section, config_option)
-        return merge_into
+    def _merge_if_exists(self, parser: ConfigParser, target_list: List[str], config_section: str, config_option: str) -> None:
+        if parser.has_option(config_section, config_option):
+            self._merge_list(target_list, parser, config_section, config_option)
+
+    def _merge_list(self, target_list, parser: ConfigParser, section: str, option: str) -> None:
+        if parser.has_option(section, option):
+            import json
+            new_list = json.loads(parser.get(section, option).replace('\n', ''))
+            Utils.add_if_not_in_list(target_list, Utils.remove_quotes(new_list))
 
     # #################################################################################################
 
-    def _merge_dict(self, old_dict: Dict, ini_parser: ConfigParser, section: str) -> Dict:
-        result = old_dict
-
+    def _merge_dict(self, old_dict: Dict, ini_parser: ConfigParser, section: str):
         if ini_parser.has_section(section):
             new_dict = dict(ini_parser.items(section))
             if new_dict is None:
-                return result
-
+                return
             for key, value in new_dict.items():
-                value = Utils.remove_quotes(value)
-
-                # if key starts with "DEL " then value does not matter and such key is REMOVED from internal storage
-                if key[:4] == 'DEL ':
-                    key = key[4:]
-                    if key in result:
-                        if not section_name_shown:
-                            section_name_shown = True
-                        del result[key]
-                    continue
-
-                if key in old_dict and result[key] != value:
-                    if not section_name_shown:
-                        section_name_shown = True
-                result[key] = value
-
-        return result
+                old_dict[key] = Utils.remove_quotes(value)

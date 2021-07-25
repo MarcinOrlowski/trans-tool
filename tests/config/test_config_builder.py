@@ -62,3 +62,24 @@ class TestConfigBuilder(TestCase):
         ConfigBuilder._validate(config)
         exp_prints = [call('Invalid comment marker.')]
         mock_print.assert_has_calls(exp_prints)
+
+    # #################################################################################################
+
+    def test_set_on_off_option(self) -> None:
+        class FakeArgs(Config):
+            def __init__(self):
+                super().__init__()
+                self.option = False
+                self.no_option = True
+
+        config = Config()
+        config.option = True
+        self.assertTrue(config.option)
+        args = FakeArgs()
+        ConfigBuilder._set_on_off_option(config, args, 'option')
+        self.assertFalse(config.option)
+
+        args.option = True
+        args.no_option = False
+        ConfigBuilder._set_on_off_option(config, args, 'option')
+        self.assertTrue(config.option)

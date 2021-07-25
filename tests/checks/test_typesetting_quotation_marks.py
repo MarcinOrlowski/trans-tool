@@ -8,7 +8,6 @@
 """
 from typing import Union
 
-from proptool.checks.base.check import Check
 from proptool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
 from proptool.config.config import Config
 from proptool.decorators.overrides import overrides
@@ -19,7 +18,7 @@ from tests.checks.checks_test_case import ChecksTestCase
 class ChecksBrackets(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Union[Config, None] = None) -> Check:
+    def get_checker(self, config: Union[Config, None] = None) -> TypesettingQuotationMarks:
         return TypesettingQuotationMarks(config)
 
     # #################################################################################################

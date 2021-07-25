@@ -38,8 +38,10 @@ class TestReportItem(TestCase):
         """
         value = self.get_random_string()
         with self.assertRaises(ValueError):
+            # noinspection PyTypeChecker
             Translation(123, value)
         with self.assertRaises(ValueError):
+            # noinspection PyTypeChecker
             Translation(None, value)
 
     def test_translation_empty_key(self) -> None:
@@ -59,12 +61,14 @@ class TestReportItem(TestCase):
             Translation('   ', value)
 
     def test_translation_invalid_value_type(self) -> None:
-        key = self.get_random_string()
-        value = self.get_random_string()
         with self.assertRaises(ValueError):
             key = self.get_random_string()
+            # noinspection PyTypeChecker
             Translation(key, 1234)
+
+        value = self.get_random_string()
         with self.assertRaises(ValueError):
+            # noinspection PyTypeChecker
             Translation(key, value, None)
 
     def test_translation_invalid_separator(self) -> None:
@@ -101,6 +105,7 @@ class TestReportItem(TestCase):
     def test_comment_invalid_value(self) -> None:
         with self.assertRaises(ValueError):
             # Invalid value type
+            # noinspection PyTypeChecker
             Comment(1234)
 
         with self.assertRaises(ValueError):

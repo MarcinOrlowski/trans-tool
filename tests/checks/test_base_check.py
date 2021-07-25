@@ -22,6 +22,7 @@ class TestBaseCheck(TestCase):
             # Check is abstract class, extending ABC meta, so ordinary
             # instantiation won't work.
             Check.__abstractmethods__ = frozenset()
+            # noinspection PyTypeChecker
             Check(False)
 
     def test_need_both_files_no_fault(self) -> None:

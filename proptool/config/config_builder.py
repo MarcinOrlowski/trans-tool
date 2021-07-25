@@ -81,10 +81,9 @@ class ConfigBuilder(object):
         :return:
         """
         if args.__getattribute__(option):
-            val = True
+            config.__setattr__(option, True)
         elif args.__getattribute__(f'no_{option}'):
-            val = False
-        config.__setattr__(option, val)
+            config.__setattr__(option, False)
 
     @staticmethod
     def _set_from_args(config: Config, args) -> None:

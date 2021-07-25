@@ -51,12 +51,14 @@ class TestEmptyTranslations(ChecksTestCase):
         while processed > 0:
             idx = random.randint(0, key_cnt - 1)
 
+            # noinspection PyTypeChecker
             ref: Translation = ref_file.items[idx]
             if ref.value != '':
                 max_spaces = 3
                 ref.value = ' ' * random.randint(0, max_spaces)
                 ref_file.items[idx] = ref
 
+                # noinspection PyTypeChecker
                 trans: Translation = trans_file.items[idx]
                 trans.value = ''
                 trans_file.items[idx] = trans
@@ -109,6 +111,7 @@ class TestEmptyTranslations(ChecksTestCase):
         processed = how_many
         while processed > 0:
             idx = random.randint(0, key_cnt - 1)
+            # noinspection PyTypeChecker
             trans: Translation = trans_file.items[idx]
             if trans.value != '':
                 trans.value = ''

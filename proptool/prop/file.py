@@ -70,7 +70,8 @@ class PropFile(object):
         :param key: Translation key to look for.
         :return: Instance of PropTranslation or None.
         """
-        translations = list(filter(lambda entry: isinstance(entry, Translation), self.items))
+        # noinspection PyTypeChecker
+        translations: List[Translation] = list(filter(lambda entry: isinstance(entry, Translation), self.items))
         for item in translations:
             if item.key == key:
                 return item
