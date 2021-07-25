@@ -89,6 +89,11 @@ class Log(object):
 
     # #################################################################################################
 
+    # Default return code passed to sys.exit() on abort() call
+    ABORT_RC = 10
+
+    # #################################################################################################
+
     @classmethod
     def configure(cls, config: Config) -> None:
         cls.buffer_enabled = True
@@ -240,7 +245,7 @@ class Log(object):
         Log.init('Aborted', Log.COLOR_ERROR, ignore_quiet = True)
 
         if not Log.debug:
-            sys.exit(1)
+            sys.exit(Log.ABORT_RC)
 
         Log.d('Related stacktrace below')
         raise RuntimeError('*** NOT A CRASH! *** Exception raised because of --debug used to obtain stacktrace. Enjoy.')
