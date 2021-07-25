@@ -190,12 +190,14 @@ Configuration file is plain text file, following [INI file format](https://en.wi
 using any text editor. Please see commented [config.ini](config.ini) for example configuration file and all available options.
 
 > NOTE: when using configuration file and command line arguments, the order of precedence is this:
+>
 > * default configuration goes first,
 > * if config file is given and can be loaded and parsed, then it overrides default configuration,
 > * if there's any command but line argument `--config` specified, then it overrides whatever is is set in config file.
-> 
+>
 > For example:
-> * by default, `verbose` option is off
+>
+> * by default, `verbose` option is off,
 > * your config file sets `verbose = true`, enabling verbose output,
 > * but your invocation is `prop-tool --config config.ini --no-verbose`, therefore `verbose` mode is set `OFF`.
 
