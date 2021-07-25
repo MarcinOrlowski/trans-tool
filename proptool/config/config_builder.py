@@ -6,6 +6,7 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+
 import argparse
 import importlib
 import inspect
@@ -90,8 +91,8 @@ class ConfigBuilder(object):
     def _set_from_args(config: Config, args) -> None:
         # At this point it is assumed that args are in valid state, i.e. no mutually
         # exclusive options are both set etc.
-        for option_name in ConfigBuilder._on_off_pairs:
-            ConfigBuilder._set_on_off_option(config, args, option_name)
+        for pair_option_name in ConfigBuilder._on_off_pairs:
+            ConfigBuilder._set_on_off_option(config, args, pair_option_name)
 
         # cmd fix
         config.fix = args.fix

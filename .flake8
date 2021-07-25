@@ -60,7 +60,10 @@ ignore =
     E241, # E241 multiple spaces after ':'
     F821, # F821 undefined name 'PropFile'
     I005, # I005 isort found an unexpected missing import
+
+    WPS201, # WPS201 Found module with too many imports: 13 > 12
     WPS210, # WPS210 Found too many local variables: 14 > 5
+    WPS213, # WPS213 Found too many expressions: 10 > 9
     WPS221, # WPS221 Found line with high Jones Complexity: 17 > 14
     WPS231, # WPS231 Found function with too much cognitive complexity: 83 > 12
     WPS232, # WPS232 Found module cognitive complexity that is too high: 27.7 > 8
@@ -89,8 +92,10 @@ per-file-ignores =
     # WPS437 Found protected attribute usage
     # WPS529 Found implicit `.get()` dict usage
     # WPS609 Found direct magic attribute usage: __setattr__, __getattr__, ...
-    proptool/config/config_reader.py: WPS609, WPS421, WPS204, WPS529,
-    proptool/config/config_builder.py: WPS609, WPS301, WPS437, WPS213,
+    # WPS433 Found nested import
+    # WPS425 Found boolean non-keyword argument: True, False
+    proptool/config/config_reader.py: WPS609, WPS421, WPS204, WPS529, WPS433,
+    proptool/config/config_builder.py: WPS609, WPS301, WPS437, WPS213, WPS425,
 
     # WPS111 Found too short name
     # WPS214 Found too many methods
@@ -131,5 +136,9 @@ per-file-ignores =
     # WPS437 Found protected attribute usage: _set_on_off_option
     tests/report/test_config_builder.py: WPS431, WPS437,
 
+    # WPS230 Found too many public instance attributes: 8 > 6
+    # WPS414 Found incorrect unpacking target
+    # WPS425 Found boolean non-keyword argument: True, False
+    # WPS431 Found nested class: FakeArgs
     # WPS437 Found protected attribute usage: _validate
-    tests/config/test_config_builder.py: WPS437,
+    tests/config/test_config_builder.py: WPS437, WPS425, WPS431, WPS230, WPS414,

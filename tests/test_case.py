@@ -26,7 +26,7 @@ class TestCase(unittest.TestCase):
         return prefix
 
     def get_random_bool(self) -> bool:
-        return True if random.randint(0, 1) == 1 else False
+        return random.randint(0, 1) == 1
 
     def get_random_on_off_pair(self) -> Tuple[bool, bool]:
         """
@@ -37,5 +37,5 @@ class TestCase(unittest.TestCase):
         """
         switch_a = self.get_random_bool()
         # Only one switch can be set True
-        switch_b = False if not switch_a else self.get_random_bool()
+        switch_b = False if switch_a else self.get_random_bool()
         return switch_a, switch_b

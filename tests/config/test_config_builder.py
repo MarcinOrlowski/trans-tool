@@ -6,8 +6,8 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+
 import copy
-import random
 from pathlib import Path
 from typing import List, Union
 from unittest.mock import call, patch
