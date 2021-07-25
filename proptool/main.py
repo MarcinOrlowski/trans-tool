@@ -29,7 +29,8 @@ from .utils import Utils
 
 class PropTool(object):
 
-    def main(self) -> int:
+    @staticmethod
+    def start() -> int:
         # Cannot rely on argparse here as we have required arguments there.
         if '--version' in sys.argv:
             Log.banner(Const.APP_DESCRIPTION)
@@ -90,8 +91,3 @@ class PropTool(object):
             Log.pop()
 
         return 100 if errors else 0
-
-    @staticmethod
-    def start() -> int:
-        app = PropTool()
-        return app.main()
