@@ -9,7 +9,7 @@
 
 import random
 import unittest
-from typing import List
+from typing import List, Tuple
 
 
 class TestCase(unittest.TestCase):
@@ -24,3 +24,18 @@ class TestCase(unittest.TestCase):
                 single_char = single_char.lower()
             prefix += single_char
         return prefix
+
+    def get_random_bool(self) -> bool:
+        return True if random.randint(0, 1) == 1 else False
+
+    def get_random_on_off_pair(self) -> Tuple[bool, bool]:
+        """
+        Generates pair of two bools, where only one can be True at the time,
+        but both can be False. This is basically handy to simulate argparse
+        `--foo`/`--no-foo` options.
+        :return: tuple of two bools.
+        """
+        switch_a = self.get_random_bool()
+        # Only one switch can be set True
+        switch_b = False if not switch_a else self.get_random_bool()
+        return switch_a, switch_b

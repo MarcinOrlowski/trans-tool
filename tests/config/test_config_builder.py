@@ -6,7 +6,10 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+import copy
+import random
 from pathlib import Path
+from typing import List, Union
 from unittest.mock import call, patch
 
 from proptool.config.config import Config
@@ -83,3 +86,71 @@ class TestConfigBuilder(TestCase):
         args.no_option = False
         ConfigBuilder._set_on_off_option(config, args, 'option')
         self.assertTrue(config.option)
+
+    # #################################################################################################
+
+    def test_set_from_args(self) -> None:
+        class FakeArgs(object):
+            def __init__(self):
+                self.fix: bool = False
+
+                self.files: List[str] = []
+                self.languages: List[str] = []
+                self.separator: Union[str, None] = None
+                self.comment_marker: Union[str, None] = None
+                self.comment_template: Union[str, None] = None
+
+                # Initialize all on/off flags related attributes.
+                for option_name in ConfigBuilder._on_off_pairs:
+                    self.__setattr__(option_name, False)
+                    self.__setattr__(f'no_{option_name}', False)
+
+        args = FakeArgs()
+        args.fix = self.get_random_bool()
+
+        args.fatal, args.no_fatal = self.get_random_on_off_pair()
+        args.strict, args.no_strict = self.get_random_on_off_pair()
+        args.quiet, args.no_quiet = self.get_random_on_off_pair()
+        args.verbose, args.no_vebose = self.get_random_on_off_pair()
+        args.color, args.no_color = self.get_random_on_off_pair()
+
+        # Generate some names with .properties suffix
+        args.files = [Path(f'{self.get_random_string()}.properties') for _ in range(1, 10)]
+
+        config = Config()
+        ConfigBuilder._set_from_args(config, args)
+
+        # Ensure config reflects changes from command line
+        exp_fatal = True if args.fatal or args.no_fatal else config.fatal
+        self.assertEqual(exp_fatal, config.fatal)
+        exp_strict = True if args.strict or args.no_strict else config.strict
+        self.assertEqual(exp_strict, config.strict)
+        exp_quiet = True if args.quiet or args.no_quiet else config.quiet
+        self.assertEqual(exp_quiet, config.quiet)
+        exp_verbose = True if args.verbose or args.no_vebose else config.verbose
+        self.assertEqual(exp_verbose, config.verbose)
+        exp_color = True if args.color or args.no_color else config.color
+        self.assertEqual(exp_color, config.color)
+
+        # ensure all files are now with proper suffix
+        for idx, args_file in enumerate(args.files):
+            self.assertEqual(config.files[idx], args_file)
+
+    # #################################################################################################
+
+    def test_add_file_suffix_missing_suffix(self) -> None:
+        # Generate some names with NO ".properties" suffix
+        srcs = [Path(self.get_random_string()) for _ in range(1, 10)]
+        dests = copy.copy(srcs)
+        ConfigBuilder._add_file_suffix(dests)
+        # Ensure nothing we got suffix added
+        for idx, src in enumerate(srcs):
+            self.assertEqual(f'{str(src)}.properties', str(dests[idx]))
+
+    def test_add_file_suffix_with_suffix(self) -> None:
+        # Generate some names with ".properties" suffix
+        srcs = [Path(f'{self.get_random_string()}.properties') for _ in range(1, 10)]
+        dests = copy.copy(srcs)
+        ConfigBuilder._add_file_suffix(dests)
+        # Ensure nothing gets altered
+        self.assertEqual(srcs, dests)

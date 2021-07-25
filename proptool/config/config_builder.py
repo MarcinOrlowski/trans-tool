@@ -11,6 +11,7 @@ import importlib
 import inspect
 from os import listdir
 from pathlib import Path
+from typing import List, Union
 
 import proptool.checks
 from proptool.checks.base.check import Check
@@ -71,46 +72,60 @@ class ConfigBuilder(object):
             Log.abort('Invalid comment marker.')
 
     @staticmethod
-    def _set_on_off_option(config: Config, args, option: str) -> None:
+    def _set_on_off_option(config: Config, args, option_name: str) -> None:
         """
         Changes Config's entry if either --<option> or --<no-option> switch is set.
         If none is set, returns Config object unaltered.
         :param config:
         :param args:
-        :param option:
+        :param option_name:
         :return:
         """
-        if args.__getattribute__(option):
-            config.__setattr__(option, True)
-        elif args.__getattribute__(f'no_{option}'):
-            config.__setattr__(option, False)
+        if args.__getattribute__(option_name):
+            config.__setattr__(option_name, True)
+        elif args.__getattribute__(f'no_{option_name}'):
+            config.__setattr__(option_name, False)
 
     @staticmethod
     def _set_from_args(config: Config, args) -> None:
-        # At this point it is assumed that args are in valid state (i.e. no mutually exclusive options are both set etc).
+        # At this point it is assumed that args are in valid state, i.e. no mutually
+        # exclusive options are both set etc.
+        for option_name in ConfigBuilder._on_off_pairs:
+            ConfigBuilder._set_on_off_option(config, args, option_name)
 
-        for option in ConfigBuilder._on_off_pairs:
-            ConfigBuilder._set_on_off_option(config, args, option)
-
+        # cmd fix
         config.fix = args.fix
-        config.languages = args.languages
 
-        config.separator = args.separator
-        config.comment_marker = args.comment
-        config.comment_template = args.comment_template
-
-        # base files
-        suffix = '.properties'
-        suffix_len = len(suffix)
-        if args.files:
-            for file in args.files:
-                if file[suffix_len * -1:] != suffix:
-                    file += suffix
-                Utils.add_if_not_in_list(config.files, str(Path(file)))
+        # Set optional args, if set by user.
+        optionals = [
+            'separator',
+            'comment_marker',
+            'comment_template',
+        ]
+        for option_name in optionals:
+            opt_val = args.__getattribute__(option_name)
+            if opt_val is not None:
+                config.__setattr__(option_name, opt_val)
 
         # languages
         if args.languages:
             Utils.add_if_not_in_list(config.languages, args.languages)
+
+        # base files
+        if args.files:
+            ConfigBuilder._add_file_suffix(args.files)
+            Utils.add_if_not_in_list(config.files, args.files)
+
+    @staticmethod
+    def _add_file_suffix(files: Union[List[Path], None]) -> None:
+        if files:
+            suffix = '.properties'
+            suffix_len = len(suffix)
+            for idx, file in enumerate(files):
+                # 'PosixPath' object is not subscriptable, so we cannot slice it.
+                path_str = str(file)
+                if path_str[suffix_len * -1:] != suffix:
+                    files[idx] = Path(f'{path_str}{suffix}')
 
     @staticmethod
     def _parse_args() -> argparse:
@@ -130,14 +145,13 @@ class ConfigBuilder(object):
                            help = 'Updated translation files in-place. No backup!')
         # group.add_argument('--pe', '--punctuation-exception', dest = 'punctuation_exception_langs', nargs = '*', metavar = 'LANG',
         #                    help = 'List of languages for which punctuation mismatch should not be checked for, i.e. "jp"')
-        group.add_argument('--separator', action = 'store', dest = 'separator', metavar = 'CHAR', nargs = 1, default = '=',
+        group.add_argument('--separator', action = 'store', dest = 'separator', metavar = 'CHAR', nargs = 1,
                            help = 'If specified, only given CHAR is considered a valid key/value separator.'
                                   + f'Must be one of the following: {", ".join(Config.ALLOWED_SEPARATORS)}')
-        group.add_argument('--comment', action = 'store', dest = 'comment', metavar = 'CHAR', nargs = 1, default = '#',
+        group.add_argument('--comment', action = 'store', dest = 'comment', metavar = 'CHAR', nargs = 1,
                            help = 'If specified, only given CHAR is considered valid comment marker.'
                                   + f'Must be one of the following: {", ".join(Config.ALLOWED_COMMENT_MARKERS)}')
         group.add_argument('-t', '--template', action = 'store', dest = 'comment_template', metavar = 'TEMPLATE', nargs = 1,
-                           default = Config.DEFAULT_COMMENT_TEMPLATE,
                            help = f'Format of commented-out entries. Default: "{Config.DEFAULT_COMMENT_TEMPLATE}".')
 
         group = parser.add_argument_group('Checks controlling options')
