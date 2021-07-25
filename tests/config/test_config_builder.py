@@ -89,6 +89,14 @@ class TestConfigBuilder(TestCase):
 
     # #################################################################################################
 
+    def get_expectation(self, config_default: bool, switch_on: bool, switch_off: bool) -> bool:
+        result = config_default
+        if switch_on:
+            result = True
+        elif switch_off:
+            result = False
+        return result
+
     def test_set_from_args(self) -> None:
         class FakeArgs(object):
             def __init__(self):
@@ -117,19 +125,20 @@ class TestConfigBuilder(TestCase):
         # Generate some names with .properties suffix
         args.files = [Path(f'{self.get_random_string()}.properties') for _ in range(1, 10)]
 
+        config_defaults = Config()
         config = Config()
         ConfigBuilder._set_from_args(config, args)
 
         # Ensure config reflects changes from command line
-        exp_fatal = True if args.fatal or args.no_fatal else config.fatal
+        exp_fatal = self.get_expectation(config_defaults.fatal, args.fatal, args.no_fatal)
         self.assertEqual(exp_fatal, config.fatal)
-        exp_strict = True if args.strict or args.no_strict else config.strict
+        exp_strict = self.get_expectation(config_defaults.strict, args.strict, args.no_strict)
         self.assertEqual(exp_strict, config.strict)
-        exp_quiet = True if args.quiet or args.no_quiet else config.quiet
+        exp_quiet = self.get_expectation(config_defaults.quiet, args.quiet, args.no_quiet)
         self.assertEqual(exp_quiet, config.quiet)
-        exp_verbose = True if args.verbose or args.no_vebose else config.verbose
+        exp_verbose = self.get_expectation(config_defaults.verbose, args.verbose, args.no_verbose)
         self.assertEqual(exp_verbose, config.verbose)
-        exp_color = True if args.color or args.no_color else config.color
+        exp_color = self.get_expectation(config_defaults.color, args.color, args.no_color)
         self.assertEqual(exp_color, config.color)
 
         # ensure all files are now with proper suffix

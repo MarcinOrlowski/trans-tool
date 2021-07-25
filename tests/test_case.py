@@ -36,6 +36,7 @@ class TestCase(unittest.TestCase):
         :return: tuple of two bools.
         """
         switch_a = self.get_random_bool()
-        # Only one switch can be set True
         switch_b = False if switch_a else self.get_random_bool()
+        # Only one switch can be set True at the same time.
+        self.assertFalse(switch_a and switch_b)
         return switch_a, switch_b
