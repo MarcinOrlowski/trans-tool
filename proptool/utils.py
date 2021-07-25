@@ -60,7 +60,18 @@ class Utils(object):
         return False
 
     @staticmethod
-    def remove_quotes(src_str: str) -> str:
+    def remove_quotes(src: Union[str, List, Dict]):
+        src_type = type(src)
+        if issubclass(src_type, str):
+            return Utils.remove_quotes_str(src)
+        elif issubclass(src_type, list):
+            return Utils.remove_quotes_from_list(src)
+        elif issubclass(src_type, dict):
+            return Utils.remove_quotes_from_dict(src)
+        raise TypeError(f'Argument must be of type "str", "list" or "dict", {src_type} given.')
+
+    @staticmethod
+    def remove_quotes_str(src_str: str) -> str:
         # FIXME: shall only removed if we have 2 quotes!
         if len(src_str) >= 2:
             if src_str[0] == '"':
@@ -70,6 +81,14 @@ class Utils(object):
                 src_str = src_str[:end_pos]
 
         return src_str
+
+    @staticmethod
+    def remove_quotes_from_dict(src_dict: Dict) -> Dict:
+        return {Utils.remove_quotes(key): Utils.remove_quotes(value) for key, value in src_dict.items()}
+
+    @staticmethod
+    def remove_quotes_from_list(src_list: List) -> List:
+        return [Utils.remove_quotes(item) for item in src_list]
 
     @staticmethod
     def upper_first(src_str: Union[str, None]) -> str:

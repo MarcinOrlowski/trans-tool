@@ -59,6 +59,8 @@ class TestUtils(TestCase):
         with self.assertRaises(TypeError):
             Utils.add_if_not_in_list([], {})
 
+    # #################################################################################################
+
     def test_add_if_not_in_dict(self) -> None:
         count = 10
         src = {}
@@ -77,7 +79,9 @@ class TestUtils(TestCase):
             self.assertFalse(Utils.add_if_not_in_dict(target, key, value))
         self.assertEqual(len(target), len(src))
 
-    def test_remove_quotes(self) -> None:
+    # #################################################################################################
+
+    def test_remove_quotes_str(self) -> None:
         val = self.get_random_string()
         src = [
             f'"{val}',
@@ -85,12 +89,59 @@ class TestUtils(TestCase):
             f'{val}"'
         ]
         for item in src:
+            # It's expected to be handled by remove_quotes_str()
             self.assertEqual(val, Utils.remove_quotes(item))
 
-    def test_remove_quotes_too_short(self) -> None:
+    def test_remove_quotes_str_too_short(self) -> None:
         items = ['', ' ']
         for item in items:
+            # It's expected to be handled by remove_quotes_from_str()
             self.assertEqual(item, Utils.remove_quotes(item))
+
+    def test_remove_quotes_from_list(self) -> None:
+        val = self.get_random_string()
+        src = [
+            f'"{val}',
+            f'"{val}"',
+            f'{val}"'
+        ]
+        # It's expected to be handled by remove_quotes_from_list()
+        result = Utils.remove_quotes(src)
+        for item in result:
+            self.assertEqual(item, val)
+
+    def test_remove_quotes_from_dict(self) -> None:
+        key = self.get_random_string('key_')
+        val_1 = self.get_random_string()
+        val_2 = self.get_random_string()
+        val_3 = self.get_random_string()
+        src = {
+            f'"{key}_1':  f'"{val_1}',
+            f'"{key}_2"': f'"{val_2}"',
+            f'{key}_3"':  f'{val_3}"',
+        }
+
+        # It's expected to be handled by remove_quotes_from_dict()
+        result = Utils.remove_quotes(src)
+        self.assertEqual(len(src), len(result))
+
+        result_key = f'{key}_1'
+        self.assertIn(result_key, result)
+        self.assertEqual(result[result_key], val_1)
+
+        result_key = f'{key}_2'
+        self.assertIn(result_key, result)
+        self.assertEqual(result[result_key], val_2)
+
+        result_key = f'{key}_3'
+        self.assertIn(result_key, result)
+        self.assertEqual(result[result_key], val_3)
+
+    def test_remove_quotes_with_unsupported_arg(self) -> None:
+        with self.assertRaises(TypeError):
+            Utils.remove_quotes(123)
+
+    # #################################################################################################
 
     def test_upper_first(self) -> None:
         # Get random string. Ensure first letter is lower-cased.

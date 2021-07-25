@@ -108,11 +108,3 @@ class ConfigReader(object):
                 result[key] = value
 
         return result
-
-    # #################################################################################################
-
-    def _sanitize_dict(self, src_dict: Dict) -> Dict:
-        tmp = collections.OrderedDict()
-        for key, value in src_dict.items():
-            tmp[Utils.remove_quotes(key)] = Utils.remove_quotes(value)
-        return tmp
