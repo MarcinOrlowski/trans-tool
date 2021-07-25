@@ -6,13 +6,47 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+import random
+import unittest
+from unittest.mock import call, patch
 
 from proptool.utils import Utils
-
 from tests.test_case import TestCase
 
 
 class TestUtils(TestCase):
+
+    @patch('builtins.print')
+    # As we mock print(), to sys.stdout.write('...\n') needs to be used instead.
+    def test_abort_single_msg(self, mock_print) -> None:
+        expected_rc = random.randint(1, 255)
+        msg = self.get_random_string()
+        with self.assertRaises(SystemExit) as context_manager:
+            Utils.abort(msg, expected_rc)
+        # Ensure all messages are printed
+        exp_calls = [call(msg)]
+        mock_print.assert_has_calls(exp_calls)
+
+        # Check we got sys.exit called with our return code.
+        self.assertEqual(SystemExit, type(context_manager.exception))
+        self.assertEqual(expected_rc, context_manager.exception.code)
+
+    @patch('builtins.print')
+    # As we mock print(), to sys.stdout.write('...\n') needs to be used instead.
+    def test_abort_msg_list(self, mock_print) -> None:
+        expected_rc = random.randint(1, 255)
+        msgs_cnt = random.randint(1, 10)
+        msgs = self.get_random_string_list(msgs_cnt)
+        with self.assertRaises(SystemExit) as context_manager:
+            Utils.abort(msgs, expected_rc)
+
+        # Ensure our messages were printed in given order
+        exp_calls = [call(msg) for msg in msgs]
+        mock_print.assert_has_calls(exp_calls)
+
+        # Check we got sys.exit called with our return code.
+        self.assertEqual(SystemExit, type(context_manager.exception))
+        self.assertEqual(expected_rc, context_manager.exception.code)
 
     def test_add_if_not_in_list(self) -> None:
         count = 10

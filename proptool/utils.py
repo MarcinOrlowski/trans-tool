@@ -18,10 +18,11 @@ from typing import Dict, List, Union
 
 class Utils(object):
     @staticmethod
-    def abort(msg: Union[str, List[str]] = 'Aborted', rc: int = 10) -> None:
-        if isinstance(msg, str):
-            msg = [msg]
-        print(msg)
+    def abort(msgs: Union[str, List[str]] = 'Aborted', rc: int = 10) -> None:
+        if isinstance(msgs, str):
+            msgs = [msgs]
+        for single_msg in msgs:
+            print(single_msg)
         exit(rc)
 
     @staticmethod
