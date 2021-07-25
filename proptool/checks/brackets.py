@@ -6,6 +6,7 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+
 from typing import Dict, List
 
 from proptool.decorators.overrides import overrides

@@ -6,7 +6,6 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
-
 from typing import Dict, List
 
 
@@ -18,11 +17,12 @@ class Config(object):
     DEFAULT_COMMENT_TEMPLATE: str = 'COM ==> KEY SEP'
 
     def __init__(self):
-        self.debug = False
         self.fatal = False
+        self.strict: bool = False
+
+        self.debug = False
         self.color = True
         self.quiet: bool = False
-        self.strict: bool = False
         self.verbose: bool = False
 
         self.fix: bool = False

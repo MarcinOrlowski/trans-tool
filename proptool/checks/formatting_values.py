@@ -8,13 +8,12 @@
 """
 
 import re
-
 from typing import List
 
-from .base.check import Check
-from proptool.prop.items import Translation
 from proptool.decorators.overrides import overrides
+from proptool.prop.items import Translation
 from proptool.report.group import ReportGroup
+from .base.check import Check
 
 
 # #################################################################################################

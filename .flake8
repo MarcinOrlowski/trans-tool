@@ -43,6 +43,7 @@ ignore =
     WPS336, # WPS336 Found explicit string concatenation
     WPS360, # WPS360 Found an unnecessary use of a raw string
     WPS420, # WPS420 Found wrong keyword: pass
+    WPS442, # WPS442 Found outer scope names shadowing:
     WPS600, # I001 isort found an import in the wrong position
     WPS602, # WPS602 Found using `@staticmethod`
     WPS604, # WPS604 Found incorrect node inside `class` body
@@ -121,4 +122,8 @@ per-file-ignores =
     # WPS323 Found `%` string formatting
     # WPS432 Found magic number
     # WPS609 Found direct magic attribute usage: __abstractmethods__
-    tests/*: S311, WPS323, WPS214, WPS432, WPS609
+    tests/*: S311, WPS323, WPS214, WPS432, WPS609,
+
+    # WPS431 Found nested class: FakeArgs
+    # WPS437 Found protected attribute usage: _set_on_off_option
+    tests/report/test_config_builder.py: WPS431, WPS437,
