@@ -237,7 +237,7 @@ class Log(object):
     @staticmethod
     def abort(messages = None) -> None:
         Log.e(messages)
-        Log.init('*** Aborted', Log.COLOR_ERROR, ignore_quiet = True)
+        Log.init('Aborted', Log.COLOR_ERROR, ignore_quiet = True)
 
         if not Log.debug:
             sys.exit(1)
