@@ -6,8 +6,8 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+
 import random
-import unittest
 from unittest.mock import call, patch
 
 from proptool.utils import Utils
@@ -23,13 +23,14 @@ class TestUtils(TestCase):
         msg = self.get_random_string()
         with self.assertRaises(SystemExit) as context_manager:
             Utils.abort(msg, expected_rc)
-        # Ensure all messages are printed
-        exp_calls = [call(msg)]
-        mock_print.assert_has_calls(exp_calls)
 
-        # Check we got sys.exit called with our return code.
-        self.assertEqual(SystemExit, type(context_manager.exception))
-        self.assertEqual(expected_rc, context_manager.exception.code)
+            # Ensure all messages are printed
+            exp_calls = [call(msg)]
+            mock_print.assert_has_calls(exp_calls)
+
+            # Check we got sys.exit called with our return code.
+            self.assertEqual(SystemExit, type(context_manager.exception))
+            self.assertEqual(expected_rc, context_manager.exception.code)
 
     @patch('builtins.print')
     # As we mock print(), to sys.stdout.write('...\n') needs to be used instead.
@@ -40,13 +41,13 @@ class TestUtils(TestCase):
         with self.assertRaises(SystemExit) as context_manager:
             Utils.abort(msgs, expected_rc)
 
-        # Ensure our messages were printed in given order
-        exp_calls = [call(msg) for msg in msgs]
-        mock_print.assert_has_calls(exp_calls)
+            # Ensure our messages were printed in given order
+            exp_calls = [call(msg) for msg in msgs]
+            mock_print.assert_has_calls(exp_calls)
 
-        # Check we got sys.exit called with our return code.
-        self.assertEqual(SystemExit, type(context_manager.exception))
-        self.assertEqual(expected_rc, context_manager.exception.code)
+            # Check we got sys.exit called with our return code.
+            self.assertEqual(SystemExit, type(context_manager.exception))
+            self.assertEqual(expected_rc, context_manager.exception.code)
 
     def test_add_if_not_in_list(self) -> None:
         count = 10
@@ -56,14 +57,14 @@ class TestUtils(TestCase):
         target = []
 
         # Try adding new elements
-        for item in srcs:
-            Utils.add_if_not_in_list(target, item)
+        for item_new in srcs:
+            Utils.add_if_not_in_list(target, item_new)
         # Check element count changed.
         self.assertEqual(len(target), len(srcs))
 
         # Try adding duplicates
-        for item in srcs:
-            Utils.add_if_not_in_list(target, item)
+        for item_dup in srcs:
+            Utils.add_if_not_in_list(target, item_dup)
         # Check element count is unaltered.
         self.assertEqual(count, len(target))
 
@@ -89,7 +90,8 @@ class TestUtils(TestCase):
         with self.assertRaises(TypeError):
             Utils.add_if_not_in_list([], 123)
         with self.assertRaises(TypeError):
-            Utils.add_if_not_in_list([], False)
+            wrong_type = False
+            Utils.add_if_not_in_list([], wrong_type)
         with self.assertRaises(TypeError):
             Utils.add_if_not_in_list([], {})
 
@@ -109,8 +111,8 @@ class TestUtils(TestCase):
         self.assertEqual(count, len(src))
 
         # Try adding duplicates
-        for key, value in src.items():
-            self.assertFalse(Utils.add_if_not_in_dict(target, key, value))
+        for key_dup, value_dup in src.items():
+            self.assertFalse(Utils.add_if_not_in_dict(target, key_dup, value_dup))
         self.assertEqual(len(target), len(src))
 
     # #################################################################################################
@@ -120,7 +122,7 @@ class TestUtils(TestCase):
         src = [
             f'"{val}',
             f'"{val}"',
-            f'{val}"'
+            f'{val}"',
         ]
         for item in src:
             # It's expected to be handled by remove_quotes_str()
@@ -137,7 +139,7 @@ class TestUtils(TestCase):
         src = [
             f'"{val}',
             f'"{val}"',
-            f'{val}"'
+            f'{val}"',
         ]
         # It's expected to be handled by remove_quotes_from_list()
         result = Utils.remove_quotes(src)

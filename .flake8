@@ -20,6 +20,7 @@ exclude =
 
 # it's not a bug that we aren't using all of hacking
 ignore =
+
     D200, # D200 One-line docstring should fit on one line with quotes
     D205, # D205 1 blank line required between summary line and description
     D400, # D400 First line should end with a period
@@ -31,9 +32,11 @@ ignore =
     I004, # I004 isort found an unexpected blank line in imports
     RST213, # RST213 Inline emphasis start-string without end-string.
     W503, # W503 line break before binary operator
+    WPS114, # WPS114 Found underscored number name pattern: val_1
     WPS115, # WPS115 Found upper-case constant in a class
     WPS204, #WPS204 Found overused expression: config['opening']; used 5 > 4
     WPS211, # WPS211 Found too many arguments: 6 > 5
+    WPS214, # WPS214 Found too many methods: 9 > 7
     WPS237, # WPS237 Found a too complex `f` string
     WPS238, # WPS238 Found too many raises in a function: 5 > 3
     WPS300, # WPS300 Found local folder import
@@ -127,3 +130,6 @@ per-file-ignores =
     # WPS431 Found nested class: FakeArgs
     # WPS437 Found protected attribute usage: _set_on_off_option
     tests/report/test_config_builder.py: WPS431, WPS437,
+
+    # WPS437 Found protected attribute usage: _validate
+    tests/config/test_config_builder.py: WPS437,

@@ -6,7 +6,7 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
-import collections
+
 from configparser import ConfigParser
 from pathlib import Path
 from typing import Dict, List

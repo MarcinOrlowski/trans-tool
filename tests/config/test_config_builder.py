@@ -19,7 +19,8 @@ class TestConfigBuilder(TestCase):
     def get_config_for_validate(self) -> Config:
         config = Config()
 
-        config.files = [Path('/tmp/')]
+        irrelevant_path = self.get_random_string()
+        config.files = [Path(irrelevant_path)]
         config.languages = ['pl']
         config.separator = Config.ALLOWED_SEPARATORS[0]
         config.comment_marker = Config.ALLOWED_COMMENT_MARKERS[0]
