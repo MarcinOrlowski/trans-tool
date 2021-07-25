@@ -57,12 +57,12 @@ class ConfigBuilder(object):
         # override with command line arguments
         ConfigBuilder._set_from_args(config, args)
 
-        ConfigBuilder._validate(config)
+        ConfigBuilder._validate_config(config)
 
         return config
 
     @staticmethod
-    def _validate(config: Config) -> None:
+    def _validate_config(config: Config) -> None:
         if not config.files:
             Log.abort('No base file(s) specified.')
         if not config.languages:
