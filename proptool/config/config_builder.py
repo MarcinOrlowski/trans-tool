@@ -53,7 +53,7 @@ class ConfigBuilder(object):
             config = ConfigReader().read(config, config_file)
 
         # override with command line arguments
-        config = ConfigBuilder._set_from_args(config, args)
+        ConfigBuilder._set_from_args(config, args)
 
         ConfigBuilder._validate(config)
 
@@ -71,7 +71,7 @@ class ConfigBuilder(object):
             Log.abort('Invalid comment marker.')
 
     @staticmethod
-    def _set_on_off_option(config: Config, args, option: str) -> Config:
+    def _set_on_off_option(config: Config, args, option: str) -> None:
         """
         Changes Config's entry if either --<option> or --<no-option> switch is set.
         If none is set, returns Config object unaltered.
@@ -86,14 +86,12 @@ class ConfigBuilder(object):
             val = False
         config.__setattr__(option, val)
 
-        return config
-
     @staticmethod
-    def _set_from_args(config: Config, args) -> Config:
+    def _set_from_args(config: Config, args) -> None:
         # At this point it is assumed that args are in valid state (i.e. no mutually exclusive options are both set etc).
 
         for option in ConfigBuilder._on_off_pairs:
-            config = ConfigBuilder._set_on_off_option(config, args, option)
+            ConfigBuilder._set_on_off_option(config, args, option)
 
         config.fix = args.fix
         config.languages = args.languages
@@ -114,8 +112,6 @@ class ConfigBuilder(object):
         # languages
         if args.languages:
             Utils.add_if_not_in_list(config.languages, args.languages)
-
-        return config
 
     @staticmethod
     def _parse_args() -> argparse:

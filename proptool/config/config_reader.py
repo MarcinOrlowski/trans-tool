@@ -18,7 +18,7 @@ from proptool.utils import Utils
 
 class ConfigReader(object):
     def __init__(self):
-        self.parser = configparser.ConfigParser()
+        self.parser = ConfigParser()
         # Prevent keys CaSe from being altered by default implementation.
         self.parser.optionxform = str
 
