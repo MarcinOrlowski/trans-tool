@@ -113,19 +113,18 @@ class ConfigBuilder(object):
 
         # base files
         if args.files:
-            ConfigBuilder._add_file_suffix(args.files)
+            ConfigBuilder._add_file_suffix(config, args.files)
             Utils.add_if_not_in_list(config.files, args.files)
 
     @staticmethod
-    def _add_file_suffix(files: Union[List[Path], None]) -> None:
+    def _add_file_suffix(config: Config, files: Union[List[Path], None]) -> None:
         if files:
-            suffix = '.properties'
-            suffix_len = len(suffix)
+            suffix_len = len(config.file_suffix)
             for idx, file in enumerate(files):
                 # 'PosixPath' object is not subscriptable, so we cannot slice it.
                 path_str = str(file)
-                if path_str[suffix_len * -1:] != suffix:
-                    files[idx] = Path(f'{path_str}{suffix}')
+                if path_str[suffix_len * -1:] != config.file_suffix:
+                    files[idx] = Path(f'{path_str}{config.file_suffix}')
 
     @staticmethod
     def _parse_args() -> argparse:

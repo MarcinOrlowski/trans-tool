@@ -15,8 +15,11 @@ class Config(object):
     ALLOWED_SEPARATORS: List[str] = ['=', ':']
     ALLOWED_COMMENT_MARKERS: List[str] = ['#', '!']
     DEFAULT_COMMENT_TEMPLATE: str = 'COM ==> KEY SEP'
+    DEFAULT_FILE_SUFFIX: str = '.properties'
 
     def __init__(self):
+        self.file_suffix = Config.DEFAULT_FILE_SUFFIX
+
         self.fatal = False
         self.strict: bool = False
 

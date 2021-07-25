@@ -139,18 +139,22 @@ class TestConfigBuilder(TestCase):
     # #################################################################################################
 
     def test_add_file_suffix_missing_suffix(self) -> None:
+        config = Config()
+
         # Generate some names with NO ".properties" suffix
         srcs = [Path(self.get_random_string()) for _ in range(1, 10)]
         dests = copy.copy(srcs)
-        ConfigBuilder._add_file_suffix(dests)
+        ConfigBuilder._add_file_suffix(config, dests)
         # Ensure nothing we got suffix added
         for idx, src in enumerate(srcs):
-            self.assertEqual(f'{str(src)}.properties', str(dests[idx]))
+            self.assertEqual(f'{str(src)}{config.file_suffix}', str(dests[idx]))
 
     def test_add_file_suffix_with_suffix(self) -> None:
+        config = Config()
+
         # Generate some names with ".properties" suffix
-        srcs = [Path(f'{self.get_random_string()}.properties') for _ in range(1, 10)]
+        srcs = [Path(f'{self.get_random_string()}{config.file_suffix}') for _ in range(1, 10)]
         dests = copy.copy(srcs)
-        ConfigBuilder._add_file_suffix(dests)
+        ConfigBuilder._add_file_suffix(config, dests)
         # Ensure nothing gets altered
         self.assertEqual(srcs, dests)
