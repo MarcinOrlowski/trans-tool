@@ -20,16 +20,23 @@ exclude =
 
 # it's not a bug that we aren't using all of hacking
 ignore =
-
+    D101, # D101 Missing docstring in public class
+    D102, # D102 Missing docstring in public method
+    D107, # D107 Missing docstring in __init__
     D200, # D200 One-line docstring should fit on one line with quotes
     D205, # D205 1 blank line required between summary line and description
     D400, # D400 First line should end with a period
     D401, # D401 First line should be in imperative mood
+    DAR101, # DAR101 Missing parameter(s) in Docstring
+    DAR201, # DAR201 Missing "Returns" in Docstring: - return
     DAR401, # DAR401 Missing exception(s) in Raises section: -r TypeError
+    E241, # E241 multiple spaces after ':'
     E251, # E251 unexpected spaces around keyword / parameter equals
+    F821, # F821 undefined name 'PropFile'
     I001, # I001 isort found an import in the wrong position
     I003, # I003 isort expected 1 blank line in imports, found
     I004, # I004 isort found an unexpected blank line in imports
+    I005, # I005 isort found an unexpected missing import
     RST213, # RST213 Inline emphasis start-string without end-string.
     W503, # W503 line break before binary operator
     WPS114, # WPS114 Found underscored number name pattern: val_1
@@ -51,15 +58,6 @@ ignore =
     WPS602, # WPS602 Found using `@staticmethod`
     WPS604, # WPS604 Found incorrect node inside `class` body
     WPS615, # WPS615 Found unpythonic getter or setter
-
-    D101, # D101 Missing docstring in public class
-    D102, # D102 Missing docstring in public method
-    D107, # D107 Missing docstring in __init__
-    DAR101, # DAR101 Missing parameter(s) in Docstring
-    DAR201, # DAR201 Missing "Returns" in Docstring: - return
-    E241, # E241 multiple spaces after ':'
-    F821, # F821 undefined name 'PropFile'
-    I005, # I005 isort found an unexpected missing import
 
     WPS201, # WPS201 Found module with too many imports: 13 > 12
     WPS210, # WPS210 Found too many local variables: 14 > 5
