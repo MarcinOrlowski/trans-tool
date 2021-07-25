@@ -6,7 +6,7 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
-
+import argparse
 import copy
 from pathlib import Path
 from typing import List, Union
@@ -18,6 +18,21 @@ from tests.test_case import TestCase
 
 
 class TestConfigBuilder(TestCase):
+
+    class FakeArgs(object):
+        def __init__(self):
+            self.fix: bool = False
+
+            self.files: List[str] = []
+            self.languages: List[str] = []
+            self.separator: Union[str, None] = None
+            self.comment_marker: Union[str, None] = None
+            self.comment_template: Union[str, None] = None
+
+            # Initialize all on/off flags related attributes.
+            for option_name in ConfigBuilder._on_off_pairs:
+                self.__setattr__(option_name, False)
+                self.__setattr__(f'no_{option_name}', False)
 
     def get_config_for_validate(self) -> Config:
         config = Config()
@@ -69,23 +84,20 @@ class TestConfigBuilder(TestCase):
     # #################################################################################################
 
     def test_set_on_off_option(self) -> None:
-        class FakeArgs(Config):
-            def __init__(self):
-                super().__init__()
-                self.option = False
-                self.no_option = True
-
         config = Config()
-        config.option = True
-        self.assertTrue(config.option)
-        args = FakeArgs()
-        ConfigBuilder._set_on_off_option(config, args, 'option')
-        self.assertFalse(config.option)
+        config.verbose = True
 
-        args.option = True
-        args.no_option = False
-        ConfigBuilder._set_on_off_option(config, args, 'option')
-        self.assertTrue(config.option)
+        self.assertTrue(config.verbose)
+        args = TestConfigBuilder.FakeArgs()
+        args.verbose = False
+        args.no_verbose = True
+        ConfigBuilder._set_on_off_option(config, args, 'verbose')
+        self.assertFalse(config.verbose)
+
+        args.verbose = True
+        args.no_verbose = False
+        ConfigBuilder._set_on_off_option(config, args, 'verbose')
+        self.assertTrue(config.verbose)
 
     # #################################################################################################
 

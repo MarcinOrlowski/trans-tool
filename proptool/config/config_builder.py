@@ -190,6 +190,12 @@ class ConfigBuilder(object):
 
         args = parser.parse_args()
 
+        ConfigBuilder._validate_args(parser, args)
+
+        return args
+
+    @staticmethod
+    def _validate_args(parser, args):
         # Check use of mutually exclusive pairs
         for key in ConfigBuilder._on_off_pairs:
             if args.__getattribute__(key) and args.__getattribute__(f'no_{key}'):
@@ -209,5 +215,3 @@ class ConfigBuilder(object):
         for placeholder in ('COM', 'SEP', 'KEY'):
             if args.comment_template.find(placeholder) == -1:
                 parser.error(f'Missing literal in comment template: "{placeholder}".')
-
-        return args
