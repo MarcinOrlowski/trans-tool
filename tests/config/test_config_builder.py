@@ -119,7 +119,7 @@ class TestConfigBuilder(TestCase):
         args.fatal, args.no_fatal = self.get_random_on_off_pair()
         args.strict, args.no_strict = self.get_random_on_off_pair()
         args.quiet, args.no_quiet = self.get_random_on_off_pair()
-        args.verbose, args.no_vebose = self.get_random_on_off_pair()
+        args.verbose, args.no_verbose = self.get_random_on_off_pair()
         args.color, args.no_color = self.get_random_on_off_pair()
 
         # Generate some names with .properties suffix
