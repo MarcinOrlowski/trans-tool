@@ -13,6 +13,9 @@ from tests.test_case import TestCase
 
 
 class TestBaseCheck(TestCase):
+    """
+    Tests base class of all Checks.
+    """
 
     def test_constructor(self) -> None:
         """
