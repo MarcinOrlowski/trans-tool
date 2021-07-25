@@ -36,7 +36,7 @@ class Utils(object):
         raises TypeError
         """
         if isinstance(items, str):
-            items = [str]
+            items = [items]
         if not isinstance(items, list):
             raise TypeError(f'add_if_not_in_list() accepts str or List[str] only. {type(items)} passed')
 
@@ -61,6 +61,7 @@ class Utils(object):
 
     @staticmethod
     def remove_quotes(src_str: str) -> str:
+        # FIXME: shall only removed if we have 2 quotes!
         if len(src_str) >= 2:
             if src_str[0] == '"':
                 src_str = src_str[1:]
@@ -71,13 +72,13 @@ class Utils(object):
         return src_str
 
     @staticmethod
-    def upper_first(src_str: str) -> str:
+    def upper_first(src_str: Union[str, None]) -> str:
         if src_str:
             return src_str[0].upper() + src_str[1:]
         return src_str
 
     @staticmethod
-    def lower_first(src_str: str) -> str:
+    def lower_first(src_str: Union[str, None]) -> str:
         if src_str:
             return src_str[0].lower() + src_str[1:]
         return src_str
