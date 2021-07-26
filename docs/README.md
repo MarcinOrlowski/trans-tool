@@ -36,6 +36,14 @@ You may also want to setup [virtual environment](https://docs.python.org/3/libra
 
 ---
 
+## Limitations ##
+
+* As of now `prop-tool` do not handle multiline entries.
+* `FormattingValues` check will do not support positional placeholders, formats using space leading positive numbers.
+* `TypesettingQuotationMarks` is not covering all possible pairs yet due
+  to [limitations of current implementation](https://github.com/MarcinOrlowski/prop-tool/issues/19).
+
+
 ## Additional links ##
 
 * The `*.properties` syntax support is based on official [file format documentation](https://docs.oracle.com/cd/E23095_01/Platform.93/ATGProgGuide/html/s0204propertiesfileformat01.html).
