@@ -1,5 +1,8 @@
 # Changelog #
 
+* dev
+  * Added support for config files
+
 * v1.3.0 (2021-07-22)
   * Added `TypesettingQuotationMarks` check.
   * Various checkers' code improvements.
