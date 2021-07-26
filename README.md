@@ -1,24 +1,40 @@
 ![prop-tool logo](artwork/prop-tool-logo.png)
 
-# prop-tool #
+# Java *.properties file checker and syncing tool #
 
-`prop-tool` - Java *.properties file checker and syncing tool.
-
-[master](https://github.com/MarcinOrlowski/prop-tool/tree/master):
+[master](https://github.com/MarcinOrlowski/prop-tool/tree/master) branch:
 [![Unit tests](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/unittests.yml/badge.svg?branch=master)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/unittests.yml)
 [![codecov](https://codecov.io/gh/MarcinOrlowski/prop-tool/branch/master/graph/badge.svg?token=3THKJKSQ1G)](https://codecov.io/gh/MarcinOrlowski/prop-tool)
 [![Code lint](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/linter.yml/badge.svg?branch=master)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/linter.yml)
 [![MD Lint](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/markdown.yml/badge.svg?branch=master)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/markdown.yml)
 
-[dev](https://github.com/MarcinOrlowski/prop-tool/tree/dev):
+[development](https://github.com/MarcinOrlowski/prop-tool/tree/dev) branch:
 [![Unit tests](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/unittests.yml/badge.svg?branch=dev)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/unittests.yml)
 [![codecov](https://codecov.io/gh/MarcinOrlowski/prop-tool/branch/dev/graph/badge.svg?token=3THKJKSQ1G)](https://codecov.io/gh/MarcinOrlowski/prop-tool)
 [![Code lint](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/linter.yml/badge.svg?branch=dev)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/linter.yml)
 [![MD Lint](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/markdown.yml/badge.svg?branch=dev)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/markdown.yml)
 
-This utility can be used to check your `*.properties` Java files to ensure correct syntax is used, all translation files are in sync
-with base file, there are no missing keys or invalid punctuation and more. It can also create translation files adding missing keys
-based on the content of base file.
+## Table of contents ##
+
+* [Introduction](#introduction)
+* [Extensive documentation](docs/README.md)
+  * [Available validators](docs/checks/README.md)
+  * [Usage examples](docs/examples.md)
+  * [Config file](docs/config.md)
+* [Features](#features)
+* [Extensive documentation](docs/README.md)
+* [License](#license)
+* [Changelog](docs/CHANGES.md)
+
+---
+
+## Introduction ##
+
+`prop-tool` is a small but powerful utility aimed at your (mainly Java) projects' `*.properties` files. Its main role is to ensure
+all files are syntactically correct and all the translation files are in sync with base (main language) file. It also comes with
+huge set of various linters and checkers to guard quality of the files' contents. It can check for missing or dangling keys,
+inproper punctuation, open brackets, quotation marks and more. It can also automatically sync translation files quickly providing
+fresh template for your translators to work on.
 
 ```bash
 $ prop-tool -b mark -l pl -v
@@ -45,9 +61,6 @@ Base: mark.properties
         E: Line 13:5: "remaining": Quotation mark mismatch. Expected ", found `.
         W: Line 14:11: No closing mark for ".
 ```
-
-Based on `*.properties`
-[file format docs](https://docs.oracle.com/cd/E23095_01/Platform.93/ATGProgGuide/html/s0204propertiesfileformat01.html).
 
 ## Checks ##
 
@@ -81,8 +94,8 @@ For translation files, the following checks are performed:
 * QuotationMarks: ensures all quotation marks are unpaired.
 * StartsWithTheSameCase: ensures translation starts with the same character case (upper/lower) as entry in base file.
 * TrailingWhiteChars: no trailing spaces nor tabs at the end of each line.
-* TypesettingQuotationMarks: ensures that typesetting quotation marks (where you have separate quote opening and closing
-  characters) are paired and properly nested.
+* TypesettingQuotationMarks: ensures that typesetting quotation marks (where you have separate quote opening and closing characters)
+  are paired and properly nested.
 * WhiteCharsBeforeLinefeed: ensures there's no space nor tab character placed before linefeed literals (`\n` and `\r`).
 
 NOTE: as this is quite common that translation file may not be updated instantly, `prop-tool` considers key presence condition
@@ -186,8 +199,8 @@ You can use `prop-tool` by providing all required parameters directly from comma
 configuration file and use `--config` option to make `prop-tool` load it and use. Almost all options can be set in configuration
 files, which helps, for example using `prop-tool` as part of CI/CD or GitHub Actions.
 
-Configuration file is plain text file, following [INI file format](https://en.wikipedia.org/wiki/INI_file) and can be created
-using any text editor. Please see commented [config.ini](config.ini) for example configuration file and all available options.
+Configuration file is plain text file, following [INI file format](https://en.wikipedia.org/wiki/INI_file) and can be created using
+any text editor. Please see commented [config.ini](config.ini) for example configuration file and all available options.
 
 > NOTE: when using configuration file and command line arguments, the order of precedence is this:
 >
