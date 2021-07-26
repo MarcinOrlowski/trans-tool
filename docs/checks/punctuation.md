@@ -14,6 +14,7 @@
     * [Description](#description)
     * [Command line options](#command-line-options)
     * [Configuration file](#configuration-file)
+
 ---
 
 ## Summary ##

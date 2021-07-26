@@ -9,7 +9,7 @@
 
 
 * **[Validators](#validators)**
-    * [Checking base and translation files](#checking-base-and-translation-files)
+  * [Checking base and translation files](#checking-base-and-translation-files)
 * Available checks
   * [Syntax check](syntax-check.md)
   * [Brackets](brackets.md)
@@ -24,7 +24,6 @@
   * [TrailingWhiteChars](trailing-white-chars.md)
   * [TypesettingQuotationMarks](typesetting-quotation-marks.md)
   * [WhiteCharsBeforeLinefeed](white-chars-before-linefeed.md)
-
 
 ---
 
