@@ -17,6 +17,6 @@ class Const(object):
 
     APP_DESCRIPTION: List[str] = [
         f'{APP_NAME} v{APP_VERSION} * Copyright 2021 by Marcin Orlowski.',
-        'Java *.properties file checker and syncing tool.',
+        'The *.properties file checker and syncing tool.',
         f'{APP_URL}',
     ]

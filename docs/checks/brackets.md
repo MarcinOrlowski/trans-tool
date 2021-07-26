@@ -1,6 +1,8 @@
 ![prop-tool logo](../../artwork/prop-tool-logo.png)
 
-# Java *.properties file checker and syncing tool #
+### The *.properties file checker and syncing tool ###
+
+---
 
 ## Brackets ##
 

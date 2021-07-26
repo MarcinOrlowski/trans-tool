@@ -1,3 +1,9 @@
+![prop-tool logo](../artwork/prop-tool-logo.png)
+
+### The *.properties file checker and syncing tool ###
+
+---
+
 # Changelog #
 
 * dev

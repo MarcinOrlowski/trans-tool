@@ -1,6 +1,8 @@
 ![prop-tool logo](artwork/prop-tool-logo.png)
 
-# Java *.properties file checker and syncing tool #
+### The *.properties file checker and syncing tool ###
+
+---
 
 [master](https://github.com/MarcinOrlowski/prop-tool/tree/master) branch:
 [![Unit tests](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/unittests.yml/badge.svg?branch=master)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/unittests.yml)
@@ -13,6 +15,8 @@
 [![codecov](https://codecov.io/gh/MarcinOrlowski/prop-tool/branch/dev/graph/badge.svg?token=3THKJKSQ1G)](https://codecov.io/gh/MarcinOrlowski/prop-tool)
 [![Code lint](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/linter.yml/badge.svg?branch=dev)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/linter.yml)
 [![MD Lint](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/markdown.yml/badge.svg?branch=dev)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/markdown.yml)
+
+---
 
 ## Table of contents ##
 
@@ -30,11 +34,20 @@
 
 ## Introduction ##
 
-`prop-tool` is a small but powerful utility aimed at your (mainly Java) projects' `*.properties` files. Its main role is to ensure
-all files are syntactically correct and all the translation files are in sync with base (main language) file. It also comes with
-huge set of various linters and checkers to guard quality of the files' contents. It can check for missing or dangling keys,
-inproper punctuation, open brackets, quotation marks and more. It can also automatically sync translation files quickly providing
-fresh template for your translators to work on.
+`prop-tool` is a small but powerful utility aimed at your projects' `*.properties` files. It looks like text based INI file, but it
+is even simpler and because to its simplicity, this file format is often used to keep the configurations or translations (i.e. in
+Java world). Example file:
+
+```ini
+programTitle = Prop-Tool v1.3
+okButton = "OK"
+```
+
+The main role of `prop-tool` is to help you keep your `*.properties` files in order, ensuring all files are
+syntactically correct and all the translation files are in sync with base (main language) file. It also comes with huge set of
+various linters and checkers to guard quality of the files' contents. It can check for missing or dangling keys, inproper
+punctuation, open brackets, quotation marks and more. It can also automatically sync translation files quickly providing fresh
+template for your translators to work on.
 
 ```bash
 $ prop-tool -b mark -l pl -v
