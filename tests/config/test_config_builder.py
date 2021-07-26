@@ -6,11 +6,14 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
-import argparse
+
 import copy
+import random
 from pathlib import Path
 from typing import List, Union
 from unittest.mock import call, patch
+
+import pytest
 
 from proptool.config.config import Config
 from proptool.config.config_builder import ConfigBuilder
@@ -18,7 +21,6 @@ from tests.test_case import TestCase
 
 
 class TestConfigBuilder(TestCase):
-
     class FakeArgs(object):
         def __init__(self):
             self.fix: bool = False
@@ -136,7 +138,12 @@ class TestConfigBuilder(TestCase):
 
         # Generate some names with .properties suffix
         args.files = [Path(f'{self.get_random_string()}.properties') for _ in range(1, 10)]
+        languages = ['pl', 'de', 'pt']
+        args.languages = languages
+        args.separator = random.choice(Config.ALLOWED_SEPARATORS)
+        args.comment_marker = random.choice(Config.ALLOWED_COMMENT_MARKERS)
 
+        # Process args and update config
         config_defaults = Config()
         config = Config()
         ConfigBuilder._set_from_args(config, args)
@@ -156,6 +163,9 @@ class TestConfigBuilder(TestCase):
         # ensure all files are now with proper suffix
         for idx, args_file in enumerate(args.files):
             self.assertEqual(config.files[idx], args_file)
+        self.assertEqual(languages, config.languages)
+        self.assertEqual(args.separator, config.separator)
+        self.assertEqual(args.comment_marker, config.comment_marker)
 
     # #################################################################################################
 
@@ -179,3 +189,69 @@ class TestConfigBuilder(TestCase):
         ConfigBuilder._add_file_suffix(config, dests)
         # Ensure nothing gets altered
         self.assertEqual(srcs, dests)
+
+    # #################################################################################################
+
+    def test_validate_args_onoff_valid_setups(self) -> None:
+        for option_name in ConfigBuilder._on_off_pairs:
+            args = TestConfigBuilder.FakeArgs()
+            args.__setattr__(option_name, False)
+            args.__setattr__(f'no_{option_name}', False)
+            # We expect no problems.
+            ConfigBuilder._validate_args(args)
+
+            args.__setattr__(option_name, True)
+            args.__setattr__(f'no_{option_name}', False)
+            # We expect no problems.
+            ConfigBuilder._validate_args(args)
+
+            args.__setattr__(option_name, False)
+            args.__setattr__(f'no_{option_name}', True)
+            # We expect no problems.
+            ConfigBuilder._validate_args(args)
+
+    @patch('proptool.log.Log.abort')
+    def test_validate_args_onoff_on_on(self, mock_log_abort) -> None:
+        for option_name in ConfigBuilder._on_off_pairs:
+            args = TestConfigBuilder.FakeArgs()
+            args.__setattr__(option_name, True)
+            args.__setattr__(f'no_{option_name}', True)
+            # Problems should be reported.
+            ConfigBuilder._validate_args(args)
+            exp_calls = [call(f'You cannot use "--{option_name}" and "--no-{option_name}" at the same time.')]
+            mock_log_abort.assert_has_calls(exp_calls)
+
+
+    @patch('proptool.log.Log.abort')
+    def test_validate_args_invalid_separator(self, mock_log_abort) -> None:
+        args = TestConfigBuilder.FakeArgs()
+
+        separator = self.get_random_string(length = 1)
+        self.assertNotIn(separator, Config.ALLOWED_SEPARATORS)
+        args.separator = separator
+        ConfigBuilder._validate_args(args)
+        exp_calls = [call(f'Invalid separator. Must be one of the following: {", ".join(Config.ALLOWED_SEPARATORS)}')]
+        mock_log_abort.assert_has_calls(exp_calls)
+
+    @patch('proptool.log.Log.abort')
+    def test_validate_args_invalid_comment_marker(self, mock_log_abort) -> None:
+        args = TestConfigBuilder.FakeArgs()
+
+        marker = self.get_random_string(length = 1)
+        self.assertNotIn(marker, Config.ALLOWED_COMMENT_MARKERS)
+        args.comment_marker = marker
+        ConfigBuilder._validate_args(args)
+        exp_calls = [call(f'Invalid comment marker. Must be one of the following: {", ".join(Config.ALLOWED_COMMENT_MARKERS)}')]
+        mock_log_abort.assert_has_calls(exp_calls)
+
+    @patch('proptool.log.Log.abort')
+    def test_validate_args_missing_comment_template_literal(self, mock_log_abort) -> None:
+        args = TestConfigBuilder.FakeArgs()
+
+        for missing_literal in Config.COMMENT_TEMPLATE_LITERALS:
+            tmp = copy.copy(Config.COMMENT_TEMPLATE_LITERALS)
+            del tmp[tmp.index(missing_literal)]
+            args.comment_template = ' '.join(tmp)
+            ConfigBuilder._validate_args(args)
+            exp_calls = [call(f'Missing literal in comment template: "{missing_literal}".')]
+            mock_log_abort.assert_has_calls(exp_calls)

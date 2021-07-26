@@ -190,28 +190,27 @@ class ConfigBuilder(object):
 
         args = parser.parse_args()
 
-        ConfigBuilder._validate_args(parser, args)
+        ConfigBuilder._validate_args(args)
 
         return args
 
     @staticmethod
-    def _validate_args(parser, args):
+    def _validate_args(args):
         # Check use of mutually exclusive pairs
-        for key in ConfigBuilder._on_off_pairs:
-            if args.__getattribute__(key) and args.__getattribute__(f'no_{key}'):
-                parser.error(f'You cannot use "--{key}" and "--no-{key}" at the same time.')
+        for option_name in ConfigBuilder._on_off_pairs:
+            if args.__getattribute__(option_name) and args.__getattribute__(f'no_{option_name}'):
+                Log.abort(f'You cannot use "--{option_name}" and "--no-{option_name}" at the same time.')
 
         # Separator character.
-        separator = args.separator[0]
-        if separator not in Config.ALLOWED_SEPARATORS:
-            parser.error(f'Invalid separator. Must be one of the following: {", ".join(Config.ALLOWED_SEPARATORS)}')
+        if args.separator and args.separator not in Config.ALLOWED_SEPARATORS:
+            Log.abort(f'Invalid separator. Must be one of the following: {", ".join(Config.ALLOWED_SEPARATORS)}')
 
         # Comment marker character.
-        comment = args.comment[0]
-        if comment not in Config.ALLOWED_COMMENT_MARKERS:
-            parser.error(f'Invalid comment marker. Must be one of the following: {", ".join(Config.ALLOWED_COMMENT_MARKERS)}')
+        if args.comment_marker and args.comment_marker not in Config.ALLOWED_COMMENT_MARKERS:
+            Log.abort(f'Invalid comment marker. Must be one of the following: {", ".join(Config.ALLOWED_COMMENT_MARKERS)}')
 
         # Comment template.
-        for placeholder in ('COM', 'SEP', 'KEY'):
-            if args.comment_template.find(placeholder) == -1:
-                parser.error(f'Missing literal in comment template: "{placeholder}".')
+        if args.comment_template:
+            for placeholder in Config.COMMENT_TEMPLATE_LITERALS:
+                if args.comment_template.find(placeholder) == -1:
+                    Log.abort(f'Missing literal in comment template: "{placeholder}".')

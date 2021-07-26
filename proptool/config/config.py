@@ -14,6 +14,7 @@ class Config(object):
 
     ALLOWED_SEPARATORS: List[str] = ['=', ':']
     ALLOWED_COMMENT_MARKERS: List[str] = ['#', '!']
+    COMMENT_TEMPLATE_LITERALS: List[str] = ['COM', 'KEY', 'SEP']
     DEFAULT_COMMENT_TEMPLATE: str = 'COM ==> KEY SEP'
     DEFAULT_FILE_SUFFIX: str = '.properties'
 
