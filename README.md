@@ -38,6 +38,7 @@ is even simpler and because to its simplicity, this file format is often used to
 Java world). Example file:
 
 ```ini
+# Example of *.properties file
 programTitle = Prop-Tool v1.3
 okButton = "OK"
 ```
