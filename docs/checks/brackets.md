@@ -14,8 +14,10 @@
   * **Brackets**
     * [Summary](#summary)
     * [Description](#description)
-    * [Command line options](#command-line-options)  
+    * [Command line options](#command-line-options)
     * [Configuration file](#configuration-file)
+      * [Important notes](#notes)
+      * [Example](#example)
 
 ---
 
@@ -29,11 +31,29 @@
 
 `Brackets` ensures all brackets that are found opened in the string are also closed and there's no unpaired bracket left.
 
-
 ## Command line options ##
 
 No dedicated command line options for this validator.
 
 ## Configuration file ##
 
-TODO
+| Key       | Type      | Description | Example |
+|-----------|-----------|-------------|---------|
+| opening   | List of strings | List of opening brackets | `[ "[", "<" ]` |
+| closing   | List of strings | List of closing brackets | `[ "]", ">" ]` |
+
+### Notes ###
+
+**IMPORTANT:** Opening and closing brackets from the same pair MUST be on the same position (i,e. if first element of `opening` list
+is `{` then the `}` MUST be first element on `closing` list.
+
+### Example ###
+
+```ini
+[prop-tool]
+version = 1
+
+[Brackets]
+opening = [ "(", "<", "{", "[" ]
+closing = [ ")", ">", "}", "]" ]
+```

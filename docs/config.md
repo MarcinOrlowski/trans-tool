@@ -17,7 +17,11 @@ You should be using standard `UTF-8` encoding for your configuration file.
 
 Configuration file is separated into sections. Each section starts with section header put in separate line between square brackets,
 followed by section related configuration items. Items are usally in `key = value` form. All keys are always lower-cased, and for
-keys containing multiple words, the single underscore character `_` is used as a separator (i.e. `quotation_marks`).
+keys containing multiple words, the single underscore character `_` is used as a separator (i.e. `quotation_marks`). String values
+can be quoted using either double quotes `"` or apostrophe `'`. You can use both but types cannot be mixed
+(if you open using i.e. `"` you must close using `"` too). Quotes can also be omited, but quotation character is part of your value
+then it must be explicitely marked so by either being part of quoted string (i.e. `'` is part of the
+value: `key = 'value contains " character'`).
 
 ```ini
 
@@ -35,6 +39,9 @@ numericValue = 1
 # This is a comment
 stringValue1 = Quotes are not needed
 stringValue2 = "But can be used if required"
+stringValue3 = 'Single quotes are fine too'
+stringValue4 = 'You can "mix quotes" too'
+stringValue5 = "As last resort, you can \"escape\" quites"
 
 thisIsTrue1 = true
 thisIsTrue2 = 1

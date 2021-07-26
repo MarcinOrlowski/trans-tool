@@ -35,10 +35,6 @@ class QuotationMarks(Check):
     def check(self, translation_file: 'PropFile', reference_file: 'PropFile' = None) -> ReportGroup:
         report = ReportGroup('Quotation marks')
 
-        # NOTE: we do not support apostrophe, because i.e. in English it can be used in sentence: "Dogs' food"
-        # Not sure how to deal with this (and I do not want to do dictionary match)
-        supported_marks: Set[str] = {'"', '`'}
-
         for line_idx, item in enumerate(translation_file.items):
             # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
             if not isinstance(item, (Translation, Comment)):
@@ -46,7 +42,7 @@ class QuotationMarks(Check):
 
             stack: List[Mark] = []
             for pos, current_char in enumerate(item.value):
-                if current_char not in supported_marks:
+                if current_char not in self.config.checks['QuotationMarks']['chars']:
                     continue
 
                 if not stack:
@@ -70,3 +66,9 @@ class QuotationMarks(Check):
                 break
 
         return report
+
+    @overrides(Check)
+    def get_default_config(self) -> Dict:
+        return {
+            'chars': ['"', '`'],
+        }

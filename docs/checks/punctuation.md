@@ -16,7 +16,9 @@
     * [Description](#description)
     * [Command line options](#command-line-options)
     * [Configuration file](#configuration-file)
-
+      * [Important notes](#notes)
+      * [Example](#example)
+  
 ---
 
 ## Summary ##
@@ -35,4 +37,21 @@ No dedicated command line options for this validator.
 
 ## Configuration file ##
 
-TODO
+| Key       | Type      | Description | Example |
+|-----------|-----------|-------------|---------|
+| chars   | List of strings | List of punctuation characters | `[ ".", "?", "!", ":" ]` |
+
+### Notes ###
+
+None.
+
+### Example ###
+
+```ini
+[prop-tool]
+version = 1
+
+[Punctuation]
+chars = [ ".", "?" ]
+```
+

@@ -16,6 +16,8 @@
     * [Description](#description)
     * [Command line options](#command-line-options)
     * [Configuration file](#configuration-file)
+      * [Important notes](#notes)
+      * [Example](#example)
 
 ---
 
@@ -37,10 +39,9 @@ it's always assumed that that there's no quotation nesting. For example, for fou
 it is assumed 1st is the opening marker, 2nd closes 1st, and 4th closes the 3rd.
 
 Things also more complicated if you want to mix the quotation marks and use apostrophes too. For example. `"'"'` (double quotes and
-apostrophes)
-will be marked as incorrect as you open `'` apostrophe marked quote before double quoted is closed. This may be problematic in some
-languages that use apostrophes as part of the sentence, i.e. `It's "me"`. This is currently sufficient to fool `QuotationMarks`
-as it will complain about not closed apostrophe marked quotation.
+apostrophes) will be marked as incorrect as you open `'` apostrophe marked quote before double quoted is closed. This may be
+problematic in some languages that use apostrophes as part of the sentence, i.e. `It's "me"`. This is currently sufficient to
+fool `QuotationMarks` as it will complain about not closed apostrophe marked quotation.
 
 Temporary workarounds:
 
@@ -55,4 +56,21 @@ No dedicated command line options for this validator.
 
 ## Configuration file ##
 
-TODO
+| Key       | Type      | Description | Example |
+|-----------|-----------|-------------|---------|
+| chars   | List of strings | List of quotation marks | `[ '"', "`" ]` |
+
+### Notes ###
+
+**IMPORTANT:** we do NOT support apostrophes, because some languages, i. e. in English it can be used in sentence: "Dogs' food".
+
+### Example ###
+
+```ini
+[prop-tool]
+version = 1
+
+[QuotationMarks]
+# Do NOT use apostrophe character for languages like English
+chars = [ "`", '"' ]
+```
