@@ -21,6 +21,8 @@ from tests.test_case import TestCase
 class FakeArgs(object):
     def __init__(self):
         self.fix: bool = False
+        self.quiet: bool = False
+        self.color: bool = False
 
         self.files: List[str] = []
         self.languages: List[str] = []
@@ -35,8 +37,13 @@ class FakeArgs(object):
 
 
 class TestConfigBuilder(TestCase):
-
     def get_config_for_validate(self) -> Config:
+        """
+        Prepares instance of Config to be later manipulated and passed
+        to ConfigBuilder._validate_config() for tests.
+
+        :return: Initialized config object with valid default state.
+        """
         config = Config()
 
         irrelevant_path = self.get_random_string()
@@ -48,11 +55,18 @@ class TestConfigBuilder(TestCase):
         return config
 
     def test_validate(self) -> None:
-        # This one should pass
+        """
+        Ensures valid Config instance passes all validation checks.
+        """
         ConfigBuilder._validate_config(self.get_config_for_validate())
 
     @patch('proptool.log.Log.abort')
     def test_validate_no_files(self, mock_log_abort) -> None:
+        """
+        Ensures empty list of files triggers expected error message and quits.
+
+        :param mock_log_abort: Log.abort() mock.
+        """
         config = self.get_config_for_validate()
         config.files = []
         ConfigBuilder._validate_config(config)
@@ -60,50 +74,75 @@ class TestConfigBuilder(TestCase):
         mock_log_abort.assert_has_calls(exp_calls)
 
     @patch('proptool.log.Log.abort')
-    def test_validate_no_languages(self, mock_print) -> None:
+    def test_validate_no_languages(self, mock_log_abort) -> None:
+        """
+        Ensures empty language list triggers expected error message and quits.
+
+        :param mock_log_abort: Log.abort() mock.
+        """
         config = self.get_config_for_validate()
         config.languages = []
         ConfigBuilder._validate_config(config)
         exp_calls = [call('No language(s) specified.')]
-        mock_print.assert_has_calls(exp_calls)
+        mock_log_abort.assert_has_calls(exp_calls)
 
     @patch('proptool.log.Log.abort')
-    def test_validate_invalid_separator(self, mock_print) -> None:
+    def test_validate_invalid_separator(self, mock_log_abort) -> None:
+        """
+        Ensures invalid separator char triggers expected error message and quits.
+
+        :param mock_log_abort: Log.abort() mock.
+        """
         config = self.get_config_for_validate()
-        config.separator = ''
+        config.separator = 'invalid'
         ConfigBuilder._validate_config(config)
         exp_calls = [call('Invalid separator character.')]
-        mock_print.assert_has_calls(exp_calls)
+        mock_log_abort.assert_has_calls(exp_calls)
 
     @patch('proptool.log.Log.abort')
-    def test_validate_invalid_comment_marker(self, mock_print) -> None:
+    def test_validate_invalid_comment_marker(self, mock_log_abort) -> None:
+        """
+        Ensures invalid comment marker triggers expected error message and quits.
+
+        :param mock_log_abort: Log.abort() mock.
+        """
         config = self.get_config_for_validate()
         config.comment_marker = ''
         ConfigBuilder._validate_config(config)
         exp_prints = [call('Invalid comment marker.')]
-        mock_print.assert_has_calls(exp_prints)
+        mock_log_abort.assert_has_calls(exp_prints)
 
     # #################################################################################################
 
     def test_set_on_off_option(self) -> None:
+        """Tests if _set_on_off_option() works as documented."""
         config = Config()
-        config.verbose = True
+        config.color = True
 
-        self.assertTrue(config.verbose)
+        self.assertTrue(config.color)
         args = FakeArgs()
-        args.verbose = False
-        args.no_verbose = True
-        ConfigBuilder._set_on_off_option(config, args, 'verbose')
-        self.assertFalse(config.verbose)
+        args.color = False
+        args.no_color = True
+        ConfigBuilder._set_on_off_option(config, args, 'color')
+        self.assertFalse(config.color)
 
-        args.verbose = True
-        args.no_verbose = False
-        ConfigBuilder._set_on_off_option(config, args, 'verbose')
-        self.assertTrue(config.verbose)
+        args.color = True
+        args.no_color = False
+        ConfigBuilder._set_on_off_option(config, args, 'color')
+        self.assertTrue(config.color)
 
     # #################################################################################################
 
     def get_expectation(self, config_default: bool, switch_on: bool, switch_off: bool) -> bool:
+        """
+        Computes expected final value based on on/off switches.
+
+        :param config_default: default option value read from default Config instance.
+        :param switch_on: state of --<OPTION> switch
+        :param switch_off: state of --no-<OPTION> switch
+
+        :return: Computer boolean value given configuration of on/off switches should produce.
+        """
         result = config_default
         if switch_on:
             result = True
@@ -112,24 +151,34 @@ class TestConfigBuilder(TestCase):
         return result
 
     def test_set_from_args(self) -> None:
+        """
+        Tests _set_from_args()
+        """
         args = FakeArgs()
-        args.fix = self.get_random_bool()
 
+        # Lets set up args to some random state
+        args.fix = self.get_random_bool()
+        args.quiet = self.get_random_bool()
+        args.verbose = self.get_random_bool()
+        args.color = self.get_random_bool()
         args.fatal, args.no_fatal = self.get_random_on_off_pair()
         args.strict, args.no_strict = self.get_random_on_off_pair()
-        args.quiet, args.no_quiet = self.get_random_on_off_pair()
-        args.verbose, args.no_verbose = self.get_random_on_off_pair()
         args.color, args.no_color = self.get_random_on_off_pair()
-
-        # Generate some names with .properties suffix
-        args.files = [Path(f'{self.get_random_string()}.properties') for _ in range(1, 10)]
-        languages = ['pl', 'de', 'pt']
-        args.languages = languages
         args.separator = random.choice(Config.ALLOWED_SEPARATORS)
         args.comment_marker = random.choice(Config.ALLOWED_COMMENT_MARKERS)
 
-        # Process args and update config
+        # Generate fake file names with expected default suffix
+        args.files = [Path(f'{self.get_random_string()}{Config.DEFAULT_FILE_SUFFIX}') for _ in range(1, 10)]
+
+        # some languages
+        # FIXME: make list more random
+        languages = ['pl', 'de', 'pt']
+        args.languages = languages
+
+        # This is going to be our reference default config instance.
         config_defaults = Config()
+
+        # Process args and update config
         config = Config()
         ConfigBuilder._set_from_args(config, args)
 
@@ -138,14 +187,14 @@ class TestConfigBuilder(TestCase):
         self.assertEqual(exp_fatal, config.fatal)
         exp_strict = self.get_expectation(config_defaults.strict, args.strict, args.no_strict)
         self.assertEqual(exp_strict, config.strict)
-        exp_quiet = self.get_expectation(config_defaults.quiet, args.quiet, args.no_quiet)
-        self.assertEqual(exp_quiet, config.quiet)
-        exp_verbose = self.get_expectation(config_defaults.verbose, args.verbose, args.no_verbose)
-        self.assertEqual(exp_verbose, config.verbose)
         exp_color = self.get_expectation(config_defaults.color, args.color, args.no_color)
         self.assertEqual(exp_color, config.color)
 
-        # ensure all files are now with proper suffix
+        # log_level controlled by `quiet` and `verbose`.
+        self.assertEqual(args.quiet, config.quiet)
+        self.assertEqual(args.verbose, config.verbose)
+
+        # Ensure all files are there and still with proper suffix.
         for idx, args_file in enumerate(args.files):
             self.assertEqual(config.files[idx], args_file)
         self.assertEqual(languages, config.languages)
@@ -155,24 +204,29 @@ class TestConfigBuilder(TestCase):
     # #################################################################################################
 
     def test_add_file_suffix_missing_suffix(self) -> None:
+        """
+        Tests ConfigBuilder._add_file_suffix() works as expected.
+        """
         config = Config()
 
-        # Generate some names with NO ".properties" suffix
+        # GIVEN list of file names WITHOUT expected suffix.
         srcs = [Path(self.get_random_string()) for _ in range(1, 10)]
         dests = copy.copy(srcs)
+        # WHEN we process it
         ConfigBuilder._add_file_suffix(config, dests)
-        # Ensure nothing we got suffix added
+        # THEN all file names should have file suffix appened.
         for idx, src in enumerate(srcs):
             self.assertEqual(f'{str(src)}{config.file_suffix}', str(dests[idx]))
 
     def test_add_file_suffix_with_suffix(self) -> None:
         config = Config()
 
-        # Generate some names with ".properties" suffix
+        # GIVEN list of file names with expected suffix suffix
         srcs = [Path(f'{self.get_random_string()}{config.file_suffix}') for _ in range(1, 10)]
         dests = copy.copy(srcs)
+        # WHEN we get it processed
         ConfigBuilder._add_file_suffix(config, dests)
-        # Ensure nothing gets altered
+        # THEN nothing should change.
         self.assertEqual(srcs, dests)
 
     # #################################################################################################
@@ -205,6 +259,21 @@ class TestConfigBuilder(TestCase):
             ConfigBuilder._validate_args(args)
             exp_calls = [call(f'You cannot use "--{option_name}" and "--no-{option_name}" at the same time.')]
             mock_log_abort.assert_has_calls(exp_calls)
+
+    @patch('proptool.log.Log.abort')
+    def test_validate_args_quiet_and_verbose(self, mock_log_abort) -> None:
+        """
+        Ensures use of mutually exclusive --quiet and --verbose is handled correctly.
+
+        :param mock_log_abort: Log.abort() mock.
+        """
+        args = FakeArgs()
+
+        args.quiet = True
+        args.verbose = True
+        ConfigBuilder._validate_args(args)
+        exp_calls = [call('You cannot use "--quiet" and "--verbose" at the same time.')]
+        mock_log_abort.assert_has_calls(exp_calls)
 
     @patch('proptool.log.Log.abort')
     def test_validate_args_invalid_separator(self, mock_log_abort) -> None:

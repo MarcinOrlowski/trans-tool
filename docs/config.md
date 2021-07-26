@@ -59,7 +59,7 @@ thisIsListToo = [
                 ]
 ```
 
-# Sections #
+# Structure #
 
 Presence of main section `[prop-tool]` in config file is mandatory, however with the exception for `version` element, all items are
 optional with application defaults used for non-specified elements.
@@ -84,3 +84,30 @@ verbose = true
 opening = ["(", "["]
 closing = [')', ']']
 ```
+
+# prop-tool section #
+
+The following elements are supported in `[prop-tool]` section
+
+| Key       | CLI switch    | Argument type | Default | Description |
+|-----------|---------------|---------------|---------|-------------|
+| comment   | `--comment`   | String        | `#`     | TODO |
+| separator | `--separator` | String        | `=`     | TODO |
+| log_level | `--log-level` | Integer       | `1`     | Sets log verbosity at specified level. |
+
+Switches. Each option how corresponding two command line switches, turning feature on (`--<OPTION>`)
+and turning it off (`--no-<OPTION>`). Only one command line argument can be used at the same time.
+
+| Key       | CLI switches |Argument type      | Default | Description |
+|-----------|-----------|-------------|---------|------------|
+| fatal   | `--fatal`, `--no-fatal` | Boolean | `false` | When used all validators' warnings are fatal as errors. |
+| color   | `--color`/`--no-color` | Boolean | `true` | When `true`, application output will be using ANSI colors.|
+
+## Supported Log verbosity levels ##
+
+| Level | Description |
+|-------|-------------|
+| `0`   | Quiet mode. All but fatal errors are muted. Equivalent of using `--quiet` switch. |
+| `1`   | Normal log level, warning and errors are shown plus some additional information if necessary. |
+| `2`   | Verbose mode, shows more information during runtime. Equivalent of using `--verbose` switch. |
+

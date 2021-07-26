@@ -28,8 +28,6 @@ class ConfigBuilder(object):
     _on_off_pairs = [
         'fatal',
         'strict',
-        'quiet',
-        'verbose',
         'color',
     ]
 
@@ -77,6 +75,7 @@ class ConfigBuilder(object):
         """
         Changes Config's entry if either --<option> or --<no-option> switch is set.
         If none is set, returns Config object unaltered.
+
         :param config:
         :param args:
         :param option_name:
@@ -168,12 +167,8 @@ class ConfigBuilder(object):
         group = parser.add_argument_group('Application controls')
         group.add_argument('-q', '--quiet', action = 'store_true', dest = 'quiet',
                            help = 'Enables quiet mode, mutting all output but fatal errors.')
-        group.add_argument('-nq', '--no-quiet', action = 'store_true', dest = 'no_quiet',
-                           help = 'Disables quiet mode, enabling all type of messages (default).')
         group.add_argument('-v', '--verbose', action = 'store_true', dest = 'verbose',
                            help = 'Produces more verbose reports.')
-        group.add_argument('-nv', '--no-verbose', action = 'store_true', dest = 'no_verbose',
-                           help = 'Disables verbose mode, so only crucial messages are shown (default).')
         group.add_argument('-d', '--debug', action = 'store_true', dest = 'debug',
                            help = 'Enables debug output.')
         group.add_argument('-nd', '--no-debug', action = 'store_true', dest = 'no_debug',
@@ -200,6 +195,10 @@ class ConfigBuilder(object):
         for option_name in ConfigBuilder._on_off_pairs:
             if args.__getattribute__(option_name) and args.__getattribute__(f'no_{option_name}'):
                 Log.abort(f'You cannot use "--{option_name}" and "--no-{option_name}" at the same time.')
+
+        # --quiet vs --verbose
+        if args.__getattribute__('quiet') and args.__getattribute__('verbose'):
+            Log.abort('You cannot use "--quiet" and "--verbose" at the same time.')
 
         # Separator character.
         if args.separator and args.separator not in Config.ALLOWED_SEPARATORS:

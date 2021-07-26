@@ -77,8 +77,29 @@ Lint the code (Default settings is very aggressive so `.flake8` config file tune
 $ flake8 proptool/ tests/
 ```
 
-No output meas no issues.
+No output means no issues.
 
+---
+
+## Packaging ##
+
+Install `wheel` first:
+
+```bash
+$ pip install wheel
+```
+
+and create Wheel package:
+
+```bash
+$ python3 setup.py sdist bdist_wheel
+```
+
+and install the package in your local virtual environment:
+
+```bash
+$ pip install --upgrade dist/prop_tool-<VERSION>-py3-none-any.whl
+```
 
 ---
 
@@ -107,3 +128,4 @@ markdownlint --ignore LICENSE.md **/*.md
 ```
 
 Note, the `LICENSE.md` file is externally sourced, therefore I am not going to fix it.
+
