@@ -26,9 +26,8 @@
   * [Usage examples](docs/usage.md)
   * [Config file](docs/config.md)
 * [Features](#features)
-* [Extensive documentation](docs/README.md)
-* [License](#license)
 * [Changelog](docs/CHANGES.md)
+* [License](#license)
 
 ---
 
