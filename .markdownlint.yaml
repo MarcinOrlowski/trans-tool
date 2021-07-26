@@ -59,7 +59,8 @@ MD011: true
 # MD012/no-multiple-blanks - Multiple consecutive blank lines
 MD012:
   # Consecutive blank lines
-  maximum: 1
+  # maximum: 1
+  maximum: 2 # MOR (to separate checks/*md navigation elements)
 
 # MD013/line-length - Line length
 MD013:
