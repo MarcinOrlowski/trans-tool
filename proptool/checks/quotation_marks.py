@@ -7,7 +7,7 @@
 #
 """
 
-from typing import List
+from typing import Dict, List
 
 from proptool.decorators.overrides import overrides
 from proptool.prop.items import Comment, Translation
