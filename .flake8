@@ -136,4 +136,7 @@ per-file-ignores =
     # WPS425 Found boolean non-keyword argument: True, False
     # WPS431 Found nested class: FakeArgs
     # WPS437 Found protected attribute usage: _validate
-    tests/config/test_config_builder.py: WPS437, WPS425, WPS431, WPS230, WPS414,
+    # WPS609 Found direct magic attribute usage: __setattr__
+    # S311 Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+    tests/config/test_config_builder.py: WPS437, WPS425, WPS431, WPS230, WPS414, WPS609, S311,
+

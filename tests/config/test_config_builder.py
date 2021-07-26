@@ -13,28 +13,28 @@ from pathlib import Path
 from typing import List, Union
 from unittest.mock import call, patch
 
-import pytest
-
 from proptool.config.config import Config
 from proptool.config.config_builder import ConfigBuilder
 from tests.test_case import TestCase
 
 
+class FakeArgs(object):
+    def __init__(self):
+        self.fix: bool = False
+
+        self.files: List[str] = []
+        self.languages: List[str] = []
+        self.separator: Union[str, None] = None
+        self.comment_marker: Union[str, None] = None
+        self.comment_template: Union[str, None] = None
+
+        # Initialize all on/off flags related attributes.
+        for option_name in ConfigBuilder._on_off_pairs:
+            self.__setattr__(option_name, False)
+            self.__setattr__(f'no_{option_name}', False)
+
+
 class TestConfigBuilder(TestCase):
-    class FakeArgs(object):
-        def __init__(self):
-            self.fix: bool = False
-
-            self.files: List[str] = []
-            self.languages: List[str] = []
-            self.separator: Union[str, None] = None
-            self.comment_marker: Union[str, None] = None
-            self.comment_template: Union[str, None] = None
-
-            # Initialize all on/off flags related attributes.
-            for option_name in ConfigBuilder._on_off_pairs:
-                self.__setattr__(option_name, False)
-                self.__setattr__(f'no_{option_name}', False)
 
     def get_config_for_validate(self) -> Config:
         config = Config()
@@ -90,7 +90,7 @@ class TestConfigBuilder(TestCase):
         config.verbose = True
 
         self.assertTrue(config.verbose)
-        args = TestConfigBuilder.FakeArgs()
+        args = FakeArgs()
         args.verbose = False
         args.no_verbose = True
         ConfigBuilder._set_on_off_option(config, args, 'verbose')
@@ -112,21 +112,6 @@ class TestConfigBuilder(TestCase):
         return result
 
     def test_set_from_args(self) -> None:
-        class FakeArgs(object):
-            def __init__(self):
-                self.fix: bool = False
-
-                self.files: List[str] = []
-                self.languages: List[str] = []
-                self.separator: Union[str, None] = None
-                self.comment_marker: Union[str, None] = None
-                self.comment_template: Union[str, None] = None
-
-                # Initialize all on/off flags related attributes.
-                for option_name in ConfigBuilder._on_off_pairs:
-                    self.__setattr__(option_name, False)
-                    self.__setattr__(f'no_{option_name}', False)
-
         args = FakeArgs()
         args.fix = self.get_random_bool()
 
@@ -194,7 +179,7 @@ class TestConfigBuilder(TestCase):
 
     def test_validate_args_onoff_valid_setups(self) -> None:
         for option_name in ConfigBuilder._on_off_pairs:
-            args = TestConfigBuilder.FakeArgs()
+            args = FakeArgs()
             args.__setattr__(option_name, False)
             args.__setattr__(f'no_{option_name}', False)
             # We expect no problems.
@@ -213,7 +198,7 @@ class TestConfigBuilder(TestCase):
     @patch('proptool.log.Log.abort')
     def test_validate_args_onoff_on_on(self, mock_log_abort) -> None:
         for option_name in ConfigBuilder._on_off_pairs:
-            args = TestConfigBuilder.FakeArgs()
+            args = FakeArgs()
             args.__setattr__(option_name, True)
             args.__setattr__(f'no_{option_name}', True)
             # Problems should be reported.
@@ -221,10 +206,9 @@ class TestConfigBuilder(TestCase):
             exp_calls = [call(f'You cannot use "--{option_name}" and "--no-{option_name}" at the same time.')]
             mock_log_abort.assert_has_calls(exp_calls)
 
-
     @patch('proptool.log.Log.abort')
     def test_validate_args_invalid_separator(self, mock_log_abort) -> None:
-        args = TestConfigBuilder.FakeArgs()
+        args = FakeArgs()
 
         separator = self.get_random_string(length = 1)
         self.assertNotIn(separator, Config.ALLOWED_SEPARATORS)
@@ -235,7 +219,7 @@ class TestConfigBuilder(TestCase):
 
     @patch('proptool.log.Log.abort')
     def test_validate_args_invalid_comment_marker(self, mock_log_abort) -> None:
-        args = TestConfigBuilder.FakeArgs()
+        args = FakeArgs()
 
         marker = self.get_random_string(length = 1)
         self.assertNotIn(marker, Config.ALLOWED_COMMENT_MARKERS)
@@ -245,8 +229,8 @@ class TestConfigBuilder(TestCase):
         mock_log_abort.assert_has_calls(exp_calls)
 
     @patch('proptool.log.Log.abort')
-    def test_validate_args_missing_comment_template_literal(self, mock_log_abort) -> None:
-        args = TestConfigBuilder.FakeArgs()
+    def test_validate_args_missing_literal(self, mock_log_abort) -> None:
+        args = FakeArgs()
 
         for missing_literal in Config.COMMENT_TEMPLATE_LITERALS:
             tmp = copy.copy(Config.COMMENT_TEMPLATE_LITERALS)
