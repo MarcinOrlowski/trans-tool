@@ -75,6 +75,28 @@ class TestPropFile(TestCase):
                 self.assertEqual(f'{sep} {com1}', item.value)
 
     @patch('pathlib.Path.exists')
+    def test_load_empty_lines_whitespaces(self, path_mock: Mock) -> None:
+        """
+        Ensures lines with all whitespaces are correctly parsed as Blank()s
+
+        :param path_mock: Mocked Path
+        """
+        fake_data_src = [
+            '',
+            '     ',
+            '\t\t\t\t',
+            '\t\t\t   \t\t\t'
+        ]
+        with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))) as pm:
+            # Lie our fake file exists
+            path_mock.return_value = True
+            prop_file = PropFile(Config(), Path('foo'))
+            self.assertEqual(len(fake_data_src), len(prop_file.items))
+
+            for item in prop_file.items:
+                self.assertIsInstance(item, Blank)
+
+    @patch('pathlib.Path.exists')
     def test_load_valid_file(self, path_mock: Mock) -> None:
         """
         Tests if load() parses valid source *.properties file correctly.
@@ -96,7 +118,6 @@ class TestPropFile(TestCase):
         sep2 = '='
         val2 = self.get_random_string('val2_')
 
-        # Contains 6 lines total (starts with blank line!)
         fake_data_src = [
             '',
             f'{comment1_marker} {comment1_value}',
