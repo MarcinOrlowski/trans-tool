@@ -272,7 +272,7 @@ class TestConfigBuilder(TestCase):
         args.quiet = True
         args.verbose = True
         ConfigBuilder._validate_args(args)
-        exp_calls = [call('You cannot use "--quiet" and "--verbose" at the same time.')]
+        exp_calls = [call('You cannot enable "quiet" and "verbose" options both at the same time.')]
         mock_log_abort.assert_has_calls(exp_calls)
 
     @patch('proptool.log.Log.abort')

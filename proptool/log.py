@@ -72,6 +72,10 @@ class Log(object):
     COLOR_DEBUG = Ansi.REVERSE
     COLOR_BANNER = (Ansi.WHITE + Ansi.REVERSE)
 
+    LEVEL_QUIET = 0
+    LEVEL_NORMAL = 1
+    LEVEL_VERBOSE = 2
+
     # #################################################################################################
 
     deferred_log_level: Union[int, None] = None
@@ -83,9 +87,9 @@ class Log(object):
     buffer_enabled: bool = True
     debug = False
     color: bool = False
-    quiet: bool = False
     skip_empty_lines: bool = False
-    verbose: bool = False
+
+    level = LEVEL_NORMAL
 
     # #################################################################################################
 
@@ -99,9 +103,14 @@ class Log(object):
         cls.buffer_enabled = True
         cls.debug = config.debug
         cls.color = config.color
-        cls.quiet = False
         cls.skip_empty_lines = False
-        cls.verbose = config.verbose
+
+        if config.verbose:
+            cls.level = Log.LEVEL_VERBOSE
+        elif config.quiet:
+            cls.level = Log.LEVEL_QUIET
+        else:
+            cls.level = Log.LEVEL_NORMAL
 
         if config.debug and os.getenv('PYTHONDONTWRITEBYTECODE') is None:
             Log.e([
@@ -133,7 +142,7 @@ class Log(object):
 
     @staticmethod
     def push(message: Union[str, None] = None, color: Union[str, None] = None, ignore_quiet = False, deferred = False) -> None:
-        if not Log.verbose and deferred:
+        if Log.level < Log.LEVEL_VERBOSE and deferred:
             Log._flush_deferred_entry()
 
             Log.deferred_log_level = Log.log_level
@@ -157,7 +166,7 @@ class Log(object):
 
     @staticmethod
     def push_v(message: Union[str, None] = None, color: Union[str, None] = None, ignore_quiet = False, deferred = False) -> None:
-        if Log.verbose:
+        if Log.level == Log.LEVEL_VERBOSE:
             Log.push(message, color, ignore_quiet, deferred)
 
     @staticmethod
@@ -175,7 +184,7 @@ class Log(object):
 
     @staticmethod
     def pop_v(messages = None, color: Union[str, None] = None, ignore_quiet: bool = False) -> None:
-        if Log.verbose:
+        if Log.level == Log.LEVEL_VERBOSE:
             Log.pop(messages, color, ignore_quiet)
 
     # #################################################################################################
@@ -209,7 +218,7 @@ class Log(object):
     # verbose
     @staticmethod
     def v(messages = None, condition: bool = True) -> None:
-        if Log.verbose and condition:
+        if Log.level == Log.LEVEL_VERBOSE and condition:
             Log._log(messages)
 
     # warning
@@ -370,7 +379,7 @@ class Log(object):
             if Log.buffer_enabled and add_to_history:
                 Log.log_entries.append(message)
 
-            quiet = False if ignore_quiet else Log.quiet
+            quiet = False if ignore_quiet else Log.level == Log.LEVEL_QUIET
             if not quiet:
                 print(message.rstrip())
 

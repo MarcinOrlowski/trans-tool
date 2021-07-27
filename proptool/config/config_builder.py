@@ -101,6 +101,8 @@ class ConfigBuilder(object):
             'separator',
             'comment_marker',
             'comment_template',
+            'quiet',
+            'verbose',
         ]
         for option_name in optionals:
             opt_val = args.__getattribute__(option_name)
@@ -198,7 +200,7 @@ class ConfigBuilder(object):
 
         # --quiet vs --verbose
         if args.__getattribute__('quiet') and args.__getattribute__('verbose'):
-            Log.abort('You cannot use "--quiet" and "--verbose" at the same time.')
+            Log.abort('You cannot enable "quiet" and "verbose" options both at the same time.')
 
         # Separator character.
         if args.separator and args.separator not in Config.ALLOWED_SEPARATORS:
