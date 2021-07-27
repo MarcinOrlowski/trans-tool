@@ -6,8 +6,9 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+import random
 from pathlib import Path
-from unittest.mock import Mock, mock_open, patch
+from unittest.mock import Mock, call, mock_open, patch
 
 from proptool.prop.items import Blank, Comment, Translation
 
@@ -97,12 +98,81 @@ class TestPropFile(TestCase):
                 self.assertIsInstance(item, Blank)
 
     @patch('pathlib.Path.exists')
+    def test_load_empty_lines_whitespaces(self, path_mock: Mock) -> None:
+        """
+        Ensures lines with all whitespaces are correctly parsed as Blank()s
+
+        :param path_mock: Mocked Path
+        """
+        fake_data_src = [
+            '',
+            '     ',
+            '\t\t\t\t',
+            '\t\t\t   \t\t\t'
+        ]
+        with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))) as pm:
+            # Lie our fake file exists
+            path_mock.return_value = True
+            prop_file = PropFile(Config(), Path('foo'))
+            self.assertEqual(len(fake_data_src), len(prop_file.items))
+
+            for item in prop_file.items:
+                self.assertIsInstance(item, Blank)
+
+    @patch('pathlib.Path.exists')
+    @patch('builtins.print')  # Needed only to mute error message during unit tests.
+    def test_load_invalid_translation_syntax(self, path_mock: Mock, print_mock: Mock) -> None:
+        """
+        Ensures lines that are expected to be translation but do not match expected syntax
+        are caught correctly.
+
+        :param path_mock: Mocked Path
+        """
+
+        fake_file = '/tmp/foo'
+
+        # Generate some valid content
+        fake_data_src = []
+        # I could use list comprehension but cannot guarantee key uniqueness that way. I need unique prefix.
+        for idx in range(random.randint(10, 30)):
+            fake_data_src.append(f'key{idx}_{self.get_random_string()} {Config.ALLOWED_SEPARATORS[0]} {self.get_random_string()}')
+
+        # Insert incorrect syntax at random line
+        trap_position = random.randint(0, len(fake_data_src) - 1)
+        fake_data_src.insert(trap_position, 'WRONG SYNTAX')
+
+        with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))) as pm:
+            # Lie our fake file exists
+            path_mock.return_value = True
+            try:
+                prop_file = PropFile(Config(), Path(fake_file))
+                self.fail('We should not reach this line.')
+            except SystemExit:
+                pass
+
+    @patch('pathlib.Path.exists')
     def test_load_valid_file(self, path_mock: Mock) -> None:
         """
         Tests if load() parses valid source *.properties file correctly.
 
         :param path_mock: Mocked Path
         """
+
+        def assertTranslation(translation, exp_key, exp_separator, exp_value):
+            self.assertIsInstance(translation, Translation)
+            self.assertEqual(exp_key, translation.key)
+            self.assertEqual(exp_separator, translation.separator)
+            self.assertEqual(exp_value, translation.value)
+
+        def assertComment(comment, exp_marker, exp_value):
+            self.assertIsInstance(comment, Comment)
+            self.assertEqual(f'{exp_marker} {exp_value}', comment.value)
+            self.assertIsNone(comment.key)
+
+        def assertBlank(blank):
+            self.assertIsInstance(blank, Blank)
+            self.assertIsNone(blank.key)
+            self.assertIsNone(blank.value)
 
         comment1_marker = '#'
         comment1_value = self.get_random_string('comment_')
@@ -136,42 +206,26 @@ class TestPropFile(TestCase):
             idx = 0
 
             item = prop_file.items[idx]
-            self.assertBlank(item)
+            assertBlank(item)
             idx += 1
 
             item = prop_file.items[idx]
-            self.assertComment(item, comment1_marker, comment1_value)
+            assertComment(item, comment1_marker, comment1_value)
             idx += 1
 
             item = prop_file.items[idx]
-            self.assertTranslation(item, key1, sep1, val1)
+            assertTranslation(item, key1, sep1, val1)
             idx += 1
 
             item = prop_file.items[idx]
-            self.assertBlank(item)
+            assertBlank(item)
             idx += 1
 
             item = prop_file.items[idx]
-            self.assertComment(item, comment2_marker, comment2_value)
+            assertComment(item, comment2_marker, comment2_value)
             self.assertIsNone(item.key)
             idx += 1
 
             item = prop_file.items[idx]
-            self.assertTranslation(item, key2, sep2, val2)
+            assertTranslation(item, key2, sep2, val2)
             idx += 1
-
-    def assertTranslation(self, translation, exp_key, exp_separator, exp_value):
-        self.assertIsInstance(translation, Translation)
-        self.assertEqual(exp_key, translation.key)
-        self.assertEqual(exp_separator, translation.separator)
-        self.assertEqual(exp_value, translation.value)
-
-    def assertComment(self, comment, exp_marker, exp_value):
-        self.assertIsInstance(comment, Comment)
-        self.assertEqual(f'{exp_marker} {exp_value}', comment.value)
-        self.assertIsNone(comment.key)
-
-    def assertBlank(self, blank):
-        self.assertIsInstance(blank, Blank)
-        self.assertIsNone(blank.key)
-        self.assertIsNone(blank.value)

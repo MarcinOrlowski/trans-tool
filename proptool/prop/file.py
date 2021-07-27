@@ -202,7 +202,7 @@ class PropFile(object):
                 # Whatever left should be valid key[:=]val entry
                 tmp: List[str] = re.split(f'^(.+)([{"".join(Config.ALLOWED_SEPARATORS)}])(.+)$', line)
                 if len(tmp) != 5:
-                    Log.abort(f'Invalid syntax. Line {line_number}, file: {file}')
+                    Log.abort(f'Invalid syntax at line {line_number} of "{file}".')
 
                 key = tmp[1].strip()
                 separator = tmp[2].strip()
