@@ -6,7 +6,7 @@
 
 # Changelog #
 
-* dev
+* v2.0.0 (2021-07-27)
   * Added support for config files.
   * Reworked documentation.
   * Added more unit tests.
