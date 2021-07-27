@@ -129,3 +129,33 @@ markdownlint --ignore LICENSE.md **/*.md
 
 Note, the `LICENSE.md` file is externally sourced, therefore I am not going to fix it.
 
+---
+
+# Combining all checks together #
+
+```bash
+#!/bin/bash
+
+set -uo pipefail
+
+# Activate venv if not active
+if [[ -z "${VIRTUAL_ENV:-}" ]]; then
+    echo "Activating virtual env..."
+    source venv/bin/activate
+fi
+
+if [[ -z "${VIRTUAL_ENV}" ]]; then
+    echo "*** Not in virtual env."
+    return 1
+fi
+
+echo "Unit tests..."
+python3 -m unittest discover --quiet
+if pip show pytest --quiet && pytest --quiet --no-header --no-summary;
+    pytest --quiet --no-header --no-summary
+fi
+echo "Code Lint"
+flake8 proptool/ tests/
+echo "MD Lint"
+markdownlint --ignore LICENSE.md **/*.md
+```
