@@ -8,8 +8,6 @@
 
 * [« Main README](../../README.md)
 * [« Documentation table of contents](../README.md)
-
-
 * [« Available checks](README.md)
   * **Syntax Check**
     * [Summary](#summary)

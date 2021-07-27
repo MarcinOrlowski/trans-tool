@@ -4,12 +4,10 @@
 
 ---
 
-## Formatting Values ##
+# Formatting Values #
 
 * [« Main README](../../README.md)
 * [« Documentation table of contents](../README.md)
-
-
 * [« Available checks](README.md)
   * **Formatting Values**
     * [Summary](#summary)
@@ -38,4 +36,4 @@ No dedicated command line options for this validator.
 
 ## Configuration file ##
 
-TODO
+No dedicated configuration.

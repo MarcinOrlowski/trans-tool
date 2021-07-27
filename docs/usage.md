@@ -1,9 +1,20 @@
-![prop-tool logo](artwork/prop-tool-logo.png)
+![prop-tool logo](../artwork/prop-tool-logo.png)
 
-# The *.properties file checker and syncing tool #
+### The *.properties file checker and syncing tool ###
 
+---
 
-## Config file and command line arguments ##
+# Usage #
+
+* [« Main README](../README.md)
+* [« Documentation table of contents](README.md)
+* **Usage**
+  * [Config file and command line arguments](#config-file-and-command-line)
+  * [Usage examples](#usage-examples)
+
+---
+
+## Config file and command line ##
 
 You can use `prop-tool` by providing all required parameters directly from command line (see `--help`), or you can create
 configuration file and use `--config` option to make `prop-tool` load it and use. Almost all options can be set in configuration
@@ -24,6 +35,7 @@ any text editor. Please see commented [config.ini](../config.ini) for example co
 > * your config file sets `verbose = true`, enabling verbose output,
 > * but your invocation is `prop-tool --config config.ini --no-verbose`, therefore `verbose` mode is set `OFF`.
 
+---
 
 ## Usage examples ##
 

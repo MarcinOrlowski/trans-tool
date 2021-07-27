@@ -4,12 +4,10 @@
 
 ---
 
-## Missing Translations ##
+# Missing Translations #
 
 * [« Main README](../../README.md)
 * [« Documentation table of contents](../README.md)
-
-
 * [« Available checks](README.md)
   * **Missing Translations**
     * [Summary](#summary)
@@ -53,8 +51,8 @@ Default format can be changed using `--template` argument or `template` config e
 
 ## Command line options ##
 
-TODO
+No dedicated command line options for this validator.
 
 ## Configuration file ##
 
-TODO
+No dedicated configuration.

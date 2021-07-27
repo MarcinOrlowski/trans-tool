@@ -7,7 +7,9 @@
 # Changelog #
 
 * dev
-  * Added support for config files
+  * Added support for config files.
+  * Reworked documentation.
+  * Added more unit tests.
 
 * v1.3.0 (2021-07-22)
   * Added `TypesettingQuotationMarks` check.

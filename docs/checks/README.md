@@ -8,8 +8,6 @@
 
 * [« Main README](../../README.md)
 * [« Documentation table of contents](README.md)
-
-
 * **[Validators](#validators)**
   * [Checking base and translation files](#checking-base-and-translation-files)
 * Available checks

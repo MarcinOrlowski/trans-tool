@@ -4,12 +4,10 @@
 
 ---
 
-## Key Format ##
+# Key Format #
 
 * [« Main README](../../README.md)
 * [« Documentation table of contents](../README.md)
-
-
 * [« Available checks](README.md)
   * **Key Format**
     * [Summary](#summary)

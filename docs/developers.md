@@ -4,7 +4,16 @@
 
 ---
 
-# Developer's corner #
+## Developers' corner ##
+
+* [« Main README](../README.md)
+* [« Documentation table of contents](README.md)
+* **Developers' corner**
+  * [Quality control](#quality-control)
+
+---
+
+# Quality control #
 
 `prop-tool` is Python 3 application. It has no external runtime dependencies, however code quality is automatically checked using
 additional tools that require additional installation.  These tests are run automatically on the code repository against

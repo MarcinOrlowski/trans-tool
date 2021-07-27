@@ -8,15 +8,12 @@
 
 * [« Main README](../../README.md)
 * [« Documentation table of contents](../README.md)
-
-
 * [« Available checks](README.md)
   * **Punctuation**
     * [Summary](#summary)
     * [Description](#description)
     * [Command line options](#command-line-options)
     * [Configuration file](#configuration-file)
-      * [Important notes](#notes)
       * [Example](#example)
   
 ---
@@ -40,10 +37,6 @@ No dedicated command line options for this validator.
 | Key       | Type      | Description | Example |
 |-----------|-----------|-------------|---------|
 | chars   | List of strings | List of punctuation characters | `[ ".", "?", "!", ":" ]` |
-
-### Notes ###
-
-None.
 
 ### Example ###
 

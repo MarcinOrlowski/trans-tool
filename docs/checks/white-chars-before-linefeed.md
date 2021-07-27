@@ -8,8 +8,6 @@
 
 * [« Main README](../../README.md)
 * [« Documentation table of contents](../README.md)
-
-
 * [« Available checks](README.md)
   * **White Chars Before Linefeed**
     * [Summary](#summary)

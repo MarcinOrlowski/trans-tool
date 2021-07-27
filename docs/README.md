@@ -8,7 +8,6 @@
 
 * [« Main README](../README.md)
 * [« Documentation table of contents](README.md)
-
 * [Usage examples](usage.md)
   * [Updating translations](usage.md#updating-translations)
 * [Available validators](checks/README.md)
@@ -42,7 +41,6 @@ You may also want to setup [virtual environment](https://docs.python.org/3/libra
 * `FormattingValues` check will do not support positional placeholders, formats using space leading positive numbers.
 * `TypesettingQuotationMarks` is not covering all possible pairs yet due
   to [limitations of current implementation](https://github.com/MarcinOrlowski/prop-tool/issues/19).
-
 
 ## Additional links ##
 

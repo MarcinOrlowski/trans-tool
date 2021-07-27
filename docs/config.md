@@ -1,6 +1,20 @@
-![prop-tool logo](artwork/prop-tool-logo.png)
+![prop-tool logo](../artwork/prop-tool-logo.png)
 
-# The *.properties file checker and syncing tool #
+### The *.properties file checker and syncing tool ###
+
+---
+
+## Configuration ##
+
+* [« Main README](../README.md)
+* [« Documentation table of contents](README.md)
+* **Configuration**
+  * [Config file](#config-file)
+  * [Syntax file](#syntax)
+  * [Structure](#structure)
+    * [The [prop-tool] section](#prop-tool-section)
+
+---
 
 # Config file #
 
@@ -93,21 +107,15 @@ The following elements are supported in `[prop-tool]` section
 |-----------|---------------|---------------|---------|-------------|
 | comment   | `--comment`   | String        | `#`     | TODO |
 | separator | `--separator` | String        | `=`     | TODO |
-| log_level | `--log-level` | Integer       | `1`     | Sets log verbosity at specified level. |
+| quiet     | `--quiet`     | Boolean       | `false` | Quiet mode. If enabled, all but fatal errors are muted. |
+| verbose   | `--verbose`   | Boolean       | `false` | Verbose mode. If enabled shows more information during runtime. |
 
-Switches. Each option how corresponding two command line switches, turning feature on (`--<OPTION>`)
+## Switches ##
+
+Each option how corresponding two command line switches, turning feature on (`--<OPTION>`)
 and turning it off (`--no-<OPTION>`). Only one command line argument can be used at the same time.
 
 | Key       | CLI switches |Argument type      | Default | Description |
 |-----------|-----------|-------------|---------|------------|
 | fatal   | `--fatal`, `--no-fatal` | Boolean | `false` | When used all validators' warnings are fatal as errors. |
 | color   | `--color`/`--no-color` | Boolean | `true` | When `true`, application output will be using ANSI colors.|
-
-## Supported Log verbosity levels ##
-
-| Level | Description |
-|-------|-------------|
-| `0`   | Quiet mode. All but fatal errors are muted. Equivalent of using `--quiet` switch. |
-| `1`   | Normal log level, warning and errors are shown plus some additional information if necessary. |
-| `2`   | Verbose mode, shows more information during runtime. Equivalent of using `--verbose` switch. |
-

@@ -4,12 +4,10 @@
 
 ---
 
-## Empty Translations ##
+# Empty Translations #
 
 * [« Main README](../../README.md)
 * [« Documentation table of contents](../README.md)
-
-
 * [« Available checks](README.md)
   * **Empty Translations**
     * [Summary](#summary)
