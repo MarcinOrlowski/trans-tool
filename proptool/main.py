@@ -7,7 +7,6 @@
 #
 """
 
-import argparse
 import copy
 import sys
 from pathlib import Path
@@ -18,64 +17,26 @@ from proptool.checks.quotation_marks import QuotationMarks
 from proptool.checks.trailing_white_chars import TrailingWhiteChars
 from proptool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
 from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
+from proptool.config.config_builder import ConfigBuilder
 from proptool.prop.file import PropFile
-from .config import Config
 from .const import Const
 from .log import Log
 from .utils import Utils
 
 
+# #################################################################################################
+
+
 class PropTool(object):
+
     @staticmethod
-    def _parse_args() -> argparse:
-        parser = argparse.ArgumentParser(prog = Const.APP_NAME.lower(), formatter_class = argparse.RawTextHelpFormatter,
-                                         description = '\n'.join(Const.APP_DESCRIPTION))
-
-        group = parser.add_argument_group('Options')
-        # group.add_argument('--config', action = 'store', dest = 'config', nargs = 1, metavar = 'FILE',
-        #                    help = 'Use specified config file. Note command line arguments can override config!')
-        group.add_argument('-b', '--base', action = 'store', dest = 'files', nargs = '+', metavar = 'FILE',
-                           help = 'List of base files to check.')
-        group.add_argument('-l', '--lang', action = 'store', dest = 'languages', nargs = '+', metavar = 'LANG', required = True,
-                           help = 'List of languages to check (space separated if more than one, i.e. "de pl").')
-        group.add_argument('--fix', action = 'store_true', dest = 'fix',
-                           help = 'Updated translation files in-place. No backup!')
-        group.add_argument('--pe', '--punctuation-exception', dest = 'punctuation_exception_langs', nargs = '*', metavar = 'LANG',
-                           help = 'List of languages for which punctuation mismatch should not be checked for, i.e. "jp"')
-        group.add_argument('-s', '--strict', action = 'store_true', dest = 'strict',
-                           help = 'Controls strict validation mode.')
-        group.add_argument('--sep', action = 'store', dest = 'separator', metavar = 'CHAR', nargs = 1, default = '=',
-                           help = 'If specified, only given CHAR is considered a valid separator.'
-                                  + f'Must be one of the following: {", ".join(Config.ALLOWED_SEPARATORS)}')
-        group.add_argument('-c', '--com', action = 'store', dest = 'comment', metavar = 'CHAR', nargs = 1, default = '#',
-                           help = 'If specified, only given CHAR is considered va alid comment marker. '
-                                  + f'Must be one of the following: {", ".join(Config.ALLOWED_COMMENT_MARKERS)}')
-        group.add_argument('-t', '--tpl', action = 'store', dest = 'comment_template', metavar = 'TEMPLATE', nargs = 1,
-                           default = Config.DEFAULT_COMMENT_TEMPLATE,
-                           help = f'Format of commented-out entries. Default: "{Config.DEFAULT_COMMENT_TEMPLATE}"')
-        group.add_argument('-f', '--fatal', action = 'store_true', dest = 'fatal',
-                           help = 'All warnings are fatal (as errors)')
-
-        group = parser.add_argument_group('Other')
-        group.add_argument('-q', '--quiet', action = 'store_true', dest = 'quiet')
-        group.add_argument('-v', '--verbose', action = 'store_true', dest = 'verbose',
-                           help = 'Produces more verbose reports')
-        group.add_argument('-d', '--debug', action = 'store_true', dest = 'debug',
-                           help = 'Enables debug output')
-        group.add_argument('-nc', '--no-color', action = 'store_true', dest = 'no_color',
-                           help = 'Disables use of ANSI colors.')
-        group.add_argument('--version', action = 'store_true', dest = 'show_version',
-                           help = 'Displays application version details and quits.')
-
-        return parser.parse_args()
-
-    def main(self) -> int:
+    def start() -> int:
         # Cannot rely on argparse here as we have required arguments there.
         if '--version' in sys.argv:
             Log.banner(Const.APP_DESCRIPTION)
             return 0
 
-        config = Config(self._parse_args())
+        config = ConfigBuilder.build()
         Log.configure(config)
 
         errors = 0
@@ -93,7 +54,7 @@ class PropTool(object):
             if not reference_propfile.loaded:
                 Utils.abort(f'File not found: {reference_path}')
 
-            checks = [
+            check_modules = [
                 TrailingWhiteChars,
                 WhiteCharsBeforeLinefeed,
                 KeyFormat,
@@ -101,7 +62,7 @@ class PropTool(object):
                 QuotationMarks,
                 TypesettingQuotationMarks,
             ]
-            for validator in checks:
+            for validator in check_modules:
                 # Almost any check validates translation against reference file, so we cannot use all checks here,
                 # but there are some that process single file independently so they in fact do not need any reference
                 # file. For them we pass our base file as translation which will do the trick.
@@ -130,10 +91,3 @@ class PropTool(object):
             Log.pop()
 
         return 100 if errors else 0
-
-
-class Main(object):
-    @staticmethod
-    def start() -> int:
-        app = PropTool()
-        return app.main()

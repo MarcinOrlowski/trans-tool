@@ -6,10 +6,11 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+from typing import Union
 
 from proptool.checks.base.check import Check
 from proptool.checks.formatting_values import FormattingValues
-from proptool.config import Config
+from proptool.config.config import Config
 from proptool.decorators.overrides import overrides
 from proptool.prop.file import PropFile
 from proptool.prop.items import Translation
@@ -19,7 +20,7 @@ from tests.checks.checks_test_case import ChecksTestCase
 class TestFormattingValues(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Config) -> Check:
+    def get_checker(self, config: Union[Config, None] = None) -> Check:
         return FormattingValues(config)
 
     # #################################################################################################

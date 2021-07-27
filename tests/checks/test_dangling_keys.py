@@ -7,10 +7,11 @@
 #
 """
 import random
+from typing import Union
 
 from proptool.checks.base.check import Check
 from proptool.checks.dangling_keys import DanglingKeys
-from proptool.config import Config
+from proptool.config.config import Config
 from proptool.decorators.overrides import overrides
 from tests.checks.checks_test_case import ChecksTestCase
 
@@ -18,7 +19,7 @@ from tests.checks.checks_test_case import ChecksTestCase
 class TestDanglingKeys(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Config) -> Check:
+    def get_checker(self, config: Union[Config, None] = None) -> Check:
         return DanglingKeys(config)
 
     # #################################################################################################

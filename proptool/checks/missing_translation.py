@@ -7,9 +7,9 @@
 #
 """
 
-from .base.check import Check
 from proptool.decorators.overrides import overrides
 from proptool.report.group import ReportGroup
+from .base.check import Check
 
 
 # #################################################################################################

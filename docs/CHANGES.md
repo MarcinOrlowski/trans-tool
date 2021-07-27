@@ -1,4 +1,13 @@
+![prop-tool logo](../artwork/prop-tool-logo.png)
+
+### The *.properties file checker and syncing tool ###
+
+---
+
 # Changelog #
+
+* dev
+  * Added support for config files
 
 * v1.3.0 (2021-07-22)
   * Added `TypesettingQuotationMarks` check.

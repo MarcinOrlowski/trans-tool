@@ -8,13 +8,12 @@
 """
 
 import re
-
 from typing import List
 
-from .base.check import Check
-from proptool.prop.items import Translation
 from proptool.decorators.overrides import overrides
+from proptool.prop.items import Translation
 from proptool.report.group import ReportGroup
+from .base.check import Check
 
 
 # #################################################################################################
@@ -32,7 +31,7 @@ class FormattingValues(Check):
     then translation uses it as well and in the same order.
     """
 
-    def _parse(self, item: str) -> List[str]:
+    def _parse(self, item: str) -> List[Formatter]:
         # https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html
         # %[argument_index$][flags][width][.precision]conversion
         result = []

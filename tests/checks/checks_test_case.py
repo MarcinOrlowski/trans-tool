@@ -11,7 +11,7 @@ from abc import abstractmethod
 from typing import List, Union
 
 from proptool.checks.base.check import Check
-from proptool.config import Config
+from proptool.config.config import Config
 from proptool.prop.file import PropFile
 from proptool.prop.items import Blank, Comment, PropItem, Translation
 from tests.test_case import TestCase
@@ -21,13 +21,16 @@ class ChecksTestCase(TestCase):
 
     def setUp(self) -> None:
         self.config: Config = Config()
-        checker = self.get_checker(self.config)
+
+        checker = self.get_checker(None)
         if not issubclass(type(checker), Check):
             raise ValueError('Checker must be subclass of Check')
+        self.config.add_checker_config(checker.__class__.__name__, self.get_checker().get_default_config())
+        checker.config = self.config
         self.checker = checker
 
     @abstractmethod
-    def get_checker(self, config: Config) -> Check:
+    def get_checker(self, config: Union[Config, None] = None) -> Check:
         raise NotImplementedError
 
     def check_single_file(self, entry: PropItem, exp_errors: int = 0, exp_warnings: int = 0) -> None:

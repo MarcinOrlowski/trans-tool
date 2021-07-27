@@ -7,12 +7,15 @@
 #
 """
 from proptool.checks.base.check import Check
-from proptool.config import Config
+from proptool.config.config import Config
 from proptool.prop.file import PropFile
 from tests.test_case import TestCase
 
 
 class TestBaseCheck(TestCase):
+    """
+    Tests base class of all Checks.
+    """
 
     def test_constructor(self) -> None:
         """
@@ -22,7 +25,8 @@ class TestBaseCheck(TestCase):
             # Check is abstract class, extending ABC meta, so ordinary
             # instantiation won't work.
             Check.__abstractmethods__ = frozenset()
-            Check(None)
+            # noinspection PyTypeChecker
+            Check(False)
 
     def test_need_both_files_no_fault(self) -> None:
         config = Config()

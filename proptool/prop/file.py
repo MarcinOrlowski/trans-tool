@@ -24,7 +24,7 @@ from proptool.checks.starts_with_the_same_case import StartsWithTheSameCase
 from proptool.checks.trailing_white_chars import TrailingWhiteChars
 from proptool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
 from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
-from proptool.config import Config
+from proptool.config.config import Config
 from proptool.log import Log
 from proptool.prop.items import Blank, Comment, PropItem, Translation
 from proptool.report.group import ReportGroup
@@ -70,7 +70,8 @@ class PropFile(object):
         :param key: Translation key to look for.
         :return: Instance of PropTranslation or None.
         """
-        translations = list(filter(lambda entry: isinstance(entry, Translation), self.items))
+        # noinspection PyTypeChecker
+        translations: List[Translation] = list(filter(lambda entry: isinstance(entry, Translation), self.items))
         for item in translations:
             if item.key == key:
                 return item

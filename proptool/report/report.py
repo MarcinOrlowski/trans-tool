@@ -9,9 +9,9 @@
 
 from typing import List
 
-from proptool.config import Config
+from proptool.config.config import Config
 from proptool.log import Log
-
+from proptool.utils import Utils
 from .group import ReportGroup
 
 
@@ -77,7 +77,7 @@ class Report(object):
             label += f'{sep}warnings: {warnings}'
 
         if label != '':
-            label = label[0].upper() + label[1:]
+            label = Utils.upper_first(label)
 
         if errors > 0:
             Log.push_e(label)

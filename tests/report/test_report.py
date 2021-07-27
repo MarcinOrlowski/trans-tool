@@ -7,7 +7,7 @@
 #
 """
 
-from proptool.config import Config
+from proptool.config.config import Config
 from proptool.report.report import Report
 from tests.test_case import TestCase
 

@@ -15,7 +15,6 @@ from .base.check import Check
 
 # #################################################################################################
 
-# noinspection PyUnresolvedReferences
 class WhiteCharsBeforeLinefeed(Check):
     r"""
     This check ensures there's no space before "\n", "\r" literals.
@@ -33,6 +32,7 @@ class WhiteCharsBeforeLinefeed(Check):
                     return True
         return False
 
+    # noinspection PyUnresolvedReferences
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(self, translation_file: 'PropFile', reference_file: 'PropFile' = None) -> ReportGroup:
