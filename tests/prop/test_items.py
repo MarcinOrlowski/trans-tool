@@ -11,7 +11,7 @@ from proptool.prop.items import Blank, Comment, PropItem, Translation
 from tests.test_case import TestCase
 
 
-class TestReportItem(TestCase):
+class TestPropItem(TestCase):
 
     def test_base_constructor_args_none(self) -> None:
         item = PropItem()
