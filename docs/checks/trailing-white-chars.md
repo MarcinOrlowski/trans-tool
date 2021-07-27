@@ -12,7 +12,6 @@
   * **Trailing White Chars**
     * [Summary](#summary)
     * [Description](#description)
-    * [Command line options](#command-line-options)
     * [Configuration file](#configuration-file)
 
 ---
@@ -26,10 +25,6 @@
 ## Description ##
 
 This validator looks at the end of your strings and comments and flags trailing spaces or tab charactes noticed.
-
-## Command line options ##
-
-No dedicated command line options for this validator.
 
 ## Configuration file ##
 

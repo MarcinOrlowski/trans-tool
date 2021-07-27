@@ -12,7 +12,6 @@
   * **Missing Translations**
     * [Summary](#summary)
     * [Description](#description)
-    * [Command line options](#command-line-options)
     * [Configuration file](#configuration-file)
   
 ---
@@ -48,10 +47,6 @@ the `newlyAddedKey` will be considered "present" in translation, despite being c
 translated, you need to use `--strict` mode instead of default loose check mode.
 
 Default format can be changed using `--template` argument or `template` config entry.
-
-## Command line options ##
-
-No dedicated command line options for this validator.
 
 ## Configuration file ##
 

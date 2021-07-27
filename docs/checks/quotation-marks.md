@@ -12,7 +12,6 @@
   * **Quotation Marks**
     * [Summary](#summary)
     * [Description](#description)
-    * [Command line options](#command-line-options)
     * [Configuration file](#configuration-file)
       * [Important notes](#notes)
       * [Example](#example)
@@ -47,10 +46,6 @@ Temporary workarounds:
   sentences.
 * Create `QuotationMarks` configuration per language so i.e. apostrophes are ignored in English, but checked in i.e. Polish which do
   not use it as part of sentences.
-
-## Command line options ##
-
-No dedicated command line options for this validator.
 
 ## Configuration file ##
 

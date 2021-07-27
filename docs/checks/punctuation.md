@@ -12,7 +12,6 @@
   * **Punctuation**
     * [Summary](#summary)
     * [Description](#description)
-    * [Command line options](#command-line-options)
     * [Configuration file](#configuration-file)
       * [Example](#example)
   
@@ -27,10 +26,6 @@
 ## Description ##
 
 Punctuation check ensures translation ends with punctuation mark (`:`, `.`, `?`, `!`) if entry in base file ends that way.
-
-## Command line options ##
-
-No dedicated command line options for this validator.
 
 ## Configuration file ##
 

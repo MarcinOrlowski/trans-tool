@@ -12,7 +12,6 @@
   * **Dangling Keys**
     * [Summary](#summary)
     * [Description](#description)
-    * [Command line options](#command-line-options)
     * [Configuration file](#configuration-file)
 
 ---
@@ -26,10 +25,6 @@
 ## Description ##
 
 Checks if keys found in translation file are also present in base file.
-
-## Command line options ##
-
-No dedicated command line options for this validator.
 
 ## Configuration file ##
 

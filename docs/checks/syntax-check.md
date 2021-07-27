@@ -12,7 +12,6 @@
   * **Syntax Check**
     * [Summary](#summary)
     * [Description](#description)
-    * [Command line options](#command-line-options)
     * [Configuration file](#configuration-file)
 
 ---
@@ -26,10 +25,6 @@
 ## Description ##
 
 This validators ensures proper structire of the files, use of allowed comment markers, key - value separators etc.
-
-## Command line options ##
-
-No dedicated command line options for this validator.
 
 ## Configuration file ##
 

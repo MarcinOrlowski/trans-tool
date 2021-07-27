@@ -12,7 +12,6 @@
   * **Typesetting Quotation Marks**
     * [Summary](#summary)
     * [Description](#description)
-    * [Command line options](#command-line-options)
     * [Configuration file](#configuration-file)
       * [Important notes](#notes)
       * [Example](#example)
@@ -29,10 +28,6 @@
 
 TypesettingQuotationMarks is a mixture of `QuotationMarks` and `Brackets` check that understans quotation mark pairs
 (where you have separate quote opening and closing characters). It can look for them and ensure all is paired and properly nested.
-
-## Command line options ##
-
-No dedicated command line options for this validator.
 
 ## Configuration file ##
 

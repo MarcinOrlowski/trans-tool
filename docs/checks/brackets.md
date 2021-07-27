@@ -12,7 +12,6 @@
   * **Brackets**
     * [Summary](#summary)
     * [Description](#description)
-    * [Command line options](#command-line-options)
     * [Configuration file](#configuration-file)
       * [Important notes](#notes)
       * [Example](#example)
@@ -28,10 +27,6 @@
 ## Description ##
 
 `Brackets` ensures all brackets that are found opened in the string are also closed and there's no unpaired bracket left.
-
-## Command line options ##
-
-No dedicated command line options for this validator.
 
 ## Configuration file ##
 

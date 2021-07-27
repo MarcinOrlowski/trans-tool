@@ -12,7 +12,6 @@
   * **White Chars Before Linefeed**
     * [Summary](#summary)
     * [Description](#description)
-    * [Command line options](#command-line-options)
     * [Configuration file](#configuration-file)
 
 ---
@@ -27,11 +26,6 @@
 
 This validator ensures there's no space nor tab character placed before linefeed literals (`\n` and `\r`)
 as this usually serves no purpose.
-
-
-## Command line options ##
-
-No dedicated command line options for this validator.
 
 ## Configuration file ##
 

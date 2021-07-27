@@ -12,7 +12,6 @@
   * **Key Format**
     * [Summary](#summary)
     * [Description](#description)
-    * [Command line options](#command-line-options)
     * [Configuration file](#configuration-file)
       * [Important notes](#notes)
       * [Example](#example)
@@ -29,10 +28,6 @@
 
 This validator ensures strings used as keys in you `*.properties` file matches specified pattern which helps keeping unified naming
 conventcion across your files.
-
-## Command line options ##
-
-No dedicated command line options for this validator.
 
 ## Configuration file ##
 

@@ -12,7 +12,6 @@
   * **Starts With The Same Case**
     * [Summary](#summary)
     * [Description](#description)
-    * [Command line options](#command-line-options)
     * [Configuration file](#configuration-file)
 
 ---
@@ -29,10 +28,6 @@ StartsWithTheSameCase ensures translation starts with the same character case (b
 
 *NOTE:* This check makes no sense for languages like Asian (i.e. Chinese, Japanese etc) and you should configure language exception
 list for `StartsWithTheSameCase` to make is skip such translations from being checked.
-
-## Command line options ##
-
-No dedicated command line options for this validator.
 
 ## Configuration file ##
 
