@@ -35,7 +35,8 @@ class TestPropFile(TestCase):
     def test_load_non_existing_file(self, path_mock: Mock) -> None:
         """
         Tests if load() parses source file properly.
-        :return:
+
+        :param path_mock: Mocked Path
         """
         prop_file = PropFile(Config())
 
@@ -43,9 +44,42 @@ class TestPropFile(TestCase):
         prop_file.load(Path('foo'))
 
     @patch('pathlib.Path.exists')
+    def test_load_strip_crlf(self, path_mock: Mock) -> None:
+        """
+        Ensures trailing LF and CRLFs are properly stripped from read lines.
+
+        :param path_mock: Mocked Path
+        """
+
+        com0 = self.get_random_string()
+        com1 = self.get_random_string()
+
+        for sep in Config.ALLOWED_COMMENT_MARKERS:
+            fake_data_src = [
+                f'{sep} {com0}\n',
+                f'{sep} {com1}\r\n',
+            ]
+
+            with patch('builtins.open', mock_open(read_data = ''.join(fake_data_src))) as pm:
+                # Lie our fake file exists
+                path_mock.return_value = True
+                prop_file = PropFile(Config(), Path('foo'))
+                self.assertEqual(len(fake_data_src), len(prop_file.items))
+
+                for comment in prop_file.items:
+                    self.assertIsInstance(comment, Comment)
+
+                item = prop_file.items[0]
+                self.assertEqual(f'{sep} {com0}', item.value)
+                item = prop_file.items[1]
+                self.assertEqual(f'{sep} {com1}', item.value)
+
+    @patch('pathlib.Path.exists')
     def test_load_valid_file(self, path_mock: Mock) -> None:
         """
         Tests if load() parses valid source *.properties file correctly.
+
+        :param path_mock: Mocked Path
         """
 
         comment1_marker = '#'
@@ -63,19 +97,20 @@ class TestPropFile(TestCase):
         val2 = self.get_random_string('val2_')
 
         # Contains 6 lines total (starts with blank line!)
-        fake_data = f"""
-{comment1_marker} {comment1_value}
-{key1} {sep1} {val1}
+        fake_data_src = [
+            '',
+            f'{comment1_marker} {comment1_value}',
+            f'{key1} {sep1} {val1}',
+            '',
+            f'{comment2_marker} {comment2_value}',
+            f'{key2} {sep2} {val2}',
+        ]
 
-{comment2_marker} {comment2_value}
-{key2} {sep2} {val2}
-"""
-
-        with patch('builtins.open', mock_open(read_data = fake_data)) as pm:
-            # Lie our file exists
+        with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))) as pm:
+            # Lie our fake file exists
             path_mock.return_value = True
             prop_file = PropFile(Config(), Path('foo'))
-            self.assertEqual(6, len(prop_file.items))
+            self.assertEqual(len(fake_data_src), len(prop_file.items))
 
             idx = 0
 
