@@ -81,7 +81,7 @@ class PropFile(object):
 
     def append(self, item: PropItem):
         if not issubclass(type(item), PropItem):
-            raise ValueError('Item must subclass PropItem.')
+            raise TypeError('Item must subclass PropItem.')
 
         if isinstance(item, Translation):
             self.keys.append(item.key)
