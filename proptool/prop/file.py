@@ -169,7 +169,7 @@ class PropFile(object):
         :return:
         """
 
-        self.init_container(self.config)
+        self.init_container()
 
         if not file.exists():
             return False
