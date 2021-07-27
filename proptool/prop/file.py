@@ -29,7 +29,6 @@ from proptool.log import Log
 from proptool.prop.items import Blank, Comment, PropItem, Translation
 from proptool.report.group import ReportGroup
 from proptool.report.report import Report
-from proptool.utils import Utils
 
 
 # #################################################################################################
@@ -200,24 +199,16 @@ class PropFile(object):
                     self.append(Comment(line))
                     continue
 
-                if not self.separator:
-                    # Let's look for used separator character
-                    for _, single_char in enumerate(line):
-                        if single_char in Config.ALLOWED_SEPARATORS:
-                            self.separator = single_char
-                            break
+                # Whatever left should be valid key[:=]val entry
+                tmp: List[str] = re.split(f'^(.+)([{"".join(Config.ALLOWED_SEPARATORS)}])(.+)$', line)
+                if len(tmp) != 5:
+                    Log.abort(f'Invalid syntax. Line {line_number}, file: {file}')
 
-                tmp: List[str] = line.split(self.separator)
-                if len(tmp) < 2:
-                    Utils.abort([
-                        f'Invalid syntax. Line {line_number}, file: {file}',
-                        f'Using "{self.separator}" as separator.',
-                    ])
-
-                key = tmp[0].strip()
-                val = ''.join(tmp[1:]).lstrip()
+                key = tmp[1].strip()
+                separator = tmp[2].strip()
+                val = tmp[3].lstrip()
                 if key not in self.keys:
-                    self.append(Translation(key, val, self.separator))
+                    self.append(Translation(key, val, separator))
                 else:
                     duplicated_keys.error(line_number, f'Duplicated key "{key}".')
 
