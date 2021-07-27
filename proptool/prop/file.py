@@ -46,10 +46,11 @@ class PropFile(object):
         # All the keys in form `# ==> KEY =` that we found.
         self.commented_out_keys: List[str] = []
         self.separator: str = config.separator
-        self.loaded: bool = False
-        self.items: List[PropItem] = []
 
-        self.report = Report(config)
+        self.loaded: bool = None
+        self.items: List[PropItem] = None
+        self.report: Report = None
+        self.init_container()
 
         comment_pattern = re.escape(self.config.comment_template).replace(
             'COM', f'[{"".join(Config.ALLOWED_COMMENT_MARKERS)}]').replace(
@@ -59,7 +60,12 @@ class PropFile(object):
         self.comment_pattern = f'^{comment_pattern}'
 
         if file is not None:
-            self.loaded = self._load(file)
+            self.loaded = self.load(file)
+
+    def init_container(self) -> None:
+        self.loaded: bool = False
+        self.items: List[PropItem] = []
+        self.report: Report = Report(self.config)
 
     # #################################################################################################
 
@@ -155,13 +161,16 @@ class PropFile(object):
 
     # #################################################################################################
 
-    def _load(self, file: Path) -> bool:
+    def load(self, file: Path) -> bool:
         """
         Loads and parses *.properties file.
 
         :param file: File to load.
         :return:
         """
+
+        self.init_container(self.config)
+
         if not file.exists():
             return False
 
