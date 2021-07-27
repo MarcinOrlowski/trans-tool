@@ -16,11 +16,10 @@
 # Quality control #
 
 `prop-tool` is Python 3 application. It has no external runtime dependencies, however code quality is automatically checked using
-additional tools that require additional installation.  These tests are run automatically on the code repository against
-any new commited code and each pull-request created using Github Actions feature (see `.github/workflows` folder for
-configuration details).
+additional tools that require additional installation. These tests are run automatically on the code repository against any new
+commited code and each pull-request created using Github Actions feature (see `.github/workflows` folder for configuration details).
 
-If you'd like to try them by hand locally here's how.
+If you'd like to run them locally by hand, here's how.
 
 ## Virtual environment ##
 
@@ -53,8 +52,8 @@ Ran 111 tests in 0.047s
 OK
 ```
 
-Unit tests can be run using [pytest](https://pytest.org/) package too (remove `--quiet` if you want to see
-tests details). Install `pytest` first:
+Unit tests can be run using [pytest](https://pytest.org/) package too (remove `--quiet` if you want to see tests details).
+Install `pytest` first:
 
 ```bash
 $ pip install pytest
@@ -73,8 +72,8 @@ $ pytest --quiet
 
 ## Python code QA ##
 
-I use `Flake8` and [wemake-python-styleguide](https://wemake-python-stylegui.de/en/latest/) and additional plugins to
-ensure code quality:
+I use `Flake8` and [wemake-python-styleguide](https://wemake-python-stylegui.de/en/latest/) and additional plugins to ensure code
+quality:
 
 ```bash
 $ pip install wemake-python-styleguide
@@ -115,10 +114,10 @@ $ pip install --upgrade dist/prop_tool-<VERSION>-py3-none-any.whl
 ## Markdown lint ##
 
 Documentation is written using [markdown](https://en.wikipedia.org/wiki/Markdown) and is checked
-using [MarkdownLint](https://github.com/DavidAnson/markdownlint)
-with use of [markdown-cli](https://github.com/igorshubovych/markdownlint-cli) wrapper. This linter is unfortunately not a Python
-application, so virtual environment won't help us keep it isolated. It must be installed on your system using `npm` package manager.
-You may need to install `npm` first as it usually is not preinstalled:
+using [MarkdownLint](https://github.com/DavidAnson/markdownlint) with use
+of [markdown-cli](https://github.com/igorshubovych/markdownlint-cli) wrapper. This linter is unfortunately not a Python
+application, so virtual environment won't help here much. You need to install `MarkdownLint` using `npm` package manager
+(you may also need to install `npm` first as it usually is not preinstalled):
 
 ```bash
 sudo apt install npm
@@ -130,13 +129,13 @@ Next, install the linter (see [markdown-cli](https://github.com/igorshubovych/ma
 npm install -g markdownlint-cli
 ```
 
-and lint all `*.md` files (linter configuration lives in `.markdownlint.yaml` file):
+Lint all `*.md` files (linter configuration lives in `.markdownlint.yaml` file):
 
 ```bash
-markdownlint --ignore LICENSE.md **/*.md
+markdownlint --config .markdownlint.yaml --ignore LICENSE.md **/*.md
 ```
 
-Note, the `LICENSE.md` file is externally sourced, therefore I am not going to fix it.
+Note, the `LICENSE.md` file is externally sourced, therefore I am not going to fix if it is faulty.
 
 ---
 
@@ -166,5 +165,6 @@ fi
 echo "Code Lint"
 flake8 proptool/ tests/
 echo "MD Lint"
-markdownlint --ignore LICENSE.md **/*.md
+# Quote file patters as we do not want it expanded too early.
+markdownlint --config .markdownlint.yaml --ignore LICENSE.md "**/*.md"
 ```

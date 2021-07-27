@@ -42,4 +42,3 @@ version = 1
 [Punctuation]
 chars = [ ".", "?" ]
 ```
-
