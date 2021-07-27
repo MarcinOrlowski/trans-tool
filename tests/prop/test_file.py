@@ -33,54 +33,80 @@ class TestPropFile(TestCase):
     # #################################################################################################
 
     @patch('pathlib.Path.exists')
-    def test_load_non_existing_file(self, path_mock: Mock) -> None:
+    def test_load_non_existing_file(self, path_exists_mock: Mock) -> None:
         """
         Tests if load() parses source file properly.
 
-        :param path_mock: Mocked Path
+        :param path_exists_mock: Mocked Path
         """
         prop_file = PropFile(Config())
 
-        path_mock.return_value = False
+        path_exists_mock.return_value = False
         prop_file.load(Path('foo'))
 
     @patch('pathlib.Path.exists')
-    def test_load_strip_crlf(self, path_mock: Mock) -> None:
+    def test_load_strip_crlf(self, path_exists_mock: Mock) -> None:
         """
         Ensures trailing LF and CRLFs are properly stripped from read lines.
 
-        :param path_mock: Mocked Path
+        :param path_exists_mock: Mocked Path
         """
 
         com0 = self.get_random_string()
         com1 = self.get_random_string()
 
         for sep in Config.ALLOWED_COMMENT_MARKERS:
-            fake_data_src = [
-                f'{sep} {com0}\n',
-                f'{sep} {com1}\r\n',
-            ]
+            for key_val_sep in Config.ALLOWED_SEPARATORS:
+                key1 = self.get_random_string()
+                val1 = self.get_random_string()
+                val2 = self.get_random_string()
+                fake_data_src = [
+                    f'{sep} {com0}\n',
+                    f'{sep} {com1}\r\n',
+                    f'{key1} {key_val_sep} {val1}\n',
+                    # This one should overwrite previous row
+                    f'{key1} {key_val_sep} {val2}\r\n',
+                ]
 
-            with patch('builtins.open', mock_open(read_data = ''.join(fake_data_src))) as pm:
-                # Lie our fake file exists
-                path_mock.return_value = True
-                prop_file = PropFile(Config(), Path('foo'))
-                self.assertEqual(len(fake_data_src), len(prop_file.items))
+                with patch('builtins.open', mock_open(read_data = ''.join(fake_data_src))) as pm:
+                    # Lie our fake file exists
+                    path_exists_mock.return_value = True
+                    prop_file = PropFile(Config(), Path('foo'))
 
-                for comment in prop_file.items:
-                    self.assertIsInstance(comment, Comment)
+                    # We should have one entry less, because once we strip CRLF from the last
+                    # row, it should overwrite entry set row before.
+                    self.assertEqual(len(fake_data_src) - 1, len(prop_file.items))
 
-                item = prop_file.items[0]
-                self.assertEqual(f'{sep} {com0}', item.value)
-                item = prop_file.items[1]
-                self.assertEqual(f'{sep} {com1}', item.value)
+                    # Let's inspect what we have.
+                    idx = 0
+
+                    # Line 0
+                    item = prop_file.items[idx]
+                    self.assertIsInstance(item, Comment)
+                    self.assertEqual(f'{sep} {com0}', item.value)
+                    idx += 1
+
+                    # Line 1
+                    item = prop_file.items[idx]
+                    self.assertIsInstance(item, Comment)
+                    self.assertEqual(f'{sep} {com1}', item.value)
+                    idx += 1
+
+                    # Line 2
+                    item = prop_file.items[idx]
+                    self.assertIsInstance(item, Translation)
+                    self.assertEqual(key1, item.key)
+                    # We have duplicated key. It's not overwritten row. Please see other code comments.
+                    self.assertEqual(val1, item.value)
+                    idx += 1
+
 
     @patch('pathlib.Path.exists')
-    def test_load_empty_lines_whitespaces(self, path_mock: Mock) -> None:
+    def test_load_empty_lines_whitespaces(self, path_exists_mock: Mock) -> None:
         """
         Ensures lines with all whitespaces are correctly parsed as Blank()s
 
-        :param path_mock: Mocked Path
+        :param path_exists_mock: Mocked Path
         """
         fake_data_src = [
             '',
@@ -90,7 +116,7 @@ class TestPropFile(TestCase):
         ]
         with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))) as pm:
             # Lie our fake file exists
-            path_mock.return_value = True
+            path_exists_mock.return_value = True
             prop_file = PropFile(Config(), Path('foo'))
             self.assertEqual(len(fake_data_src), len(prop_file.items))
 
@@ -98,30 +124,19 @@ class TestPropFile(TestCase):
                 self.assertIsInstance(item, Blank)
 
     @patch('pathlib.Path.exists')
-    def test_load_empty_lines_whitespaces(self, path_mock: Mock) -> None:
+    def test_load_empty_file(self, path_exists_mock: Mock) -> None:
         """
-        Ensures lines with all whitespaces are correctly parsed as Blank()s
-
-        :param path_mock: Mocked Path
+        Checks if empty file is not too confusing.
         """
-        fake_data_src = [
-            '',
-            '     ',
-            '\t\t\t\t',
-            '\t\t\t   \t\t\t'
-        ]
-        with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))) as pm:
+        fake_file = f'/tmp/{self.get_random_string()}'
+        with patch('builtins.open', mock_open(read_data = '')):
             # Lie our fake file exists
-            path_mock.return_value = True
-            prop_file = PropFile(Config(), Path('foo'))
-            self.assertEqual(len(fake_data_src), len(prop_file.items))
+            path_exists_mock.return_value = True
+            prop_file = PropFile(Config(), Path(fake_file))
+            self.assertEqual(0, len(prop_file.items))
 
-            for item in prop_file.items:
-                self.assertIsInstance(item, Blank)
-
-    @patch('pathlib.Path.exists')
     @patch('builtins.print')  # Needed only to mute error message during unit tests.
-    def test_load_invalid_translation_syntax(self, path_mock: Mock, print_mock: Mock) -> None:
+    def test_load_invalid_translation_syntax(self, path_mock: Mock) -> None:
         """
         Ensures lines that are expected to be translation but do not match expected syntax
         are caught correctly.
@@ -129,7 +144,7 @@ class TestPropFile(TestCase):
         :param path_mock: Mocked Path
         """
 
-        fake_file = '/tmp/foo'
+        fake_file = f'/tmp/{self.get_random_string()}'
 
         # Generate some valid content
         fake_data_src = []
@@ -144,11 +159,8 @@ class TestPropFile(TestCase):
         with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))) as pm:
             # Lie our fake file exists
             path_mock.return_value = True
-            try:
-                prop_file = PropFile(Config(), Path(fake_file))
-                self.fail('We should not reach this line.')
-            except SystemExit:
-                pass
+            prop_file = PropFile(Config(), Path(fake_file))
+            self.assertEqual(0, len(prop_file.items))
 
     @patch('pathlib.Path.exists')
     def test_load_valid_file(self, path_mock: Mock) -> None:
