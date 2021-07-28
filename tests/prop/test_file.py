@@ -8,7 +8,9 @@
 """
 import random
 from pathlib import Path
-from unittest.mock import Mock, call, mock_open, patch
+from unittest.mock import DEFAULT, Mock, call, mock_open, patch
+
+from proptool.log import Log
 
 from proptool.prop.items import Blank, Comment, Translation
 
@@ -100,7 +102,6 @@ class TestPropFile(TestCase):
                     self.assertEqual(val1, item.value)
                     idx += 1
 
-
     @patch('pathlib.Path.exists')
     def test_load_empty_lines_whitespaces(self, path_exists_mock: Mock) -> None:
         """
@@ -135,32 +136,41 @@ class TestPropFile(TestCase):
             prop_file = PropFile(Config(), Path(fake_file))
             self.assertEqual(0, len(prop_file.items))
 
-    @patch('builtins.print')  # Needed only to mute error message during unit tests.
-    def test_load_invalid_translation_syntax(self, path_mock: Mock) -> None:
+    @patch('pathlib.Path.exists')
+    def test_load_invalid_translation_invalid_syntax(self, path_mock: Mock) -> None:
         """
         Ensures lines that are expected to be translation but do not match expected syntax
         are caught correctly.
 
         :param path_mock: Mocked Path
+        :param print_mock: Mocked print()
         """
 
-        fake_file = f'/tmp/{self.get_random_string()}'
+        fake_file_name = f'/tmp/{self.get_random_string()}'
 
-        # Generate some valid content
+        # Fake source file content
         fake_data_src = []
-        # I could use list comprehension but cannot guarantee key uniqueness that way. I need unique prefix.
+        # I could use list comprehension but cannot guarantee key uniqueness that way. I need unique prefix then.
         for idx in range(random.randint(10, 30)):
             fake_data_src.append(f'key{idx}_{self.get_random_string()} {Config.ALLOWED_SEPARATORS[0]} {self.get_random_string()}')
 
-        # Insert incorrect syntax at random line
+        # # Insert incorrect syntax at random line
         trap_position = random.randint(0, len(fake_data_src) - 1)
         fake_data_src.insert(trap_position, 'WRONG SYNTAX')
 
-        with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))) as pm:
-            # Lie our fake file exists
-            path_mock.return_value = True
-            prop_file = PropFile(Config(), Path(fake_file))
-            self.assertEqual(0, len(prop_file.items))
+        def log_abort_side_effect(messages):
+            """
+            Side effect to be called when Log.abort() is invoked to break the load() loop.
+            """
+            raise SystemExit
+
+        with patch('proptool.log.Log.abort', side_effect = log_abort_side_effect) as mocked_log_abort:
+            with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))) as mocked_open:
+                try:
+                    PropFile(Config(), Path(fake_file_name))
+                except SystemExit as ex:
+                    log_abort_call: call = mocked_log_abort.call_args_list[0]
+                    self.assertEqual(f'Invalid syntax at line {trap_position + 1} of "{fake_file_name}".', log_abort_call.args[0])
 
     @patch('pathlib.Path.exists')
     def test_load_valid_file(self, path_mock: Mock) -> None:
