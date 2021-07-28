@@ -8,14 +8,11 @@
 """
 import random
 from pathlib import Path
-from unittest.mock import DEFAULT, Mock, call, mock_open, patch
-
-from proptool.log import Log
-
-from proptool.prop.items import Blank, Comment, Translation
+from unittest.mock import Mock, call, mock_open, patch
 
 from proptool.config.config import Config
 from proptool.prop.file import PropFile
+from proptool.prop.items import Blank, Comment, Translation
 from tests.test_case import TestCase
 
 
@@ -53,7 +50,6 @@ class TestPropFile(TestCase):
 
         :param path_exists_mock: Mocked Path
         """
-
         com0 = self.get_random_string()
         com1 = self.get_random_string()
 
@@ -70,7 +66,7 @@ class TestPropFile(TestCase):
                     f'{key1} {key_val_sep} {val2}\r\n',
                 ]
 
-                with patch('builtins.open', mock_open(read_data = ''.join(fake_data_src))) as pm:
+                with patch('builtins.open', mock_open(read_data = ''.join(fake_data_src))):
                     # Lie our fake file exists
                     path_exists_mock.return_value = True
                     prop_file = PropFile(Config(), Path('foo'))
@@ -113,9 +109,9 @@ class TestPropFile(TestCase):
             '',
             '     ',
             '\t\t\t\t',
-            '\t\t\t   \t\t\t'
+            '\t\t\t   \t\t\t',
         ]
-        with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))) as pm:
+        with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))):
             # Lie our fake file exists
             path_exists_mock.return_value = True
             prop_file = PropFile(Config(), Path('foo'))
@@ -129,11 +125,11 @@ class TestPropFile(TestCase):
         """
         Checks if empty file is not too confusing.
         """
-        fake_file = f'/tmp/{self.get_random_string()}'
+        fake_file_name = f'/does/not/matter/{self.get_random_string()}'
         with patch('builtins.open', mock_open(read_data = '')):
             # Lie our fake file exists
             path_exists_mock.return_value = True
-            prop_file = PropFile(Config(), Path(fake_file))
+            prop_file = PropFile(Config(), Path(fake_file_name))
             self.assertEqual(0, len(prop_file.items))
 
     @patch('pathlib.Path.exists')
@@ -145,13 +141,13 @@ class TestPropFile(TestCase):
         :param path_mock: Mocked Path
         :param print_mock: Mocked print()
         """
-
-        fake_file_name = f'/tmp/{self.get_random_string()}'
+        fake_file_name = f'/does/not/matter/{self.get_random_string()}'
 
         # Fake source file content
         fake_data_src = []
         # I could use list comprehension but cannot guarantee key uniqueness that way. I need unique prefix then.
-        for idx in range(random.randint(10, 30)):
+        max_elements = 30
+        for idx in range(random.randint(10, max_elements)):
             fake_data_src.append(f'key{idx}_{self.get_random_string()} {Config.ALLOWED_SEPARATORS[0]} {self.get_random_string()}')
 
         # # Insert incorrect syntax at random line
@@ -165,10 +161,10 @@ class TestPropFile(TestCase):
             raise SystemExit
 
         with patch('proptool.log.Log.abort', side_effect = log_abort_side_effect) as mocked_log_abort:
-            with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))) as mocked_open:
+            with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))):
                 try:
                     PropFile(Config(), Path(fake_file_name))
-                except SystemExit as ex:
+                except SystemExit:
                     log_abort_call: call = mocked_log_abort.call_args_list[0]
                     self.assertEqual(f'Invalid syntax at line {trap_position + 1} of "{fake_file_name}".', log_abort_call.args[0])
 
@@ -219,7 +215,7 @@ class TestPropFile(TestCase):
             f'{key2} {sep2} {val2}',
         ]
 
-        with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))) as pm:
+        with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))):
             # Lie our fake file exists
             path_mock.return_value = True
             prop_file = PropFile(Config(), Path('foo'))

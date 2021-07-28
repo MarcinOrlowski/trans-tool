@@ -131,6 +131,11 @@ per-file-ignores =
     # WPS437 Found protected attribute usage: _set_on_off_option
     tests/report/test_config_builder.py: WPS431, WPS437,
 
+    # WPS430 Found nested function: log_abort_side_effect
+    # S311 Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+    # N802 function name 'assertTranslation' should be lowercase
+    tests/prop/test_file.py: WPS430, S311, N802
+
     # WPS230 Found too many public instance attributes: 8 > 6
     # WPS414 Found incorrect unpacking target
     # WPS425 Found boolean non-keyword argument: True, False

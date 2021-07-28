@@ -165,9 +165,8 @@ class PropFile(object):
         Loads and parses *.properties file.
 
         :param file: File to load.
-        :return:
+        :return: True if file loaded correctly, False otherwise.
         """
-
         self.init_container()
 
         if not file.exists():
