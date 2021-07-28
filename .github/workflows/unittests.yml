@@ -17,7 +17,11 @@ on:
 jobs:
   unittests:
     name: "Testing"
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        python: [3.6, 3.7, 3.8]
 
     steps:
       # https://github.com/marketplace/actions/checkout
@@ -32,6 +36,12 @@ jobs:
           filters: |
             srcs:
               - '**/*.py'
+
+      - name: "Setup Python"
+        if: steps.filter.outputs.srcs == 'true'
+        uses: actions/setup-python@master
+        with:
+          python-version: ${{ matrix.python }}
 
       - name: "Running unit tests..."
         if: steps.filter.outputs.srcs == 'true'
