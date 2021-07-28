@@ -251,3 +251,43 @@ class TestPropFile(TestCase):
             item = prop_file.items[idx]
             assertTranslation(item, key2, sep2, val2)
             idx += 1
+
+    # #################################################################################################
+
+    @patch('pathlib.Path.exists')
+    def test_is_valid_on_empty_files(self, path_exists_mock: Mock) -> None:
+
+        fake_file_name = f'/does/not/matter/{self.get_random_string()}'
+        with patch('builtins.open', mock_open(read_data = '')):
+            config = Config()
+
+            # Lie our fake file exists
+            path_exists_mock.return_value = True
+
+            ref_file = PropFile(config, Path(fake_file_name))
+            prop_file = PropFile(config, Path(fake_file_name))
+
+            # Expecting no problems reported
+            self.assertTrue(prop_file.is_valid(ref_file))
+
+    def test_is_valid_file_not_set(self) -> None:
+        config = Config()
+        ref_file = PropFile(config)
+        prop_file = PropFile(config)
+
+        # Expecting errors reported
+        self.assertFalse(prop_file.is_valid(ref_file))
+        # FIXME: we shall also check if reported error message
+
+    def test_is_valid_file_not_found(self) -> None:
+        config = Config()
+        fake_file_name = self.get_random_string()
+        ref_file = PropFile(config, Path(fake_file_name))
+        prop_file = PropFile(config, Path(fake_file_name))
+
+        # Expecting errors reported
+        self.assertFalse(prop_file.is_valid(ref_file))
+        # FIXME: we shall also check if reported error message
+
+
+

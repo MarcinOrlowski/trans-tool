@@ -100,20 +100,25 @@ class PropFile(object):
     # #################################################################################################
 
     def validate_and_fix(self, reference: 'PropFile') -> None:
-        if not self.validate(reference) and self.config.fix:
+        if not self.is_valid(reference) and self.config.fix:
             self.fix(reference)
 
     # #################################################################################################
 
-    def validate(self, reference_file: 'PropFile') -> bool:
+    def is_valid(self, reference_file: 'PropFile') -> bool:
         """
         Validates given PropFile against provided reference file.
 
         :param reference_file:
-        :return:
+        :return True if file is valid, False if there were errors.
         """
         if not self.loaded:
-            Log.e(f'File does not exist: {self.file}')
+            rg = ReportGroup('Filesystem')
+            if self.file is None:
+                rg.error(None, 'No properties file set.')
+            else:
+                rg.error(None, f'File not found: {self.file}')
+            self.report.add(rg)
             return False
 
         checks = [
