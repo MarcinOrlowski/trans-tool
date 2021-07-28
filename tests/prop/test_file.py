@@ -169,7 +169,6 @@ class TestPropFile(TestCase):
                 except SystemExit:
                     mocked_log_abort.assert_called_once()
                     log_abort_call: call = mocked_log_abort.call_args_list[0]
-                    self.assertEqual(len(log_abort_call.args), 1)
                     arg = log_abort_call.args[0]
                     self.assertEqual(arg, f'Invalid syntax at line {trap_position + 1} of "{fake_file_name}".')
 
