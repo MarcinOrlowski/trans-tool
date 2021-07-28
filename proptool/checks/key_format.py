@@ -29,19 +29,20 @@ class KeyFormat(Check):
     def check(self, translation_file: 'PropFile', reference_file: 'PropFile' = None) -> ReportGroup:
         self.need_valid_config()
 
-        pattern = self.config.checks['KeyFormat']['pattern']
-        compiled_pattern = re.compile(pattern)
+        report = ReportGroup(f'Key naming pattern.')
 
-        report = ReportGroup(f'Key naming pattern: {pattern}')
+        if translation_file.items:
+            pattern = self.config.checks['KeyFormat']['pattern']
+            compiled_pattern = re.compile(pattern)
 
-        for line_number, item in enumerate(translation_file.items):
-            # We care translations only for now.
-            # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
-            if not isinstance(item, Translation):
-                continue
+            for line_number, item in enumerate(translation_file.items):
+                # We care translations only for now.
+                # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
+                if not isinstance(item, Translation):
+                    continue
 
-            if compiled_pattern.match(item.key) is None:
-                report.error(line_number + 1, 'Invalid key name format.', item.key)
+                if compiled_pattern.match(item.key) is None:
+                    report.error(line_number + 1, 'Invalid key name format.', item.key)
 
         return report
 
