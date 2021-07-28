@@ -138,7 +138,7 @@ class TestPropFile(TestCase):
         Ensures lines that are expected to be translation but do not match expected syntax
         are caught correctly.
 
-        :param path_mock: Mocked Path
+        :param path_exists_mock: Mocked Path
         """
         fake_file_name = f'/does/not/matter/{self.get_random_string()}'
 
@@ -179,13 +179,13 @@ class TestPropFile(TestCase):
         :param path_mock: Mocked Path
         """
 
-        def assertTranslation(translation, exp_key, exp_separator, exp_value):
+        def assertTranslation(translation: Translation, exp_key, exp_separator, exp_value):
             self.assertIsInstance(translation, Translation)
             self.assertEqual(exp_key, translation.key)
             self.assertEqual(exp_separator, translation.separator)
             self.assertEqual(exp_value, translation.value)
 
-        def assertComment(comment, exp_marker, exp_value):
+        def assertComment(comment: Comment, exp_marker, exp_value):
             self.assertIsInstance(comment, Comment)
             self.assertEqual(f'{exp_marker} {exp_value}', comment.value)
             self.assertIsNone(comment.key)

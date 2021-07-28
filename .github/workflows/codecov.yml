@@ -42,6 +42,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest
           pip install pytest-cov
+          pytest --version
           pytest --cov=./ --cov-report=xml
 
       # https://github.com/marketplace/actions/codecov

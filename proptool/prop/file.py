@@ -46,11 +46,6 @@ class PropFile(object):
         self.commented_out_keys: List[str] = []
         self.separator: str = config.separator
 
-        self.loaded: bool = None
-        self.items: List[PropItem] = None
-        self.report: Report = None
-        self.init_container()
-
         comment_pattern = re.escape(self.config.comment_template).replace(
             'COM', f'[{"".join(Config.ALLOWED_COMMENT_MARKERS)}]').replace(
             'SEP', f'[{"".join(Config.ALLOWED_SEPARATORS)}]')
@@ -60,6 +55,10 @@ class PropFile(object):
 
         if file is not None:
             self.loaded = self.load(file)
+        else:
+            self.loaded: bool = False
+            self.items: List[PropItem] = []
+            self.report: Report = Report(config)
 
     def init_container(self) -> None:
         self.loaded: bool = False
