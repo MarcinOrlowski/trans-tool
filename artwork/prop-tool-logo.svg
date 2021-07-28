@@ -36,10 +36,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.97992958"
-     inkscape:cx="907.71829"
-     inkscape:cy="286.24506"
+     inkscape:cx="824.0388"
+     inkscape:cy="-54.59576"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer2"
      showgrid="false"
      width="5600mm"
      showguides="true"
@@ -64,7 +64,8 @@
   <g
      inkscape:groupmode="layer"
      id="layer5"
-     inkscape:label="icon">
+     inkscape:label="icon"
+     style="display:inline">
     <g
        inkscape:groupmode="layer"
        id="layer4"
@@ -173,7 +174,7 @@
        inkscape:groupmode="layer"
        id="layer3"
        inkscape:label="java"
-       style="display:inline"
+       style="display:none"
        transform="translate(2.5945052,-141.63911)">
       <g
          id="g31745"
@@ -226,86 +227,117 @@
              sodipodi:nodetypes="cscccc" />
         </g>
       </g>
+    </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="text"
+     style="display:inline">
+    <g
+       id="g14775"
+       transform="translate(2.5945045,-143.63646)"
+       style="display:inline">
       <g
-         id="g14775"
-         transform="translate(0,-1.9973497)">
-        <text
-           xml:space="preserve"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3028px;line-height:1.25;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#f13360;fill-opacity:1;stroke-width:1.05249"
-           x="104.08276"
-           y="78.811234"
-           id="text5759-4"
-           transform="translate(-2.5945052,141.63911)"><tspan
-             sodipodi:role="line"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3028px;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f13360;fill-opacity:1;stroke-width:1.05249"
-             x="104.08276"
-             y="78.811234"
-             id="tspan139593-1">*.properties file checker and syncing tool</tspan></text>
+         id="g62051"
+         transform="translate(1.8405542,-3.1750001)">
         <g
-           id="g62051"
-           transform="translate(1.8405542,-3.1750001)">
-          <g
-             id="g1083-0"
-             transform="matrix(0.17983676,0,0,0.22163989,138.59531,143.56834)"
-             style="fill:#f1a233;fill-opacity:1;stroke-width:2.5317">
-            <text
-               xml:space="preserve"
-               style="font-size:256.699px;line-height:1.25;font-family:'a dripping marker';-inkscape-font-specification:'a dripping marker';letter-spacing:0px;word-spacing:0px;fill:#f13360;fill-opacity:1;stroke-width:5.27174"
+           id="g1083-0"
+           transform="matrix(0.17983676,0,0,0.22163989,138.59531,143.56834)"
+           style="fill:#f1a233;fill-opacity:1;stroke-width:2.5317">
+          <text
+             xml:space="preserve"
+             style="font-size:256.699px;line-height:1.25;font-family:'a dripping marker';-inkscape-font-specification:'a dripping marker';letter-spacing:0px;word-spacing:0px;fill:#f13360;fill-opacity:1;stroke-width:5.27174"
+             x="-214.49933"
+             y="265.17487"
+             id="text5759"
+             transform="scale(1.092369,0.91544159)"><tspan
+               sodipodi:role="line"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, ';fill:#f13360;fill-opacity:1;stroke-width:5.27174"
                x="-214.49933"
                y="265.17487"
-               id="text5759"
-               transform="scale(1.092369,0.91544159)"><tspan
-                 sodipodi:role="line"
-                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, ';fill:#f13360;fill-opacity:1;stroke-width:5.27174"
-                 x="-214.49933"
-                 y="265.17487"
-                 id="tspan139593">prop-tool</tspan></text>
-          </g>
+               id="tspan139593">prop-tool</tspan></text>
+        </g>
+        <g
+           id="g62006"
+           transform="matrix(1.0446229,0,0,1.0744828,-12.952594,-9.8873609)"
+           style="stroke-width:0.943888">
           <g
-             id="g62006"
-             transform="matrix(1.0446229,0,0,1.0744828,-12.952594,-9.8873609)"
+             id="g61977"
+             transform="translate(-38.938309,1.7962658)"
              style="stroke-width:0.943888">
             <g
-               id="g61977"
-               transform="translate(-38.938309,1.7962658)"
-               style="stroke-width:0.943888">
-              <g
-                 id="g1083-0-0"
-                 transform="matrix(0.06409891,0,0,0.07899872,257.89685,158.57104)"
-                 style="stroke-width:6.7044" />
-              <text
-                 xml:space="preserve"
-                 style="font-size:10.7669px;line-height:1.25;font-family:'a dripping marker';-inkscape-font-specification:'a dripping marker';letter-spacing:0px;word-spacing:0px;fill:#f1333f;fill-opacity:1;stroke-width:0.993433"
+               id="g1083-0-0"
+               transform="matrix(0.06409891,0,0,0.07899872,257.89685,158.57104)"
+               style="stroke-width:6.7044" />
+            <text
+               xml:space="preserve"
+               style="font-size:10.7669px;line-height:1.25;font-family:'a dripping marker';-inkscape-font-specification:'a dripping marker';letter-spacing:0px;word-spacing:0px;fill:#f1333f;fill-opacity:1;stroke-width:0.993433"
+               x="319.13046"
+               y="173.1644"
+               id="text5759-7-7"><tspan
+                 sodipodi:role="line"
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, ';fill:#f13360;fill-opacity:1;stroke-width:0.993433"
                  x="319.13046"
                  y="173.1644"
-                 id="text5759-7-7"><tspan
-                   sodipodi:role="line"
-                   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, ';fill:#f13360;fill-opacity:1;stroke-width:0.993433"
-                   x="319.13046"
-                   y="173.1644"
-                   id="tspan119569-7">a development tool</tspan><tspan
-                   sodipodi:role="line"
-                   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, ';fill:#f13360;fill-opacity:1;stroke-width:0.993433"
-                   x="319.13046"
-                   y="186.71045"
-                   id="tspan13760">by Marcin Orlowski</tspan></text>
+                 id="tspan119569-7">a development tool</tspan><tspan
+                 sodipodi:role="line"
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, ';fill:#f13360;fill-opacity:1;stroke-width:0.993433"
+                 x="319.13046"
+                 y="186.71045"
+                 id="tspan13760">by Marcin Orlowski</tspan></text>
+            <g
+               id="g59430"
+               transform="translate(19.699781,54.181392)"
+               style="stroke-width:0.943888">
               <g
-                 id="g59430"
-                 transform="translate(19.699781,54.181392)"
-                 style="stroke-width:0.943888">
+                 id="g31745-8"
+                 transform="matrix(0.04649357,0,0,0.04649356,302.21383,113.19229)"
+                 style="display:inline;stroke-width:14.594">
                 <g
-                   id="g31745-8"
-                   transform="matrix(0.04649357,0,0,0.04649356,302.21383,113.19229)"
-                   style="display:inline;stroke-width:14.594">
-                  <g
-                     id="g36065-9"
-                     transform="translate(28.160981,111.53962)"
-                     style="stroke-width:14.594" />
-                </g>
+                   id="g36065-9"
+                   transform="translate(28.160981,111.53962)"
+                   style="stroke-width:14.594" />
               </g>
             </g>
           </g>
         </g>
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:30.8951px;line-height:1.25;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, Normal';letter-spacing:0px;word-spacing:0px;stroke-width:0.264583"
+         x="112.17001"
+         y="258.76547"
+         id="text4368"><tspan
+           sodipodi:role="line"
+           id="tspan4366"
+           style="stroke-width:0.264583"
+           x="112.17001"
+           y="258.76547" /></text>
+      <g
+         id="g14564">
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3028px;line-height:1.25;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#f13360;fill-opacity:1;stroke-width:1.05249"
+           x="108.36742"
+           y="220.45035"
+           id="text5759-4"><tspan
+             sodipodi:role="line"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3028px;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f13360;fill-opacity:1;stroke-width:1.05249"
+             x="108.36742"
+             y="220.45035"
+             id="tspan139593-1">.properties file checker and syncing tool</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3028px;line-height:1.25;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;display:inline;fill:#f13360;fill-opacity:1;stroke-width:1.05249"
+           x="101.69014"
+           y="223.61536"
+           id="text5759-4-5"><tspan
+             sodipodi:role="line"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3028px;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f13360;fill-opacity:1;stroke-width:1.05249"
+             x="101.69014"
+             y="223.61536"
+             id="tspan139593-1-9">*</tspan></text>
       </g>
     </g>
   </g>
