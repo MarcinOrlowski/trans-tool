@@ -133,13 +133,12 @@ class TestPropFile(TestCase):
             self.assertEqual(0, len(prop_file.items))
 
     @patch('pathlib.Path.exists')
-    def test_load_invalid_translation_invalid_syntax(self, path_mock: Mock) -> None:
+    def test_load_invalid_translation_invalid_syntax(self, path_exists_mock: Mock) -> None:
         """
         Ensures lines that are expected to be translation but do not match expected syntax
         are caught correctly.
 
         :param path_mock: Mocked Path
-        :param print_mock: Mocked print()
         """
         fake_file_name = f'/does/not/matter/{self.get_random_string()}'
 
@@ -161,6 +160,9 @@ class TestPropFile(TestCase):
             raise SystemExit
 
         with patch('proptool.log.Log.abort', side_effect = log_abort_side_effect) as mocked_log_abort:
+            # Lie our fake file exists
+            path_exists_mock.return_value = True
+
             with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))):
                 try:
                     PropFile(Config(), Path(fake_file_name))
