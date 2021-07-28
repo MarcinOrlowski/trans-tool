@@ -167,8 +167,9 @@ class TestPropFile(TestCase):
                 try:
                     PropFile(Config(), Path(fake_file_name))
                 except SystemExit:
+                    mocked_log_abort.assert_called_once()
                     log_abort_call: call = mocked_log_abort.call_args_list[0]
-                    self.assertEqual(f'Invalid syntax at line {trap_position + 1} of "{fake_file_name}".', log_abort_call.args[0])
+                    self.assertEqual(log_abort_call.args[0], f'Invalid syntax at line {trap_position + 1} of "{fake_file_name}".')
 
     @patch('pathlib.Path.exists')
     def test_load_valid_file(self, path_mock: Mock) -> None:
