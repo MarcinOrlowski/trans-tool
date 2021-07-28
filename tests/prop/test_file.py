@@ -8,11 +8,11 @@
 """
 import random
 from pathlib import Path
-from unittest.mock import Mock, call, mock_open, patch
+from unittest.mock import Mock, mock_open, patch
 
 from proptool.config.config import Config
 from proptool.prop.file import PropFile
-from proptool.prop.items import Blank, Comment, Translation
+from proptool.prop.items import Blank, Comment, PropItem, Translation
 from tests.test_case import TestCase
 
 
@@ -27,6 +27,7 @@ class TestPropFile(TestCase):
 
         # THEN Exception should be thrown.
         with self.assertRaises(TypeError):
+            # noinspection PyTypeChecker
             prop_file.append(obj)
 
     # #################################################################################################
@@ -153,6 +154,7 @@ class TestPropFile(TestCase):
         trap_position = random.randint(0, len(fake_data_src) - 1)
         fake_data_src.insert(trap_position, 'WRONG SYNTAX')
 
+        # noinspection PyUnusedLocal
         def log_abort_side_effect(messages):
             """
             Side effect to be called when Log.abort() is invoked to break the load() loop.
@@ -167,10 +169,8 @@ class TestPropFile(TestCase):
                 try:
                     PropFile(Config(), Path(fake_file_name))
                 except SystemExit:
-                    mocked_log_abort.assert_called_once()
-                    log_abort_call: call = mocked_log_abort.call_args_list[0]
-                    arg = log_abort_call.args[0]
-                    self.assertEqual(arg, f'Invalid syntax at line {trap_position + 1} of "{fake_file_name}".')
+                    msg = mocked_log_abort.call_args_list[0][0][0]
+                    self.assertEqual(msg, f'Invalid syntax at line {trap_position + 1} of "{fake_file_name}".')
 
     @patch('pathlib.Path.exists')
     def test_load_valid_file(self, path_mock: Mock) -> None:
@@ -180,17 +180,20 @@ class TestPropFile(TestCase):
         :param path_mock: Mocked Path
         """
 
-        def assertTranslation(translation: Translation, exp_key, exp_separator, exp_value):
+        # noinspection PyPep8Naming
+        def assertTranslation(translation: PropItem, exp_key, exp_separator, exp_value):
             self.assertIsInstance(translation, Translation)
             self.assertEqual(exp_key, translation.key)
             self.assertEqual(exp_separator, translation.separator)
             self.assertEqual(exp_value, translation.value)
 
-        def assertComment(comment: Comment, exp_marker, exp_value):
+        # noinspection PyPep8Naming
+        def assertComment(comment: PropItem, exp_marker, exp_value):
             self.assertIsInstance(comment, Comment)
             self.assertEqual(f'{exp_marker} {exp_value}', comment.value)
             self.assertIsNone(comment.key)
 
+        # noinspection PyPep8Naming
         def assertBlank(blank):
             self.assertIsInstance(blank, Blank)
             self.assertIsNone(blank.key)
@@ -251,3 +254,40 @@ class TestPropFile(TestCase):
             item = prop_file.items[idx]
             assertTranslation(item, key2, sep2, val2)
             idx += 1
+
+    # #################################################################################################
+
+    @patch('pathlib.Path.exists')
+    def test_is_valid_on_empty_files(self, path_exists_mock: Mock) -> None:
+
+        fake_file_name = f'/does/not/matter/{self.get_random_string()}'
+        with patch('builtins.open', mock_open(read_data = '')):
+            config = Config()
+
+            # Lie our fake file exists
+            path_exists_mock.return_value = True
+
+            ref_file = PropFile(config, Path(fake_file_name))
+            prop_file = PropFile(config, Path(fake_file_name))
+
+            # Expecting no problems reported
+            self.assertTrue(prop_file.is_valid(ref_file))
+
+    def test_is_valid_file_not_set(self) -> None:
+        config = Config()
+        ref_file = PropFile(config)
+        prop_file = PropFile(config)
+
+        # Expecting errors reported
+        self.assertFalse(prop_file.is_valid(ref_file))
+        # FIXME: we shall also check if reported error message
+
+    def test_is_valid_file_not_found(self) -> None:
+        config = Config()
+        fake_file_name = self.get_random_string()
+        ref_file = PropFile(config, Path(fake_file_name))
+        prop_file = PropFile(config, Path(fake_file_name))
+
+        # Expecting errors reported
+        self.assertFalse(prop_file.is_valid(ref_file))
+        # FIXME: we shall also check if reported error message

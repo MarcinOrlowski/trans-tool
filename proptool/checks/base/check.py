@@ -41,7 +41,3 @@ class Check(ABC):
 
     def get_default_config(self) -> Dict:
         return Check.DEFAULT_CHECK_CONFIG
-
-    # @abstractmethod
-    # def parse_args(self, args: argparse) -> Dict:
-    #     raise NotImplementedError
