@@ -110,7 +110,7 @@ class PropFile(object):
         Validates given PropFile against provided reference file.
 
         :param reference_file:
-        :return True if file is valid, False if there were errors.
+        :return: True if file is valid, False if there were errors.
         """
         if not self.loaded:
             rg = ReportGroup('Filesystem')

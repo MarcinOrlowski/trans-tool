@@ -8,7 +8,7 @@
 """
 import random
 from pathlib import Path
-from unittest.mock import Mock, call, mock_open, patch
+from unittest.mock import Mock, mock_open, patch
 
 from proptool.config.config import Config
 from proptool.prop.file import PropFile
@@ -169,7 +169,7 @@ class TestPropFile(TestCase):
                 try:
                     PropFile(Config(), Path(fake_file_name))
                 except SystemExit:
-                    msg,  = mocked_log_abort.call_args_list[0][0]
+                    msg = mocked_log_abort.call_args_list[0][0][0]
                     self.assertEqual(msg, f'Invalid syntax at line {trap_position + 1} of "{fake_file_name}".')
 
     @patch('pathlib.Path.exists')

@@ -29,7 +29,7 @@ class KeyFormat(Check):
     def check(self, translation_file: 'PropFile', reference_file: 'PropFile' = None) -> ReportGroup:
         self.need_valid_config()
 
-        report = ReportGroup(f'Key naming pattern.')
+        report = ReportGroup('Key naming pattern.')
 
         if translation_file.items:
             pattern = self.config.checks['KeyFormat']['pattern']
