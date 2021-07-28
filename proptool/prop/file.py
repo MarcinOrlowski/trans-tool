@@ -57,13 +57,19 @@ class PropFile(object):
             self.loaded = self.load(file)
         else:
             self.loaded: bool = False
-            self.items: List[PropItem] = []
+            self._items: List[PropItem] = []
             self.report: Report = Report(config)
 
     def init_container(self) -> None:
         self.loaded: bool = False
-        self.items: List[PropItem] = []
+        self._items: List[PropItem] = []
         self.report: Report = Report(self.config)
+
+    # #################################################################################################
+
+    @property
+    def items(self) -> List[PropItem]:
+        return self._items
 
     # #################################################################################################
 
@@ -95,13 +101,34 @@ class PropFile(object):
             if match:
                 self.commented_out_keys.append(match.group(1))
 
-        self.items.append(item)
+        self._items.append(item)
 
     # #################################################################################################
 
     def validate_and_fix(self, reference: 'PropFile') -> None:
         if not self.is_valid(reference) and self.config.fix:
             self.fix(reference)
+
+    # #################################################################################################
+
+    def fix(self, reference: 'PropFile') -> None:
+        synced: List[str] = []
+
+        comment_pattern = self.config.comment_template.replace('COM', self.config.comment_marker).replace('SEP', self.separator)
+        for item in reference.items:
+            if isinstance(item, Translation):
+                if item.key in self.keys:
+                    synced.append(self.find_by_key(item.key).to_string() + '\n')
+                else:
+                    synced.append(comment_pattern.replace('KEY', item.key) + '\n')
+            elif isinstance(item, (Blank, Comment)):
+                synced.append(item.to_string() + '\n')
+            else:
+                raise RuntimeError(f'Unknown entry type: {type(item)}')
+
+        Log.i(f'Re-writing translation file: {self.file}')
+        with open(self.file, 'w') as fh:
+            fh.writelines(synced)
 
     # #################################################################################################
 
@@ -140,27 +167,6 @@ class PropFile(object):
             self.report.add((validator(self.config)).check(copy.copy(reference_file), copy.copy(self)))
 
         return self.report.empty()
-
-    # #################################################################################################
-
-    def fix(self, reference: 'PropFile') -> None:
-        synced: List[str] = []
-
-        comment_pattern = self.config.comment_template.replace('COM', self.config.comment_marker).replace('SEP', self.separator)
-        for item in reference.items:
-            if isinstance(item, Translation):
-                if item.key in self.keys:
-                    synced.append(self.find_by_key(item.key).to_string() + '\n')
-                else:
-                    synced.append(comment_pattern.replace('KEY', item.key) + '\n')
-            elif isinstance(item, (Blank, Comment)):
-                synced.append(item.to_string() + '\n')
-            else:
-                raise RuntimeError(f'Unknown entry type: {type(item)}')
-
-        Log.i(f'Re-writing translation file: {self.file}')
-        with open(self.file, 'w') as fh:
-            fh.writelines(synced)
 
     # #################################################################################################
 
