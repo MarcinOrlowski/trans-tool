@@ -135,7 +135,7 @@ class TestPropFile(TestCase):
             self.assertEqual(0, len(prop_file.items))
 
     @patch('pathlib.Path.exists')
-    def test_load_invalid_translation_invalid_syntax(self, path_exists_mock: Mock) -> None:
+    def test_load_invalid_translation_syntax(self, path_exists_mock: Mock) -> None:
         """
         Ensures lines that are expected to be translation but do not match expected syntax
         are caught correctly.
@@ -155,14 +155,7 @@ class TestPropFile(TestCase):
         trap_position = random.randint(0, len(fake_data_src) - 1)
         fake_data_src.insert(trap_position, 'WRONG SYNTAX')
 
-        # noinspection PyUnusedLocal
-        def log_abort_side_effect(messages):
-            """
-            Side effect to be called when Log.abort() is invoked to break the load() loop.
-            """
-            raise SystemExit
-
-        with patch('proptool.log.Log.e', side_effect = log_abort_side_effect) as mocked_log_abort:
+        with patch('proptool.log.Log.e') as log_e_mock:
             # Lie our fake file exists
             path_exists_mock.return_value = True
 
@@ -171,7 +164,7 @@ class TestPropFile(TestCase):
                     prop_file = PropFile(Config())
                     prop_file.load(Path(fake_file_name))
                 except SystemExit:
-                    msg = mocked_log_abort.call_args_list[0][0][0]
+                    msg = log_e_mock.call_args_list[0][0][0]
                     self.assertEqual(msg, f'Invalid syntax at line {trap_position + 1} of "{fake_file_name}".')
 
     @patch('pathlib.Path.exists')
