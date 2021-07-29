@@ -8,12 +8,11 @@
 """
 import random
 from pathlib import Path
-from unittest.mock import Mock, call, mock_open, patch
+from unittest.mock import Mock, mock_open, patch
 
 from proptool.config.config import Config
 from proptool.prop.file import PropFile
 from proptool.prop.items import Blank, Comment, PropItem, Translation
-from proptool.utils import Utils
 from tests.test_case import TestCase
 
 
@@ -41,7 +40,6 @@ class TestPropFile(TestCase):
         prop_file = PropFile(Config())
         with self.assertRaises(Exception) as cm:
             prop_file.load(Path(file_name))
-            print('xx' + cm.exception.message)
             self.assertEqual(FileNotFoundError, type(cm.exception))
 
     @patch('pathlib.Path.exists')
