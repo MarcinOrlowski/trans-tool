@@ -177,7 +177,8 @@ class Log(object):
         had_anything_deferred = Log._flush_deferred_entry()
 
         if Log.log_level == 0:
-            Log.abort('pop() called too many times.')
+            Log.e('pop() called too many times.')
+            sys.exit(Log.ABORT_RC)
         Log.log_level -= 1
 
         return had_anything_deferred
@@ -247,17 +248,6 @@ class Log(object):
                 postfix = ''
 
     # #################################################################################################
-
-    @staticmethod
-    def abort(messages = None) -> None:
-        Log.e(messages)
-        Log.init('Aborted', Log.COLOR_ERROR, ignore_quiet = True)
-
-        if not Log.debug:
-            sys.exit(Log.ABORT_RC)
-
-        Log.d('Related stacktrace below')
-        raise RuntimeError('*** NOT A CRASH! *** Exception raised because of --debug used to obtain stacktrace. Enjoy.')
 
     @staticmethod
     def _get_stacktrace_string() -> str:

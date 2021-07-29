@@ -8,11 +8,12 @@
 """
 import random
 from pathlib import Path
-from unittest.mock import Mock, mock_open, patch
+from unittest.mock import Mock, call, mock_open, patch
 
 from proptool.config.config import Config
 from proptool.prop.file import PropFile
 from proptool.prop.items import Blank, Comment, PropItem, Translation
+from proptool.utils import Utils
 from tests.test_case import TestCase
 
 
@@ -33,16 +34,24 @@ class TestPropFile(TestCase):
     # #################################################################################################
 
     @patch('pathlib.Path.exists')
-    def test_load_non_existing_file(self, path_exists_mock: Mock) -> None:
+    @patch('proptool.log.Log.e')
+    def test_load_non_existing_file(self, path_exists_mock: Mock, log_e_mock: Mock) -> None:
         """
-        Tests if load() parses source file properly.
-
-        :param path_exists_mock: Mocked Path
+        Tests if load() fails on non-existing file correctly.
         """
-        prop_file = PropFile(Config())
-
         path_exists_mock.return_value = False
-        prop_file.load(Path('foo'))
+
+        prop_file = PropFile(Config())
+        file_name = self.get_random_string()
+
+        with self.assertRaises(FileNotFoundError) as context_manager:
+            prop_file.load(Path(file_name))
+            exp_calls = [call(f'File not found: {file_name}')]
+            log_e_mock.assert_has_calls(exp_calls)
+
+            # Check we got sys.exit called with non-zero return code
+            self.assertEqual(SystemExit, type(context_manager.exception))
+            self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
     @patch('pathlib.Path.exists')
     def test_load_strip_crlf(self, path_exists_mock: Mock) -> None:
@@ -70,7 +79,8 @@ class TestPropFile(TestCase):
                 with patch('builtins.open', mock_open(read_data = ''.join(fake_data_src))):
                     # Lie our fake file exists
                     path_exists_mock.return_value = True
-                    prop_file = PropFile(Config(), Path('foo'))
+                    prop_file = PropFile(Config())
+                    prop_file.load(Path('foo'))
 
                     # We should have one entry less, because once we strip CRLF from the last
                     # row, it should overwrite entry set row before.
@@ -115,7 +125,8 @@ class TestPropFile(TestCase):
         with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))):
             # Lie our fake file exists
             path_exists_mock.return_value = True
-            prop_file = PropFile(Config(), Path('foo'))
+            prop_file = PropFile(Config())
+            prop_file.load(Path('foo'))
             self.assertEqual(len(fake_data_src), len(prop_file.items))
 
             for item in prop_file.items:
@@ -130,7 +141,8 @@ class TestPropFile(TestCase):
         with patch('builtins.open', mock_open(read_data = '')):
             # Lie our fake file exists
             path_exists_mock.return_value = True
-            prop_file = PropFile(Config(), Path(fake_file_name))
+            prop_file = PropFile(Config())
+            prop_file.load(Path(fake_file_name))
             self.assertEqual(0, len(prop_file.items))
 
     @patch('pathlib.Path.exists')
@@ -161,13 +173,14 @@ class TestPropFile(TestCase):
             """
             raise SystemExit
 
-        with patch('proptool.log.Log.abort', side_effect = log_abort_side_effect) as mocked_log_abort:
+        with patch('proptool.log.Log.e', side_effect = log_abort_side_effect) as mocked_log_abort:
             # Lie our fake file exists
             path_exists_mock.return_value = True
 
             with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))):
                 try:
-                    PropFile(Config(), Path(fake_file_name))
+                    prop_file = PropFile(Config())
+                    prop_file.load(Path(fake_file_name))
                 except SystemExit:
                     msg = mocked_log_abort.call_args_list[0][0][0]
                     self.assertEqual(msg, f'Invalid syntax at line {trap_position + 1} of "{fake_file_name}".')
@@ -225,7 +238,8 @@ class TestPropFile(TestCase):
         with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))):
             # Lie our fake file exists
             path_mock.return_value = True
-            prop_file = PropFile(Config(), Path('foo'))
+            prop_file = PropFile(Config())
+            prop_file.load(Path('foo'))
             self.assertEqual(len(fake_data_src), len(prop_file.items))
 
             idx = 0
@@ -260,34 +274,18 @@ class TestPropFile(TestCase):
     @patch('pathlib.Path.exists')
     def test_is_valid_on_empty_files(self, path_exists_mock: Mock) -> None:
 
-        fake_file_name = f'/does/not/matter/{self.get_random_string()}'
+        config = Config()
+        fake_file = Path(f'/does/not/matter/{self.get_random_string()}')
         with patch('builtins.open', mock_open(read_data = '')):
-            config = Config()
-
             # Lie our fake file exists
             path_exists_mock.return_value = True
 
-            ref_file = PropFile(config, Path(fake_file_name))
-            prop_file = PropFile(config, Path(fake_file_name))
+            ref_file = PropFile(config)
+            ref_file.load(fake_file)
+
+            prop_file = PropFile(config)
+            prop_file.load(fake_file)
 
             # Expecting no problems reported
+            prop_file.report.dump()
             self.assertTrue(prop_file.is_valid(ref_file))
-
-    def test_is_valid_file_not_set(self) -> None:
-        config = Config()
-        ref_file = PropFile(config)
-        prop_file = PropFile(config)
-
-        # Expecting errors reported
-        self.assertFalse(prop_file.is_valid(ref_file))
-        # FIXME: we shall also check if reported error message
-
-    def test_is_valid_file_not_found(self) -> None:
-        config = Config()
-        fake_file_name = self.get_random_string()
-        ref_file = PropFile(config, Path(fake_file_name))
-        prop_file = PropFile(config, Path(fake_file_name))
-
-        # Expecting errors reported
-        self.assertFalse(prop_file.is_valid(ref_file))
-        # FIXME: we shall also check if reported error message

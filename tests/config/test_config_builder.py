@@ -11,10 +11,11 @@ import copy
 import random
 from pathlib import Path
 from typing import List, Union
-from unittest.mock import call, patch
+from unittest.mock import Mock, call, patch
 
 from proptool.config.config import Config
 from proptool.config.config_builder import ConfigBuilder
+from proptool.utils import Utils
 from tests.test_case import TestCase
 
 
@@ -60,8 +61,8 @@ class TestConfigBuilder(TestCase):
         """
         ConfigBuilder._validate_config(self.get_config_for_validate())
 
-    @patch('proptool.log.Log.abort')
-    def test_validate_no_files(self, mock_log_abort) -> None:
+    @patch('proptool.log.Log.e')
+    def test_validate_no_files(self, log_e_mock: Mock) -> None:
         """
         Ensures empty list of files triggers expected error message and quits.
 
@@ -69,12 +70,17 @@ class TestConfigBuilder(TestCase):
         """
         config = self.get_config_for_validate()
         config.files = []
-        ConfigBuilder._validate_config(config)
-        exp_calls = [call('No base file(s) specified.')]
-        mock_log_abort.assert_has_calls(exp_calls)
+        with self.assertRaises(SystemExit) as context_manager:
+            ConfigBuilder._validate_config(config)
+            exp_calls = [call('No base file(s) specified.')]
+            log_e_mock.assert_has_calls(exp_calls)
 
-    @patch('proptool.log.Log.abort')
-    def test_validate_no_languages(self, mock_log_abort) -> None:
+            # Check we got sys.exit called with non-zero return code
+            self.assertEqual(SystemExit, type(context_manager.exception))
+            self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
+
+    @patch('proptool.log.Log.e')
+    def test_validate_no_languages(self, log_e_mock: Mock) -> None:
         """
         Ensures empty language list triggers expected error message and quits.
 
@@ -82,12 +88,17 @@ class TestConfigBuilder(TestCase):
         """
         config = self.get_config_for_validate()
         config.languages = []
-        ConfigBuilder._validate_config(config)
-        exp_calls = [call('No language(s) specified.')]
-        mock_log_abort.assert_has_calls(exp_calls)
+        with self.assertRaises(SystemExit) as context_manager:
+            ConfigBuilder._validate_config(config)
+            exp_calls = [call('No language(s) specified.')]
+            log_e_mock.assert_has_calls(exp_calls)
 
-    @patch('proptool.log.Log.abort')
-    def test_validate_invalid_separator(self, mock_log_abort) -> None:
+            # Check we got sys.exit called with non-zero return code
+            self.assertEqual(SystemExit, type(context_manager.exception))
+            self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
+
+    @patch('proptool.log.Log.e')
+    def test_validate_invalid_separator(self, log_e_mock: Mock) -> None:
         """
         Ensures invalid separator char triggers expected error message and quits.
 
@@ -95,12 +106,17 @@ class TestConfigBuilder(TestCase):
         """
         config = self.get_config_for_validate()
         config.separator = 'invalid'
-        ConfigBuilder._validate_config(config)
-        exp_calls = [call('Invalid separator character.')]
-        mock_log_abort.assert_has_calls(exp_calls)
+        with self.assertRaises(SystemExit) as context_manager:
+            ConfigBuilder._validate_config(config)
+            exp_calls = [call('Invalid separator character.')]
+            log_e_mock.assert_has_calls(exp_calls)
 
-    @patch('proptool.log.Log.abort')
-    def test_validate_invalid_comment_marker(self, mock_log_abort) -> None:
+            # Check we got sys.exit called with non-zero return code
+            self.assertEqual(SystemExit, type(context_manager.exception))
+            self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
+
+    @patch('proptool.log.Log.e')
+    def test_validate_invalid_comment_marker(self, log_e_mock: Mock) -> None:
         """
         Ensures invalid comment marker triggers expected error message and quits.
 
@@ -108,9 +124,14 @@ class TestConfigBuilder(TestCase):
         """
         config = self.get_config_for_validate()
         config.comment_marker = ''
-        ConfigBuilder._validate_config(config)
-        exp_prints = [call('Invalid comment marker.')]
-        mock_log_abort.assert_has_calls(exp_prints)
+        with self.assertRaises(SystemExit) as context_manager:
+            ConfigBuilder._validate_config(config)
+            exp_prints = [call('Invalid comment marker.')]
+            log_e_mock.assert_has_calls(exp_prints)
+
+            # Check we got sys.exit called with non-zero return code
+            self.assertEqual(SystemExit, type(context_manager.exception))
+            self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
     # #################################################################################################
 
@@ -249,19 +270,25 @@ class TestConfigBuilder(TestCase):
             # We expect no problems.
             ConfigBuilder._validate_args(args)
 
-    @patch('proptool.log.Log.abort')
-    def test_validate_args_onoff_on_on(self, mock_log_abort) -> None:
+    @patch('proptool.log.Log.e')
+    def test_validate_args_onoff_on_on(self, log_e_mock: Mock) -> None:
         for option_name in ConfigBuilder._on_off_pairs:
             args = FakeArgs()
             args.__setattr__(option_name, True)
             args.__setattr__(f'no_{option_name}', True)
-            # Problems should be reported.
-            ConfigBuilder._validate_args(args)
-            exp_calls = [call(f'You cannot use "--{option_name}" and "--no-{option_name}" at the same time.')]
-            mock_log_abort.assert_has_calls(exp_calls)
 
-    @patch('proptool.log.Log.abort')
-    def test_validate_args_quiet_and_verbose(self, mock_log_abort) -> None:
+            with self.assertRaises(SystemExit) as context_manager:
+                ConfigBuilder._validate_args(args)
+                # Problems should be reported.
+                exp_calls = [call(f'You cannot use "--{option_name}" and "--no-{option_name}" at the same time.')]
+                log_e_mock.assert_has_calls(exp_calls)
+
+                # Check we got sys.exit called with non-zero return code
+                self.assertEqual(SystemExit, type(context_manager.exception))
+                self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
+
+    @patch('proptool.log.Log.e')
+    def test_validate_args_quiet_and_verbose(self, log_e_mock: Mock) -> None:
         """
         Ensures use of mutually exclusive --quiet and --verbose is handled correctly.
 
@@ -271,40 +298,68 @@ class TestConfigBuilder(TestCase):
 
         args.quiet = True
         args.verbose = True
-        ConfigBuilder._validate_args(args)
-        exp_calls = [call('You cannot enable "quiet" and "verbose" options both at the same time.')]
-        mock_log_abort.assert_has_calls(exp_calls)
+        with self.assertRaises(SystemExit) as context_manager:
+            ConfigBuilder._validate_args(args)
+            exp_calls = [call('You cannot enable "quiet" and "verbose" options both at the same time.')]
+            log_e_mock.assert_has_calls(exp_calls)
 
-    @patch('proptool.log.Log.abort')
-    def test_validate_args_invalid_separator(self, mock_log_abort) -> None:
+            # Check we got sys.exit called with non-zero return code
+            self.assertEqual(SystemExit, type(context_manager.exception))
+            self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
+
+    @patch('proptool.log.Log.e')
+    def test_validate_args_invalid_separator(self, log_e_mock: Mock) -> None:
+        """
+        Checks if attempt to use invalid character as separator is correctly handled.
+
+        :param mock_log_abort:
+        """
         args = FakeArgs()
 
         separator = self.get_random_string(length = 1)
         self.assertNotIn(separator, Config.ALLOWED_SEPARATORS)
         args.separator = separator
-        ConfigBuilder._validate_args(args)
-        exp_calls = [call(f'Invalid separator. Must be one of the following: {", ".join(Config.ALLOWED_SEPARATORS)}')]
-        mock_log_abort.assert_has_calls(exp_calls)
 
-    @patch('proptool.log.Log.abort')
-    def test_validate_args_invalid_comment_marker(self, mock_log_abort) -> None:
+        with self.assertRaises(SystemExit) as context_manager:
+            ConfigBuilder._validate_args(args)
+            exp_calls = [call(f'Invalid separator. Must be one of the following: {", ".join(Config.ALLOWED_SEPARATORS)}')]
+            log_e_mock.assert_has_calls(exp_calls)
+
+            # Check we got sys.exit called with non-zero return code
+            self.assertEqual(SystemExit, type(context_manager.exception))
+            self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
+
+    @patch('proptool.log.Log.e')
+    def test_validate_args_invalid_comment_marker(self, log_e_mock: Mock) -> None:
         args = FakeArgs()
 
         marker = self.get_random_string(length = 1)
         self.assertNotIn(marker, Config.ALLOWED_COMMENT_MARKERS)
         args.comment_marker = marker
-        ConfigBuilder._validate_args(args)
-        exp_calls = [call(f'Invalid comment marker. Must be one of the following: {", ".join(Config.ALLOWED_COMMENT_MARKERS)}')]
-        mock_log_abort.assert_has_calls(exp_calls)
 
-    @patch('proptool.log.Log.abort')
-    def test_validate_args_missing_literal(self, mock_log_abort) -> None:
+        with self.assertRaises(SystemExit) as context_manager:
+            ConfigBuilder._validate_args(args)
+            exp_calls = [call(f'Invalid comment marker. Must be one of the following: {", ".join(Config.ALLOWED_COMMENT_MARKERS)}')]
+            log_e_mock.assert_has_calls(exp_calls)
+
+            # Check we got sys.exit called with non-zero return code
+            self.assertEqual(SystemExit, type(context_manager.exception))
+            self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
+
+    @patch('proptool.log.Log.e')
+    def test_validate_args_missing_literal(self, log_e_mock: Mock) -> None:
         args = FakeArgs()
 
         for missing_literal in Config.COMMENT_TEMPLATE_LITERALS:
             tmp = copy.copy(Config.COMMENT_TEMPLATE_LITERALS)
             del tmp[tmp.index(missing_literal)]
             args.comment_template = ' '.join(tmp)
-            ConfigBuilder._validate_args(args)
-            exp_calls = [call(f'Missing literal in comment template: "{missing_literal}".')]
-            mock_log_abort.assert_has_calls(exp_calls)
+
+            with self.assertRaises(SystemExit) as context_manager:
+                ConfigBuilder._validate_args(args)
+                exp_calls = [call(f'Missing literal in comment template: "{missing_literal}".')]
+                log_e_mock.assert_has_calls(exp_calls)
+
+                # Check we got sys.exit called with non-zero return code
+                self.assertEqual(SystemExit, type(context_manager.exception))
+                self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)

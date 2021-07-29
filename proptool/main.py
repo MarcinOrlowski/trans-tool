@@ -45,14 +45,16 @@ class PropTool(object):
 
             tmp = Path(reference_path).name.split('.')
             if len(tmp) != 2:
-                Utils.abort('Base filename format invalid. Must be "prefix.suffix".')
+                Log.e('Base filename format invalid. Must be "prefix.suffix".')
+                Utils.abort()
             name_prefix = tmp[0]
             name_suffix = tmp[1]
 
             Log.push(f'Base: {reference_path}')
             reference_propfile = PropFile(config, reference_path)
             if not reference_propfile.loaded:
-                Utils.abort(f'File not found: {reference_path}')
+                Log.e(f'File not found: {reference_path}')
+                Utils.abort()
 
             check_modules = [
                 TrailingWhiteChars,
