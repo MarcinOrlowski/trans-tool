@@ -147,14 +147,14 @@ class ConfigBuilder(object):
                            help = 'List of languages to check (space separated if more than one, i.e. "de pl").')
 
         group = parser.add_argument_group('Additional options')
-        group.add_argument('--fix', action = 'store_true', dest = 'fix',
-                           help = 'Updated translation files in-place. No backup!')
+        group.add_argument('--update', action = 'store_true', dest = 'update',
+                           help = 'Updates translation files in-place using base file as reference. No backup!')
         # group.add_argument('--pe', '--punctuation-exception', dest = 'punctuation_exception_langs', nargs = '*', metavar = 'LANG',
         #                    help = 'List of languages for which punctuation mismatch should not be checked for, i.e. "jp"')
         group.add_argument('--separator', action = 'store', dest = 'separator', metavar = 'CHAR', nargs = 1,
                            help = 'If specified, only given CHAR is considered a valid key/value separator.'
                                   + f'Must be one of the following: {", ".join(Config.ALLOWED_SEPARATORS)}')
-        group.add_argument('--comment', action = 'store', dest = 'comment', metavar = 'CHAR', nargs = 1,
+        group.add_argument('--comment', action = 'store', dest = 'comment_marker', metavar = 'CHAR', nargs = 1,
                            help = 'If specified, only given CHAR is considered valid comment marker.'
                                   + f'Must be one of the following: {", ".join(Config.ALLOWED_COMMENT_MARKERS)}')
         group.add_argument('-t', '--template', action = 'store', dest = 'comment_template', metavar = 'TEMPLATE', nargs = 1,
