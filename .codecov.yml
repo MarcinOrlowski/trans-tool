@@ -6,3 +6,8 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 comment: false
+coverage:
+  status:
+    patch:
+      default:
+        enabled: no
