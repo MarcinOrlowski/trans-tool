@@ -22,6 +22,10 @@ class ConfigReader(object):
         # Prevent keys CaSe from being altered by default implementation.
         self.parser.optionxform = str
 
+    def abort(self, msg: str):
+        Log.e(msg)
+        Utils.abort()
+
     def read(self, config: Config, config_file_name: Path) -> Config:
         """
         Reads and **MERGES** configuration parameters read from given configuration INI file.
@@ -32,24 +36,24 @@ class ConfigReader(object):
         :return: Instance of Config with fields containing
         """
         if not config_file_name.exists():
-            Log.abort(f'Config file not found {config_file_name}')
+            self.abort(f'Config file not found: {config_file_name}')
 
         # noinspection PyBroadException
         try:
             self.parser.read(config_file_name)
         except Exception:
             # noinspection PyUnresolvedReferences
-            Log.abort(f'Failed parsing config INI file: {config_file_name}')
+            self.abort(f'Failed parsing config INI file: {config_file_name}')
 
         # Presence of "prop-tool" section is mandatory.
         main_section = 'prop-tool'
         if not self.parser.has_section(main_section):
-            Log.abort(f'Missing "{main_section}" section.')
+            self.abort(f'Missing "{main_section}" section.')
 
         # Ensure we know how to read this config file.
         config_version = self.parser.getint(main_section, 'version')
         if config_version < Config.VERSION:
-            Log.abort(f'Old version ({config_version}) of config INI file. Required {Config.VERSION}')
+            self.abort(f'Old version ({config_version}) of config INI file. Required {Config.VERSION}')
 
         bools = [
             'debug',

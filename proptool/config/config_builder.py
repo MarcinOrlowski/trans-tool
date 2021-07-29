@@ -60,15 +60,20 @@ class ConfigBuilder(object):
         return config
 
     @staticmethod
+    def _abort(msg: str) -> None:
+        Log.e(msg)
+        Utils.abort()
+
+    @staticmethod
     def _validate_config(config: Config) -> None:
         if not config.files:
-            Log.abort('No base file(s) specified.')
+            ConfigBuilder._abort('No base file(s) specified.')
         if not config.languages:
-            Log.abort('No language(s) specified.')
+            ConfigBuilder._abort('No language(s) specified.')
         if config.separator not in Config.ALLOWED_SEPARATORS:
-            Log.abort('Invalid separator character.')
+            ConfigBuilder._abort('Invalid separator character.')
         if config.comment_marker not in Config.ALLOWED_COMMENT_MARKERS:
-            Log.abort('Invalid comment marker.')
+            ConfigBuilder._abort('Invalid comment marker.')
 
     @staticmethod
     def _set_on_off_option(config: Config, args, option_name: str) -> None:
@@ -196,22 +201,22 @@ class ConfigBuilder(object):
         # Check use of mutually exclusive pairs
         for option_name in ConfigBuilder._on_off_pairs:
             if args.__getattribute__(option_name) and args.__getattribute__(f'no_{option_name}'):
-                Log.abort(f'You cannot use "--{option_name}" and "--no-{option_name}" at the same time.')
+                ConfigBuilder._abort(f'You cannot use "--{option_name}" and "--no-{option_name}" at the same time.')
 
         # --quiet vs --verbose
         if args.__getattribute__('quiet') and args.__getattribute__('verbose'):
-            Log.abort('You cannot enable "quiet" and "verbose" options both at the same time.')
+            ConfigBuilder._abort('You cannot enable "quiet" and "verbose" options both at the same time.')
 
         # Separator character.
         if args.separator and args.separator not in Config.ALLOWED_SEPARATORS:
-            Log.abort(f'Invalid separator. Must be one of the following: {", ".join(Config.ALLOWED_SEPARATORS)}')
+            ConfigBuilder._abort(f'Invalid separator. Must be one of the following: {", ".join(Config.ALLOWED_SEPARATORS)}')
 
         # Comment marker character.
         if args.comment_marker and args.comment_marker not in Config.ALLOWED_COMMENT_MARKERS:
-            Log.abort(f'Invalid comment marker. Must be one of the following: {", ".join(Config.ALLOWED_COMMENT_MARKERS)}')
+            ConfigBuilder._abort(f'Invalid comment marker. Must be one of: {", ".join(Config.ALLOWED_COMMENT_MARKERS)}')
 
         # Comment template.
         if args.comment_template:
             for placeholder in Config.COMMENT_TEMPLATE_LITERALS:
                 if args.comment_template.find(placeholder) == -1:
-                    Log.abort(f'Missing literal in comment template: "{placeholder}".')
+                    ConfigBuilder._abort(f'Missing literal in comment template: "{placeholder}".')

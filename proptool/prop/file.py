@@ -29,22 +29,32 @@ from proptool.log import Log
 from proptool.prop.items import Blank, Comment, PropItem, Translation
 from proptool.report.group import ReportGroup
 from proptool.report.report import Report
+from proptool.utils import Utils
 
 
 # #################################################################################################
 
 class PropFile(object):
-    def __init__(self, config: Config, file: Union[Path, None] = None, language: List[str] = None):
+    def __init__(self, config: Config, language: str = None):
         super().__init__()
 
         self.config: Config = config
 
-        self.file: Path = file
+        self._items: List[PropItem] = []
+
+        self.file: Union[Path, None] = None
+        self.loaded: bool = False
+
         # All the keys of 'regular' translations
         self.keys: List[str] = []
         # All the keys in form `# ==> KEY =` that we found.
         self.commented_out_keys: List[str] = []
+
         self.separator: str = config.separator
+        self.report: Report = Report(config)
+
+        # This call is most likely redundant here.
+        self.init_container(language)
 
         comment_pattern = re.escape(self.config.comment_template).replace(
             'COM', f'[{"".join(Config.ALLOWED_COMMENT_MARKERS)}]').replace(
@@ -53,17 +63,19 @@ class PropFile(object):
         comment_pattern = comment_pattern.replace('KEY', '([a-zAz][a-zA-z0-9_.-]+)')
         self.comment_pattern = f'^{comment_pattern}'
 
-        if file is not None:
-            self.loaded = self.load(file)
-        else:
-            self.loaded: bool = False
-            self.items: List[PropItem] = []
-            self.report: Report = Report(config)
+    def init_container(self, language: str) -> None:
+        self._items = []
+        self.keys = []
+        self.commented_out_keys = []
+        self.loaded = False
+        self.report = Report(self.config)
+        self.language = language
 
-    def init_container(self) -> None:
-        self.loaded: bool = False
-        self.items: List[PropItem] = []
-        self.report: Report = Report(self.config)
+    # #################################################################################################
+
+    @property
+    def items(self) -> List[PropItem]:
+        return self._items
 
     # #################################################################################################
 
@@ -95,51 +107,13 @@ class PropFile(object):
             if match:
                 self.commented_out_keys.append(match.group(1))
 
-        self.items.append(item)
+        self._items.append(item)
 
     # #################################################################################################
 
     def validate_and_fix(self, reference: 'PropFile') -> None:
         if not self.is_valid(reference) and self.config.fix:
             self.fix(reference)
-
-    # #################################################################################################
-
-    def is_valid(self, reference_file: 'PropFile') -> bool:
-        """
-        Validates given PropFile against provided reference file.
-
-        :param reference_file:
-        :return: True if file is valid, False if there were errors.
-        """
-        if not self.loaded:
-            rg = ReportGroup('Filesystem')
-            if self.file is None:
-                rg.error(None, 'No properties file set.')
-            else:
-                rg.error(None, f'File not found: {self.file}')
-            self.report.add(rg)
-            return False
-
-        checks = [
-            MissingTranslation,
-            DanglingKeys,
-            TrailingWhiteChars,
-            Punctuation,
-            StartsWithTheSameCase,
-            EmptyTranslations,
-            WhiteCharsBeforeLinefeed,
-            KeyFormat,
-            Brackets,
-            QuotationMarks,
-            TypesettingQuotationMarks,
-            FormattingValues,
-        ]
-        for validator in checks:
-            # Each validator gets copy of the files, to prevent any potential destructive operation.
-            self.report.add((validator(self.config)).check(copy.copy(reference_file), copy.copy(self)))
-
-        return self.report.empty()
 
     # #################################################################################################
 
@@ -164,17 +138,47 @@ class PropFile(object):
 
     # #################################################################################################
 
-    def load(self, file: Path) -> bool:
+    def is_valid(self, reference_file: 'PropFile') -> bool:
+        """
+        Validates given PropFile against provided reference file.
+
+        :param reference_file:
+        :return: True if file is valid, False if there were errors.
+        """
+        checks = [
+            MissingTranslation,
+            DanglingKeys,
+            TrailingWhiteChars,
+            Punctuation,
+            StartsWithTheSameCase,
+            EmptyTranslations,
+            WhiteCharsBeforeLinefeed,
+            KeyFormat,
+            Brackets,
+            QuotationMarks,
+            TypesettingQuotationMarks,
+            FormattingValues,
+        ]
+        for validator in checks:
+            # Each validator gets copy of the files, to prevent any potential destructive operation.
+            self.report.add((validator(self.config)).check(copy.copy(reference_file), copy.copy(self)))
+
+        return self.report.empty()
+
+    # #################################################################################################
+
+    def load(self, file: Path, language: str = None) -> bool:
         """
         Loads and parses *.properties file.
 
         :param file: File to load.
         :return: True if file loaded correctly, False otherwise.
         """
-        self.init_container()
 
         if not file.exists():
-            return False
+            raise FileNotFoundError(f'File not found: {file}')
+
+        self.init_container(language)
 
         with open(file, 'r') as fh:
             line_number: int = 0
@@ -205,7 +209,8 @@ class PropFile(object):
                 # Whatever left should be valid key[:=]val entry
                 tmp: List[str] = re.split(f'^(.+)([{"".join(Config.ALLOWED_SEPARATORS)}])(.+)$', line)
                 if len(tmp) != 5:
-                    Log.abort(f'Invalid syntax at line {line_number} of "{file}".')
+                    Log.e(f'Invalid syntax at line {line_number} of "{file}".')
+                    Utils.abort()
 
                 key = tmp[1].strip()
                 separator = tmp[2].strip()

@@ -45,14 +45,18 @@ class PropTool(object):
 
             tmp = Path(reference_path).name.split('.')
             if len(tmp) != 2:
-                Utils.abort('Base filename format invalid. Must be "prefix.suffix".')
+                Log.e('Base filename format invalid. Must be "prefix.suffix".')
+                Utils.abort()
             name_prefix = tmp[0]
             name_suffix = tmp[1]
 
             Log.push(f'Base: {reference_path}')
-            reference_propfile = PropFile(config, reference_path)
-            if not reference_propfile.loaded:
-                Utils.abort(f'File not found: {reference_path}')
+            reference_propfile = PropFile(config)
+            try:
+                reference_propfile.load(reference_path)
+            except FileNotFoundError:
+                Log.e(f'File not found: {reference_path}')
+                Utils.abort()
 
             check_modules = [
                 TrailingWhiteChars,
@@ -78,16 +82,20 @@ class PropTool(object):
             if not reference_propfile.report.is_fatal():
                 for lang in config.languages:
                     translation_path = Path(reference_path.parent / f'{name_prefix}_{lang}.{name_suffix}')
-                    translation_propfile = PropFile(config, translation_path, lang)
+                    translation_propfile = PropFile(config, lang)
 
-                    trans_level_label = f'{lang.upper()}: {translation_path}'
-                    Log.push(trans_level_label, deferred = True)
-                    if not translation_propfile.validate_and_fix(reference_propfile):
-                        translation_propfile.report.dump()
-                        errors += 1
-                    if Log.pop():
-                        Log.i(f'%ok%{trans_level_label}: OK')
+                    try:
+                        translation_propfile.load(translation_path)
+                        trans_level_label = f'{lang.upper()}: {translation_path}'
+                        Log.push(trans_level_label, deferred = True)
+                        if not translation_propfile.validate_and_fix(reference_propfile):
+                            translation_propfile.report.dump()
+                            errors += 1
+                        if Log.pop():
+                            Log.i(f'%ok%{trans_level_label}: OK')
+                    except FileNotFoundError:
+                        Log.e(f'File not found: {translation_path}')
 
-            Log.pop()
+        Log.pop()
 
         return 100 if errors else 0
