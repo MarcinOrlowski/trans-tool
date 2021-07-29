@@ -33,25 +33,14 @@ class TestPropFile(TestCase):
 
     # #################################################################################################
 
-    @patch('pathlib.Path.exists')
-    @patch('proptool.log.Log.e')
-    def test_load_non_existing_file(self, path_exists_mock: Mock, log_e_mock: Mock) -> None:
+    def test_load_non_existing_file(self) -> None:
         """
         Tests if load() fails on non-existing file correctly.
         """
-        path_exists_mock.return_value = False
-
-        prop_file = PropFile(Config())
         file_name = self.get_random_string()
-
-        with self.assertRaises(FileNotFoundError) as context_manager:
-            prop_file.load(Path(file_name))
-            exp_calls = [call(f'File not found: {file_name}')]
-            log_e_mock.assert_has_calls(exp_calls)
-
-            # Check we got sys.exit called with non-zero return code
-            self.assertEqual(SystemExit, type(context_manager.exception))
-            self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
+        prop_file = PropFile(Config())
+        prop_file.load(Path(file_name))
+        self.assertRaises(FileNotFoundError)
 
     @patch('pathlib.Path.exists')
     def test_load_strip_crlf(self, path_exists_mock: Mock) -> None:
