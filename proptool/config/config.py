@@ -29,7 +29,7 @@ class Config(object):
         self.quiet: bool = False
         self.verbose: bool = False
 
-        self.fix: bool = False
+        self.update: bool = False
 
         self.files: List[str] = []
         self.languages: List[str] = []

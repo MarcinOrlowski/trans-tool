@@ -80,19 +80,25 @@ class PropTool(object):
                 # There's something to fix, but not necessary critical.
                 reference_propfile.report.dump()
 
-            # No errors, no problem. Warnings are just fine.
+            # No reference files errors. Warnings are just fine, though.
             if not reference_propfile.report.is_fatal():
                 for lang in config.languages:
                     translation_path = Path(reference_path.parent / f'{name_prefix}_{lang}.{name_suffix}')
-                    translation_propfile = PropFile(config, lang)
+                    translation_propfile = PropFile(config)
 
                     try:
-                        translation_propfile.load(translation_path)
+                        translation_propfile.load(translation_path, lang)
                         trans_level_label = f'{lang.upper()}: {translation_path}'
                         Log.push(trans_level_label, deferred = True)
-                        if not translation_propfile.validate_and_fix(reference_propfile):
+
+                        if not translation_propfile.is_valid(reference_propfile):
                             translation_propfile.report.dump()
                             errors += 1
+                            if config.update:
+                                if translation_propfile.file:
+                                    translation_propfile.update(reference_propfile)
+                                    translation_propfile.save()
+
                         if Log.pop():
                             Log.i(f'%ok%{trans_level_label}: OK')
                     except FileNotFoundError:

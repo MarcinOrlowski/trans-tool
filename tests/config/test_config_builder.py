@@ -21,7 +21,7 @@ from tests.test_case import TestCase
 
 class FakeArgs(object):
     def __init__(self):
-        self.fix: bool = False
+        self.update: bool = False
         self.quiet: bool = False
         self.color: bool = False
 
@@ -66,7 +66,7 @@ class TestConfigBuilder(TestCase):
         """
         Ensures empty list of files triggers expected error message and quits.
 
-        :param mock_log_abort: Log.abort() mock.
+        :param log_e_mock: Log.abort() mock.
         """
         config = self.get_config_for_validate()
         config.files = []
@@ -84,7 +84,7 @@ class TestConfigBuilder(TestCase):
         """
         Ensures empty language list triggers expected error message and quits.
 
-        :param mock_log_abort: Log.abort() mock.
+        :param log_e_mock: Log.abort() mock.
         """
         config = self.get_config_for_validate()
         config.languages = []
@@ -102,7 +102,7 @@ class TestConfigBuilder(TestCase):
         """
         Ensures invalid separator char triggers expected error message and quits.
 
-        :param mock_log_abort: Log.abort() mock.
+        :param log_e_mock: Log.abort() mock.
         """
         config = self.get_config_for_validate()
         config.separator = 'invalid'
@@ -120,7 +120,7 @@ class TestConfigBuilder(TestCase):
         """
         Ensures invalid comment marker triggers expected error message and quits.
 
-        :param mock_log_abort: Log.abort() mock.
+        :param log_e_mock: Log.abort() mock.
         """
         config = self.get_config_for_validate()
         config.comment_marker = ''
@@ -178,7 +178,7 @@ class TestConfigBuilder(TestCase):
         args = FakeArgs()
 
         # Lets set up args to some random state
-        args.fix = self.get_random_bool()
+        args.update = self.get_random_bool()
         args.quiet = self.get_random_bool()
         args.verbose = self.get_random_bool()
         args.color = self.get_random_bool()
@@ -292,7 +292,7 @@ class TestConfigBuilder(TestCase):
         """
         Ensures use of mutually exclusive --quiet and --verbose is handled correctly.
 
-        :param mock_log_abort: Log.abort() mock.
+        :param log_e_mock: Log.abort() mock.
         """
         args = FakeArgs()
 
@@ -312,7 +312,7 @@ class TestConfigBuilder(TestCase):
         """
         Checks if attempt to use invalid character as separator is correctly handled.
 
-        :param mock_log_abort:
+        :param log_e_mock:
         """
         args = FakeArgs()
 

@@ -99,7 +99,7 @@ class ConfigBuilder(object):
             ConfigBuilder._set_on_off_option(config, args, pair_option_name)
 
         # cmd fix
-        config.fix = args.fix
+        config.update = args.update
 
         # Set optional args, if set by user.
         optionals = [
