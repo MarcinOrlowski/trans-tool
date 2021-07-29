@@ -35,8 +35,7 @@ from proptool.utils import Utils
 # #################################################################################################
 
 class PropFile(object):
-    # def __init__(self, config: Config, language: List[str] = None):
-    def __init__(self, config: Config):
+    def __init__(self, config: Config, language: str = None):
         super().__init__()
 
         self.config: Config = config
@@ -55,7 +54,7 @@ class PropFile(object):
         self.report: Report = Report(config)
 
         # This call is most likely redundant here.
-        self.init_container()
+        self.init_container(language)
 
         comment_pattern = re.escape(self.config.comment_template).replace(
             'COM', f'[{"".join(Config.ALLOWED_COMMENT_MARKERS)}]').replace(
@@ -64,12 +63,13 @@ class PropFile(object):
         comment_pattern = comment_pattern.replace('KEY', '([a-zAz][a-zA-z0-9_.-]+)')
         self.comment_pattern = f'^{comment_pattern}'
 
-    def init_container(self) -> None:
+    def init_container(self, language: str) -> None:
         self._items = []
         self.keys = []
         self.commented_out_keys = []
         self.loaded = False
         self.report = Report(self.config)
+        self.language = language
 
     # #################################################################################################
 
@@ -167,7 +167,7 @@ class PropFile(object):
 
     # #################################################################################################
 
-    def load(self, file: Path) -> bool:
+    def load(self, file: Path, language: str = None) -> bool:
         """
         Loads and parses *.properties file.
 
@@ -178,7 +178,7 @@ class PropFile(object):
         if not file.exists():
             raise FileNotFoundError(f'File not found: {file}')
 
-        self.init_container()
+        self.init_container(language)
 
         with open(file, 'r') as fh:
             line_number: int = 0
