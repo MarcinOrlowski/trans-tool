@@ -22,7 +22,7 @@ jobs:
       matrix:
         # os: [ ubuntu-latest, macos-latest, windows-latest ]
         os: [ ubuntu-latest ]
-        python: [3.6, 3.7, 3.8]
+        python: [3.6, 3.7, 3.8, 3.9]
 
     steps:
       # https://github.com/marketplace/actions/checkout
