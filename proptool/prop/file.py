@@ -172,6 +172,7 @@ class PropFile(object):
         Loads and parses *.properties file.
 
         :param file: File to load.
+        :param language: Optional language code the loaded data if for.
         :return: True if file loaded correctly, False otherwise.
         """
 

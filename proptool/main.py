@@ -50,7 +50,9 @@ class PropTool(object):
             name_prefix = tmp[0]
             name_suffix = tmp[1]
 
+            # Main push
             Log.push(f'Base: {reference_path}')
+
             reference_propfile = PropFile(config)
             try:
                 reference_propfile.load(reference_path)
@@ -96,6 +98,7 @@ class PropTool(object):
                     except FileNotFoundError:
                         Log.e(f'File not found: {translation_path}')
 
+        # Close main push.
         Log.pop()
 
         return 100 if errors else 0
