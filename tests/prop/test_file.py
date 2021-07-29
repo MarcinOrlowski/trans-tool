@@ -39,8 +39,10 @@ class TestPropFile(TestCase):
         """
         file_name = self.get_random_string()
         prop_file = PropFile(Config())
-        prop_file.load(Path(file_name))
-        self.assertRaises(FileNotFoundError)
+        with self.assertRaises(Exception) as cm:
+            prop_file.load(Path(file_name))
+            print('xx' + cm.exception.message)
+            self.assertEqual(FileNotFoundError, type(cm.exception))
 
     @patch('pathlib.Path.exists')
     def test_load_strip_crlf(self, path_exists_mock: Mock) -> None:
