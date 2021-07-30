@@ -159,8 +159,13 @@ class ConfigBuilder(object):
                                   + f'Must be one of the following: {", ".join(Config.ALLOWED_COMMENT_MARKERS)}')
         group.add_argument('-t', '--template', action = 'store', dest = 'comment_template', metavar = 'TEMPLATE', nargs = 1,
                            help = f'Format of commented-out entries. Default: "{Config.DEFAULT_COMMENT_TEMPLATE}".')
+        group.add_argument('--suffix', action = 'store', dest = 'file_suffix', metavar = 'STRING', nargs = 1,
+                           help = f'Default file name suffix. Default: "{Config.DEFAULT_FILE_SUFFIX}".')
 
         group = parser.add_argument_group('Checks controlling options')
+        group.add_argument('--checks', action = 'store', dest = 'checks', nargs = '+', metavar = 'CHECK_ID',
+                           help = 'List of checks ID to be executed. By default all available checks are run.')
+
         group.add_argument('-s', '--strict', action = 'store_true', dest = 'strict',
                            help = 'Enables strict validation mode for all checks involved.')
         group.add_argument('-ns', '--no-strict', action = 'store_true', dest = 'no_strict',
@@ -173,13 +178,11 @@ class ConfigBuilder(object):
 
         group = parser.add_argument_group('Application controls')
         group.add_argument('-q', '--quiet', action = 'store_true', dest = 'quiet',
-                           help = 'Enables quiet mode, mutting all output but fatal errors.')
+                           help = 'Enables quiet mode, muting all output but fatal errors.')
         group.add_argument('-v', '--verbose', action = 'store_true', dest = 'verbose',
                            help = 'Produces more verbose reports.')
         group.add_argument('-d', '--debug', action = 'store_true', dest = 'debug',
                            help = 'Enables debug output.')
-        group.add_argument('-nd', '--no-debug', action = 'store_true', dest = 'no_debug',
-                           help = 'Disables additional debug output (default).')
 
         group.add_argument('-c', '--color', action = 'store_true', dest = 'color',
                            help = 'Enables use of ANSI colors (default).')
