@@ -7,6 +7,7 @@
 #
 """
 
+from typing import Dict
 from proptool.decorators.overrides import overrides
 from proptool.prop.items import Translation
 from proptool.report.group import ReportGroup
@@ -50,3 +51,9 @@ class EmptyTranslations(Check):
             report.warn(idx + 1, 'Empty string.', item.key)
 
         return report
+
+    @overrides(Check)
+    def get_default_config(self) -> Dict:
+        return {
+            'strict': False,
+        }

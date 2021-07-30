@@ -7,6 +7,7 @@
 #
 """
 
+from typing import Dict
 from proptool.decorators.overrides import overrides
 from proptool.report.group import ReportGroup
 from .base.check import Check
@@ -27,6 +28,8 @@ class MissingTranslation(Check):
 
         report = ReportGroup('Missing keys')
 
+        checker_config = self.config.get_checker_config(self.__class__.__name__)
+
         translation_keys = translation_file.keys.copy()
         missing_keys: List[str] = []
         for ref_key in reference_file.keys:
@@ -37,7 +40,7 @@ class MissingTranslation(Check):
 
         # Commented out keys are also considered present in the translation unless
         # we run in strict check mode.
-        if not self.config.strict:
+        if not checker_config['strict']:
             commented_out_keys = translation_file.commented_out_keys.copy()
             for comm_key in commented_out_keys:
                 if comm_key in missing_keys:
@@ -47,3 +50,9 @@ class MissingTranslation(Check):
             report.warn(None, missing_key)
 
         return report
+
+    @overrides(Check)
+    def get_default_config(self) -> Dict:
+        return {
+            'strict': False,
+        }
