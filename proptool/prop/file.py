@@ -12,18 +12,6 @@ import re
 from pathlib import Path
 from typing import List, Union
 
-from proptool.checks.brackets import Brackets
-from proptool.checks.dangling_keys import DanglingKeys
-from proptool.checks.empty_translations import EmptyTranslations
-from proptool.checks.formatting_values import FormattingValues
-from proptool.checks.key_format import KeyFormat
-from proptool.checks.missing_translation import MissingTranslation
-from proptool.checks.punctuation import Punctuation
-from proptool.checks.quotation_marks import QuotationMarks
-from proptool.checks.starts_with_the_same_case import StartsWithTheSameCase
-from proptool.checks.trailing_white_chars import TrailingWhiteChars
-from proptool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
-from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from proptool.config.config import Config
 from proptool.log import Log
 from proptool.prop.items import Blank, Comment, PropItem, Translation
@@ -111,30 +99,34 @@ class PropFile(object):
 
     # #################################################################################################
 
-    def validate_and_fix(self, reference: 'PropFile') -> None:
-        if not self.is_valid(reference) and self.config.fix:
-            self.fix(reference)
+    def update(self, reference_propfile: 'PropFile') -> None:
+        """
+        Rewrites content of the file using reference file as foundation. It then adds all keys from reference files.
+        The update rules are as follow:
+        * If we have translation for it, we add it,
+        * if we do not have it, it will go as comment and recorded as commented-out key,
+        * all reference files comments are copied to,
+        * dangling keys and translation file comments are gone.
 
-    # #################################################################################################
+        :param reference_propfile:
+        """
 
-    def fix(self, reference: 'PropFile') -> None:
-        synced: List[str] = []
+        tmp = PropFile(self.config)
 
-        comment_pattern = self.config.comment_template.replace('COM', self.config.comment_marker).replace('SEP', self.separator)
-        for item in reference.items:
-            if isinstance(item, Translation):
+        for idx, item in enumerate(reference_propfile.items):
+            if isinstance(item, (Comment, Blank)):
+                tmp.append(item)
+            elif isinstance(item, Translation):
                 if item.key in self.keys:
-                    synced.append(self.find_by_key(item.key).to_string() + '\n')
+                    tmp.append(self.find_by_key(item.key))
                 else:
-                    synced.append(comment_pattern.replace('KEY', item.key) + '\n')
-            elif isinstance(item, (Blank, Comment)):
-                synced.append(item.to_string() + '\n')
+                    tmp.append(Comment(self.config.comment_pattern.replace('KEY', item.key)))
             else:
-                raise RuntimeError(f'Unknown entry type: {type(item)}')
+                raise RuntimeError(f'Unknown entry type: {type(item)} at position {idx + 1}')
 
-        Log.i(f'Re-writing translation file: {self.file}')
-        with open(self.file, 'w') as fh:
-            fh.writelines(synced)
+        self._items = copy.deepcopy(tmp.items)
+        self.keys = copy.copy(tmp.keys)
+        self.commented_out_keys = copy.copy(tmp.commented_out_keys)
 
     # #################################################################################################
 
@@ -145,23 +137,10 @@ class PropFile(object):
         :param reference_file:
         :return: True if file is valid, False if there were errors.
         """
-        checks = [
-            MissingTranslation,
-            DanglingKeys,
-            TrailingWhiteChars,
-            Punctuation,
-            StartsWithTheSameCase,
-            EmptyTranslations,
-            WhiteCharsBeforeLinefeed,
-            KeyFormat,
-            Brackets,
-            QuotationMarks,
-            TypesettingQuotationMarks,
-            FormattingValues,
-        ]
-        for validator in checks:
+        for validator_cls, validator_cfg in self.config.checks:
+            validator = validator_cls(self.config)
             # Each validator gets copy of the files, to prevent any potential destructive operation.
-            self.report.add((validator(self.config)).check(copy.copy(reference_file), copy.copy(self)))
+            self.report.add(validator.check(copy.copy(reference_file), copy.copy(self)))
 
         return self.report.empty()
 
@@ -172,6 +151,7 @@ class PropFile(object):
         Loads and parses *.properties file.
 
         :param file: File to load.
+        :param language: Optional language code the loaded data if for.
         :return: True if file loaded correctly, False otherwise.
         """
 
@@ -224,3 +204,16 @@ class PropFile(object):
                 self.report.add(duplicated_keys)
 
         return True
+
+    # #################################################################################################
+
+    def save(self, target_file_name: Path) -> None:
+        """
+        Saves content of the propfile.
+        """
+
+        Log.i(f'Saving: {target_file_name}')
+        with open(target_file_name, 'w') as fh:
+            for item in self.items:
+                # FIXME: LF/CRLF should configurable
+                fh.write(f'{item.to_string()}\n')

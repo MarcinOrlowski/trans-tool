@@ -32,7 +32,7 @@ class TestPunctuation(ChecksTestCase):
         cnt_max = 40
         keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
 
-        marks = self.config.checks['Punctuation']['chars']
+        marks = (self.config.get_checker_config('Punctuation'))['chars']
         punct_idx = 0
 
         ref_file = PropFile(self.config)
@@ -51,7 +51,7 @@ class TestPunctuation(ChecksTestCase):
         cnt_max = 40
         keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
 
-        marks = self.config.checks['Punctuation']['chars']
+        marks = (self.config.get_checker_config('Punctuation'))['chars']
         punct_idx = 0
 
         expected_faults = 0

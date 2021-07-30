@@ -21,6 +21,8 @@ class TypesettingQuotationMarks(Brackets):
     ensures proper nesting and checks if all opened brackets are closed.
     """
 
+    _is_single_file_check = True
+
     report_title = ReportGroup('Print Quotation Marks')
 
     opening: List[str] = ['‘', '«', '„', '「', '《']

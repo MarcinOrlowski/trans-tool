@@ -11,12 +11,7 @@ import copy
 import sys
 from pathlib import Path
 
-from proptool.checks.brackets import Brackets
-from proptool.checks.key_format import KeyFormat
-from proptool.checks.quotation_marks import QuotationMarks
-from proptool.checks.trailing_white_chars import TrailingWhiteChars
-from proptool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
-from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
+from proptool.config.config import Config
 from proptool.config.config_builder import ConfigBuilder
 from proptool.prop.file import PropFile
 from .const import Const
@@ -36,7 +31,8 @@ class PropTool(object):
             Log.banner(Const.APP_DESCRIPTION)
             return 0
 
-        config = ConfigBuilder.build()
+        config_defaults = Config()
+        config = ConfigBuilder.build(config_defaults)
         Log.configure(config)
 
         errors = 0
@@ -50,7 +46,9 @@ class PropTool(object):
             name_prefix = tmp[0]
             name_suffix = tmp[1]
 
+            # Main push
             Log.push(f'Base: {reference_path}')
+
             reference_propfile = PropFile(config)
             try:
                 reference_propfile.load(reference_path)
@@ -58,44 +56,46 @@ class PropTool(object):
                 Log.e(f'File not found: {reference_path}')
                 Utils.abort()
 
-            check_modules = [
-                TrailingWhiteChars,
-                WhiteCharsBeforeLinefeed,
-                KeyFormat,
-                Brackets,
-                QuotationMarks,
-                TypesettingQuotationMarks,
-            ]
-            for validator in check_modules:
+            for validator_cls, validator_config in config.checks:
                 # Almost any check validates translation against reference file, so we cannot use all checks here,
                 # but there are some that process single file independently so they in fact do not need any reference
                 # file. For them we pass our base file as translation which will do the trick.
                 #
-                # Each validator gets copy of the files, to prevent any potential destructive operation.
-                reference_propfile.report.add((validator(config)).check(copy.copy(reference_propfile)))
+                if validator_cls.is_single_file_check:
+                    # Each validator gets copy of the files, to prevent any potential destructive operation.
+                    propfile_copy = copy.copy(reference_propfile)
+                    validator = validator_cls(config)
+                    reference_propfile.report.add(validator.check(propfile_copy))
 
             if not reference_propfile.report.empty():
                 # There's something to fix, but not necessary critical.
                 reference_propfile.report.dump()
 
-            # No errors, no problem. Warnings are just fine.
+            # No reference files errors. Warnings are just fine, though.
             if not reference_propfile.report.is_fatal():
                 for lang in config.languages:
                     translation_path = Path(reference_path.parent / f'{name_prefix}_{lang}.{name_suffix}')
-                    translation_propfile = PropFile(config, lang)
+                    translation_propfile = PropFile(config)
 
                     try:
-                        translation_propfile.load(translation_path)
+                        translation_propfile.load(translation_path, lang)
                         trans_level_label = f'{lang.upper()}: {translation_path}'
                         Log.push(trans_level_label, deferred = True)
-                        if not translation_propfile.validate_and_fix(reference_propfile):
+
+                        if not translation_propfile.is_valid(reference_propfile):
                             translation_propfile.report.dump()
                             errors += 1
+                            if config.update:
+                                if translation_propfile.file:
+                                    translation_propfile.update(reference_propfile)
+                                    translation_propfile.save()
+
                         if Log.pop():
                             Log.i(f'%ok%{trans_level_label}: OK')
                     except FileNotFoundError:
                         Log.e(f'File not found: {translation_path}')
 
+        # Close main push.
         Log.pop()
 
         return 100 if errors else 0

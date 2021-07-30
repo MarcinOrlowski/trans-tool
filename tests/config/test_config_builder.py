@@ -9,6 +9,7 @@
 
 import copy
 import random
+import sys
 from pathlib import Path
 from typing import List, Union
 from unittest.mock import Mock, call, patch
@@ -21,7 +22,7 @@ from tests.test_case import TestCase
 
 class FakeArgs(object):
     def __init__(self):
-        self.fix: bool = False
+        self.update: bool = False
         self.quiet: bool = False
         self.color: bool = False
 
@@ -66,7 +67,7 @@ class TestConfigBuilder(TestCase):
         """
         Ensures empty list of files triggers expected error message and quits.
 
-        :param mock_log_abort: Log.abort() mock.
+        :param log_e_mock: Log.abort() mock.
         """
         config = self.get_config_for_validate()
         config.files = []
@@ -84,7 +85,7 @@ class TestConfigBuilder(TestCase):
         """
         Ensures empty language list triggers expected error message and quits.
 
-        :param mock_log_abort: Log.abort() mock.
+        :param log_e_mock: Log.abort() mock.
         """
         config = self.get_config_for_validate()
         config.languages = []
@@ -102,7 +103,7 @@ class TestConfigBuilder(TestCase):
         """
         Ensures invalid separator char triggers expected error message and quits.
 
-        :param mock_log_abort: Log.abort() mock.
+        :param log_e_mock: Log.abort() mock.
         """
         config = self.get_config_for_validate()
         config.separator = 'invalid'
@@ -120,7 +121,7 @@ class TestConfigBuilder(TestCase):
         """
         Ensures invalid comment marker triggers expected error message and quits.
 
-        :param mock_log_abort: Log.abort() mock.
+        :param log_e_mock: Log.abort() mock.
         """
         config = self.get_config_for_validate()
         config.comment_marker = ''
@@ -178,7 +179,7 @@ class TestConfigBuilder(TestCase):
         args = FakeArgs()
 
         # Lets set up args to some random state
-        args.fix = self.get_random_bool()
+        args.update = self.get_random_bool()
         args.quiet = self.get_random_bool()
         args.verbose = self.get_random_bool()
         args.color = self.get_random_bool()
@@ -292,7 +293,7 @@ class TestConfigBuilder(TestCase):
         """
         Ensures use of mutually exclusive --quiet and --verbose is handled correctly.
 
-        :param mock_log_abort: Log.abort() mock.
+        :param log_e_mock: Log.abort() mock.
         """
         args = FakeArgs()
 
@@ -312,7 +313,7 @@ class TestConfigBuilder(TestCase):
         """
         Checks if attempt to use invalid character as separator is correctly handled.
 
-        :param mock_log_abort:
+        :param log_e_mock:
         """
         args = FakeArgs()
 
@@ -363,3 +364,44 @@ class TestConfigBuilder(TestCase):
                 # Check we got sys.exit called with non-zero return code
                 self.assertEqual(SystemExit, type(context_manager.exception))
                 self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
+
+    # #################################################################################################
+
+    def test_parse_args_returns_all_keys(self) -> None:
+        """
+        Checks if argparse returned dict contains all the keys we expect to be present while building
+        Config instance.
+        """
+        config = Config()
+
+        # Pass no args for parsing (this is legit as we have config file that can provide what's needed).
+
+        sys.argv[1:] = []  # noqa: WPS362
+        args = ConfigBuilder._parse_args()
+        for key in config.__dict__:
+            self.assertIn(key, args)
+
+    def test_parse_args_returns_no_more_keys(self) -> None:
+        """
+        Checks if argparse returned keys are all expected and handled by config (no dangling options
+        no-one supports).
+        """
+        config = Config()
+
+        # Pass no args for parsing (this is legit as we have config file that can provide what's needed).
+        sys.argv[1:] = []  # noqa: WPS362
+        args = vars(ConfigBuilder._parse_args())  # noqa: WPS421
+
+        # Eliminate --no-<KEY> related keys first as these are not mapped directly.
+        for pair_key in ConfigBuilder._on_off_pairs:
+            del args[f'no_{pair_key}']
+
+        # Remove `show_version` as this is also not mapped.
+        # FIXME: this should not be hardcoded here!
+        del args['show_version']
+
+        self.assertEqual(len(args), len(config.__dict__))
+
+        for key in args:
+            # Ensure key args returns is what is present in Config as well.
+            self.assertIn(key, config.__dict__)

@@ -164,6 +164,7 @@ class TestPropFile(TestCase):
                     prop_file = PropFile(Config())
                     prop_file.load(Path(fake_file_name))
                 except SystemExit:
+                    # sys.exit() happened afrer Log.e() is called, so we can check the error message here.
                     msg = log_e_mock.call_args_list[0][0][0]
                     self.assertEqual(msg, f'Invalid syntax at line {trap_position + 1} of "{fake_file_name}".')
 

@@ -9,6 +9,8 @@
 # Refactoring hints:
 # https://flake8.codes/wemake-python-styleguide/0.15.3/index.html
 
+# https://pypi.org/project/flake8-noqa/
+noqa-require-code
 max-line-length = 132
 
 exclude =

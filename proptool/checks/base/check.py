@@ -24,6 +24,8 @@ class Check(ABC):
                 raise ValueError(f'Configuration object must be instance of Config ("{type(config)}" given).')
         self.config = config
 
+        self.is_single_file_check = False
+
     @abstractmethod
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(self, translation: 'PropFile', reference: Union['PropFile', None] = None) -> Report:
