@@ -32,7 +32,6 @@ class Brackets(Check):
 
     _is_single_file_check = True
 
-
     report_title = 'Brackets'
 
     @overrides(Check)

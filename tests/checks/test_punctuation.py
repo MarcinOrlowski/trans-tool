@@ -7,7 +7,7 @@
 #
 """
 import random
-from typing import Dict, Union
+from typing import Union
 
 from proptool.checks.base.check import Check
 from proptool.checks.punctuation import Punctuation

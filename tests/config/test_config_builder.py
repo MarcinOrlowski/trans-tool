@@ -375,7 +375,8 @@ class TestConfigBuilder(TestCase):
         config = Config()
 
         # Pass no args for parsing (this is legit as we have config file that can provide what's needed).
-        sys.argv[1:] = []
+
+        sys.argv[1:] = []  # noqa: WPS362
         args = ConfigBuilder._parse_args()
         for key in config.__dict__:
             self.assertIn(key, args)
@@ -388,8 +389,8 @@ class TestConfigBuilder(TestCase):
         config = Config()
 
         # Pass no args for parsing (this is legit as we have config file that can provide what's needed).
-        sys.argv[1:] = []
-        args = vars(ConfigBuilder._parse_args())
+        sys.argv[1:] = []  # noqa: WPS362
+        args = vars(ConfigBuilder._parse_args())  # noqa: WPS421
 
         # Eliminate --no-<KEY> related keys first as these are not mapped directly.
         for pair_key in ConfigBuilder._on_off_pairs:
