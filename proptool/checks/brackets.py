@@ -42,8 +42,8 @@ class Brackets(Check):
         if not translation.items:
             return report
 
-        opening = self.config.checks[self.__class__.__name__]['opening']
-        closing = self.config.checks[self.__class__.__name__]['closing']
+        opening = (self.config.get_checker_config(self.__class__.__name__))['opening']
+        closing = (self.config.get_checker_config(self.__class__.__name__))['closing']
 
         for idx, item in enumerate(translation.items):
             # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
