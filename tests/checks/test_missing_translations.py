@@ -7,11 +7,10 @@
 #
 """
 import random
-from typing import Union
+from typing import Dict, Union
 
 from proptool.checks.base.check import Check
 from proptool.checks.missing_translation import MissingTranslation
-from proptool.config.config import Config
 from proptool.decorators.overrides import overrides
 from proptool.prop.items import Comment
 from tests.checks.checks_test_case import ChecksTestCase
@@ -20,7 +19,7 @@ from tests.checks.checks_test_case import ChecksTestCase
 class TestMissingTranslations(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Union[Config, None] = None) -> Check:
+    def get_checker(self, config: Union[Dict, None] = None) -> Check:
         return MissingTranslation(config)
 
     # #################################################################################################
@@ -58,11 +57,11 @@ class TestMissingTranslations(ChecksTestCase):
             trans_file.append(Comment(comment))
 
         # We expect no issues in non-strict mode
-        trans_file.config.checks['MissingTranslation']['strict'] = False
+        self.checker.config['strict'] = False
         self.check(trans_file, ref_file)
 
         # We expect warnings in strict mode
-        trans_file.config.checks['MissingTranslation']['strict'] = True
+        self.checker.config['strict'] = True
         self.check(trans_file, ref_file, exp_warnings = len(remaining_keys))
 
     def test_translation_with_faults(self) -> None:

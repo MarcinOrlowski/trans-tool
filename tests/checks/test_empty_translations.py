@@ -7,11 +7,10 @@
 #
 """
 import random
-from typing import Union
+from typing import Dict, Union
 
 from proptool.checks.base.check import Check
 from proptool.checks.empty_translations import EmptyTranslations
-from proptool.config.config import Config
 from proptool.decorators.overrides import overrides
 from proptool.prop.items import Translation
 from tests.checks.checks_test_case import ChecksTestCase
@@ -20,7 +19,7 @@ from tests.checks.checks_test_case import ChecksTestCase
 class TestEmptyTranslations(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Union[Config, None] = None) -> Check:
+    def get_checker(self, config: Union[Dict, None] = None) -> Check:
         return EmptyTranslations(config)
 
     # #################################################################################################

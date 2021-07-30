@@ -44,7 +44,7 @@ class QuotationMarks(Check):
 
             stack: List[Mark] = []
             for pos, current_char in enumerate(item.value):
-                if current_char not in self.config.checks['QuotationMarks']['chars']:
+                if current_char not in self.config['chars']:
                     continue
 
                 if not stack:

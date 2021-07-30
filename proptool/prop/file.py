@@ -137,10 +137,10 @@ class PropFile(object):
         :param reference_file:
         :return: True if file is valid, False if there were errors.
         """
-        for validator_cls, validator_cfg in self.config.checks:
-            validator = validator_cls(self.config)
+        for checker_cls, checker_config in self.config.checks:
+            checker = checker_cls(checker_config)
             # Each validator gets copy of the files, to prevent any potential destructive operation.
-            self.report.add(validator.check(copy.copy(reference_file), copy.copy(self)))
+            self.report.add(checker.check(copy.copy(self), copy.copy(reference_file)))
 
         return self.report.empty()
 

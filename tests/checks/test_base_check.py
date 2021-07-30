@@ -29,13 +29,12 @@ class TestBaseCheck(TestCase):
             Check(False)
 
     def test_need_both_files_no_fault(self) -> None:
-        config = Config()
-
         # Check is abstract class, extending ABC meta, so ordinary
         # instantiation won't work.
         Check.__abstractmethods__ = frozenset()
-        check = Check(config)
+        check = Check({})
 
+        config = Config()
         prop = PropFile(config)
         check.need_both_files(prop, prop)
 
@@ -43,22 +42,19 @@ class TestBaseCheck(TestCase):
         """
         Ensures there's no default implementation of check()
         """
-        config = Config()
-
         # Check is abstract class, extending ABC meta, so ordinary
         # instantiation won't work.
         Check.__abstractmethods__ = frozenset()
-        check = Check(config)
+        check = Check({})
 
         with self.assertRaises(NotImplementedError):
             check.check(None, None)
 
     def test_need_valid_config_valid_arg(self) -> None:
-        config = Config()
         # Check is abstract class, extending ABC meta, so ordinary
         # instantiation won't work.
         Check.__abstractmethods__ = frozenset()
-        check = Check(config)
+        check = Check({})
         # We expect no problems.
         check.need_valid_config()
 
@@ -87,8 +83,8 @@ class TestBaseCheck(TestCase):
         Checks how need_both_files() is handling missing arguments.
         """
         config = Config()
-        check = Check(config)
         prop = PropFile(config)
+        check = Check({})
 
         with self.assertRaises(ValueError):
             check.need_both_files(None, None)

@@ -44,8 +44,16 @@ class Brackets(Check):
         if not translation.items:
             return report
 
-        opening = (self.config.get_checker_config(self.__class__.__name__))['opening']
-        closing = (self.config.get_checker_config(self.__class__.__name__))['closing']
+        opening = self.config['opening']
+        closing = self.config['closing']
+
+        opening_cnt = len(opening)
+        closing_cnt = len(closing)
+
+        if opening_cnt != closing_cnt:
+            report.error('CONFIG: Both "opening" and "closing" arrays must contain the same number of elements.')
+        if opening_cnt == 0:
+            report.warn('CONFIG: Empty "opening" and "closing" arrays.')
 
         for idx, item in enumerate(translation.items):
             # Do not try to be clever and filter() data first, because line_number values will no longer be correct.

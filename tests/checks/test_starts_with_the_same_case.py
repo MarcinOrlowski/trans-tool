@@ -7,11 +7,10 @@
 #
 """
 import random
-from typing import Union
+from typing import Dict, Union
 
 from proptool.checks.base.check import Check
 from proptool.checks.starts_with_the_same_case import StartsWithTheSameCase
-from proptool.config.config import Config
 from proptool.decorators.overrides import overrides
 from proptool.prop.file import PropFile
 from proptool.prop.items import Translation
@@ -22,7 +21,7 @@ from tests.checks.checks_test_case import ChecksTestCase
 class TestStartsWithTheSameCase(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Union[Config, None] = None) -> Check:
+    def get_checker(self, config: Union[Dict, None] = None) -> Check:
         return StartsWithTheSameCase(config)
 
     # #################################################################################################
