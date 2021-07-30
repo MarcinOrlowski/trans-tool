@@ -8,6 +8,8 @@
 """
 from typing import Dict, List
 
+from proptool.config.checker_info import CheckerInfo
+
 
 class Config(object):
     VERSION = 1
@@ -40,8 +42,8 @@ class Config(object):
         self.comment_marker: str = '#'
         self.comment_template: str = Config.DEFAULT_COMMENT_TEMPLATE
 
-        self.checks = {
-            # empty set
+        self.checks : List[CheckerInfo] = {
+            # empty set. Populated and manipulated by ConfigBuilder
         }
 
     def set_checker_config(self, checker_id: str, config: Dict) -> None:

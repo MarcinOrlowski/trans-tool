@@ -56,15 +56,15 @@ class PropTool(object):
                 Log.e(f'File not found: {reference_path}')
                 Utils.abort()
 
-            for validator_cls, validator_config in config.checks:
+            for checker_id, checker_info in config.checks.items():
                 # Almost any check validates translation against reference file, so we cannot use all checks here,
                 # but there are some that process single file independently so they in fact do not need any reference
                 # file. For them we pass our base file as translation which will do the trick.
-                if validator_cls.is_single_file_check:
+                checker = checker_info.cls(checker_info.config)
+                if checker.is_single_file_check:
                     # Each validator gets copy of the files, to prevent any potential destructive operation.
                     propfile_copy = copy.copy(reference_propfile)
-                    validator = validator_cls(validator_config)
-                    reference_propfile.report.add(validator.check(propfile_copy))
+                    reference_propfile.report.add(checker.check(propfile_copy))
 
             if not reference_propfile.report.empty():
                 # There's something to fix, but not necessary critical.

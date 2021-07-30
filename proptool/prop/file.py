@@ -41,6 +41,8 @@ class PropFile(object):
         self.separator: str = config.separator
         self.report: Report = Report(config)
 
+        self.language = language
+
         # This call is most likely redundant here.
         self.init_container(language)
 
@@ -137,8 +139,8 @@ class PropFile(object):
         :param reference_file:
         :return: True if file is valid, False if there were errors.
         """
-        for checker_cls, checker_config in self.config.checks:
-            checker = checker_cls(checker_config)
+        for checker_id, checker_info in self.config.checks.items():
+            checker = checker_info.cls(checker_info.config)
             # Each validator gets copy of the files, to prevent any potential destructive operation.
             self.report.add(checker.check(copy.copy(self), copy.copy(reference_file)))
 
