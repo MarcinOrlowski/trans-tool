@@ -25,7 +25,7 @@ class ChecksTestCase(TestCase):
         checker = self.get_checker(None)
         if not issubclass(type(checker), Check):
             raise ValueError('Checker must be subclass of Check')
-        self.config.add_checker_config(checker.__class__.__name__, self.get_checker().get_default_config())
+        self.config.set_checker_config(checker.__class__.__name__, self.get_checker().get_default_config())
         checker.config = self.config
         self.checker = checker
 

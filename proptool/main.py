@@ -74,7 +74,8 @@ class PropTool(object):
                 # file. For them we pass our base file as translation which will do the trick.
                 #
                 # Each validator gets copy of the files, to prevent any potential destructive operation.
-                reference_propfile.report.add((validator(config)).check(copy.copy(reference_propfile)))
+                checker_config = config.get_checker_config(validator.__name__)
+                reference_propfile.report.add((validator(config)).check(checker_config, copy.copy(reference_propfile)))
 
             if not reference_propfile.report.empty():
                 # There's something to fix, but not necessary critical.
