@@ -57,8 +57,8 @@ class ConfigBuilder(object):
         ]
 
         for checker in checkers:
-            id = checker.__name__
-            config_defaults.checks[id] = CheckerInfo(id, checker, (checker()).get_default_config())
+            checker_id = checker.__name__
+            config_defaults.checks[checker_id] = CheckerInfo(checker_id, checker, (checker()).get_default_config())
 
         # Handler CLI args so we can see if there's config file to load
         args = ConfigBuilder._parse_args()

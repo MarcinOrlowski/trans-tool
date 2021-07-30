@@ -34,9 +34,9 @@ class TestMissingTranslations(ChecksTestCase):
         self.check(trans_file, ref_file)
 
     def test_translation_with_keys_in_comments(self) -> None:
-        # Checks if we have no issues reported when running
-        # in non-strict mode and having some keys in comments.
-
+        """
+        Checks if we have no issues reported when running in non-strict mode and having some keys in comments.
+        """
         # generate some keys for reference file
         cnt_min = 20
         cnt_max = 40

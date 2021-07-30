@@ -42,7 +42,7 @@ class Config(object):
         self.comment_marker: str = '#'
         self.comment_template: str = Config.DEFAULT_COMMENT_TEMPLATE
 
-        self.checks : List[CheckerInfo] = {
+        self.checks: List[CheckerInfo] = {
             # empty set. Populated and manipulated by ConfigBuilder
         }
 

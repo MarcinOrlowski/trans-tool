@@ -40,13 +40,15 @@ class TestFormattingValues(ChecksTestCase):
             self.check(trans_file, ref_file)
 
     def test_with_faults(self) -> None:
+        """
+        Tests various types of formatters count mismatch
+        """
         tests = [
-            # Tests various types of formatters count mismatch
-            ('This %s foo %s', 'This 123 %s %d llorem bar %s ipsum.'),
-            ('This %s', 'This 123 %s %d llorem bar %s ipsum.'),
-            ('%d foo', '123 %s %d llorem bar %s ipsum.'),
-            ('No formatters', 'But we have %s ome...'),
-            ('%s ome formatters', 'But we have none.'),
+            ('This %s foo %s line 1', 'This 123 %s %d llorem bar %s ipsum.'),
+            ('This %s line 2', 'This 123 %s %d llorem bar %s ipsum.'),
+            ('%d foo line 3', '123 %s %d llorem bar %s ipsum.'),
+            ('No formatters in line 4', 'But we have %s one...'),
+            ('%s one formatter in line 5', 'But we have none.'),
 
             # Count matches, but order is messed.
             ('Count matches: %s %d', 'But order differs: %d %s'),
@@ -60,7 +62,7 @@ class TestFormattingValues(ChecksTestCase):
             ref_file.append(Translation(key, test_case[0]))
             trans_file.append(Translation(key, test_case[1]))
             # This checker always return one error (if there's any fault).
-            self.check(trans_file, ref_file, exp_errors = 1, dump=True)
+            self.check(trans_file, ref_file, exp_errors = 1, msg = f"'{test_case[0]}' vs. '{test_case[1]}'")
 
     # #################################################################################################
 

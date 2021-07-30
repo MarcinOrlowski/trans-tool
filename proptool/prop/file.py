@@ -98,6 +98,9 @@ class PropFile(object):
             raise TypeError('Item must be either subclass of PropItem or List[PropItems]')
 
         for single_item in items:
+            if not issubclass(type(single_item), PropItem):
+                raise TypeError(f'Item must be of PropItem, {type(single_item)} given.')
+
             if isinstance(items, Translation):
                 self.keys.append(items.key)
             elif isinstance(items, Comment):
@@ -105,7 +108,7 @@ class PropFile(object):
                 match = re.compile(self.comment_pattern).match(items.value)
                 if match:
                     self.commented_out_keys.append(match.group(1))
-            self._items.append(items)
+            self._items.append(single_item)
 
     # #################################################################################################
 
@@ -147,9 +150,9 @@ class PropFile(object):
             else:
                 raise RuntimeError(f'Unknown entry type: {type(item)} at position {idx + 1}')
 
-        self._items = copy.copy(tmp.items)
-        self.keys = copy.copy(tmp.keys)
-        self.commented_out_keys = copy.copy(tmp.commented_out_keys)
+        self._items = tmp.items
+        self.keys = tmp.keys
+        self.commented_out_keys = tmp.commented_out_keys
 
     # #################################################################################################
 
@@ -160,8 +163,8 @@ class PropFile(object):
         :param reference_file:
         :return: True if file is valid, False if there were errors.
         """
-        for checker_id, checker_info in self.config.checks.items():
-            checker = checker_info.cls(checker_info.config)
+        for _, checker_info in self.config.checks.items():
+            checker = checker_info.callable(checker_info.config)
             # Each validator gets copy of the files, to prevent any potential destructive operation.
             self.report.add(checker.check(copy.copy(self), copy.copy(reference_file)))
 

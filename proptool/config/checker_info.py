@@ -10,7 +10,7 @@ from typing import Callable, Dict, Union
 
 
 class CheckerInfo(object):
-    def __init__(self, id: str, cls: Callable, config: Union[Dict, None] = None):
-        self.id = id
-        self.cls = cls
+    def __init__(self, checker_id: str, checker_callable: Callable, config: Union[Dict, None] = None):
+        self.id = checker_id
+        self.callable = checker_callable
         self.config = config

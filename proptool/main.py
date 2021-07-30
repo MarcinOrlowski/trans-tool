@@ -8,7 +8,6 @@
 """
 
 import copy
-import linecache
 import sys
 from pathlib import Path
 
@@ -53,17 +52,17 @@ class PropTool(object):
                 Log.push(f'Base: {reference_path}')
 
                 reference_propfile = PropFile(config)
-                try:
+                try:  # noqa: WPS505
                     reference_propfile.load(reference_path)
                 except FileNotFoundError:
                     Log.e(f'File not found: {reference_path}')
                     Utils.abort()
 
-                for checker_id, checker_info in config.checks.items():
+                for _, checker_info in config.checks.items():
                     # Almost any check validates translation against reference file, so we cannot use all checks here,
                     # but there are some that process single file independently so they in fact do not need any reference
                     # file. For them we pass our base file as translation which will do the trick.
-                    checker = checker_info.cls(checker_info.config)
+                    checker = checker_info.callable(checker_info.config)
                     if checker.is_single_file_check:
                         # Each validator gets copy of the files, to prevent any potential destructive operation.
                         propfile_copy = copy.copy(reference_propfile)
@@ -79,7 +78,7 @@ class PropTool(object):
                         translation_path = Path(reference_path.parent / f'{name_prefix}_{lang}.{name_suffix}')
                         translation_propfile = PropFile(config)
 
-                        try:
+                        try:  # noqa: WPS505
                             translation_propfile.load(translation_path, lang)
                             trans_level_label = f'{lang.upper()}: {translation_path}'
                             Log.push(trans_level_label, deferred = True)
@@ -110,6 +109,6 @@ class PropTool(object):
         except Exception as ex:
             Log.e(str(ex))
             exc_type, exc_obj, tb = sys.exc_info()
-            f = tb.tb_frame
-            Log.e(f'Exception in {f.f_code.co_filename}:{tb.tb_lineno}')
-            return 666
+            frame = tb.tb_frame
+            Log.e(f'Exception in {frame.f_code.co_filename}:{tb.tb_lineno}')
+            return 666  # noqa: WPS432

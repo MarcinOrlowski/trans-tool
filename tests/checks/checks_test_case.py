@@ -40,13 +40,20 @@ class ChecksTestCase(TestCase):
         self.check(prop_file, exp_errors = exp_errors, exp_warnings = exp_warnings)
 
     def check(self, translation: PropFile, reference: Union[PropFile, None] = None,
-              exp_errors: int = 0, exp_warnings: int = 0, dump = False) -> None:
+              exp_errors: int = 0, exp_warnings: int = 0, dump = False, msg = None) -> None:
         report = self.checker.check(translation, reference)
         if dump:
             report.dump()
 
-        self.assertEqual(exp_errors, report.errors)
-        self.assertEqual(exp_warnings, report.warnings)
+        err_msg = msg
+        warn_msg = msg
+        if exp_errors > 0:
+            err_msg = err_msg
+        if exp_warnings > 0:
+            warn_msg = err_msg
+
+        self.assertEqual(exp_errors, report.errors, err_msg)
+        self.assertEqual(exp_warnings, report.warnings, warn_msg)
 
     # #################################################################################################
 
