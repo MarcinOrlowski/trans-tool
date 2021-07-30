@@ -32,10 +32,7 @@ class ConfigBuilder(object):
     ]
 
     @staticmethod
-    def build():
-        # get default config
-        config = Config()
-
+    def build(config_defaults: Config) -> Config:
         # Set default configuration options for each checker.
         check_dir = Path(proptool.checks.__file__).parent
         check_modules = [file for file in listdir(check_dir) if file[:2] != '__' and (check_dir / file).is_file()]
@@ -43,21 +40,21 @@ class ConfigBuilder(object):
             module = importlib.import_module(f'.{check_file_name[:-3]}', proptool.checks.__name__)
             for _, obj in inspect.getmembers(module, inspect.isclass):
                 if issubclass(obj, Check) and obj.__name__ != Check.__name__:
-                    config.checks[obj.__name__] = obj.get_default_config(obj)
+                    config_defaults.checks[obj.__name__] = obj.get_default_config(obj)
 
         # Handler CLI args so we can see if there's config file to load
         args = ConfigBuilder._parse_args()
         if args.config_file:
             config_file = Path(args.config_file[0])
             # override with loaded user config file
-            config = ConfigReader().read(config, config_file)
+            config_defaults = ConfigReader().read(config_defaults, config_file)
 
         # override with command line arguments
-        ConfigBuilder._set_from_args(config, args)
+        ConfigBuilder._set_from_args(config_defaults, args)
 
-        ConfigBuilder._validate_config(config)
+        ConfigBuilder._validate_config(config_defaults)
 
-        return config
+        return config_defaults
 
     @staticmethod
     def _abort(msg: str) -> None:

@@ -11,6 +11,7 @@ import copy
 import sys
 from pathlib import Path
 
+from proptool.config.config import Config
 from proptool.config.config_builder import ConfigBuilder
 from proptool.prop.file import PropFile
 from .const import Const
@@ -30,7 +31,8 @@ class PropTool(object):
             Log.banner(Const.APP_DESCRIPTION)
             return 0
 
-        config = ConfigBuilder.build()
+        config_defaults = Config()
+        config = ConfigBuilder.build(config_defaults)
         Log.configure(config)
 
         errors = 0
