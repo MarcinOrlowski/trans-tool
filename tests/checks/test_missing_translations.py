@@ -58,11 +58,11 @@ class TestMissingTranslations(ChecksTestCase):
             trans_file.append(Comment(comment))
 
         # We expect no issues in non-strict mode
-        trans_file.config.strict = False
+        trans_file.config.checks['MissingTranslation']['strict'] = False
         self.check(trans_file, ref_file)
 
         # We expect warnings in strict mode
-        trans_file.config.strict = True
+        trans_file.config.checks['MissingTranslation']['strict'] = True
         self.check(trans_file, ref_file, exp_warnings = len(remaining_keys))
 
     def test_translation_with_faults(self) -> None:

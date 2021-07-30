@@ -207,8 +207,6 @@ class TestConfigBuilder(TestCase):
         # Ensure config reflects changes from command line
         exp_fatal = self.get_expectation(config_defaults.fatal, args.fatal, args.no_fatal)
         self.assertEqual(exp_fatal, config.fatal)
-        exp_strict = self.get_expectation(config_defaults.strict, args.strict, args.no_strict)
-        self.assertEqual(exp_strict, config.strict)
         exp_color = self.get_expectation(config_defaults.color, args.color, args.no_color)
         self.assertEqual(exp_color, config.color)
 

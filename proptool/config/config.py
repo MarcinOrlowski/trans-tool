@@ -24,7 +24,6 @@ class Config(object):
         self.file_suffix = Config.DEFAULT_FILE_SUFFIX
 
         self.fatal = False
-        self.strict: bool = False
 
         self.debug = False
         self.color = True

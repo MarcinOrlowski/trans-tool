@@ -27,7 +27,6 @@ class ConfigBuilder(object):
     # List of options that can be either turned on or off.
     _on_off_pairs = [
         'fatal',
-        'strict',
         'color',
     ]
 
@@ -162,11 +161,6 @@ class ConfigBuilder(object):
         group = parser.add_argument_group('Checks controlling options')
         group.add_argument('--checks', action = 'store', dest = 'checks', nargs = '+', metavar = 'CHECK_ID',
                            help = 'List of checks ID to be executed. By default all available checks are run.')
-
-        group.add_argument('-s', '--strict', action = 'store_true', dest = 'strict',
-                           help = 'Enables strict validation mode for all checks involved.')
-        group.add_argument('-ns', '--no-strict', action = 'store_true', dest = 'no_strict',
-                           help = 'Disables strict validation mode for all checks involved (default).')
 
         group.add_argument('-f', '--fatal', action = 'store_true', dest = 'fatal',
                            help = 'Enables strict mode. All warnings are treated as errors and are fatal.')
