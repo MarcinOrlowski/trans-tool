@@ -12,18 +12,6 @@ import re
 from pathlib import Path
 from typing import List, Union
 
-from proptool.checks.brackets import Brackets
-from proptool.checks.dangling_keys import DanglingKeys
-from proptool.checks.empty_translations import EmptyTranslations
-from proptool.checks.formatting_values import FormattingValues
-from proptool.checks.key_format import KeyFormat
-from proptool.checks.missing_translation import MissingTranslation
-from proptool.checks.punctuation import Punctuation
-from proptool.checks.quotation_marks import QuotationMarks
-from proptool.checks.starts_with_the_same_case import StartsWithTheSameCase
-from proptool.checks.trailing_white_chars import TrailingWhiteChars
-from proptool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
-from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from proptool.config.config import Config
 from proptool.log import Log
 from proptool.prop.items import Blank, Comment, PropItem, Translation
@@ -149,23 +137,10 @@ class PropFile(object):
         :param reference_file:
         :return: True if file is valid, False if there were errors.
         """
-        checks = [
-            MissingTranslation,
-            DanglingKeys,
-            TrailingWhiteChars,
-            Punctuation,
-            StartsWithTheSameCase,
-            EmptyTranslations,
-            WhiteCharsBeforeLinefeed,
-            KeyFormat,
-            Brackets,
-            QuotationMarks,
-            TypesettingQuotationMarks,
-            FormattingValues,
-        ]
-        for validator in checks:
+        for validator_cls, validator_cfg in self.config.checks:
+            validator = validator_cls(self.config)
             # Each validator gets copy of the files, to prevent any potential destructive operation.
-            self.report.add((validator(self.config)).check(copy.copy(reference_file), copy.copy(self)))
+            self.report.add(validator.check(copy.copy(reference_file), copy.copy(self)))
 
         return self.report.empty()
 

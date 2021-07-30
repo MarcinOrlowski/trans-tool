@@ -20,6 +20,8 @@ class WhiteCharsBeforeLinefeed(Check):
     This check ensures there's no space before "\n", "\r" literals.
     """
 
+    is_single_file_check = True
+
     def _scan(self, report: ReportGroup, idx: int, item: Translation, literal: str) -> bool:
         literal_len = len(literal)
         # Let's crawl backward and see what's there...

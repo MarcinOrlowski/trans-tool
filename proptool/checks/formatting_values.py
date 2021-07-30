@@ -31,6 +31,8 @@ class FormattingValues(Check):
     then translation uses it as well and in the same order.
     """
 
+    _is_single_file_check = True
+
     def _parse(self, item: str) -> List[Formatter]:
         # https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html
         # %[argument_index$][flags][width][.precision]conversion

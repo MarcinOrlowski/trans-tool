@@ -30,6 +30,9 @@ class Brackets(Check):
     opened brackets are closed.
     """
 
+    _is_single_file_check = True
+
+
     report_title = 'Brackets'
 
     @overrides(Check)

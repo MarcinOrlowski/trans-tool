@@ -11,12 +11,6 @@ import copy
 import sys
 from pathlib import Path
 
-from proptool.checks.brackets import Brackets
-from proptool.checks.key_format import KeyFormat
-from proptool.checks.quotation_marks import QuotationMarks
-from proptool.checks.trailing_white_chars import TrailingWhiteChars
-from proptool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
-from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from proptool.config.config_builder import ConfigBuilder
 from proptool.prop.file import PropFile
 from .const import Const
@@ -60,21 +54,16 @@ class PropTool(object):
                 Log.e(f'File not found: {reference_path}')
                 Utils.abort()
 
-            check_modules = [
-                TrailingWhiteChars,
-                WhiteCharsBeforeLinefeed,
-                KeyFormat,
-                Brackets,
-                QuotationMarks,
-                TypesettingQuotationMarks,
-            ]
-            for validator in check_modules:
+            for validator_cls, validator_config in config.checks:
                 # Almost any check validates translation against reference file, so we cannot use all checks here,
                 # but there are some that process single file independently so they in fact do not need any reference
                 # file. For them we pass our base file as translation which will do the trick.
                 #
-                # Each validator gets copy of the files, to prevent any potential destructive operation.
-                reference_propfile.report.add((validator(config)).check(copy.copy(reference_propfile)))
+                if validator_cls.is_single_file_check:
+                    # Each validator gets copy of the files, to prevent any potential destructive operation.
+                    propfile_copy = copy.copy(reference_propfile)
+                    validator = validator_cls(config)
+                    reference_propfile.report.add(validator.check(propfile_copy))
 
             if not reference_propfile.report.empty():
                 # There's something to fix, but not necessary critical.

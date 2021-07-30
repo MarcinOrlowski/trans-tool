@@ -24,6 +24,8 @@ class KeyFormat(Check):
     This check verifies that translation keys follow specified naming convention.
     """
 
+    _is_single_file_check = True
+
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(self, translation_file: 'PropFile', reference_file: 'PropFile' = None) -> ReportGroup:
