@@ -19,6 +19,8 @@ class Config(object):
     DEFAULT_FILE_SUFFIX: str = '.properties'
 
     def __init__(self):
+        self.config_file = None
+
         self.file_suffix = Config.DEFAULT_FILE_SUFFIX
 
         self.fatal = False
@@ -43,5 +45,10 @@ class Config(object):
             # empty set
         }
 
-    def add_checker_config(self, key: str, config: Dict) -> None:
-        self.checks[key] = config
+    def set_checker_config(self, checker_id: str, config: Dict) -> None:
+        self.checks[checker_id] = config
+
+    def get_checker_config(self, checker_id: str) -> Dict:
+        if checker_id not in self.checks:
+            raise KeyError(f'No config for {checker_id} found.')
+        return self.checks[checker_id]
