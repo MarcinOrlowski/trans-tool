@@ -10,6 +10,7 @@
 from typing import Union
 
 from proptool.decorators.overrides import overrides
+from proptool.config.config import Config
 
 
 # #################################################################################################
@@ -62,14 +63,18 @@ class Comment(PropItem):
     Class representing a line comment.
     """
 
-    def __init__(self, value: str) -> None:
+    def __init__(self, value: str = '', marker: str = '#') -> None:
+        if marker not in Config.ALLOWED_COMMENT_MARKERS:
+            raise ValueError(f'Invalid comment marker: "{marker}".')
         if not isinstance(value, str):
             raise ValueError('Value must be a string.')
         if not value:
-            raise ValueError('Value cannot be empty.')
-        marker = value[0]
-        if marker not in {'!', '#'}:
-            raise ValueError(f'Invalid comment marker: "{marker}".')
+            value = f'{marker}'
+
+        value_marker = value[0]
+        if value_marker not in Config.ALLOWED_COMMENT_MARKERS:
+            value = f'{marker} {value}'
+
         super().__init__(value)
 
     @overrides(PropItem)

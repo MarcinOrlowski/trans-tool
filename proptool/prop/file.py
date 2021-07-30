@@ -85,19 +85,27 @@ class PropFile(object):
 
     # #################################################################################################
 
-    def append(self, item: PropItem):
-        if not issubclass(type(item), PropItem):
-            raise TypeError('Item must subclass PropItem.')
+    def append(self, items: Union[List[PropItem], PropItem]) -> None:
+        """
+        Appends given PropItem(s) to internal buffer.
 
-        if isinstance(item, Translation):
-            self.keys.append(item.key)
-        elif isinstance(item, Comment):
-            # Let's look for commented out keys.
-            match = re.compile(self.comment_pattern).match(item.value)
-            if match:
-                self.commented_out_keys.append(match.group(1))
+        :param items: PropItem(s) to be added.
+        """
+        if issubclass(type(items), PropItem):
+            items = [items]
 
-        self._items.append(item)
+        if not issubclass(type(items), list):
+            raise TypeError('Item must be either subclass of PropItem or List[PropItems]')
+
+        for single_item in items:
+            if isinstance(items, Translation):
+                self.keys.append(items.key)
+            elif isinstance(items, Comment):
+                # Let's look for commented out keys.
+                match = re.compile(self.comment_pattern).match(items.value)
+                if match:
+                    self.commented_out_keys.append(match.group(1))
+            self._items.append(items)
 
     # #################################################################################################
 
@@ -114,19 +122,32 @@ class PropFile(object):
         """
 
         tmp = PropFile(self.config)
+        tmp.append([
+            Comment(),
+            Comment(f'Base: {reference_propfile}'),
+        ])
+        if self.language is not None:
+            tmp.append(Comment(f'Lang: {self.language}'))
+        tmp.append(Comment())
 
+        # For all items in reference file...
         for idx, item in enumerate(reference_propfile.items):
+            # Copy comments and blank lines as-is
             if isinstance(item, (Comment, Blank)):
                 tmp.append(item)
             elif isinstance(item, Translation):
+                # If we do have the translation already
                 if item.key in self.keys:
+                    # Add original string as comment if that's requested
+                    tmp.append(Comment(f'BASE: {item.value}'))
+                    # Copy our translation.
                     tmp.append(self.find_by_key(item.key))
                 else:
                     tmp.append(Comment(self.config.comment_pattern.replace('KEY', item.key)))
             else:
                 raise RuntimeError(f'Unknown entry type: {type(item)} at position {idx + 1}')
 
-        self._items = copy.deepcopy(tmp.items)
+        self._items = copy.copy(tmp.items)
         self.keys = copy.copy(tmp.keys)
         self.commented_out_keys = copy.copy(tmp.commented_out_keys)
 
@@ -161,6 +182,7 @@ class PropFile(object):
             raise FileNotFoundError(f'File not found: {file}')
 
         self.init_container(language)
+        self.file = file
 
         with open(file, 'r') as fh:
             line_number: int = 0
@@ -209,10 +231,15 @@ class PropFile(object):
 
     # #################################################################################################
 
-    def save(self, target_file_name: Path) -> None:
+    def save(self, target_file_name: Union[Path, None] = None) -> None:
         """
         Saves content of the propfile.
         """
+
+        if not target_file_name:
+            if not self.file:
+                raise RuntimeError('No target file name given.')
+            target_file_name = self.file
 
         Log.i(f'Saving: {target_file_name}')
         with open(target_file_name, 'w') as fh:
