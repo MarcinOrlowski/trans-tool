@@ -45,15 +45,8 @@ class ChecksTestCase(TestCase):
         if dump:
             report.dump()
 
-        err_msg = msg
-        warn_msg = msg
-        if exp_errors > 0:
-            err_msg = err_msg
-        if exp_warnings > 0:
-            warn_msg = err_msg
-
-        self.assertEqual(exp_errors, report.errors, err_msg)
-        self.assertEqual(exp_warnings, report.warnings, warn_msg)
+        self.assertEqual(exp_errors, report.errors, msg)
+        self.assertEqual(exp_warnings, report.warnings, msg)
 
     # #################################################################################################
 

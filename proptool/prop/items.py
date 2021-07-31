@@ -63,7 +63,9 @@ class Comment(PropItem):
     Class representing a line comment.
     """
 
-    def __init__(self, value: str = '', marker: str = '#') -> None:
+    def __init__(self, value: str = '', marker: str = None) -> None:
+        if not marker:
+            marker = Config.ALLOWED_COMMENT_MARKERS[0]
         if marker not in Config.ALLOWED_COMMENT_MARKERS:
             raise ValueError(f'Invalid comment marker: "{marker}".')
         if not isinstance(value, str):

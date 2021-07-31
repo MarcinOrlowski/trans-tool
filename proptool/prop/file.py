@@ -224,6 +224,7 @@ class PropFile(object):
                 val = tmp[3].lstrip()
                 if key not in self.keys:
                     self.append(Translation(key, val, separator))
+                    self.keys.append(key)
                 else:
                     duplicated_keys.error(line_number, f'Duplicated key "{key}".')
 

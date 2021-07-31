@@ -12,7 +12,6 @@ from typing import Dict, Union
 from proptool.checks.base.check import Check
 from proptool.checks.missing_translation import MissingTranslation
 from proptool.decorators.overrides import overrides
-from proptool.prop.items import Comment
 from tests.checks.checks_test_case import ChecksTestCase
 
 
@@ -52,9 +51,9 @@ class TestMissingTranslations(ChecksTestCase):
         # put remaining keys into comments
         remaining_keys = ref_keys[(how_many_less * -1):]
         for key in remaining_keys:
-            comment = self.config.DEFAULT_COMMENT_TEMPLATE
-            comment = comment.replace('SEP', trans_file.separator).replace('COM', self.config.comment_marker).replace('KEY', key)
-            trans_file.append(Comment(comment))
+            # We do not really care comments per-se as it sufficient to put these keys into separate
+            # list that loader uses to store parsed commented-out keys.
+            trans_file.commented_out_keys.append(key)
 
         # We expect no issues in non-strict mode
         self.checker.config['strict'] = False
