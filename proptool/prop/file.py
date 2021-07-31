@@ -41,6 +41,8 @@ class PropFile(object):
         self.separator: str = config.separator
         self.report: Report = Report(config)
 
+        self.language = language
+
         # This call is most likely redundant here.
         self.init_container(language)
 
@@ -83,19 +85,30 @@ class PropFile(object):
 
     # #################################################################################################
 
-    def append(self, item: PropItem):
-        if not issubclass(type(item), PropItem):
-            raise TypeError('Item must subclass PropItem.')
+    def append(self, items: Union[List[PropItem], PropItem]) -> None:
+        """
+        Appends given PropItem(s) to internal buffer.
 
-        if isinstance(item, Translation):
-            self.keys.append(item.key)
-        elif isinstance(item, Comment):
-            # Let's look for commented out keys.
-            match = re.compile(self.comment_pattern).match(item.value)
-            if match:
-                self.commented_out_keys.append(match.group(1))
+        :param items: PropItem(s) to be added.
+        """
+        if issubclass(type(items), PropItem):
+            items = [items]
 
-        self._items.append(item)
+        if not issubclass(type(items), list):
+            raise TypeError('Item must be either subclass of PropItem or List[PropItems]')
+
+        for single_item in items:
+            if not issubclass(type(single_item), PropItem):
+                raise TypeError(f'Item must be of PropItem, {type(single_item)} given.')
+
+            if isinstance(single_item, Translation):
+                self.keys.append(single_item.key)
+            elif isinstance(single_item, Comment):
+                # Let's look for commented out keys.
+                match = re.compile(self.comment_pattern).match(single_item.value)
+                if match:
+                    self.commented_out_keys.append(match.group(1))
+            self._items.append(single_item)
 
     # #################################################################################################
 
@@ -114,19 +127,21 @@ class PropFile(object):
         tmp = PropFile(self.config)
 
         for idx, item in enumerate(reference_propfile.items):
+            # Copy comments and blank lines as-is
             if isinstance(item, (Comment, Blank)):
                 tmp.append(item)
             elif isinstance(item, Translation):
+                # If we do have the translation already
                 if item.key in self.keys:
                     tmp.append(self.find_by_key(item.key))
                 else:
-                    tmp.append(Comment(self.config.comment_pattern.replace('KEY', item.key)))
+                    tmp.append(Comment.get_commented_out_key_comment(item.key, item.value, self.config))
             else:
                 raise RuntimeError(f'Unknown entry type: {type(item)} at position {idx + 1}')
 
-        self._items = copy.deepcopy(tmp.items)
-        self.keys = copy.copy(tmp.keys)
-        self.commented_out_keys = copy.copy(tmp.commented_out_keys)
+        self._items = tmp.items
+        self.keys = tmp.keys
+        self.commented_out_keys = tmp.commented_out_keys
 
     # #################################################################################################
 
@@ -137,10 +152,10 @@ class PropFile(object):
         :param reference_file:
         :return: True if file is valid, False if there were errors.
         """
-        for validator_cls, validator_cfg in self.config.checks:
-            validator = validator_cls(self.config)
+        for _, checker_info in self.config.checks.items():
+            checker = checker_info.callable(checker_info.config)
             # Each validator gets copy of the files, to prevent any potential destructive operation.
-            self.report.add(validator.check(copy.copy(reference_file), copy.copy(self)))
+            self.report.add(checker.check(copy.copy(self), copy.copy(reference_file)))
 
         return self.report.empty()
 
@@ -159,6 +174,7 @@ class PropFile(object):
             raise FileNotFoundError(f'File not found: {file}')
 
         self.init_container(language)
+        self.file = file
 
         with open(file, 'r') as fh:
             line_number: int = 0
@@ -197,6 +213,7 @@ class PropFile(object):
                 val = tmp[3].lstrip()
                 if key not in self.keys:
                     self.append(Translation(key, val, separator))
+                    self.keys.append(key)
                 else:
                     duplicated_keys.error(line_number, f'Duplicated key "{key}".')
 
@@ -207,10 +224,15 @@ class PropFile(object):
 
     # #################################################################################################
 
-    def save(self, target_file_name: Path) -> None:
+    def save(self, target_file_name: Union[Path, None] = None) -> None:
         """
         Saves content of the propfile.
         """
+
+        if not target_file_name:
+            if not self.file:
+                raise RuntimeError('No target file name given.')
+            target_file_name = self.file
 
         Log.i(f'Saving: {target_file_name}')
         with open(target_file_name, 'w') as fh:

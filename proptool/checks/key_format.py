@@ -34,7 +34,7 @@ class KeyFormat(Check):
         report = ReportGroup('Key naming pattern.')
 
         if translation_file.items:
-            pattern = self.config.checks['KeyFormat']['pattern']
+            pattern = self.config['pattern']
             compiled_pattern = re.compile(pattern)
 
             for line_number, item in enumerate(translation_file.items):

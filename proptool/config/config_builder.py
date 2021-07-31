@@ -8,14 +8,22 @@
 """
 
 import argparse
-import importlib
-import inspect
-from os import listdir
 from pathlib import Path
 from typing import List, Union
 
-import proptool.checks
-from proptool.checks.base.check import Check
+from proptool.checks.brackets import Brackets
+from proptool.checks.dangling_keys import DanglingKeys
+from proptool.checks.empty_translations import EmptyTranslations
+from proptool.checks.formatting_values import FormattingValues
+from proptool.checks.key_format import KeyFormat
+from proptool.checks.missing_translation import MissingTranslation
+from proptool.checks.punctuation import Punctuation
+from proptool.checks.quotation_marks import QuotationMarks
+from proptool.checks.starts_with_the_same_case import StartsWithTheSameCase
+from proptool.checks.trailing_white_chars import TrailingWhiteChars
+from proptool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
+from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
+from proptool.config.checker_info import CheckerInfo
 from proptool.config.config import Config
 from proptool.config.config_reader import ConfigReader
 from proptool.const import Const
@@ -32,14 +40,25 @@ class ConfigBuilder(object):
 
     @staticmethod
     def build(config_defaults: Config) -> Config:
-        # Set default configuration options for each checker.
-        check_dir = Path(proptool.checks.__file__).parent
-        check_modules = [file for file in listdir(check_dir) if file[:2] != '__' and (check_dir / file).is_file()]
-        for check_file_name in check_modules:
-            module = importlib.import_module(f'.{check_file_name[:-3]}', proptool.checks.__name__)
-            for _, obj in inspect.getmembers(module, inspect.isclass):
-                if issubclass(obj, Check) and obj.__name__ != Check.__name__:
-                    config_defaults.checks[obj.__name__] = obj.get_default_config(obj)
+
+        checkers = [
+            Brackets,
+            DanglingKeys,
+            EmptyTranslations,
+            FormattingValues,
+            KeyFormat,
+            MissingTranslation,
+            Punctuation,
+            QuotationMarks,
+            StartsWithTheSameCase,
+            TrailingWhiteChars,
+            TypesettingQuotationMarks,
+            WhiteCharsBeforeLinefeed,
+        ]
+
+        for checker in checkers:
+            checker_id = checker.__name__
+            config_defaults.checks[checker_id] = CheckerInfo(checker_id, checker, (checker()).get_default_config())
 
         # Handler CLI args so we can see if there's config file to load
         args = ConfigBuilder._parse_args()

@@ -8,6 +8,8 @@
 """
 from typing import Dict, List
 
+from proptool.config.checker_info import CheckerInfo
+
 
 class Config(object):
     VERSION = 1
@@ -15,8 +17,13 @@ class Config(object):
     ALLOWED_SEPARATORS: List[str] = ['=', ':']
     ALLOWED_COMMENT_MARKERS: List[str] = ['#', '!']
     COMMENT_TEMPLATE_LITERALS: List[str] = ['COM', 'KEY', 'SEP']
-    DEFAULT_COMMENT_TEMPLATE: str = 'COM ==> KEY SEP'
     DEFAULT_FILE_SUFFIX: str = '.properties'
+
+    # COM: comment marker
+    # KEY: translation key
+    # SEP: "key SEP value" separator
+    # VAL: original string
+    DEFAULT_COMMENT_TEMPLATE: str = 'COM ==> KEY SEP VAL'
 
     def __init__(self):
         self.config_file = None
@@ -40,8 +47,8 @@ class Config(object):
         self.comment_marker: str = '#'
         self.comment_template: str = Config.DEFAULT_COMMENT_TEMPLATE
 
-        self.checks = {
-            # empty set
+        self.checks: List[CheckerInfo] = {
+            # empty set. Populated and manipulated by ConfigBuilder
         }
 
     def set_checker_config(self, checker_id: str, config: Dict) -> None:

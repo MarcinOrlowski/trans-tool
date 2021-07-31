@@ -10,6 +10,7 @@
 from typing import Union
 
 from proptool.decorators.overrides import overrides
+from proptool.config.config import Config
 
 
 # #################################################################################################
@@ -59,22 +60,50 @@ class Translation(PropItem):
 
 class Comment(PropItem):
     """
-    Class representing a line comment.
+    Class representing a comment line.
     """
 
-    def __init__(self, value: str) -> None:
+    def __init__(self, value: str = '', marker: str = None) -> None:
+        if not marker:
+            marker = Config.ALLOWED_COMMENT_MARKERS[0]
+        if marker not in Config.ALLOWED_COMMENT_MARKERS:
+            raise ValueError(f'Invalid comment marker: "{marker}".')
         if not isinstance(value, str):
             raise ValueError('Value must be a string.')
         if not value:
-            raise ValueError('Value cannot be empty.')
-        marker = value[0]
-        if marker not in {'!', '#'}:
-            raise ValueError(f'Invalid comment marker: "{marker}".')
+            value = f'{marker}'
+
+        value_marker = value[0]
+        if value_marker not in Config.ALLOWED_COMMENT_MARKERS:
+            value = f'{marker} {value}'
+
         super().__init__(value)
 
     @overrides(PropItem)
     def to_string(self) -> str:
         return self.value
+
+    @staticmethod
+    def comment_out_key(key: str, value: Union[str, None], config: Config) -> str:
+        """
+        Helper method that returns translation key formatted as commented-out item.
+        :param key: translation key.
+        :param config: Application config.
+        :param value: Optional original string value
+        """
+
+        if value is None:
+            value = ''
+
+        return config.DEFAULT_COMMENT_TEMPLATE.replace(
+            'KEY', key).replace(
+            'COM', config.ALLOWED_COMMENT_MARKERS[0]).replace(
+            'SEP', config.ALLOWED_SEPARATORS[0]).replace(
+            'VAL', value).strip()
+
+    @staticmethod
+    def get_commented_out_key_comment(key: str, value: Union[str, None], config: Config) -> 'Comment':
+        return Comment(Comment.comment_out_key(key, value, config))
 
 
 # #################################################################################################

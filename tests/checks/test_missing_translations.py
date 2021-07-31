@@ -7,20 +7,20 @@
 #
 """
 import random
-from typing import Union
+from typing import Dict, Union
 
+from proptool.prop.items import Comment
 from proptool.checks.base.check import Check
 from proptool.checks.missing_translation import MissingTranslation
 from proptool.config.config import Config
 from proptool.decorators.overrides import overrides
-from proptool.prop.items import Comment
 from tests.checks.checks_test_case import ChecksTestCase
 
 
 class TestMissingTranslations(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Union[Config, None] = None) -> Check:
+    def get_checker(self, config: Union[Dict, None] = None) -> Check:
         return MissingTranslation(config)
 
     # #################################################################################################
@@ -35,9 +35,9 @@ class TestMissingTranslations(ChecksTestCase):
         self.check(trans_file, ref_file)
 
     def test_translation_with_keys_in_comments(self) -> None:
-        # Checks if we have no issues reported when running
-        # in non-strict mode and having some keys in comments.
-
+        """
+        Checks if we have no issues reported when running in non-strict mode and having some keys in comments.
+        """
         # generate some keys for reference file
         cnt_min = 20
         cnt_max = 40
@@ -53,16 +53,17 @@ class TestMissingTranslations(ChecksTestCase):
         # put remaining keys into comments
         remaining_keys = ref_keys[(how_many_less * -1):]
         for key in remaining_keys:
-            comment = self.config.DEFAULT_COMMENT_TEMPLATE
-            comment = comment.replace('SEP', trans_file.separator).replace('COM', self.config.comment_marker).replace('KEY', key)
-            trans_file.append(Comment(comment))
+            key_comment = Config.DEFAULT_COMMENT_TEMPLATE.replace('KEY', key)
+            key_comment = key_comment.replace('COM', Config.ALLOWED_COMMENT_MARKERS[0])
+            key_comment = key_comment.replace('SEP', Config.ALLOWED_SEPARATORS[0])
+            trans_file.append(Comment(key_comment))
 
         # We expect no issues in non-strict mode
-        trans_file.config.checks['MissingTranslation']['strict'] = False
+        self.checker.config['strict'] = False
         self.check(trans_file, ref_file)
 
         # We expect warnings in strict mode
-        trans_file.config.checks['MissingTranslation']['strict'] = True
+        self.checker.config['strict'] = True
         self.check(trans_file, ref_file, exp_warnings = len(remaining_keys))
 
     def test_translation_with_faults(self) -> None:

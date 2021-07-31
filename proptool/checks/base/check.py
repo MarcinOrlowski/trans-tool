@@ -10,7 +10,6 @@
 from abc import ABC, abstractmethod
 from typing import Dict, Union
 
-from proptool.config.config import Config
 from proptool.report.report import Report
 
 
@@ -18,10 +17,10 @@ from proptool.report.report import Report
 class Check(ABC):
     DEFAULT_CHECK_CONFIG = {}
 
-    def __init__(self, config: Union[Config, None] = None):
+    def __init__(self, config: Union[Dict, None] = None):
         if config is not None:
-            if not isinstance(config, Config):
-                raise ValueError(f'Configuration object must be instance of Config ("{type(config)}" given).')
+            if not isinstance(config, Dict):
+                raise ValueError(f'Configuration object must be instance of Dict ("{type(config)}" given).')
         self.config = config
 
         self.is_single_file_check = False
@@ -38,8 +37,8 @@ class Check(ABC):
             raise ValueError(f'Reference must be valid PropFile object ({type(reference)} given).')
 
     def need_valid_config(self) -> None:
-        if not isinstance(self.config, Config):
-            raise ValueError(f'Configuration object must be instance of Config ("{type(self.config)}" given).')
+        if not isinstance(self.config, Dict):
+            raise ValueError(f'Configuration object must be instance of Dict ("{type(self.config)}" given).')
 
     def get_default_config(self) -> Dict:
         return Check.DEFAULT_CHECK_CONFIG

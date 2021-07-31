@@ -6,6 +6,7 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+import copy
 import random
 from pathlib import Path
 from unittest.mock import Mock, mock_open, patch
@@ -272,3 +273,89 @@ class TestPropFile(TestCase):
             # Expecting no problems reported
             prop_file.report.dump()
             self.assertTrue(prop_file.is_valid(ref_file))
+
+    # #################################################################################################
+
+    def test_update(self) -> None:
+        config = Config()
+
+        # Generate reference file and its contents
+        reference = PropFile(config)
+
+        item_types = [Blank, Comment, Translation]
+        item_weights = [1, 5, 10]
+        new_items = 20
+        for new_item_cls in random.choices(item_types, item_weights, k = new_items):
+            if issubclass(new_item_cls, Translation):
+                key = self.get_random_string('key_')
+                val = self.get_random_string('ref_val_')
+                reference.append(Translation(key, val))
+            elif issubclass(new_item_cls, Comment):
+                reference.append(Comment(self.get_random_string('comment_')))
+            elif issubclass(new_item_cls, Blank):
+                reference.append(Blank())
+            else:
+                self.fail(f'Unknown new_item_cls: {type(new_item_cls)}')
+
+        # Generate translation file
+        translation = PropFile(config)
+
+        mut_none = 'none'
+        mut_com = 'comment-out'
+        mutation_items = [mut_none, mut_com]
+        mutation_weights = [10, 5]
+
+        mut_com_cnt = 0
+
+        for ref_idx, ref_item in enumerate(reference.items):
+            if isinstance(ref_item, Translation):
+                mutation = random.choices(mutation_items, mutation_weights, k = 1)[0]
+                if mutation == mut_none:
+                    translation.append(Translation(ref_item.key, self.get_random_string(f'translation_{ref_idx}')))
+                else:
+                    # or commented out key
+                    translation.append(Comment.get_commented_out_key_comment(ref_item.key, ref_item.value, config))
+                    mut_com_cnt += 1
+                continue
+            translation.append(ref_item)
+
+        self.assertNotEqual(0, mut_com_cnt)
+
+        # Keep the clone of
+        translation_clone = copy.deepcopy(translation)
+
+        # Then add some Blanks and Comments that will be gone after the sync.
+        max_items = 5
+        for _ in range(max_items):
+            translation.append([
+                Blank(),
+                Comment(self.get_random_string('comment_')),
+            ])
+
+        # THEN after update
+        translation.update(reference)
+
+        # we should have synced content
+        for ref_idx, ref_item in enumerate(reference.items):  # noqa: WPS440
+            trans_item = translation.items[ref_idx]
+
+            if isinstance(ref_item, Blank):
+                self.assertEqual(type(trans_item), Blank)
+                continue
+
+            if isinstance(ref_item, Comment):
+                self.assertEqual(type(trans_item), Comment)
+                continue
+
+            if isinstance(ref_item, Translation):
+                if isinstance(trans_item, Translation):
+                    # FIXME: we shall check the separator too.
+                    self.assertEqual(ref_item.key, trans_item.key)
+                    self.assertEqual(translation_clone.items[ref_idx].value, trans_item.value)
+                    continue
+                if isinstance(trans_item, Comment):
+                    expected = Comment.comment_out_key(ref_item.key, ref_item.value, config)
+                    self.assertEqual(expected, trans_item.to_string())
+                    continue
+
+            self.fail(f'Unknown item type: {type(trans_item)}')

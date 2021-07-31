@@ -108,13 +108,19 @@ class TestPropItem(TestCase):
             # noinspection PyTypeChecker
             Comment(1234)
 
-        with self.assertRaises(ValueError):
-            # Empty value
-            Comment('')
+    def test_comment_without_marker(self) -> None:
+        """
+        Checks if constructing Comment without valid marker in passed value
+        would automatically add such marker.
+        """
+        val = self.get_random_string('no_maker_')
+        # No valid comment marker
+        comment = Comment(val)
+        self.assertEqual(f'{Config.ALLOWED_COMMENT_MARKERS[0]} {val}', comment.to_string())
 
-        with self.assertRaises(ValueError):
-            # No valid comment marker
-            Comment('No marker')
+    def test_comment_empty_value(self) -> None:
+        comment = Comment('')
+        self.assertEqual(Config.ALLOWED_COMMENT_MARKERS[0], comment.to_string())
 
     def test_comment_to_string(self) -> None:
         config = Config()

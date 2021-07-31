@@ -37,7 +37,7 @@ class Punctuation(Check):
             if not isinstance(item, Translation):
                 continue
 
-            for last_char in self.config.checks['Punctuation']['chars']:
+            for last_char in self.config['chars']:
                 last_char_len = len(last_char)
 
                 ref_last_char = item.value[(last_char_len * -1):]

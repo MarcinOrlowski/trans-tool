@@ -345,7 +345,7 @@ class Log(object):
             if stacktrace_postfix is not None:
                 message += stacktrace_postfix
 
-            if Log.color:
+            if not Log.color:
                 message = Ansi.strip(message)
 
         return message

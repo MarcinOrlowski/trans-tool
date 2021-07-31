@@ -8,7 +8,7 @@
 """
 import random
 from abc import abstractmethod
-from typing import List, Union
+from typing import Dict, List, Union
 
 from proptool.checks.base.check import Check
 from proptool.config.config import Config
@@ -25,12 +25,11 @@ class ChecksTestCase(TestCase):
         checker = self.get_checker(None)
         if not issubclass(type(checker), Check):
             raise ValueError('Checker must be subclass of Check')
-        self.config.set_checker_config(checker.__class__.__name__, self.get_checker().get_default_config())
-        checker.config = self.config
+        checker.config = self.get_checker().get_default_config()
         self.checker = checker
 
     @abstractmethod
-    def get_checker(self, config: Union[Config, None] = None) -> Check:
+    def get_checker(self, config: Union[Dict, None] = None) -> Check:
         raise NotImplementedError
 
     def check_single_file(self, entry: PropItem, exp_errors: int = 0, exp_warnings: int = 0) -> None:
@@ -41,13 +40,13 @@ class ChecksTestCase(TestCase):
         self.check(prop_file, exp_errors = exp_errors, exp_warnings = exp_warnings)
 
     def check(self, translation: PropFile, reference: Union[PropFile, None] = None,
-              exp_errors: int = 0, exp_warnings: int = 0, dump = False) -> None:
+              exp_errors: int = 0, exp_warnings: int = 0, dump = False, msg = None) -> None:
         report = self.checker.check(translation, reference)
         if dump:
             report.dump()
 
-        self.assertEqual(exp_errors, report.errors)
-        self.assertEqual(exp_warnings, report.warnings)
+        self.assertEqual(exp_errors, report.errors, msg)
+        self.assertEqual(exp_warnings, report.warnings, msg)
 
     # #################################################################################################
 
