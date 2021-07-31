@@ -53,8 +53,10 @@ class TestMissingTranslations(ChecksTestCase):
         # put remaining keys into comments
         remaining_keys = ref_keys[(how_many_less * -1):]
         for key in remaining_keys:
-            commented_out_key = Config.DEFAULT_COMMENT_TEMPLATE.replace('KEY',key).replace('COM',Config.ALLOWED_COMMENT_MARKERS[0]).replace('SEP', Config.ALLOWED_SEPARATORS[0])
-            trans_file.append(Comment(commented_out_key))
+            key_comment = Config.DEFAULT_COMMENT_TEMPLATE.replace('KEY', key)
+            key_comment = key_comment.replace('COM', Config.ALLOWED_COMMENT_MARKERS[0])
+            key_comment = key_comment.replace('SEP', Config.ALLOWED_SEPARATORS[0])
+            trans_file.append(Comment(key_comment))
 
         # We expect no issues in non-strict mode
         self.checker.config['strict'] = False

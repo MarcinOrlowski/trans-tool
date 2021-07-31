@@ -17,8 +17,15 @@ class Config(object):
     ALLOWED_SEPARATORS: List[str] = ['=', ':']
     ALLOWED_COMMENT_MARKERS: List[str] = ['#', '!']
     COMMENT_TEMPLATE_LITERALS: List[str] = ['COM', 'KEY', 'SEP']
-    DEFAULT_COMMENT_TEMPLATE: str = 'COM ==> KEY SEP'
     DEFAULT_FILE_SUFFIX: str = '.properties'
+
+    DEFAULT_COMMENT_TEMPLATE: str = 'COM ==> KEY SEP VAL'
+    """
+    COM: comment marker
+    KEU: translation key
+    SEP: "key SEP value" separator
+    VAL: original string
+    """
 
     def __init__(self):
         self.config_file = None

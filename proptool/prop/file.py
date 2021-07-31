@@ -125,13 +125,16 @@ class PropFile(object):
         """
 
         tmp = PropFile(self.config)
-        tmp.append([
-            Comment(),
-            Comment(f'Base: {reference_propfile}'),
-        ])
-        if self.language is not None:
-            tmp.append(Comment(f'Lang: {self.language}'))
-        tmp.append(Comment())
+        # tmp.append([
+        #     Comment(),
+        #     base_comment = f'Base: {reference_propfile}'
+        #     if reference_propfile.language:
+        #        base_comment = f'{base_comment} [{reference_propfile.language}]'
+        #     Comment(base_comment),
+        # ])
+        # if self.language is not None:
+        #     tmp.append(Comment(f'Lang: {self.language}'))
+        # tmp.append(Comment())
 
         # For all items in reference file...
         for idx, item in enumerate(reference_propfile.items):
@@ -142,11 +145,11 @@ class PropFile(object):
                 # If we do have the translation already
                 if item.key in self.keys:
                     # Add original string as comment if that's requested
-                    tmp.append(Comment(f'BASE: {item.value}'))
+                    # tmp.append(Comment(f'BASE: {item.value}'))
                     # Copy our translation.
                     tmp.append(self.find_by_key(item.key))
                 else:
-                    tmp.append(Comment(self.config.comment_pattern.replace('KEY', item.key)))
+                    tmp.append(Comment.get_commented_out_key_comment(item.key, item.value, self.config))
             else:
                 raise RuntimeError(f'Unknown entry type: {type(item)} at position {idx + 1}')
 
