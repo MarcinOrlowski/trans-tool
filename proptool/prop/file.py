@@ -101,11 +101,11 @@ class PropFile(object):
             if not issubclass(type(single_item), PropItem):
                 raise TypeError(f'Item must be of PropItem, {type(single_item)} given.')
 
-            if isinstance(items, Translation):
-                self.keys.append(items.key)
-            elif isinstance(items, Comment):
+            if isinstance(single_item, Translation):
+                self.keys.append(single_item.key)
+            elif isinstance(single_item, Comment):
                 # Let's look for commented out keys.
-                match = re.compile(self.comment_pattern).match(items.value)
+                match = re.compile(self.comment_pattern).match(single_item.value)
                 if match:
                     self.commented_out_keys.append(match.group(1))
             self._items.append(single_item)

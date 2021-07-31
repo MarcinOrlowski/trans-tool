@@ -60,7 +60,7 @@ class Translation(PropItem):
 
 class Comment(PropItem):
     """
-    Class representing a line comment.
+    Class representing a comment line.
     """
 
     def __init__(self, value: str = '', marker: str = None) -> None:
