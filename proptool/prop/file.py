@@ -125,18 +125,7 @@ class PropFile(object):
         """
 
         tmp = PropFile(self.config)
-        # tmp.append([
-        #     Comment(),
-        #     base_comment = f'Base: {reference_propfile}'
-        #     if reference_propfile.language:
-        #        base_comment = f'{base_comment} [{reference_propfile.language}]'
-        #     Comment(base_comment),
-        # ])
-        # if self.language is not None:
-        #     tmp.append(Comment(f'Lang: {self.language}'))
-        # tmp.append(Comment())
 
-        # For all items in reference file...
         for idx, item in enumerate(reference_propfile.items):
             # Copy comments and blank lines as-is
             if isinstance(item, (Comment, Blank)):
@@ -144,9 +133,6 @@ class PropFile(object):
             elif isinstance(item, Translation):
                 # If we do have the translation already
                 if item.key in self.keys:
-                    # Add original string as comment if that's requested
-                    # tmp.append(Comment(f'BASE: {item.value}'))
-                    # Copy our translation.
                     tmp.append(self.find_by_key(item.key))
                 else:
                     tmp.append(Comment.get_commented_out_key_comment(item.key, item.value, self.config))

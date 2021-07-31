@@ -284,7 +284,8 @@ class TestPropFile(TestCase):
 
         item_types = [Blank, Comment, Translation]
         item_weights = [1, 5, 10]
-        for new_item_cls in random.choices(item_types, item_weights, k = 20):
+        new_items = 20
+        for new_item_cls in random.choices(item_types, item_weights, k = new_items):
             if issubclass(new_item_cls, Translation):
                 key = self.get_random_string('key_')
                 val = self.get_random_string('ref_val_')
@@ -335,7 +336,7 @@ class TestPropFile(TestCase):
         translation.update(reference)
 
         # we should have synced content
-        for ref_idx, ref_item in enumerate(reference.items):
+        for ref_idx, ref_item in enumerate(reference.items):  # noqa: WPS440
             trans_item = translation.items[ref_idx]
 
             if isinstance(ref_item, Blank):

@@ -19,13 +19,11 @@ class Config(object):
     COMMENT_TEMPLATE_LITERALS: List[str] = ['COM', 'KEY', 'SEP']
     DEFAULT_FILE_SUFFIX: str = '.properties'
 
+    # COM: comment marker
+    # KEY: translation key
+    # SEP: "key SEP value" separator
+    # VAL: original string
     DEFAULT_COMMENT_TEMPLATE: str = 'COM ==> KEY SEP VAL'
-    """
-    COM: comment marker
-    KEU: translation key
-    SEP: "key SEP value" separator
-    VAL: original string
-    """
 
     def __init__(self):
         self.config_file = None

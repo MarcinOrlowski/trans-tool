@@ -38,5 +38,5 @@ base (reference) file and each translation.
 
 Some validators can do their work having just single file to process. In such
 case you can use it to check both your base file and translation files. Those
-validators that needs base file reference (i.e. [DanglingKeys](#dangling-keys)
+validators that needs base file reference (i.e. [DanglingKeys](dangling-keys.md)
 can only be used to validate translations.
