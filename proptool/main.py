@@ -34,7 +34,10 @@ class PropTool(object):
                 return 0
 
             config_defaults = Config()
+            # Configure Log with defaults (i.e. colors etc)
+            Log.configure(config_defaults)
             config = ConfigBuilder.build(config_defaults)
+            # Reconfigure once we got user settings handled.
             Log.configure(config)
 
             errors = 0
