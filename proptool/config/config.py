@@ -19,8 +19,6 @@ class Config(object):
     COMMENT_TEMPLATE_LITERALS: List[str] = ['COM', 'KEY', 'SEP']
     DEFAULT_FILE_SUFFIX: str = '.properties'
 
-    # DEFAULT_COMMENT_TEMPLATE: str = 'COM ==> KEY SEP VAL'
-
     # COM: comment marker
     # KEY: translation key
     # SEP: "key SEP value" separator

@@ -32,10 +32,12 @@ class PropTool(object):
                 Log.banner(Const.APP_DESCRIPTION)
                 return 0
 
-            config_defaults = Config()
+            # Config with built-in defaults
+            config = Config()
             # Configure Log with defaults (i.e. colors etc)
-            Log.configure(config_defaults)
-            config = ConfigBuilder.build(config_defaults)
+            Log.configure(config)
+            # Parse args and update the config if needed
+            ConfigBuilder.build(config)
             # Reconfigure once we got user settings handled.
             Log.configure(config)
 
@@ -61,6 +63,7 @@ class PropTool(object):
                     Utils.abort()
 
                 # Validate base file.
+                checks_executed = 0
                 for _, checker_info in config.checks.items():
                     # Almost any check validates translation against reference file, so we cannot use all checks here,
                     # but there are some that process single file independently so they in fact do not need any reference
@@ -70,13 +73,16 @@ class PropTool(object):
                         # Each validator gets copy of the files, to prevent any potential destructive operation.
                         propfile_copy = copy.copy(reference_propfile)
                         reference_propfile.report.add(checker.check(propfile_copy))
+                        checks_executed += 1
 
-                if not reference_propfile.report.empty():
+                if reference_propfile.report.not_empty():
                     # There's something to fix, but not necessary critical.
                     reference_propfile.report.dump()
+                else:
+                    Log.v(f'Checks passed: {checks_executed}.')
 
                 # No reference files errors. Warnings are just fine, though.
-                if not reference_propfile.report.is_fatal():
+                if reference_propfile.report.is_ok():
                     for lang in config.languages:
                         translation_path = Path(reference_path.parent / f'{name_prefix}_{lang}.{name_suffix}')
                         translation_propfile = PropFile(config)

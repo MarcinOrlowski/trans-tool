@@ -8,7 +8,7 @@
 """
 
 import re
-from typing import Dict
+from typing import Dict, Union
 
 from proptool.decorators.overrides import overrides
 from proptool.prop.items import Translation
@@ -24,7 +24,9 @@ class KeyFormat(Check):
     This check verifies that translation keys follow specified naming convention.
     """
 
-    _is_single_file_check = True
+    def __init__(self, config: Union[Dict, None] = None):
+        super().__init__(config)
+        self.is_single_file_check = True
 
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!

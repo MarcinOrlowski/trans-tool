@@ -38,6 +38,9 @@ class Report(object):
         """
         return sum(group.warnings for group in self._groups)
 
+    def is_ok(self) -> bool:
+        return not self.is_fatal()
+
     def is_fatal(self) -> bool:
         """
         Helper to determine if report contains fatal errors.
@@ -59,6 +62,9 @@ class Report(object):
 
     def empty(self) -> bool:
         return not self._groups
+
+    def not_empty(self) -> bool:
+        return self._groups
 
     def dump(self):
         errors = self.errors

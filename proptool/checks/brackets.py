@@ -7,7 +7,7 @@
 #
 """
 
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from proptool.decorators.overrides import overrides
 from proptool.prop.items import Comment, Translation
@@ -30,7 +30,9 @@ class Brackets(Check):
     opened brackets are closed.
     """
 
-    _is_single_file_check = True
+    def __init__(self, config: Union[Dict, None] = None):
+        super().__init__(config)
+        self.is_single_file_check = True
 
     report_title = 'Brackets'
 

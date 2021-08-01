@@ -39,7 +39,7 @@ class ConfigBuilder(object):
     ]
 
     @staticmethod
-    def build(config_defaults: Config) -> Config:
+    def build(config_defaults: Config):
         checkers = [
             Brackets,
             DanglingKeys,
@@ -70,8 +70,6 @@ class ConfigBuilder(object):
         ConfigBuilder._set_from_args(config_defaults, args)
 
         ConfigBuilder._validate_config(config_defaults)
-
-        return config_defaults
 
     @staticmethod
     def _abort(msg: str) -> None:

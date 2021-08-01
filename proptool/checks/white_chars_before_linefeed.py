@@ -6,6 +6,7 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+from typing import Dict, Union
 
 from proptool.decorators.overrides import overrides
 from proptool.prop.items import Translation
@@ -20,7 +21,9 @@ class WhiteCharsBeforeLinefeed(Check):
     This check ensures there's no space before "\n", "\r" literals.
     """
 
-    is_single_file_check = True
+    def __init__(self, config: Union[Dict, None] = None):
+        super().__init__(config)
+        self.is_single_file_check = True
 
     def _scan(self, report: ReportGroup, idx: int, item: Translation, literal: str) -> bool:
         literal_len = len(literal)

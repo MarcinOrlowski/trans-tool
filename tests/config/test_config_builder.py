@@ -381,18 +381,18 @@ class TestConfigBuilder(TestCase):
         languages = ['pl', 'de', 'pt']
         args = self._generate_fake_args(languages)
 
-        config_defaults = Config()
+        config = Config()
         file = self.get_random_string('file_')
-        config_defaults.files.append(file)
+        config.files.append(file)
 
         # Pass no args for parsing (this is legit as we have config file that can provide what's needed).
         sys.argv[1:] = []  # noqa: WPS362
         with patch('proptool.config.config_builder.ConfigBuilder._parse_args') as manager:
             manager.return_value = args
 
-            config = ConfigBuilder.build(config_defaults)
+            ConfigBuilder.build(config)
 
             # TODO: make comparision more detailed; add test for langs as well
-            self.assertEqual(len(config_defaults.files), len(config.files))
-            for idx, def_file in enumerate(config_defaults.files):
+            self.assertEqual(len(config.files), len(config.files))
+            for idx, def_file in enumerate(config.files):
                 self.assertEqual(def_file, config.files[idx])
