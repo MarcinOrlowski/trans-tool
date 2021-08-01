@@ -16,7 +16,6 @@ class Config(object):
 
     ALLOWED_SEPARATORS: List[str] = ['=', ':']
     ALLOWED_COMMENT_MARKERS: List[str] = ['#', '!']
-    COMMENT_TEMPLATE_LITERALS: List[str] = ['COM', 'KEY', 'SEP']
     DEFAULT_FILE_SUFFIX: str = '.properties'
 
     # COM: comment marker
@@ -55,7 +54,7 @@ class Config(object):
         self.comment_marker: str = '#'
 
         self.checks: Dict[str, CheckerInfo] = {
-            # empty set. Populated and manipulated by ConfigBuilder
+            # empty set. Populated and manipulated by ConfigBuilder.
         }
 
     def set_checker_config(self, checker_id: str, config: Dict) -> None:
