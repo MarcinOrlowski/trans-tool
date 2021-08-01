@@ -93,12 +93,9 @@ class PropTool(object):
                                 errors += 1
 
                             if config.update:
-                                if is_translation_valid:
-                                    if translation_propfile.file:
-                                        translation_propfile.update(reference_propfile)
-                                        translation_propfile.save()
-                                else:
-                                    Log.w('Not updating translation due to found issues')
+                                if translation_propfile.file:
+                                    translation_propfile.update(reference_propfile)
+                                    translation_propfile.save()
 
                             if Log.pop():
                                 Log.i(f'%ok%{trans_level_label}: OK')
