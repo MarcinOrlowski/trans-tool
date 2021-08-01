@@ -54,6 +54,7 @@ class Brackets(Check):
             report.error('CONFIG: Both "opening" and "closing" arrays must contain the same number of elements.')
         if opening_cnt == 0:
             report.warn('CONFIG: Empty "opening" and "closing" arrays.')
+            return report
 
         for idx, item in enumerate(translation.items):
             # Do not try to be clever and filter() data first, because line_number values will no longer be correct.

@@ -26,7 +26,6 @@ class PropTool(object):
 
     @staticmethod
     def start() -> int:
-
         try:
             # Cannot rely on argparse here as we have required arguments there.
             if '--version' in sys.argv:
@@ -34,7 +33,10 @@ class PropTool(object):
                 return 0
 
             config_defaults = Config()
+            # Configure Log with defaults (i.e. colors etc)
+            Log.configure(config_defaults)
             config = ConfigBuilder.build(config_defaults)
+            # Reconfigure once we got user settings handled.
             Log.configure(config)
 
             errors = 0
@@ -58,6 +60,7 @@ class PropTool(object):
                     Log.e(f'File not found: {reference_path}')
                     Utils.abort()
 
+                # Validate base file.
                 for _, checker_info in config.checks.items():
                     # Almost any check validates translation against reference file, so we cannot use all checks here,
                     # but there are some that process single file independently so they in fact do not need any reference
@@ -90,12 +93,9 @@ class PropTool(object):
                                 errors += 1
 
                             if config.update:
-                                if is_translation_valid:
-                                    if translation_propfile.file:
-                                        translation_propfile.update(reference_propfile)
-                                        translation_propfile.save()
-                                else:
-                                    Log.w('Not updating translation due to found issues')
+                                if translation_propfile.file:
+                                    translation_propfile.update(reference_propfile)
+                                    translation_propfile.save()
 
                             if Log.pop():
                                 Log.i(f'%ok%{trans_level_label}: OK')
