@@ -231,11 +231,14 @@ class PropFile(object):
 
         if not target_file_name:
             if not self.file:
-                raise RuntimeError('No target file name given.')
+                raise ValueError('No target file name given.')
             target_file_name = self.file
+
+        content = []
+        for item in self.items:
+            content.append(item.to_string())
 
         Log.i(f'Saving: {target_file_name}')
         with open(target_file_name, 'w') as fh:
-            for item in self.items:
-                # FIXME: LF/CRLF should configurable
-                fh.write(f'{item.to_string()}\n')
+            # FIXME: LF/CRLF should configurable
+            fh.write('\n'.join(content))

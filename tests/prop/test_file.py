@@ -19,6 +19,32 @@ from tests.test_case import TestCase
 
 class TestPropFile(TestCase):
 
+    def _generate_propfile_with_content(self, config: Config) -> PropFile:
+        """
+        Creates instance of PropFile and fills it with randonly generated content.
+        :param config: Config to be used while constructing instance.
+        """
+        propfile = PropFile(config)
+
+        item_types = [Blank, Comment, Translation]
+        item_weights = [2, 5, 10]
+        new_items = 50
+        for new_item_cls in random.choices(item_types, item_weights, k = new_items):
+            if issubclass(new_item_cls, Translation):
+                key = self.get_random_string('key_')
+                val = self.get_random_string('ref_val_')
+                propfile.append(Translation(key, val))
+            elif issubclass(new_item_cls, Comment):
+                propfile.append(Comment(self.get_random_string('comment_')))
+            elif issubclass(new_item_cls, Blank):
+                propfile.append(Blank())
+            else:
+                self.fail(f'Unknown new_item_cls: {type(new_item_cls)}')
+
+        return propfile
+
+    # #################################################################################################
+
     def test_append_wrong_arg_type(self) -> None:
         # GIVEN normal instance of PropFile
         prop_file = PropFile(Config())
@@ -165,7 +191,7 @@ class TestPropFile(TestCase):
                     prop_file = PropFile(Config())
                     prop_file.load(Path(fake_file_name))
                 except SystemExit:
-                    # sys.exit() happened afrer Log.e() is called, so we can check the error message here.
+                    # sys.exit() happened after Log.e() is called, so we can check the error message here.
                     msg = log_e_mock.call_args_list[0][0][0]
                     self.assertEqual(msg, f'Invalid syntax at line {trap_position + 1} of "{fake_file_name}".')
 
@@ -255,6 +281,62 @@ class TestPropFile(TestCase):
 
     # #################################################################################################
 
+    def _check_written_content(self, propfile: PropFile, verify_file_name, save_file_name = None):
+        with patch('builtins.open', mock_open()) as manager:
+            with patch('proptool.log.Log.i') as log_i_mock:
+                if save_file_name:
+                    propfile.save(save_file_name)
+                else:
+                    propfile.save()
+                manager.assert_called_once_with(verify_file_name, 'w')
+
+                # Ensure call to Log.i() happened with expected message.
+                msg = log_i_mock.call_args_list[0][0][0]
+                self.assertEqual(msg, f'Saving: {verify_file_name}')
+
+                # Check file content is written as expected.
+                expected = []
+                for item in propfile.items:
+                    expected.append(item.to_string())
+
+                fh = manager()
+                # FIXME: LF/CRLF should configurable
+                fh.write.assert_called_once_with('\n'.join(expected))
+
+    def test_save(self) -> None:
+        """
+        Checks if save() writes proper contents to the file.
+        """
+        config = Config()
+        propfile = self._generate_propfile_with_content(config)
+
+        fake_file_name = Path(self.get_random_string())
+        self._check_written_content(propfile, fake_file_name, fake_file_name)
+
+    def test_save_use_property_file(self) -> None:
+        """
+        Checks save() will use property file as target file name if no
+        file name is specified as save() argument.
+        """
+        config = Config()
+        propfile = self._generate_propfile_with_content(config)
+        verify_file_name = Path(self.get_random_string())
+        propfile.file = verify_file_name
+        self._check_written_content(propfile, verify_file_name)
+
+    def test_save_no_target_file(self) -> None:
+        """
+        Checks if save() will fail if no target file name is given nor object's
+        `file` property is `None`.
+        :return:
+        """
+        config = Config()
+        propfile = PropFile(config)
+        with self.assertRaises(ValueError):
+            propfile.save()
+
+    # #################################################################################################
+
     @patch('pathlib.Path.exists')
     def test_is_valid_on_empty_files(self, path_exists_mock: Mock) -> None:
 
@@ -280,22 +362,7 @@ class TestPropFile(TestCase):
         config = Config()
 
         # Generate reference file and its contents
-        reference = PropFile(config)
-
-        item_types = [Blank, Comment, Translation]
-        item_weights = [1, 5, 10]
-        new_items = 20
-        for new_item_cls in random.choices(item_types, item_weights, k = new_items):
-            if issubclass(new_item_cls, Translation):
-                key = self.get_random_string('key_')
-                val = self.get_random_string('ref_val_')
-                reference.append(Translation(key, val))
-            elif issubclass(new_item_cls, Comment):
-                reference.append(Comment(self.get_random_string('comment_')))
-            elif issubclass(new_item_cls, Blank):
-                reference.append(Blank())
-            else:
-                self.fail(f'Unknown new_item_cls: {type(new_item_cls)}')
+        reference = self._generate_propfile_with_content(config)
 
         # Generate translation file
         translation = PropFile(config)
