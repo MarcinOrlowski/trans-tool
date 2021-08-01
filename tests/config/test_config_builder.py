@@ -32,6 +32,8 @@ class FakeArgs(object):
         self.comment_marker: Union[str, None] = None
         self.comment_template: Union[str, None] = None
 
+        self.config_file = None
+
         # Initialize all on/off flags related attributes.
         for option_name in ConfigBuilder._on_off_pairs:
             self.__setattr__(option_name, False)
@@ -79,24 +81,6 @@ class TestConfigBuilder(TestCase):
             # Check we got sys.exit called with non-zero return code
             self.assertEqual(SystemExit, type(context_manager.exception))
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
-
-    # @patch('proptool.log.Log.e')
-    # def test_validate_no_languages(self, log_e_mock: Mock) -> None:
-    #     """
-    #     Ensures empty language list triggers expected error message and quits.
-    #
-    #     :param log_e_mock: Log.abort() mock.
-    #     """
-    #     config = self.get_config_for_validate()
-    #     config.languages = []
-    #     with self.assertRaises(SystemExit) as context_manager:
-    #         ConfigBuilder._validate_config(config)
-    #         exp_calls = [call('No language(s) specified.')]
-    #         log_e_mock.assert_has_calls(exp_calls)
-    #
-    #         # Check we got sys.exit called with non-zero return code
-    #         self.assertEqual(SystemExit, type(context_manager.exception))
-    #         self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
     @patch('proptool.log.Log.e')
     def test_validate_invalid_separator(self, log_e_mock: Mock) -> None:
@@ -175,7 +159,6 @@ class TestConfigBuilder(TestCase):
         args.languages = languages
 
         return args
-
 
     def _get_expectation(self, config_default: bool, switch_on: bool, switch_off: bool) -> bool:
         """
@@ -421,7 +404,9 @@ class TestConfigBuilder(TestCase):
 
         # Pass no args for parsing (this is legit as we have config file that can provide what's needed).
         sys.argv[1:] = []  # noqa: WPS362
-        with patch('proptool.config.config_builder.ConfigBuilder._set_from_args') as manager:
+        with patch('proptool.config.config_builder.ConfigBuilder._parse_args') as manager:
+            manager.return_value = args
+
             config = ConfigBuilder.build(config_defaults)
 
             # TODO: make comparision more detailed; add test for langs as well

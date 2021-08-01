@@ -69,7 +69,6 @@ class PropTool(object):
                     if checker.is_single_file_check:
                         # Each validator gets copy of the files, to prevent any potential destructive operation.
                         propfile_copy = copy.copy(reference_propfile)
-                        print(checker)
                         reference_propfile.report.add(checker.check(propfile_copy))
 
                 if not reference_propfile.report.empty():
