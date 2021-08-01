@@ -30,7 +30,8 @@ class FakeArgs(object):
         self.languages: List[str] = []
         self.separator: Union[str, None] = None
         self.comment_marker: Union[str, None] = None
-        self.comment_template: Union[str, None] = None
+        self.commented_translation_template: Union[str, None] = None
+        self.commented_translation_regexp: Union[str, None] = None
 
         self.config_file = None
 
@@ -333,24 +334,6 @@ class TestConfigBuilder(TestCase):
             self.assertEqual(SystemExit, type(context_manager.exception))
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('proptool.log.Log.e')
-    def test_validate_args_missing_literal(self, log_e_mock: Mock) -> None:
-        args = FakeArgs()
-
-        for missing_literal in Config.COMMENT_TEMPLATE_LITERALS:
-            tmp = copy.copy(Config.COMMENT_TEMPLATE_LITERALS)
-            del tmp[tmp.index(missing_literal)]
-            args.comment_template = ' '.join(tmp)
-
-            with self.assertRaises(SystemExit) as context_manager:
-                ConfigBuilder._validate_args(args)
-                exp_calls = [call(f'Missing literal in comment template: "{missing_literal}".')]
-                log_e_mock.assert_has_calls(exp_calls)
-
-                # Check we got sys.exit called with non-zero return code
-                self.assertEqual(SystemExit, type(context_manager.exception))
-                self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
-
     # #################################################################################################
 
     def test_parse_args_returns_all_keys(self) -> None:
@@ -377,7 +360,7 @@ class TestConfigBuilder(TestCase):
         sys.argv[1:] = []  # noqa: WPS362
         args = vars(ConfigBuilder._parse_args())  # noqa: WPS421
 
-        # Eliminate --no-<KEY> related keys first as these are not mapped directly.
+        # Eliminate --no-<KEY> related keys first as these are not mapped to Config's attributes directly.
         for pair_key in ConfigBuilder._on_off_pairs:
             del args[f'no_{pair_key}']
 

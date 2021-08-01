@@ -46,8 +46,6 @@ someKey = Hello
 the `newlyAddedKey` will be considered "present" in translation, despite being commented out. If you want to ensure there are all
 translated, you need to use `--strict` mode instead of default loose check mode.
 
-Default format can be changed using `--template` argument or `template` config entry.
-
 ## Configuration file ##
 
 No dedicated configuration.

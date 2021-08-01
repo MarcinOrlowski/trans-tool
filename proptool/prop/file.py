@@ -46,14 +46,6 @@ class PropFile(object):
         # This call is most likely redundant here.
         self.init_container(language)
 
-        comment_pattern = re.escape(self.config.comment_template).replace(
-            'COM', f'[{"".join(Config.ALLOWED_COMMENT_MARKERS)}]').replace(
-            'SEP', f'[{"".join(Config.ALLOWED_SEPARATORS)}]')
-        # NOTE: key pattern must be in () brackets to form a group used later!
-        comment_pattern = comment_pattern.replace('KEY', '([a-zAz][a-zA-z0-9_.-]+)')
-        comment_pattern = comment_pattern.replace('VAL', '(.*)')
-        self.comment_pattern = f'^{comment_pattern}'
-
     def init_container(self, language: str) -> None:
         self._items = []
         self.keys = []
@@ -106,7 +98,7 @@ class PropFile(object):
                 self.keys.append(single_item.key)
             elif isinstance(single_item, Comment):
                 # Let's look for commented out keys.
-                match = re.compile(self.comment_pattern).match(single_item.value)
+                match = re.compile(Config.COMMENTED_TRANS_REGEXP).match(single_item.value)
                 if match:
                     self.commented_out_keys.append(match.group(1))
             self._items.append(single_item)

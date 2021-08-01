@@ -56,13 +56,11 @@ class ChecksTestCase(TestCase):
 
         for item in contents:
             if isinstance(item, str):
-                prep_file.keys.append(item)
                 value = self.get_random_string()
                 if lower:
                     value = value.lower()
-                prep_file.items.append(Translation(item, value))
-                continue
-            elif isinstance(item, (Translation, Comment)):
+                prep_file.append(Translation(item, value))
+            elif isinstance(item, PropItem):
                 prep_file.append(item)
             else:
                 raise RuntimeError(f'Unsupported content type: {type(item)}')

@@ -29,6 +29,7 @@ class MissingTranslation(Check):
         report = ReportGroup('Missing keys')
 
         translation_keys = translation_file.keys.copy()
+
         missing_keys: List[str] = []
         for ref_key in reference_file.keys:
             if ref_key in translation_keys:
@@ -39,7 +40,7 @@ class MissingTranslation(Check):
         # Commented out keys are also considered present in the translation unless
         # we run in strict check mode.
         if not self.config['strict']:
-            commented_out_keys = translation_file.commented_out_keys.copy()
+            commented_out_keys = translation_file.commented_out_keys
             for comm_key in commented_out_keys:
                 if comm_key in missing_keys:
                     missing_keys.remove(comm_key)

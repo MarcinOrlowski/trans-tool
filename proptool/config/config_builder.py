@@ -117,7 +117,6 @@ class ConfigBuilder(object):
         optionals = [
             'separator',
             'comment_marker',
-            'comment_template',
             'quiet',
             'verbose',
         ]
@@ -152,7 +151,7 @@ class ConfigBuilder(object):
 
         group = parser.add_argument_group('Base options')
         group.add_argument('--config', action = 'store', dest = 'config_file', nargs = 1, metavar = 'FILE',
-                           help = 'Use specified config file. Note: command line arguments can override config!')
+                           help = 'Use specified config file. Command line arguments override config settings.')
         group.add_argument('-b', '--base', action = 'store', dest = 'files', nargs = '+', metavar = 'FILE',
                            help = 'List of base files to check.')
         group.add_argument('-l', '--lang', action = 'store', dest = 'languages', nargs = '+', metavar = 'LANG',
@@ -161,16 +160,12 @@ class ConfigBuilder(object):
         group = parser.add_argument_group('Additional options')
         group.add_argument('--update', action = 'store_true', dest = 'update',
                            help = 'Updates translation files in-place using base file as reference. No backup!')
-        # group.add_argument('--pe', '--punctuation-exception', dest = 'punctuation_exception_langs', nargs = '*', metavar = 'LANG',
-        #                    help = 'List of languages for which punctuation mismatch should not be checked for, i.e. "jp"')
         group.add_argument('--separator', action = 'store', dest = 'separator', metavar = 'CHAR', nargs = 1,
                            help = 'If specified, only given CHAR is considered a valid key/value separator.'
                                   + f'Must be one of the following: {", ".join(Config.ALLOWED_SEPARATORS)}')
         group.add_argument('--comment', action = 'store', dest = 'comment_marker', metavar = 'CHAR', nargs = 1,
                            help = 'If specified, only given CHAR is considered valid comment marker.'
                                   + f'Must be one of the following: {", ".join(Config.ALLOWED_COMMENT_MARKERS)}')
-        group.add_argument('-t', '--template', action = 'store', dest = 'comment_template', metavar = 'TEMPLATE', nargs = 1,
-                           help = f'Format of commented-out entries. Default: "{Config.DEFAULT_COMMENT_TEMPLATE}".')
         group.add_argument('--suffix', action = 'store', dest = 'file_suffix', metavar = 'STRING', nargs = 1,
                            help = f'Default file name suffix. Default: "{Config.DEFAULT_FILE_SUFFIX}".')
 
@@ -224,9 +219,3 @@ class ConfigBuilder(object):
         # Comment marker character.
         if args.comment_marker and args.comment_marker not in Config.ALLOWED_COMMENT_MARKERS:
             ConfigBuilder._abort(f'Invalid comment marker. Must be one of: {", ".join(Config.ALLOWED_COMMENT_MARKERS)}')
-
-        # Comment template.
-        if args.comment_template:
-            for placeholder in Config.COMMENT_TEMPLATE_LITERALS:
-                if args.comment_template.find(placeholder) == -1:
-                    ConfigBuilder._abort(f'Missing literal in comment template: "{placeholder}".')

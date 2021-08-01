@@ -19,13 +19,24 @@ class Config(object):
     COMMENT_TEMPLATE_LITERALS: List[str] = ['COM', 'KEY', 'SEP']
     DEFAULT_FILE_SUFFIX: str = '.properties'
 
+    # DEFAULT_COMMENT_TEMPLATE: str = 'COM ==> KEY SEP VAL'
+
     # COM: comment marker
     # KEY: translation key
     # SEP: "key SEP value" separator
     # VAL: original string
-    DEFAULT_COMMENT_TEMPLATE: str = 'COM ==> KEY SEP VAL'
+    COMMENTED_TRANS_TPL: str = 'COM ==> KEY SEP VAL'
+    COMMENTED_TRANS_REGEXP = r'^[{com}]\s*==>\s*{key}\s*[{sep}].*'.format(
+        com = ''.join(ALLOWED_COMMENT_MARKERS),
+        # must be in () brackets to form a group used later!
+        key = r'([a-zAz][a-zA-z0-9_.-]+)',
+        sep = ''.join(ALLOWED_SEPARATORS))
 
     def __init__(self):
+        """
+        NOTE: Do NOT put any non-configurable elements as Config's instance attributes as by design
+        it is assumed that any attribute can be modified, while consts cannot.
+        """
         self.config_file = None
 
         self.file_suffix = Config.DEFAULT_FILE_SUFFIX
@@ -43,9 +54,7 @@ class Config(object):
         self.languages: List[str] = []
 
         self.separator: str = '='
-
         self.comment_marker: str = '#'
-        self.comment_template: str = Config.DEFAULT_COMMENT_TEMPLATE
 
         self.checks: Dict[str, CheckerInfo] = {
             # empty set. Populated and manipulated by ConfigBuilder

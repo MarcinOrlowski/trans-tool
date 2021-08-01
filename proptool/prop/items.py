@@ -95,7 +95,7 @@ class Comment(PropItem):
         if value is None:
             value = ''
 
-        return config.DEFAULT_COMMENT_TEMPLATE.replace(
+        return config.COMMENTED_TRANS_TPL.replace(
             'KEY', key).replace(
             'COM', config.ALLOWED_COMMENT_MARKERS[0]).replace(
             'SEP', config.ALLOWED_SEPARATORS[0]).replace(

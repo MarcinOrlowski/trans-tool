@@ -35,11 +35,13 @@ class TestMissingTranslations(ChecksTestCase):
 
     def test_translation_with_keys_in_comments(self) -> None:
         """
-        Checks if we have no issues reported when running in non-strict mode and having some keys in comments.
+        Checks if we have no issues reported when running in non-strict mode and having some translation
+        keys in commented-out form, like:
+        # ==> KEY =
         """
-        # generate some keys for reference file
-        cnt_min = 20
-        cnt_max = 40
+        # Generate some keys for reference file.
+        cnt_min = 10
+        cnt_max = 15
         ref_keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
 
         # have less keys for translation file
@@ -49,7 +51,7 @@ class TestMissingTranslations(ChecksTestCase):
         ref_file = self.build_prepfile(ref_keys)
         trans_file = self.build_prepfile(trans_keys)
 
-        # put remaining keys into comments
+        # Put remaining keys into comments.
         remaining_keys = ref_keys[(how_many_less * -1):]
         for key in remaining_keys:
             if random.randint(0, 1) == 0:
