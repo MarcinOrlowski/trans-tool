@@ -84,11 +84,11 @@ class Comment(PropItem):
         return self.value
 
     @staticmethod
-    def comment_out_key(key: str, value: Union[str, None], config: Config) -> str:
+    def comment_out_key(config: Config, key: str, value: Union[str, None]) -> str:
         """
         Helper method that returns translation key formatted as commented-out item.
-        :param key: translation key.
         :param config: Application config.
+        :param key: translation key.
         :param value: Optional original string value
         """
 
@@ -102,8 +102,16 @@ class Comment(PropItem):
             'VAL', value).strip()
 
     @staticmethod
-    def get_commented_out_key_comment(key: str, value: Union[str, None], config: Config) -> 'Comment':
-        return Comment(Comment.comment_out_key(key, value, config))
+    def get_commented_out_key_comment(config: Config, key: str, value: Union[str, None] = None) -> 'Comment':
+        """
+        Returns instance of Comment with content being commented-out key
+        formatted according to current configuration
+        :param config: config to be
+        :param key: key to comment-out
+        :param value: optional value (or None)
+        :return:
+        """
+        return Comment(Comment.comment_out_key(config, key, value))
 
 
 # #################################################################################################

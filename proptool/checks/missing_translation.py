@@ -45,7 +45,7 @@ class MissingTranslation(Check):
                     missing_keys.remove(comm_key)
 
         for missing_key in missing_keys:
-            report.warn(None, missing_key)
+            report.warn(None, f'Key "{missing_key}" not found.')
 
         return report
 

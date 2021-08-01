@@ -381,7 +381,7 @@ class TestPropFile(TestCase):
                     translation.append(Translation(ref_item.key, self.get_random_string(f'translation_{ref_idx}')))
                 else:
                     # or commented out key
-                    translation.append(Comment.get_commented_out_key_comment(ref_item.key, ref_item.value, config))
+                    translation.append(Comment.get_commented_out_key_comment(config, ref_item.key, ref_item.value))
                     mut_com_cnt += 1
                 continue
             translation.append(ref_item)
@@ -421,7 +421,7 @@ class TestPropFile(TestCase):
                     self.assertEqual(translation_clone.items[ref_idx].value, trans_item.value)
                     continue
                 if isinstance(trans_item, Comment):
-                    expected = Comment.comment_out_key(ref_item.key, ref_item.value, config)
+                    expected = Comment.comment_out_key(config, ref_item.key, ref_item.value)
                     self.assertEqual(expected, trans_item.to_string())
                     continue
 

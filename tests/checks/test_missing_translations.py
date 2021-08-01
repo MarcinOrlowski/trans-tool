@@ -9,11 +9,10 @@
 import random
 from typing import Dict, Union
 
-from proptool.prop.items import Comment
 from proptool.checks.base.check import Check
 from proptool.checks.missing_translation import MissingTranslation
-from proptool.config.config import Config
 from proptool.decorators.overrides import overrides
+from proptool.prop.items import Comment
 from tests.checks.checks_test_case import ChecksTestCase
 
 
@@ -53,10 +52,12 @@ class TestMissingTranslations(ChecksTestCase):
         # put remaining keys into comments
         remaining_keys = ref_keys[(how_many_less * -1):]
         for key in remaining_keys:
-            key_comment = Config.DEFAULT_COMMENT_TEMPLATE.replace('KEY', key)
-            key_comment = key_comment.replace('COM', Config.ALLOWED_COMMENT_MARKERS[0])
-            key_comment = key_comment.replace('SEP', Config.ALLOWED_SEPARATORS[0])
-            trans_file.append(Comment(key_comment))
+            if random.randint(0, 1) == 0:
+                comment = Comment.get_commented_out_key_comment(self.config, key)
+            else:
+                val = self.get_random_string('translation_')
+                comment = Comment.get_commented_out_key_comment(self.config, key, val)
+            trans_file.append(comment)
 
         # We expect no issues in non-strict mode
         self.checker.config['strict'] = False

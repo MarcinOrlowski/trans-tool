@@ -51,6 +51,7 @@ class PropFile(object):
             'SEP', f'[{"".join(Config.ALLOWED_SEPARATORS)}]')
         # NOTE: key pattern must be in () brackets to form a group used later!
         comment_pattern = comment_pattern.replace('KEY', '([a-zAz][a-zA-z0-9_.-]+)')
+        comment_pattern = comment_pattern.replace('VAL', '(.*)')
         self.comment_pattern = f'^{comment_pattern}'
 
     def init_container(self, language: str) -> None:
@@ -135,7 +136,7 @@ class PropFile(object):
                 if item.key in self.keys:
                     tmp.append(self.find_by_key(item.key))
                 else:
-                    tmp.append(Comment.get_commented_out_key_comment(item.key, item.value, self.config))
+                    tmp.append(Comment.get_commented_out_key_comment(self.config, item.key, item.value))
             else:
                 raise RuntimeError(f'Unknown entry type: {type(item)} at position {idx + 1}')
 
