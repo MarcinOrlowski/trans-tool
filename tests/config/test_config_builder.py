@@ -80,23 +80,23 @@ class TestConfigBuilder(TestCase):
             self.assertEqual(SystemExit, type(context_manager.exception))
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('proptool.log.Log.e')
-    def test_validate_no_languages(self, log_e_mock: Mock) -> None:
-        """
-        Ensures empty language list triggers expected error message and quits.
-
-        :param log_e_mock: Log.abort() mock.
-        """
-        config = self.get_config_for_validate()
-        config.languages = []
-        with self.assertRaises(SystemExit) as context_manager:
-            ConfigBuilder._validate_config(config)
-            exp_calls = [call('No language(s) specified.')]
-            log_e_mock.assert_has_calls(exp_calls)
-
-            # Check we got sys.exit called with non-zero return code
-            self.assertEqual(SystemExit, type(context_manager.exception))
-            self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
+    # @patch('proptool.log.Log.e')
+    # def test_validate_no_languages(self, log_e_mock: Mock) -> None:
+    #     """
+    #     Ensures empty language list triggers expected error message and quits.
+    #
+    #     :param log_e_mock: Log.abort() mock.
+    #     """
+    #     config = self.get_config_for_validate()
+    #     config.languages = []
+    #     with self.assertRaises(SystemExit) as context_manager:
+    #         ConfigBuilder._validate_config(config)
+    #         exp_calls = [call('No language(s) specified.')]
+    #         log_e_mock.assert_has_calls(exp_calls)
+    #
+    #         # Check we got sys.exit called with non-zero return code
+    #         self.assertEqual(SystemExit, type(context_manager.exception))
+    #         self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
     @patch('proptool.log.Log.e')
     def test_validate_invalid_separator(self, log_e_mock: Mock) -> None:
@@ -155,7 +155,29 @@ class TestConfigBuilder(TestCase):
 
     # #################################################################################################
 
-    def get_expectation(self, config_default: bool, switch_on: bool, switch_off: bool) -> bool:
+    def _generate_fake_args(self, languages: List[str]) -> FakeArgs:
+        args = FakeArgs()
+
+        # Lets set up args to some random state
+        args.update = self.get_random_bool()
+        args.quiet = self.get_random_bool()
+        args.verbose = self.get_random_bool()
+        args.color = self.get_random_bool()
+        args.fatal, args.no_fatal = self.get_random_on_off_pair()
+        args.strict, args.no_strict = self.get_random_on_off_pair()
+        args.color, args.no_color = self.get_random_on_off_pair()
+        args.separator = random.choice(Config.ALLOWED_SEPARATORS)
+        args.comment_marker = random.choice(Config.ALLOWED_COMMENT_MARKERS)
+
+        # Generate fake file names with expected default suffix
+        args.files = [Path(f'{self.get_random_string()}{Config.DEFAULT_FILE_SUFFIX}') for _ in range(1, 10)]
+
+        args.languages = languages
+
+        return args
+
+
+    def _get_expectation(self, config_default: bool, switch_on: bool, switch_off: bool) -> bool:
         """
         Computes expected final value based on on/off switches.
 
@@ -176,26 +198,9 @@ class TestConfigBuilder(TestCase):
         """
         Tests _set_from_args()
         """
-        args = FakeArgs()
-
-        # Lets set up args to some random state
-        args.update = self.get_random_bool()
-        args.quiet = self.get_random_bool()
-        args.verbose = self.get_random_bool()
-        args.color = self.get_random_bool()
-        args.fatal, args.no_fatal = self.get_random_on_off_pair()
-        args.strict, args.no_strict = self.get_random_on_off_pair()
-        args.color, args.no_color = self.get_random_on_off_pair()
-        args.separator = random.choice(Config.ALLOWED_SEPARATORS)
-        args.comment_marker = random.choice(Config.ALLOWED_COMMENT_MARKERS)
-
-        # Generate fake file names with expected default suffix
-        args.files = [Path(f'{self.get_random_string()}{Config.DEFAULT_FILE_SUFFIX}') for _ in range(1, 10)]
-
-        # some languages
         # FIXME: make list more random
         languages = ['pl', 'de', 'pt']
-        args.languages = languages
+        args = self._generate_fake_args(languages)
 
         # This is going to be our reference default config instance.
         config_defaults = Config()
@@ -205,9 +210,9 @@ class TestConfigBuilder(TestCase):
         ConfigBuilder._set_from_args(config, args)
 
         # Ensure config reflects changes from command line
-        exp_fatal = self.get_expectation(config_defaults.fatal, args.fatal, args.no_fatal)
+        exp_fatal = self._get_expectation(config_defaults.fatal, args.fatal, args.no_fatal)
         self.assertEqual(exp_fatal, config.fatal)
-        exp_color = self.get_expectation(config_defaults.color, args.color, args.no_color)
+        exp_color = self._get_expectation(config_defaults.color, args.color, args.no_color)
         self.assertEqual(exp_color, config.color)
 
         # log_level controlled by `quiet` and `verbose`.
@@ -373,7 +378,6 @@ class TestConfigBuilder(TestCase):
         config = Config()
 
         # Pass no args for parsing (this is legit as we have config file that can provide what's needed).
-
         sys.argv[1:] = []  # noqa: WPS362
         args = ConfigBuilder._parse_args()
         for key in config.__dict__:
@@ -403,3 +407,24 @@ class TestConfigBuilder(TestCase):
         for key in args:
             # Ensure key args returns is what is present in Config as well.
             self.assertIn(key, config.__dict__)
+
+    # #################################################################################################
+
+    def test_build(self) -> None:
+        # FIXME: make list more random
+        languages = ['pl', 'de', 'pt']
+        args = self._generate_fake_args(languages)
+
+        config_defaults = Config()
+        file = self.get_random_string('file_')
+        config_defaults.files.append(file)
+
+        # Pass no args for parsing (this is legit as we have config file that can provide what's needed).
+        sys.argv[1:] = []  # noqa: WPS362
+        with patch('proptool.config.config_builder.ConfigBuilder._set_from_args') as manager:
+            config = ConfigBuilder.build(config_defaults)
+
+            # TODO: make comparision more detailed; add test for langs as well
+            self.assertEqual(len(config_defaults.files), len(config.files))
+            for idx, def_file in enumerate(config_defaults.files):
+                self.assertEqual(def_file, config.files[idx])

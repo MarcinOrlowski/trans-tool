@@ -26,7 +26,6 @@ class PropTool(object):
 
     @staticmethod
     def start() -> int:
-
         try:
             # Cannot rely on argparse here as we have required arguments there.
             if '--version' in sys.argv:
@@ -61,6 +60,7 @@ class PropTool(object):
                     Log.e(f'File not found: {reference_path}')
                     Utils.abort()
 
+                # Validate base file.
                 for _, checker_info in config.checks.items():
                     # Almost any check validates translation against reference file, so we cannot use all checks here,
                     # but there are some that process single file independently so they in fact do not need any reference
@@ -69,6 +69,7 @@ class PropTool(object):
                     if checker.is_single_file_check:
                         # Each validator gets copy of the files, to prevent any potential destructive operation.
                         propfile_copy = copy.copy(reference_propfile)
+                        print(checker)
                         reference_propfile.report.add(checker.check(propfile_copy))
 
                 if not reference_propfile.report.empty():

@@ -8,6 +8,7 @@
 """
 
 import argparse
+import copy
 from pathlib import Path
 from typing import List, Union
 
@@ -40,7 +41,6 @@ class ConfigBuilder(object):
 
     @staticmethod
     def build(config_defaults: Config) -> Config:
-
         checkers = [
             Brackets,
             DanglingKeys,
@@ -83,8 +83,8 @@ class ConfigBuilder(object):
     def _validate_config(config: Config) -> None:
         if not config.files:
             ConfigBuilder._abort('No base file(s) specified.')
-        if not config.languages:
-            ConfigBuilder._abort('No language(s) specified.')
+        # if not config.languages:
+        #     ConfigBuilder._abort('No language(s) specified.')
         if config.separator not in Config.ALLOWED_SEPARATORS:
             ConfigBuilder._abort('Invalid separator character.')
         if config.comment_marker not in Config.ALLOWED_COMMENT_MARKERS:
