@@ -6,7 +6,7 @@
 
 # Changelog #
 
-* dev ()
+* v2.0.0 (2021-08-02)
   * Added support for config files.
   * Added option to `--create` template translation files.
   * The `--lang` now also supports comma separated arguments.
