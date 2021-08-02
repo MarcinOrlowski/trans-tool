@@ -33,11 +33,11 @@ class ChecksTestCase(TestCase):
         raise NotImplementedError
 
     def check_single_file(self, entry: PropItem, exp_errors: int = 0, exp_warnings: int = 0) -> None:
-        prop_file = PropFile(self.config)
-        prop_file.loaded = True
-        prop_file.items.append(entry)
+        propfile = PropFile(self.config)
+        propfile.loaded = True
+        propfile.items.append(entry)
 
-        self.check(prop_file, exp_errors = exp_errors, exp_warnings = exp_warnings)
+        self.check(propfile, exp_errors = exp_errors, exp_warnings = exp_warnings)
 
     def check(self, translation: PropFile, reference: Union[PropFile, None] = None,
               exp_errors: int = 0, exp_warnings: int = 0, dump = False, msg = None) -> None:

@@ -105,7 +105,7 @@ class PropFile(object):
 
     # #################################################################################################
 
-    def update(self, reference_propfile: 'PropFile') -> None:
+    def update(self, reference: 'PropFile') -> None:
         """
         Rewrites content of the file using reference file as foundation. It then adds all keys from reference files.
         The update rules are as follow:
@@ -114,12 +114,12 @@ class PropFile(object):
         * all reference files comments are copied to,
         * dangling keys and translation file comments are gone.
 
-        :param reference_propfile:
+        :param reference:
         """
 
         tmp = PropFile(self.config)
 
-        for idx, item in enumerate(reference_propfile.items):
+        for idx, item in enumerate(reference.items):
             # Copy comments and blank lines as-is
             if isinstance(item, (Comment, Blank)):
                 tmp.append(item)
