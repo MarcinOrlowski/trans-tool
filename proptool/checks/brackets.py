@@ -15,8 +15,6 @@ from proptool.report.group import ReportGroup
 from .base.check import Check
 
 
-# #################################################################################################
-
 class Bracket(object):
     def __init__(self, pos: int, bracket: str):
         self.pos = pos

@@ -1,4 +1,5 @@
 """
+
 # prop-tool
 # Java *.properties file sync checker and syncing tool.
 #

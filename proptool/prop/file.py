@@ -20,8 +20,6 @@ from proptool.report.report import Report
 from proptool.utils import Utils
 
 
-# #################################################################################################
-
 class PropFile(object):
     def __init__(self, config: Config, language: str = None):
         super().__init__()

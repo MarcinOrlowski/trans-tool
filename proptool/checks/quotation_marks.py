@@ -15,8 +15,6 @@ from proptool.report.group import ReportGroup
 from .base.check import Check
 
 
-# #################################################################################################
-
 class Mark(object):
     def __init__(self, pos: int, mark: str):
         self.pos = pos

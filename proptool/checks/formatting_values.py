@@ -16,8 +16,6 @@ from proptool.report.group import ReportGroup
 from .base.check import Check
 
 
-# #################################################################################################
-
 class Formatter(object):
     def __init__(self, pos: int, formatter: str):
         self.pos = pos

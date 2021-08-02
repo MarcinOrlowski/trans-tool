@@ -14,8 +14,6 @@ from proptool.report.group import ReportGroup
 from .base.check import Check
 
 
-# #################################################################################################
-
 class WhiteCharsBeforeLinefeed(Check):
     r"""
     This check ensures there's no space before "\n", "\r" literals.

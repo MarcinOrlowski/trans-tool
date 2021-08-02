@@ -29,16 +29,9 @@ class TestKeyFormat(ChecksTestCase):
         self.check_single_file(Translation('validKey123', 'foo'))
         self.check_single_file(Translation('valid.Key', 'foo'))
         self.check_single_file(Translation('valid_Key', 'foo'))
+        self.check_single_file(Translation('k', 'foo'))
 
     def test_translation_with_faults(self) -> None:
-        # Too short key name
-        self.check_single_file(Translation('k', 'foo'), exp_errors = 1)
-        # starts capitalized
-        self.check_single_file(Translation('INVALIDkey', 'foo'), exp_errors = 1)
-        # has underscore at the end
-        self.check_single_file(Translation('invalidKey_', 'foo'), exp_errors = 1)
-        # has dot at the end
-        self.check_single_file(Translation('invalidKey.', 'foo'), exp_errors = 1)
         # starts with digits
         self.check_single_file(Translation('666keys.', 'foo'), exp_errors = 1)
 

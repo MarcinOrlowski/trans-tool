@@ -13,8 +13,6 @@ from proptool.report.group import ReportGroup
 from .base.check import Check
 
 
-# #################################################################################################
-
 # noinspection PyUnresolvedReferences
 class MissingTranslations(Check):
     """

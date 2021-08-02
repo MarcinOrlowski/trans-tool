@@ -12,8 +12,6 @@ from proptool.report.group import ReportGroup
 from .base.check import Check
 
 
-# #################################################################################################
-
 class DanglingKeys(Check):
 
     # noinspection PyUnresolvedReferences
