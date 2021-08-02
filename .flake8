@@ -125,11 +125,12 @@ per-file-ignores =
     proptool/utils.py: WPS421, WPS100,
 
     # S311 Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+    # WPS118 Found too long name
     # WPS214 Found too many methods
     # WPS323 Found `%` string formatting
     # WPS432 Found magic number
     # WPS609 Found direct magic attribute usage: __abstractmethods__
-    tests/*: S311, WPS323, WPS214, WPS432, WPS609,
+    tests/*: S311, WPS323, WPS214, WPS432, WPS609, WPS118,
 
     # WPS431 Found nested class: FakeArgs
     # WPS437 Found protected attribute usage: _set_on_off_option

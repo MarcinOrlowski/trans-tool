@@ -14,10 +14,8 @@ from typing import Dict, List, Union
 # DO NOT use Log class in Utils. That causes some dependency issues which are NOT
 # worth solving.
 
-# #################################################################################################
 
 class Utils(object):
-
     ABORT_RETURN_CODE = 10
 
     @staticmethod
