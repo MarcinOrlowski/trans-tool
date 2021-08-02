@@ -7,8 +7,9 @@
 #
 """
 
-from typing import Union
+from typing import Tuple, Union
 
+from proptool.config.config import Config
 from proptool.decorators.overrides import overrides
 
 
@@ -54,27 +55,102 @@ class Translation(PropItem):
     def to_string(self) -> str:
         return f'{self.key} {self.separator} {self.value}'
 
+    @staticmethod
+    def parse_translation_line(line: str) -> Union[Tuple[str, str, str], None]:
+        # Min two chars (one letter key and separator)
+        if len(line) < 2:
+            return None
+
+        # Find used separator first
+        separator = None
+        separator_pos = None
+        previous_char_backspace = False
+        for idx, char in enumerate(line):
+            if char == '\\':
+                if not previous_char_backspace:
+                    previous_char_backspace = True
+                continue
+            if char in Config.ALLOWED_SEPARATORS:
+                if previous_char_backspace:
+                    continue
+
+                separator = char
+                separator_pos = idx
+                break
+            else:
+                previous_char_backspace = False
+
+        # https://docs.oracle.com/javase/7/docs/api/java/util/Properties.html
+
+        if not separator:
+            return None
+
+        key = line[:separator_pos].strip()
+        sep = separator.strip()
+        val = line[separator_pos + 1:].lstrip()
+
+        if key == '' or sep == '':
+            return None
+
+        return key, sep, val
+
 
 # #################################################################################################
 
 class Comment(PropItem):
     """
-    Class representing a line comment.
+    Class representing a comment line.
     """
 
-    def __init__(self, value: str) -> None:
+    def __init__(self, value: str = '', marker: str = None) -> None:
+        if not marker:
+            marker = Config.ALLOWED_COMMENT_MARKERS[0]
+        if marker not in Config.ALLOWED_COMMENT_MARKERS:
+            raise ValueError(f'Invalid comment marker: "{marker}".')
         if not isinstance(value, str):
             raise ValueError('Value must be a string.')
         if not value:
-            raise ValueError('Value cannot be empty.')
-        marker = value[0]
-        if marker not in {'!', '#'}:
-            raise ValueError(f'Invalid comment marker: "{marker}".')
+            value = f'{marker}'
+
+        value_marker = value[0]
+        if value_marker not in Config.ALLOWED_COMMENT_MARKERS:
+            value = f'{marker} {value}'
+
         super().__init__(value)
 
     @overrides(PropItem)
     def to_string(self) -> str:
         return self.value
+
+    @staticmethod
+    def comment_out_key(config: Config, key: str, value: Union[str, None]) -> str:
+        """
+        Helper method that returns translation key formatted as commented-out item.
+        :param config: Application config.
+        :param key: translation key.
+        :param value: Optional original string value
+        """
+
+        if value is None:
+            value = ''
+
+        return config.COMMENTED_TRANS_TPL.replace(
+            'KEY', key).replace(
+            'COM', config.ALLOWED_COMMENT_MARKERS[0]).replace(
+            'SEP', config.ALLOWED_SEPARATORS[0]).replace(
+            'VAL', value).strip()
+
+    @staticmethod
+    def get_commented_out_key_comment(config: Config, key: str, value: Union[str, None] = None) -> 'Comment':
+        """
+        Returns instance of Comment with content being commented-out key
+        formatted according to current configuration
+        :param config: config to be
+        :param key: key to comment-out
+        :param value: optional value (or None)
+        :return:
+        """
+        return Comment(Comment.comment_out_key(config, key, value))
 
 
 # #################################################################################################

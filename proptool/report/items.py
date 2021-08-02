@@ -13,8 +13,9 @@ from typing import Union
 
 class ReportItem(object):
     def __init__(self, position: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> None:
-        if isinstance(position, int):
-            position = str(position)
+        if position is not None:
+            if isinstance(position, int):
+                position = str(position)
 
         self.position = position
         self.msg = msg

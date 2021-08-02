@@ -9,9 +9,9 @@
 
 from typing import List
 
-from proptool.config import Config
+from proptool.config.config import Config
 from proptool.log import Log
-
+from proptool.utils import Utils
 from .group import ReportGroup
 
 
@@ -38,6 +38,9 @@ class Report(object):
         """
         return sum(group.warnings for group in self._groups)
 
+    def is_ok(self) -> bool:
+        return not self.is_fatal()
+
     def is_fatal(self) -> bool:
         """
         Helper to determine if report contains fatal errors.
@@ -60,6 +63,9 @@ class Report(object):
     def empty(self) -> bool:
         return not self._groups
 
+    def not_empty(self) -> bool:
+        return self._groups
+
     def dump(self):
         errors = self.errors
         warnings = self.warnings
@@ -77,7 +83,7 @@ class Report(object):
             label += f'{sep}warnings: {warnings}'
 
         if label != '':
-            label = label[0].upper() + label[1:]
+            label = Utils.upper_first(label)
 
         if errors > 0:
             Log.push_e(label)

@@ -12,19 +12,7 @@ import re
 from pathlib import Path
 from typing import List, Union
 
-from proptool.checks.brackets import Brackets
-from proptool.checks.dangling_keys import DanglingKeys
-from proptool.checks.empty_translations import EmptyTranslations
-from proptool.checks.formatting_values import FormattingValues
-from proptool.checks.key_format import KeyFormat
-from proptool.checks.missing_translation import MissingTranslation
-from proptool.checks.punctuation import Punctuation
-from proptool.checks.quotation_marks import QuotationMarks
-from proptool.checks.starts_with_the_same_case import StartsWithTheSameCase
-from proptool.checks.trailing_white_chars import TrailingWhiteChars
-from proptool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
-from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
-from proptool.config import Config
+from proptool.config.config import Config
 from proptool.log import Log
 from proptool.prop.items import Blank, Comment, PropItem, Translation
 from proptool.report.group import ReportGroup
@@ -32,34 +20,43 @@ from proptool.report.report import Report
 from proptool.utils import Utils
 
 
-# #################################################################################################
-
 class PropFile(object):
-    def __init__(self, config: Config, file: Union[Path, None] = None, language: List[str] = None):
+    def __init__(self, config: Config, language: str = None):
         super().__init__()
 
         self.config: Config = config
 
-        self.file: Path = file
+        self._items: List[PropItem] = []
+
+        self.file: Union[Path, None] = None
+        self.loaded: bool = False
+
         # All the keys of 'regular' translations
         self.keys: List[str] = []
         # All the keys in form `# ==> KEY =` that we found.
         self.commented_out_keys: List[str] = []
+
         self.separator: str = config.separator
-        self.loaded: bool = False
-        self.items: List[PropItem] = []
+        self.report: Report = Report(config)
 
-        self.report = Report(config)
+        self.language = language
 
-        comment_pattern = re.escape(self.config.comment_template).replace(
-            'COM', f'[{"".join(Config.ALLOWED_COMMENT_MARKERS)}]').replace(
-            'SEP', f'[{"".join(Config.ALLOWED_SEPARATORS)}]')
-        # NOTE: key pattern must be in () brackets to form a group used later!
-        comment_pattern = comment_pattern.replace('KEY', '([a-zAz][a-zA-z0-9_.-]+)')
-        self.comment_pattern = f'^{comment_pattern}'
+        # This call is most likely redundant here.
+        self.init_container(language)
 
-        if file is not None:
-            self.loaded = self._load(file)
+    def init_container(self, language: str) -> None:
+        self._items = []
+        self.keys = []
+        self.commented_out_keys = []
+        self.loaded = False
+        self.report = Report(self.config)
+        self.language = language
+
+    # #################################################################################################
+
+    @property
+    def items(self) -> List[PropItem]:
+        return self._items
 
     # #################################################################################################
 
@@ -70,7 +67,8 @@ class PropFile(object):
         :param key: Translation key to look for.
         :return: Instance of PropTranslation or None.
         """
-        translations = list(filter(lambda entry: isinstance(entry, Translation), self.items))
+        # noinspection PyTypeChecker
+        translations: List[Translation] = list(filter(lambda entry: isinstance(entry, Translation), self.items))
         for item in translations:
             if item.key == key:
                 return item
@@ -78,91 +76,96 @@ class PropFile(object):
 
     # #################################################################################################
 
-    def append(self, item: PropItem):
-        if not issubclass(type(item), PropItem):
-            raise ValueError('Item must subclass PropItem.')
+    def append(self, items: Union[List[PropItem], PropItem]) -> None:
+        """
+        Appends given PropItem(s) to internal buffer.
 
-        if isinstance(item, Translation):
-            self.keys.append(item.key)
-        elif isinstance(item, Comment):
-            # Let's look for commented out keys.
-            match = re.compile(self.comment_pattern).match(item.value)
-            if match:
-                self.commented_out_keys.append(match.group(1))
+        :param items: PropItem(s) to be added.
+        """
+        if issubclass(type(items), PropItem):
+            items = [items]
 
-        self.items.append(item)
+        if not issubclass(type(items), list):
+            raise TypeError('Item must be either subclass of PropItem or List[PropItems]')
+
+        for single_item in items:
+            if not issubclass(type(single_item), PropItem):
+                raise TypeError(f'Item must be of PropItem, {type(single_item)} given.')
+
+            if isinstance(single_item, Translation):
+                self.keys.append(single_item.key)
+            elif isinstance(single_item, Comment):
+                # Let's look for commented out keys.
+                match = re.compile(Config.COMMENTED_TRANS_REGEXP).match(single_item.value)
+                if match:
+                    self.commented_out_keys.append(match.group(1))
+            self._items.append(single_item)
 
     # #################################################################################################
 
-    def validate_and_fix(self, reference: 'PropFile') -> None:
-        if not self.validate(reference) and self.config.fix:
-            self.fix(reference)
+    def update(self, reference: 'PropFile') -> None:
+        """
+        Rewrites content of the file using reference file as foundation. It then adds all keys from reference files.
+        The update rules are as follow:
+        * If we have translation for it, we add it,
+        * if we do not have it, it will go as comment and recorded as commented-out key,
+        * all reference files comments are copied to,
+        * dangling keys and translation file comments are gone.
+
+        :param reference:
+        """
+
+        tmp = PropFile(self.config)
+
+        for idx, item in enumerate(reference.items):
+            # Copy comments and blank lines as-is
+            if isinstance(item, (Comment, Blank)):
+                tmp.append(item)
+            elif isinstance(item, Translation):
+                # If we do have the translation already
+                if item.key in self.keys:
+                    tmp.append(self.find_by_key(item.key))
+                else:
+                    tmp.append(Comment.get_commented_out_key_comment(self.config, item.key, item.value))
+            else:
+                raise RuntimeError(f'Unknown entry type: {type(item)} at position {idx + 1}')
+
+        self._items = tmp.items
+        self.keys = tmp.keys
+        self.commented_out_keys = tmp.commented_out_keys
 
     # #################################################################################################
 
-    def validate(self, reference_file: 'PropFile') -> bool:
+    def is_valid(self, reference_file: 'PropFile') -> bool:
         """
         Validates given PropFile against provided reference file.
 
         :param reference_file:
-        :return:
+        :return: True if file is valid, False if there were errors.
         """
-        if not self.loaded:
-            Log.e(f'File does not exist: {self.file}')
-            return False
-
-        checks = [
-            MissingTranslation,
-            DanglingKeys,
-            TrailingWhiteChars,
-            Punctuation,
-            StartsWithTheSameCase,
-            EmptyTranslations,
-            WhiteCharsBeforeLinefeed,
-            KeyFormat,
-            Brackets,
-            QuotationMarks,
-            TypesettingQuotationMarks,
-            FormattingValues,
-        ]
-        for validator in checks:
+        for _, checker_info in self.config.checks.items():
+            checker = checker_info.callable(checker_info.config)
             # Each validator gets copy of the files, to prevent any potential destructive operation.
-            self.report.add((validator(self.config)).check(copy.copy(reference_file), copy.copy(self)))
+            self.report.add(checker.check(copy.copy(self), copy.copy(reference_file)))
 
         return self.report.empty()
 
     # #################################################################################################
 
-    def fix(self, reference: 'PropFile') -> None:
-        synced: List[str] = []
-
-        comment_pattern = self.config.comment_template.replace('COM', self.config.comment_marker).replace('SEP', self.separator)
-        for item in reference.items:
-            if isinstance(item, Translation):
-                if item.key in self.keys:
-                    synced.append(self.find_by_key(item.key).to_string() + '\n')
-                else:
-                    synced.append(comment_pattern.replace('KEY', item.key) + '\n')
-            elif isinstance(item, (Blank, Comment)):
-                synced.append(item.to_string() + '\n')
-            else:
-                raise RuntimeError(f'Unknown entry type: {type(item)}')
-
-        Log.i(f'Re-writing translation file: {self.file}')
-        with open(self.file, 'w') as fh:
-            fh.writelines(synced)
-
-    # #################################################################################################
-
-    def _load(self, file: Path) -> bool:
+    def load(self, file: Path, language: str = None) -> bool:
         """
         Loads and parses *.properties file.
 
         :param file: File to load.
-        :return:
+        :param language: Optional language code the loaded data if for.
+        :return: True if file loaded correctly, False otherwise.
         """
+
         if not file.exists():
-            return False
+            raise FileNotFoundError(f'File not found: {file}')
+
+        self.init_container(language)
+        self.file = file
 
         with open(file, 'r') as fh:
             line_number: int = 0
@@ -190,24 +193,18 @@ class PropFile(object):
                     self.append(Comment(line))
                     continue
 
-                if not self.separator:
-                    # Let's look for used separator character
-                    for _, single_char in enumerate(line):
-                        if single_char in Config.ALLOWED_SEPARATORS:
-                            self.separator = single_char
-                            break
-
-                tmp: List[str] = line.split(self.separator)
-                if len(tmp) < 2:
-                    Utils.abort([
-                        f'Invalid syntax. Line {line_number}, file: {file}',
-                        f'Using "{self.separator}" as separator.',
-                    ])
+                # Whatever left should be valid key[:=]val entry
+                tmp = Translation.parse_translation_line(line)
+                if not tmp:
+                    Log.e(f'Invalid syntax at line {line_number} of "{file}".')
+                    Utils.abort()
 
                 key = tmp[0].strip()
-                val = ''.join(tmp[1:]).lstrip()
+                separator = tmp[1].strip()
+                val = tmp[2].lstrip()
                 if key not in self.keys:
-                    self.append(Translation(key, val, self.separator))
+                    self.append(Translation(key, val, separator))
+                    self.keys.append(key)
                 else:
                     duplicated_keys.error(line_number, f'Duplicated key "{key}".')
 
@@ -215,3 +212,24 @@ class PropFile(object):
                 self.report.add(duplicated_keys)
 
         return True
+
+    # #################################################################################################
+
+    def save(self, target_file_name: Union[Path, None] = None) -> None:
+        """
+        Saves content of the propfile.
+        """
+
+        if not target_file_name:
+            if not self.file:
+                raise ValueError('No target file name given.')
+            target_file_name = self.file
+
+        content = []
+        for item in self.items:
+            content.append(item.to_string())
+
+        Log.i(f'Writing: {target_file_name}')
+        with open(target_file_name, 'w') as fh:
+            # FIXME: LF/CRLF should configurable
+            fh.write('\n'.join(content))

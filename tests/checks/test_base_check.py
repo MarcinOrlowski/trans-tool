@@ -1,4 +1,5 @@
 """
+
 # prop-tool
 # Java *.properties file sync checker and syncing tool.
 #
@@ -7,12 +8,15 @@
 #
 """
 from proptool.checks.base.check import Check
-from proptool.config import Config
+from proptool.config.config import Config
 from proptool.prop.file import PropFile
 from tests.test_case import TestCase
 
 
 class TestBaseCheck(TestCase):
+    """
+    Tests base class of all Checks.
+    """
 
     def test_constructor(self) -> None:
         """
@@ -22,16 +26,16 @@ class TestBaseCheck(TestCase):
             # Check is abstract class, extending ABC meta, so ordinary
             # instantiation won't work.
             Check.__abstractmethods__ = frozenset()
-            Check(None)
+            # noinspection PyTypeChecker
+            Check(False)
 
     def test_need_both_files_no_fault(self) -> None:
-        config = Config()
-
         # Check is abstract class, extending ABC meta, so ordinary
         # instantiation won't work.
         Check.__abstractmethods__ = frozenset()
-        check = Check(config)
+        check = Check({})
 
+        config = Config()
         prop = PropFile(config)
         check.need_both_files(prop, prop)
 
@@ -39,23 +43,49 @@ class TestBaseCheck(TestCase):
         """
         Ensures there's no default implementation of check()
         """
-        config = Config()
-
         # Check is abstract class, extending ABC meta, so ordinary
         # instantiation won't work.
         Check.__abstractmethods__ = frozenset()
-        check = Check(config)
+        check = Check({})
 
         with self.assertRaises(NotImplementedError):
             check.check(None, None)
+
+    def test_need_valid_config_valid_arg(self) -> None:
+        # Check is abstract class, extending ABC meta, so ordinary
+        # instantiation won't work.
+        Check.__abstractmethods__ = frozenset()
+        check = Check({})
+        # We expect no problems.
+        check.need_valid_config()
+
+    def test_need_valid_config_no_config(self) -> None:
+        # Check is abstract class, extending ABC meta, so ordinary
+        # instantiation won't work.
+        Check.__abstractmethods__ = frozenset()
+        check = Check()
+        # Exception should be thrown
+        with self.assertRaises(ValueError):
+            check.need_valid_config()
+
+    def test_need_valid_config_invalid_config_type(self) -> None:
+        # Check is abstract class, extending ABC meta, so ordinary
+        # instantiation won't work.
+        Check.__abstractmethods__ = frozenset()
+        check = Check()
+        # Inject faulty 'config' to walk around constructor check.
+        check.config = 123
+        # Exception should be thrown
+        with self.assertRaises(ValueError):
+            check.need_valid_config()
 
     def test_need_both_files_missing_file(self) -> None:
         """
         Checks how need_both_files() is handling missing arguments.
         """
         config = Config()
-        check = Check(config)
         prop = PropFile(config)
+        check = Check({})
 
         with self.assertRaises(ValueError):
             check.need_both_files(None, None)

@@ -8,10 +8,10 @@
 """
 import random
 from abc import abstractmethod
-from typing import List, Union
+from typing import Dict, List, Union
 
 from proptool.checks.base.check import Check
-from proptool.config import Config
+from proptool.config.config import Config
 from proptool.prop.file import PropFile
 from proptool.prop.items import Blank, Comment, PropItem, Translation
 from tests.test_case import TestCase
@@ -21,30 +21,32 @@ class ChecksTestCase(TestCase):
 
     def setUp(self) -> None:
         self.config: Config = Config()
-        checker = self.get_checker(self.config)
+
+        checker = self.get_checker(None)
         if not issubclass(type(checker), Check):
             raise ValueError('Checker must be subclass of Check')
+        checker.config = self.get_checker().get_default_config()
         self.checker = checker
 
     @abstractmethod
-    def get_checker(self, config: Config) -> Check:
+    def get_checker(self, config: Union[Dict, None] = None) -> Check:
         raise NotImplementedError
 
     def check_single_file(self, entry: PropItem, exp_errors: int = 0, exp_warnings: int = 0) -> None:
-        prop_file = PropFile(self.config)
-        prop_file.loaded = True
-        prop_file.items.append(entry)
+        propfile = PropFile(self.config)
+        propfile.loaded = True
+        propfile.items.append(entry)
 
-        self.check(prop_file, exp_errors = exp_errors, exp_warnings = exp_warnings)
+        self.check(propfile, exp_errors = exp_errors, exp_warnings = exp_warnings)
 
     def check(self, translation: PropFile, reference: Union[PropFile, None] = None,
-              exp_errors: int = 0, exp_warnings: int = 0, dump = False) -> None:
+              exp_errors: int = 0, exp_warnings: int = 0, dump = False, msg = None) -> None:
         report = self.checker.check(translation, reference)
         if dump:
             report.dump()
 
-        self.assertEqual(exp_errors, report.errors)
-        self.assertEqual(exp_warnings, report.warnings)
+        self.assertEqual(exp_errors, report.errors, msg)
+        self.assertEqual(exp_warnings, report.warnings, msg)
 
     # #################################################################################################
 
@@ -54,13 +56,11 @@ class ChecksTestCase(TestCase):
 
         for item in contents:
             if isinstance(item, str):
-                prep_file.keys.append(item)
                 value = self.get_random_string()
                 if lower:
                     value = value.lower()
-                prep_file.items.append(Translation(item, value))
-                continue
-            elif isinstance(item, (Translation, Comment)):
+                prep_file.append(Translation(item, value))
+            elif isinstance(item, PropItem):
                 prep_file.append(item)
             else:
                 raise RuntimeError(f'Unsupported content type: {type(item)}')

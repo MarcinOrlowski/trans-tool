@@ -7,10 +7,10 @@
 #
 """
 import random
+from typing import Dict, Union
 
 from proptool.checks.base.check import Check
-from proptool.checks.missing_translation import MissingTranslation
-from proptool.config import Config
+from proptool.checks.missing_translations import MissingTranslations
 from proptool.decorators.overrides import overrides
 from proptool.prop.items import Comment
 from tests.checks.checks_test_case import ChecksTestCase
@@ -19,8 +19,8 @@ from tests.checks.checks_test_case import ChecksTestCase
 class TestMissingTranslations(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Config) -> Check:
-        return MissingTranslation(config)
+    def get_checker(self, config: Union[Dict, None] = None) -> Check:
+        return MissingTranslations(config)
 
     # #################################################################################################
 
@@ -34,12 +34,14 @@ class TestMissingTranslations(ChecksTestCase):
         self.check(trans_file, ref_file)
 
     def test_translation_with_keys_in_comments(self) -> None:
-        # Checks if we have no issues reported when running
-        # in non-strict mode and having some keys in comments.
-
-        # generate some keys for reference file
-        cnt_min = 20
-        cnt_max = 40
+        """
+        Checks if we have no issues reported when running in non-strict mode and having some translation
+        keys in commented-out form, like:
+        # ==> KEY =
+        """
+        # Generate some keys for reference file.
+        cnt_min = 10
+        cnt_max = 15
         ref_keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
 
         # have less keys for translation file
@@ -49,19 +51,22 @@ class TestMissingTranslations(ChecksTestCase):
         ref_file = self.build_prepfile(ref_keys)
         trans_file = self.build_prepfile(trans_keys)
 
-        # put remaining keys into comments
+        # Put remaining keys into comments.
         remaining_keys = ref_keys[(how_many_less * -1):]
         for key in remaining_keys:
-            comment = self.config.DEFAULT_COMMENT_TEMPLATE
-            comment = comment.replace('SEP', trans_file.separator).replace('COM', self.config.comment_marker).replace('KEY', key)
-            trans_file.append(Comment(comment))
+            if random.randint(0, 1) == 0:
+                comment = Comment.get_commented_out_key_comment(self.config, key)
+            else:
+                val = self.get_random_string('translation_')
+                comment = Comment.get_commented_out_key_comment(self.config, key, val)
+            trans_file.append(comment)
 
         # We expect no issues in non-strict mode
-        trans_file.config.strict = False
+        self.checker.config['strict'] = False
         self.check(trans_file, ref_file)
 
         # We expect warnings in strict mode
-        trans_file.config.strict = True
+        self.checker.config['strict'] = True
         self.check(trans_file, ref_file, exp_warnings = len(remaining_keys))
 
     def test_translation_with_faults(self) -> None:

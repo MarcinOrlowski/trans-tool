@@ -1,4 +1,18 @@
+![prop-tool logo](../artwork/prop-tool-logo.png)
+
+### The *.properties file checker and syncing tool ###
+
+---
+
 # Changelog #
+
+* v2.0.0 (2021-08-02)
+  * Added support for config files.
+  * Added option to `--create` template translation files.
+  * The `--lang` now also supports comma separated arguments.
+  * Reworked documentation.
+  * Improved `*.properties` file parsing to better handle extreme cases.
+  * Added more unit tests.
 
 * v1.3.0 (2021-07-22)
   * Added `TypesettingQuotationMarks` check.

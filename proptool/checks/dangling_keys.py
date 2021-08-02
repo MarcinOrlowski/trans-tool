@@ -7,16 +7,14 @@
 #
 """
 
-from .base.check import Check
 from proptool.decorators.overrides import overrides
 from proptool.report.group import ReportGroup
+from .base.check import Check
 
 
-# #################################################################################################
-
-# noinspection PyUnresolvedReferences
 class DanglingKeys(Check):
 
+    # noinspection PyUnresolvedReferences
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(self, translation_file: 'PropFile', reference_file: 'PropFile' = None) -> ReportGroup:

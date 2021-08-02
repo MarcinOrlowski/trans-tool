@@ -14,7 +14,7 @@ import sys
 from pathlib import PosixPath
 from typing import List, Union
 
-from .config import Config
+from proptool.config.config import Config
 
 
 # #################################################################################################
@@ -72,6 +72,10 @@ class Log(object):
     COLOR_DEBUG = Ansi.REVERSE
     COLOR_BANNER = (Ansi.WHITE + Ansi.REVERSE)
 
+    LEVEL_QUIET = 0
+    LEVEL_NORMAL = 1
+    LEVEL_VERBOSE = 2
+
     # #################################################################################################
 
     deferred_log_level: Union[int, None] = None
@@ -82,10 +86,15 @@ class Log(object):
 
     buffer_enabled: bool = True
     debug = False
-    no_color: bool = False
-    quiet: bool = False
+    color: bool = False
     skip_empty_lines: bool = False
-    verbose: bool = False
+
+    level = LEVEL_NORMAL
+
+    # #################################################################################################
+
+    # Default return code passed to sys.exit() on abort() call
+    ABORT_RC = 10
 
     # #################################################################################################
 
@@ -93,10 +102,15 @@ class Log(object):
     def configure(cls, config: Config) -> None:
         cls.buffer_enabled = True
         cls.debug = config.debug
-        cls.no_color = config.no_color
-        cls.quiet = False
+        cls.color = config.color
         cls.skip_empty_lines = False
-        cls.verbose = config.verbose
+
+        if config.verbose:
+            cls.level = Log.LEVEL_VERBOSE
+        elif config.quiet:
+            cls.level = Log.LEVEL_QUIET
+        else:
+            cls.level = Log.LEVEL_NORMAL
 
         if config.debug and os.getenv('PYTHONDONTWRITEBYTECODE') is None:
             Log.e([
@@ -128,7 +142,7 @@ class Log(object):
 
     @staticmethod
     def push(message: Union[str, None] = None, color: Union[str, None] = None, ignore_quiet = False, deferred = False) -> None:
-        if not Log.verbose and deferred:
+        if Log.level < Log.LEVEL_VERBOSE and deferred:
             Log._flush_deferred_entry()
 
             Log.deferred_log_level = Log.log_level
@@ -152,7 +166,7 @@ class Log(object):
 
     @staticmethod
     def push_v(message: Union[str, None] = None, color: Union[str, None] = None, ignore_quiet = False, deferred = False) -> None:
-        if Log.verbose:
+        if Log.level == Log.LEVEL_VERBOSE:
             Log.push(message, color, ignore_quiet, deferred)
 
     @staticmethod
@@ -163,14 +177,15 @@ class Log(object):
         had_anything_deferred = Log._flush_deferred_entry()
 
         if Log.log_level == 0:
-            Log.abort('pop() called too many times.')
+            Log.e('pop() called too many times.')
+            sys.exit(Log.ABORT_RC)
         Log.log_level -= 1
 
         return had_anything_deferred
 
     @staticmethod
     def pop_v(messages = None, color: Union[str, None] = None, ignore_quiet: bool = False) -> None:
-        if Log.verbose:
+        if Log.level == Log.LEVEL_VERBOSE:
             Log.pop(messages, color, ignore_quiet)
 
     # #################################################################################################
@@ -204,7 +219,7 @@ class Log(object):
     # verbose
     @staticmethod
     def v(messages = None, condition: bool = True) -> None:
-        if Log.verbose and condition:
+        if Log.level == Log.LEVEL_VERBOSE and condition:
             Log._log(messages)
 
     # warning
@@ -233,17 +248,6 @@ class Log(object):
                 postfix = ''
 
     # #################################################################################################
-
-    @staticmethod
-    def abort(messages = None) -> None:
-        Log.e(messages)
-        Log.init('*** Aborted', Log.COLOR_ERROR, ignore_quiet = True)
-
-        if not Log.debug:
-            sys.exit(1)
-
-        Log.d('Related stacktrace below')
-        raise RuntimeError('*** NOT A CRASH! *** Exception raised because of --debug used to obtain stacktrace. Enjoy.')
 
     @staticmethod
     def _get_stacktrace_string() -> str:
@@ -341,7 +345,7 @@ class Log(object):
             if stacktrace_postfix is not None:
                 message += stacktrace_postfix
 
-            if Log.no_color:
+            if not Log.color:
                 message = Ansi.strip(message)
 
         return message
@@ -365,7 +369,7 @@ class Log(object):
             if Log.buffer_enabled and add_to_history:
                 Log.log_entries.append(message)
 
-            quiet = False if ignore_quiet else Log.quiet
+            quiet = False if ignore_quiet else Log.level == Log.LEVEL_QUIET
             if not quiet:
                 print(message.rstrip())
 

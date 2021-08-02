@@ -7,15 +7,13 @@
 #
 """
 
-from typing import List
+from typing import Dict, List, Union
 
 from proptool.decorators.overrides import overrides
 from proptool.prop.items import Comment, Translation
 from proptool.report.group import ReportGroup
 from .base.check import Check
 
-
-# #################################################################################################
 
 class Mark(object):
     def __init__(self, pos: int, mark: str):
@@ -30,14 +28,14 @@ class QuotationMarks(Check):
     opened marks got their closing pair.
     """
 
+    def __init__(self, config: Union[Dict, None] = None):
+        super().__init__(config)
+        self.is_single_file_check = True
+
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(self, translation_file: 'PropFile', reference_file: 'PropFile' = None) -> ReportGroup:
         report = ReportGroup('Quotation marks')
-
-        # NOTE: we do not support apostrophe, because i.e. in English it can be used in sentence: "Dogs' food"
-        # Not sure how to deal with this (and I do not want to do dictionary match)
-        supported_marks: List[str] = {'"', '`'}
 
         for line_idx, item in enumerate(translation_file.items):
             # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
@@ -46,7 +44,7 @@ class QuotationMarks(Check):
 
             stack: List[Mark] = []
             for pos, current_char in enumerate(item.value):
-                if current_char not in supported_marks:
+                if current_char not in self.config['chars']:
                     continue
 
                 if not stack:
@@ -70,3 +68,9 @@ class QuotationMarks(Check):
                 break
 
         return report
+
+    @overrides(Check)
+    def get_default_config(self) -> Dict:
+        return {
+            'chars': ['"', '`'],
+        }

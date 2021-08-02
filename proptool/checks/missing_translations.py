@@ -7,15 +7,14 @@
 #
 """
 
-from .base.check import Check
+from typing import Dict
 from proptool.decorators.overrides import overrides
 from proptool.report.group import ReportGroup
+from .base.check import Check
 
-
-# #################################################################################################
 
 # noinspection PyUnresolvedReferences
-class MissingTranslation(Check):
+class MissingTranslations(Check):
     """
     This check checks if given base key is also present in translation file.
     """
@@ -28,6 +27,7 @@ class MissingTranslation(Check):
         report = ReportGroup('Missing keys')
 
         translation_keys = translation_file.keys.copy()
+
         missing_keys: List[str] = []
         for ref_key in reference_file.keys:
             if ref_key in translation_keys:
@@ -37,13 +37,19 @@ class MissingTranslation(Check):
 
         # Commented out keys are also considered present in the translation unless
         # we run in strict check mode.
-        if not self.config.strict:
-            commented_out_keys = translation_file.commented_out_keys.copy()
+        if not self.config['strict']:
+            commented_out_keys = translation_file.commented_out_keys
             for comm_key in commented_out_keys:
                 if comm_key in missing_keys:
                     missing_keys.remove(comm_key)
 
         for missing_key in missing_keys:
-            report.warn(None, missing_key)
+            report.warn(None, f'Key "{missing_key}" not found.')
 
         return report
+
+    @overrides(Check)
+    def get_default_config(self) -> Dict:
+        return {
+            'strict': False,
+        }
