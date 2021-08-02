@@ -16,7 +16,7 @@ from proptool.checks.dangling_keys import DanglingKeys
 from proptool.checks.empty_translations import EmptyTranslations
 from proptool.checks.formatting_values import FormattingValues
 from proptool.checks.key_format import KeyFormat
-from proptool.checks.missing_translation import MissingTranslation
+from proptool.checks.missing_translations import MissingTranslations
 from proptool.checks.punctuation import Punctuation
 from proptool.checks.quotation_marks import QuotationMarks
 from proptool.checks.starts_with_the_same_case import StartsWithTheSameCase
@@ -46,7 +46,7 @@ class ConfigBuilder(object):
             EmptyTranslations,
             FormattingValues,
             KeyFormat,
-            MissingTranslation,
+            MissingTranslations,
             Punctuation,
             QuotationMarks,
             StartsWithTheSameCase,

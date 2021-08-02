@@ -16,7 +16,7 @@ from .base.check import Check
 # #################################################################################################
 
 # noinspection PyUnresolvedReferences
-class MissingTranslation(Check):
+class MissingTranslations(Check):
     """
     This check checks if given base key is also present in translation file.
     """
