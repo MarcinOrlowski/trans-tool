@@ -7,10 +7,10 @@
 #
 """
 
-from typing import Union
+from typing import Tuple, Union
 
-from proptool.decorators.overrides import overrides
 from proptool.config.config import Config
+from proptool.decorators.overrides import overrides
 
 
 # #################################################################################################
@@ -54,6 +54,45 @@ class Translation(PropItem):
     @overrides(PropItem)
     def to_string(self) -> str:
         return f'{self.key} {self.separator} {self.value}'
+
+    @staticmethod
+    def parse_translation_line(line: str) -> Union[Tuple[str, str, str], None]:
+        # Min two chars (one letter key and separator)
+        if len(line) < 2:
+            return None
+
+        # Find used separator first
+        separator = None
+        separator_pos = None
+        previous_char_backspace = False
+        for idx, char in enumerate(line):
+            if char == '\\':
+                if not previous_char_backspace:
+                    previous_char_backspace = True
+                continue
+            if char in Config.ALLOWED_SEPARATORS:
+                if previous_char_backspace:
+                    continue
+
+                separator = char
+                separator_pos = idx
+                break
+            else:
+                previous_char_backspace = False
+
+        # https://docs.oracle.com/javase/7/docs/api/java/util/Properties.html
+
+        if not separator:
+            return None
+
+        key = line[:separator_pos].strip()
+        sep = separator.strip()
+        val = line[separator_pos + 1:].lstrip()
+
+        if key == '' or sep == '':
+            return None
+
+        return key, sep, val
 
 
 # #################################################################################################

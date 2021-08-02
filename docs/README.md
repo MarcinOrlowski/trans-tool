@@ -45,3 +45,4 @@ You may also want to setup [virtual environment](https://docs.python.org/3/libra
 ## Additional links ##
 
 * The `*.properties` syntax support is based on official [file format documentation](https://docs.oracle.com/cd/E23095_01/Platform.93/ATGProgGuide/html/s0204propertiesfileformat01.html).
+* More technical details also in [JavaDocs for java.util.properties](https://docs.oracle.com/javase/7/docs/api/java/util/Properties.html).

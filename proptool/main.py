@@ -107,8 +107,9 @@ class PropTool(object):
                         else:
                             if config.create:
                                 translation.update(reference)
-                                Log.i(f'Creating new translation file: {translation_path}')
+                                Log.push('Creating new translation file')
                                 translation.save(translation_path)
+                                Log.pop()
                             else:
                                 Log.e(f'File not found: {translation_path}')
 
@@ -118,7 +119,10 @@ class PropTool(object):
             # Close main push.
             Log.pop()
 
+            # Done.
             return 100 if errors else 0
+
+        # Last-resort exceptin catcher.
         except Exception as ex:
             Log.e(str(ex))
             exc_type, exc_obj, tb = sys.exc_info()

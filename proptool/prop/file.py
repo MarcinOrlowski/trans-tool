@@ -196,14 +196,14 @@ class PropFile(object):
                     continue
 
                 # Whatever left should be valid key[:=]val entry
-                tmp: List[str] = re.split(f'^(.+)([{"".join(Config.ALLOWED_SEPARATORS)}])(.+)$', line)
-                if len(tmp) != 5:
+                tmp = Translation.parse_translation_line(line)
+                if not tmp:
                     Log.e(f'Invalid syntax at line {line_number} of "{file}".')
                     Utils.abort()
 
-                key = tmp[1].strip()
-                separator = tmp[2].strip()
-                val = tmp[3].lstrip()
+                key = tmp[0].strip()
+                separator = tmp[1].strip()
+                val = tmp[2].lstrip()
                 if key not in self.keys:
                     self.append(Translation(key, val, separator))
                     self.keys.append(key)
