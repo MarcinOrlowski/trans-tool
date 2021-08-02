@@ -25,7 +25,7 @@ from proptool.checks.typesetting_quotation_marks import TypesettingQuotationMark
 from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from proptool.config.checker_info import CheckerInfo
 from proptool.config.config import Config
-from proptool.config.config_reader import ConfigReader
+from proptool.config.reader import ConfigReader
 from proptool.const import Const
 from proptool.log import Log
 from proptool.utils import Utils
