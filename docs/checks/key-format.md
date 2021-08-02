@@ -33,7 +33,7 @@ conventcion across your files.
 
 | Key       | Type      | Description | Example |
 |-----------|-----------|-------------|---------|
-| pattern   | Regular expression (string) | Pattern for that each key must match | `"^[a-z]+[a-zA-Z0-9_.]*[a-zA-Z0-9]+$"` |
+| pattern   | Regular expression (string) | Pattern for that each key must match | `"^[a-zA-Z0-9_.]*[a-zA-Z0-9]+$"` |
 
 ### Notes ###
 
