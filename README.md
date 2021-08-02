@@ -39,7 +39,7 @@ Java world). Example file:
 
 ```ini
 # Example of *.properties file
-programTitle = Prop-Tool v1.3
+programTitle = Prop-Tool v2.0.0
 okButton = "OK"
 ```
 
