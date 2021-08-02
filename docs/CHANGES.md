@@ -11,6 +11,7 @@
   * Added option to `--create` template translation files.
   * The `--lang` now also supports comma separated arguments.
   * Reworked documentation.
+  * Improved `*.properties` file parsing to better handle extreme cases.
   * Added more unit tests.
 
 * v1.3.0 (2021-07-22)
