@@ -207,9 +207,27 @@ class ConfigBuilder(object):
 
         args = parser.parse_args()
 
+        # If user separated languages with comma instead of space, lets do some magic for it to work too.
+        args.languages = ConfigBuilder._process_comma_separated_langs(args.languages)
+
         ConfigBuilder._validate_args(args)
 
         return args
+
+    @staticmethod
+    def _process_comma_separated_langs(languages: Union[List[str], None]) -> Union[List[str], None]:
+        if languages is None:
+            return None
+
+        result = []
+        for lang in languages:
+            tmp = lang.split(',')
+            if len(tmp) > 1:
+                _ = [result.append(code) for code in tmp if code.strip() != '']  # noqa: WPS122
+            else:
+                result.append(lang)
+
+        return result
 
     @staticmethod
     def _validate_args(args):

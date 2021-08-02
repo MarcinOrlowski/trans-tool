@@ -426,3 +426,39 @@ class TestConfigBuilder(TestCase):
             self.assertEqual(len(config.files), len(config.files))
             for idx, def_file in enumerate(config.files):
                 self.assertEqual(def_file, config.files[idx])
+
+    # #################################################################################################
+
+    def test_comma_separated_langs_noop(self) -> None:
+        """
+        Checks if _process_comma_separated_langs() does nothing if there's no comma separated stuff.
+        """
+
+        max_cnt = random.randint(5, 20)  # noqa: WPS432
+        src_langs = [self.get_random_string(length = 5) for _ in range(max_cnt)]
+        result = ConfigBuilder._process_comma_separated_langs(src_langs)
+
+        self.assertEqual(len(src_langs), len(result))
+        self.assertEqual(src_langs, result)
+
+    def test_comma_separated_langs_split_and_filter(self) -> None:
+        """
+        Checks if _process_comma_separated_langs() properly splits comma separated languages
+        and filters out empty (i.e. ",,") entries.
+        """
+
+        max_cnt = random.randint(5, 20)  # noqa: WPS432
+        src_langs = [self.get_random_string(length = 5) for _ in range(max_cnt)]
+
+        comma_separated = [
+            'foo,bar',
+            'double,,comma',
+        ]
+        comma_splitted = [
+            'foo', 'bar', 'double', 'comma',
+        ]
+
+        result = ConfigBuilder._process_comma_separated_langs(src_langs + comma_separated)
+
+        self.assertEqual(len(src_langs) + len(comma_splitted), len(result))
+        self.assertEqual(src_langs + comma_splitted, result)
