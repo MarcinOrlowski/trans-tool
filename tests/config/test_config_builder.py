@@ -61,14 +61,14 @@ class TestConfigBuilder(TestCase):
 
         return config
 
-    def test_validate(self) -> None:
+    def test_validate_config(self) -> None:
         """
         Ensures valid Config instance passes all validation checks.
         """
         ConfigBuilder._validate_config(self.get_config_for_validate())
 
     @patch('proptool.log.Log.e')
-    def test_validate_no_files(self, log_e_mock: Mock) -> None:
+    def test_validate_config_no_files(self, log_e_mock: Mock) -> None:
         """
         Ensures empty list of files triggers expected error message and quits.
 
@@ -86,7 +86,7 @@ class TestConfigBuilder(TestCase):
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
     @patch('proptool.log.Log.e')
-    def test_validate_invalid_separator(self, log_e_mock: Mock) -> None:
+    def test_validate_config_invalid_separator(self, log_e_mock: Mock) -> None:
         """
         Ensures invalid separator char triggers expected error message and quits.
 
@@ -104,7 +104,7 @@ class TestConfigBuilder(TestCase):
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
     @patch('proptool.log.Log.e')
-    def test_validate_invalid_comment_marker(self, log_e_mock: Mock) -> None:
+    def test_validate_config_invalid_comment_marker(self, log_e_mock: Mock) -> None:
         """
         Ensures invalid comment marker triggers expected error message and quits.
 
@@ -120,6 +120,29 @@ class TestConfigBuilder(TestCase):
             # Check we got sys.exit called with non-zero return code
             self.assertEqual(SystemExit, type(context_manager.exception))
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
+
+    @patch('proptool.log.Log.e')
+    def test_validate_config_invalid_languages(self, log_e_mock: Mock) -> None:
+        # valid language code is just lowercased [a-z]{2,}
+        faults = [
+            'ALLCAPS',  # all caps
+            'X',  # too short
+            'Pl',  # mixed case
+            'P9',  # digits
+        ]
+
+        for fault in faults:
+            config = self.get_config_for_validate()
+            config.languages = [fault]
+
+            with self.assertRaises(SystemExit) as context_manager:
+                ConfigBuilder._validate_config(config)
+                exp_calls = [call(f'Invalid language: "{fault}".')]
+                log_e_mock.assert_has_calls(exp_calls)
+
+                # Check we got sys.exit called with non-zero return code
+                self.assertEqual(SystemExit, type(context_manager.exception))
+                self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
     # #################################################################################################
 

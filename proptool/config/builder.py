@@ -8,6 +8,7 @@
 """
 
 import argparse
+import re
 from pathlib import Path
 from typing import List, Union
 
@@ -80,8 +81,16 @@ class ConfigBuilder(object):
     def _validate_config(config: Config) -> None:
         if not config.files:
             ConfigBuilder._abort('No base file(s) specified.')
+
+        if config.languages:
+            pattern = re.compile(r'^[a-z]{2,}$')
+            for lang in config.languages:
+                if not pattern.match(lang):
+                    ConfigBuilder._abort(f'Invalid language: "{lang}".')
+
         if config.separator not in Config.ALLOWED_SEPARATORS:
             ConfigBuilder._abort('Invalid separator character.')
+
         if config.comment_marker not in Config.ALLOWED_COMMENT_MARKERS:
             ConfigBuilder._abort('Invalid comment marker.')
 
