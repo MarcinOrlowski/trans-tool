@@ -292,7 +292,7 @@ class TestPropFile(TestCase):
 
                 # Ensure call to Log.i() happened with expected message.
                 msg = log_i_mock.call_args_list[0][0][0]
-                self.assertEqual(msg, f'Saving: {verify_file_name}')
+                self.assertEqual(msg, f'Writing: {verify_file_name}')
 
                 # Check file content is written as expected.
                 expected = []

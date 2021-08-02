@@ -11,6 +11,9 @@
 * **Usage**
   * [Config file and command line arguments](#config-file-and-command-line)
   * [Usage examples](#usage-examples)
+  * Handling translation files
+    * [Create new translation files](#create-new-translation-files)
+    * [Updating existing translations](#update-existing-translations)
 
 ---
 
@@ -75,33 +78,38 @@ gui_fr.properties
 
 ---
 
-Check if `es` translation of `gui.properties` is in sync and if there are any missing keys, rewrite translation file to contain all
-keys from base:
+### Update existing translations ###
 
-```bash
-prop-tool --base gui --lang es --fix
-```
+You can use `prop-tool` to update your translation files by using `--update` option. In such case `prop-tool` will completely
+rewrite translation files, adding missing keys (in commented out form).
 
----
-
-Check if `pt` translation of `gui.properties` is in sync and if there are any missing keys, rewrite translation file to contain all
-keys from base using own comment format:
-
-```bash
-prop-tool --base gui --lang es --fix --tpl "COM >~=-> KEY SEP"
-```
-
----
-
-## Updating translations ##
-
-You can use `prop-tool` to update your translation files by using `--fix` option. In such case `prop-tool` will completely rewrite
-translation files, adding missing keys (in commented out form).
-
-While content of written file is strongly based on base file Some normalization will be made
+While content of written file is strongly based on a reference file. Some normalization will be made though:
 
 * There will be no more than one empty consequent empty line written,
 * There will be no more than one consequent empty comment line (just comment marker) written.
 
-NOTE: Be aware that `--fix` do NOT update existing translation file but builds it completely using base file as reference and
-existing translations (if present). No other content of translation files (for example additional comments etc) will be preserved.
+Be aware that `--update` do NOT update existing translation file but builds it completely using base file as reference and existing
+translations (if present). No other content of translation files (for example additional comments etc.) will be preserved.
+
+This will check if `es` translation of `gui.properties` is in sync and if there are any issues, rewrite translation file to
+contain all keys from base:
+
+```bash
+prop-tool --base gui --lang es --update
+```
+
+---
+
+### Create new translation files ###
+
+The `--update` only acts if target translation file exists and `prop-tool` will abort with error if you try to update non-existing
+file. However it's also often required to be able to create empty translation file (i.e. to hand it to the translator) and `prop-tool`
+can do that that too with use of `--create` switch.
+
+This will check if `de` translation of `gui.properties` but if file does not exist, then it will create and empty "template" file:
+
+```bash
+prop-tool --base gui --lang de --create
+```
+
+**NOTE:** You can combine `--create` and `--update` in one invocation.

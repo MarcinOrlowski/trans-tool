@@ -87,10 +87,12 @@ class PropTool(object):
                         translation_path = Path(reference_path.parent / f'{name_prefix}_{lang}.{name_suffix}')
                         translation = PropFile(config)
 
-                        try:  # noqa: WPS505
+                        trans_level_label = f'{lang.upper()}: {translation_path}'
+                        Log.push(trans_level_label, deferred = True)
+
+                        if translation_path.exists():
+                            # Load translation file.
                             translation.load(translation_path, lang)
-                            trans_level_label = f'{lang.upper()}: {translation_path}'
-                            Log.push(trans_level_label, deferred = True)
 
                             is_translation_valid = translation.is_valid(reference)
 
@@ -102,11 +104,16 @@ class PropTool(object):
                                 if translation.file:
                                     translation.update(reference)
                                     translation.save()
+                        else:
+                            if config.create:
+                                translation.update(reference)
+                                Log.i(f'Creating new translation file: {translation_path}')
+                                translation.save(translation_path)
+                            else:
+                                Log.e(f'File not found: {translation_path}')
 
-                            if Log.pop():
-                                Log.i(f'%ok%{trans_level_label}: OK')
-                        except FileNotFoundError:
-                            Log.e(f'File not found: {translation_path}')
+                        if Log.pop():
+                            Log.i(f'%ok%{trans_level_label}: OK')
 
             # Close main push.
             Log.pop()

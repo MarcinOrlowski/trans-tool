@@ -46,6 +46,7 @@ class Config(object):
         self.verbose: bool = False
 
         self.update: bool = False
+        self.create: bool = False
 
         self.files: List[str] = []
         self.languages: List[str] = []

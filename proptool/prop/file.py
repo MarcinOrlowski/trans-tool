@@ -231,7 +231,7 @@ class PropFile(object):
         for item in self.items:
             content.append(item.to_string())
 
-        Log.i(f'Saving: {target_file_name}')
+        Log.i(f'Writing: {target_file_name}')
         with open(target_file_name, 'w') as fh:
             # FIXME: LF/CRLF should configurable
             fh.write('\n'.join(content))

@@ -110,6 +110,7 @@ class ConfigBuilder(object):
 
         # cmd fix
         config.update = args.update
+        config.create = args.create
 
         # Set optional args, if set by user.
         optionals = [
@@ -157,7 +158,9 @@ class ConfigBuilder(object):
 
         group = parser.add_argument_group('Additional options')
         group.add_argument('--update', action = 'store_true', dest = 'update',
-                           help = 'Updates translation files in-place using base file as reference. No backup!')
+                           help = 'Updates existing translation files in-place using base file as reference.')
+        group.add_argument('--create', action = 'store_true', dest = 'create',
+                           help = 'Creates new translation files using base file as reference if no file exists.')
         group.add_argument('--separator', action = 'store', dest = 'separator', metavar = 'CHAR', nargs = 1,
                            help = 'If specified, only given CHAR is considered a valid key/value separator.'
                                   + f'Must be one of the following: {", ".join(Config.ALLOWED_SEPARATORS)}')
