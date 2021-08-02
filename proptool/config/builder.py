@@ -16,7 +16,7 @@ from proptool.checks.dangling_keys import DanglingKeys
 from proptool.checks.empty_translations import EmptyTranslations
 from proptool.checks.formatting_values import FormattingValues
 from proptool.checks.key_format import KeyFormat
-from proptool.checks.missing_translation import MissingTranslation
+from proptool.checks.missing_translations import MissingTranslations
 from proptool.checks.punctuation import Punctuation
 from proptool.checks.quotation_marks import QuotationMarks
 from proptool.checks.starts_with_the_same_case import StartsWithTheSameCase
@@ -25,7 +25,7 @@ from proptool.checks.typesetting_quotation_marks import TypesettingQuotationMark
 from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from proptool.config.checker_info import CheckerInfo
 from proptool.config.config import Config
-from proptool.config.config_reader import ConfigReader
+from proptool.config.reader import ConfigReader
 from proptool.const import Const
 from proptool.log import Log
 from proptool.utils import Utils
@@ -46,7 +46,7 @@ class ConfigBuilder(object):
             EmptyTranslations,
             FormattingValues,
             KeyFormat,
-            MissingTranslation,
+            MissingTranslations,
             Punctuation,
             QuotationMarks,
             StartsWithTheSameCase,
@@ -110,6 +110,7 @@ class ConfigBuilder(object):
 
         # cmd fix
         config.update = args.update
+        config.create = args.create
 
         # Set optional args, if set by user.
         optionals = [
@@ -157,7 +158,9 @@ class ConfigBuilder(object):
 
         group = parser.add_argument_group('Additional options')
         group.add_argument('--update', action = 'store_true', dest = 'update',
-                           help = 'Updates translation files in-place using base file as reference. No backup!')
+                           help = 'Updates existing translation files in-place using base file as reference.')
+        group.add_argument('--create', action = 'store_true', dest = 'create',
+                           help = 'Creates new translation files using base file as reference if no file exists.')
         group.add_argument('--separator', action = 'store', dest = 'separator', metavar = 'CHAR', nargs = 1,
                            help = 'If specified, only given CHAR is considered a valid key/value separator.'
                                   + f'Must be one of the following: {", ".join(Config.ALLOWED_SEPARATORS)}')

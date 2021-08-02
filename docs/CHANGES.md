@@ -6,8 +6,9 @@
 
 # Changelog #
 
-* v2.0.0 (2021-07-27)
+* dev ()
   * Added support for config files.
+  * Added option to `--create` template translation files.
   * Reworked documentation.
   * Added more unit tests.
 

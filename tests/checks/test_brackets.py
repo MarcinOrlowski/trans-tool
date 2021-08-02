@@ -6,10 +6,12 @@
 # https://github.com/MarcinOrlowski/prop-tool/
 #
 """
+import random
 from typing import Dict, Union
 
 from proptool.checks.brackets import Brackets
 from proptool.decorators.overrides import overrides
+from proptool.prop.file import PropFile
 from proptool.prop.items import Blank, Comment, Translation
 from tests.checks.checks_test_case import ChecksTestCase
 
@@ -33,6 +35,10 @@ class ChecksBrackets(ChecksTestCase):
         self.check_single_file(Translation('key', '(<>'), exp_errors = 1)
         # Text the case where we have matches, but not in order.
         self.check_single_file(Translation('key', '<(>)'), exp_errors = 1)
+
+    def test_empty_translation(self) -> None:
+        propfile = PropFile(self.config)
+        self.check(propfile)
 
     # #################################################################################################
 
@@ -71,3 +77,54 @@ class ChecksBrackets(ChecksTestCase):
             self.assertFalse(op_marker in config['closing'], f'Marker {op_marker} (position: {op_idx}) is present in closing too.')
         for cl_idx, cl_marker in enumerate(config['closing']):
             self.assertFalse(cl_marker in config['opening'], f'Marker {cl_marker} (position: {cl_idx}) is present in opening too.')
+
+    def test_uneven_opening_and_closing_lists(self) -> None:
+        """
+        Checks if error will be reported when opening and closing configuration
+        lists contain different number of elements.
+        """
+        opening_cnt = random.randint(10, 20)
+        opening = [self.get_random_string(length = 1) for item in range(opening_cnt)]
+
+        closing_cnt = random.randint(10, 20)
+        closing = [self.get_random_string(length = 1) for item in range(closing_cnt)]
+
+        if closing_cnt == opening_cnt:
+            if random.randint(0, 1) == 0:
+                del opening[random.randint(0, opening_cnt - 1)]
+            else:
+                del closing[random.randint(0, closing_cnt - 1)]
+
+        self.checker.config = {
+            'opening': opening,
+            'closing': closing,
+        }
+
+        prop_file = PropFile(self.config)
+        self.check(prop_file, exp_errors = 1)
+
+    def test_empty_opening_or_closing_lists(self) -> None:
+        non_empty_cnt = random.randint(10, 20)
+        non_empty = [self.get_random_string(length = 1) for item in range(non_empty_cnt)]
+        empty = []
+
+        self.checker.config = {
+            'opening': non_empty,
+            'closing': empty,
+        }
+        prop_file = PropFile(self.config)
+        self.check(prop_file, exp_warnings = 1)
+
+        self.checker.config = {
+            'opening': empty,
+            'closing': non_empty,
+        }
+        prop_file = PropFile(self.config)
+        self.check(prop_file, exp_warnings = 1)
+
+        self.checker.config = {
+            'opening': empty,
+            'closing': empty,
+        }
+        prop_file = PropFile(self.config)
+        self.check(prop_file, exp_warnings = 1)

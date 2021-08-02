@@ -15,7 +15,7 @@ from typing import List, Union
 from unittest.mock import Mock, call, patch
 
 from proptool.config.config import Config
-from proptool.config.config_builder import ConfigBuilder
+from proptool.config.builder import ConfigBuilder
 from proptool.utils import Utils
 from tests.test_case import TestCase
 
@@ -23,6 +23,8 @@ from tests.test_case import TestCase
 class FakeArgs(object):
     def __init__(self):
         self.update: bool = False
+        self.create: bool = False
+
         self.quiet: bool = False
         self.color: bool = False
 
@@ -145,6 +147,8 @@ class TestConfigBuilder(TestCase):
 
         # Lets set up args to some random state
         args.update = self.get_random_bool()
+        args.create = self.get_random_bool()
+
         args.quiet = self.get_random_bool()
         args.verbose = self.get_random_bool()
         args.color = self.get_random_bool()
@@ -198,6 +202,9 @@ class TestConfigBuilder(TestCase):
         self.assertEqual(exp_fatal, config.fatal)
         exp_color = self._get_expectation(config_defaults.color, args.color, args.no_color)
         self.assertEqual(exp_color, config.color)
+
+        self.assertEqual(args.update, config.update)
+        self.assertEqual(args.create, config.create)
 
         # log_level controlled by `quiet` and `verbose`.
         self.assertEqual(args.quiet, config.quiet)
@@ -387,7 +394,7 @@ class TestConfigBuilder(TestCase):
 
         # Pass no args for parsing (this is legit as we have config file that can provide what's needed).
         sys.argv[1:] = []  # noqa: WPS362
-        with patch('proptool.config.config_builder.ConfigBuilder._parse_args') as manager:
+        with patch('proptool.config.builder.ConfigBuilder._parse_args') as manager:
             manager.return_value = args
 
             ConfigBuilder.build(config)

@@ -10,7 +10,7 @@ import random
 from typing import Dict, Union
 
 from proptool.checks.base.check import Check
-from proptool.checks.missing_translation import MissingTranslation
+from proptool.checks.missing_translations import MissingTranslations
 from proptool.decorators.overrides import overrides
 from proptool.prop.items import Comment
 from tests.checks.checks_test_case import ChecksTestCase
@@ -20,7 +20,7 @@ class TestMissingTranslations(ChecksTestCase):
 
     @overrides(ChecksTestCase)
     def get_checker(self, config: Union[Dict, None] = None) -> Check:
-        return MissingTranslation(config)
+        return MissingTranslations(config)
 
     # #################################################################################################
 

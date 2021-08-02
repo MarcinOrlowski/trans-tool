@@ -47,7 +47,7 @@ class TestPropFile(TestCase):
 
     def test_append_wrong_arg_type(self) -> None:
         # GIVEN normal instance of PropFile
-        prop_file = PropFile(Config())
+        propfile = PropFile(Config())
 
         # WHEN we try to append object of unsupported type
         obj = 'INVALID'
@@ -55,7 +55,7 @@ class TestPropFile(TestCase):
         # THEN Exception should be thrown.
         with self.assertRaises(TypeError):
             # noinspection PyTypeChecker
-            prop_file.append(obj)
+            propfile.append(obj)
 
     # #################################################################################################
 
@@ -64,9 +64,9 @@ class TestPropFile(TestCase):
         Tests if load() fails on non-existing file correctly.
         """
         file_name = self.get_random_string()
-        prop_file = PropFile(Config())
+        propfile = PropFile(Config())
         with self.assertRaises(Exception) as cm:
-            prop_file.load(Path(file_name))
+            propfile.load(Path(file_name))
             self.assertEqual(FileNotFoundError, type(cm.exception))
 
     @patch('pathlib.Path.exists')
@@ -95,30 +95,30 @@ class TestPropFile(TestCase):
                 with patch('builtins.open', mock_open(read_data = ''.join(fake_data_src))):
                     # Lie our fake file exists
                     path_exists_mock.return_value = True
-                    prop_file = PropFile(Config())
-                    prop_file.load(Path('foo'))
+                    propfile = PropFile(Config())
+                    propfile.load(Path('foo'))
 
                     # We should have one entry less, because once we strip CRLF from the last
                     # row, it should overwrite entry set row before.
-                    self.assertEqual(len(fake_data_src) - 1, len(prop_file.items))
+                    self.assertEqual(len(fake_data_src) - 1, len(propfile.items))
 
                     # Let's inspect what we have.
                     idx = 0
 
                     # Line 0
-                    item = prop_file.items[idx]
+                    item = propfile.items[idx]
                     self.assertIsInstance(item, Comment)
                     self.assertEqual(f'{sep} {com0}', item.value)
                     idx += 1
 
                     # Line 1
-                    item = prop_file.items[idx]
+                    item = propfile.items[idx]
                     self.assertIsInstance(item, Comment)
                     self.assertEqual(f'{sep} {com1}', item.value)
                     idx += 1
 
                     # Line 2
-                    item = prop_file.items[idx]
+                    item = propfile.items[idx]
                     self.assertIsInstance(item, Translation)
                     self.assertEqual(key1, item.key)
                     # We have duplicated key. It's not overwritten row. Please see other code comments.
@@ -141,11 +141,11 @@ class TestPropFile(TestCase):
         with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))):
             # Lie our fake file exists
             path_exists_mock.return_value = True
-            prop_file = PropFile(Config())
-            prop_file.load(Path('foo'))
-            self.assertEqual(len(fake_data_src), len(prop_file.items))
+            propfile = PropFile(Config())
+            propfile.load(Path('foo'))
+            self.assertEqual(len(fake_data_src), len(propfile.items))
 
-            for item in prop_file.items:
+            for item in propfile.items:
                 self.assertIsInstance(item, Blank)
 
     @patch('pathlib.Path.exists')
@@ -157,9 +157,9 @@ class TestPropFile(TestCase):
         with patch('builtins.open', mock_open(read_data = '')):
             # Lie our fake file exists
             path_exists_mock.return_value = True
-            prop_file = PropFile(Config())
-            prop_file.load(Path(fake_file_name))
-            self.assertEqual(0, len(prop_file.items))
+            propfile = PropFile(Config())
+            propfile.load(Path(fake_file_name))
+            self.assertEqual(0, len(propfile.items))
 
     @patch('pathlib.Path.exists')
     def test_load_invalid_translation_syntax(self, path_exists_mock: Mock) -> None:
@@ -188,8 +188,8 @@ class TestPropFile(TestCase):
 
             with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))):
                 try:
-                    prop_file = PropFile(Config())
-                    prop_file.load(Path(fake_file_name))
+                    propfile = PropFile(Config())
+                    propfile.load(Path(fake_file_name))
                 except SystemExit:
                     # sys.exit() happened after Log.e() is called, so we can check the error message here.
                     msg = log_e_mock.call_args_list[0][0][0]
@@ -248,34 +248,34 @@ class TestPropFile(TestCase):
         with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))):
             # Lie our fake file exists
             path_mock.return_value = True
-            prop_file = PropFile(Config())
-            prop_file.load(Path('foo'))
-            self.assertEqual(len(fake_data_src), len(prop_file.items))
+            propfile = PropFile(Config())
+            propfile.load(Path('foo'))
+            self.assertEqual(len(fake_data_src), len(propfile.items))
 
             idx = 0
 
-            item = prop_file.items[idx]
+            item = propfile.items[idx]
             assertBlank(item)
             idx += 1
 
-            item = prop_file.items[idx]
+            item = propfile.items[idx]
             assertComment(item, comment1_marker, comment1_value)
             idx += 1
 
-            item = prop_file.items[idx]
+            item = propfile.items[idx]
             assertTranslation(item, key1, sep1, val1)
             idx += 1
 
-            item = prop_file.items[idx]
+            item = propfile.items[idx]
             assertBlank(item)
             idx += 1
 
-            item = prop_file.items[idx]
+            item = propfile.items[idx]
             assertComment(item, comment2_marker, comment2_value)
             self.assertIsNone(item.key)
             idx += 1
 
-            item = prop_file.items[idx]
+            item = propfile.items[idx]
             assertTranslation(item, key2, sep2, val2)
             idx += 1
 
@@ -292,7 +292,7 @@ class TestPropFile(TestCase):
 
                 # Ensure call to Log.i() happened with expected message.
                 msg = log_i_mock.call_args_list[0][0][0]
-                self.assertEqual(msg, f'Saving: {verify_file_name}')
+                self.assertEqual(msg, f'Writing: {verify_file_name}')
 
                 # Check file content is written as expected.
                 expected = []
@@ -349,12 +349,12 @@ class TestPropFile(TestCase):
             ref_file = PropFile(config)
             ref_file.load(fake_file)
 
-            prop_file = PropFile(config)
-            prop_file.load(fake_file)
+            propfile = PropFile(config)
+            propfile.load(fake_file)
 
             # Expecting no problems reported
-            prop_file.report.dump()
-            self.assertTrue(prop_file.is_valid(ref_file))
+            propfile.report.dump()
+            self.assertTrue(propfile.is_valid(ref_file))
 
     # #################################################################################################
 

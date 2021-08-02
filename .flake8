@@ -93,8 +93,8 @@ per-file-ignores =
     # WPS609 Found direct magic attribute usage: __setattr__, __getattr__, ...
     # WPS433 Found nested import
     # WPS425 Found boolean non-keyword argument: True, False
-    proptool/config/config_reader.py: WPS609, WPS421, WPS204, WPS529, WPS433,
-    proptool/config/config_builder.py: WPS609, WPS301, WPS437, WPS213, WPS425,
+    proptool/config/reader.py: WPS609, WPS421, WPS204, WPS529, WPS433,
+    proptool/config/builder.py: WPS609, WPS301, WPS437, WPS213, WPS425,
 
     # WPS111 Found too short name
     # WPS214 Found too many methods
