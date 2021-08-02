@@ -43,19 +43,21 @@ class Brackets(Check):
 
         report = ReportGroup(self.report_title)
 
-        if not translation.items:
-            return report
-
         opening = self.config['opening']
         closing = self.config['closing']
 
         opening_cnt = len(opening)
         closing_cnt = len(closing)
 
+        if opening_cnt == 0 or closing_cnt == 0:
+            report.warn(line = None, msg = 'CONFIG: Empty "opening" and "closing" arrays.')
+            return report
         if opening_cnt != closing_cnt:
-            report.error('CONFIG: Both "opening" and "closing" arrays must contain the same number of elements.')
-        if opening_cnt == 0:
-            report.warn('CONFIG: Empty "opening" and "closing" arrays.')
+            report.error(line = None, msg = 'CONFIG: Both "opening" and "closing" arrays must contain the same number of elements.')
+            return report
+
+        # We do that check at the end to ensure config is validated first.
+        if not translation.items:
             return report
 
         for idx, item in enumerate(translation.items):
