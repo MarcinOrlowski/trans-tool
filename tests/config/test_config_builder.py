@@ -15,7 +15,7 @@ from typing import List, Union
 from unittest.mock import Mock, call, patch
 
 from proptool.config.config import Config
-from proptool.config.config_builder import ConfigBuilder
+from proptool.config.builder import ConfigBuilder
 from proptool.utils import Utils
 from tests.test_case import TestCase
 
@@ -387,7 +387,7 @@ class TestConfigBuilder(TestCase):
 
         # Pass no args for parsing (this is legit as we have config file that can provide what's needed).
         sys.argv[1:] = []  # noqa: WPS362
-        with patch('proptool.config.config_builder.ConfigBuilder._parse_args') as manager:
+        with patch('proptool.config.builder.ConfigBuilder._parse_args') as manager:
             manager.return_value = args
 
             ConfigBuilder.build(config)

@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 from proptool.config.config import Config
-from proptool.config.config_builder import ConfigBuilder
+from proptool.config.builder import ConfigBuilder
 from proptool.prop.file import PropFile
 from .const import Const
 from .log import Log
