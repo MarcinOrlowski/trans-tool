@@ -42,7 +42,7 @@ setup(
 
     author = 'Marcin Orlowski',
     author_email = 'mail@marcinOrlowski.com',
-    description = 'prop-tool: Java *.properties file sync checker and syncing tool.',
+    description = 'The *.properties file sync checker and syncing tool.',
     long_description = readme,
     long_description_content_type = 'text/markdown',
     url = Const.APP_URL,
