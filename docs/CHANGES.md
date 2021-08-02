@@ -9,7 +9,7 @@
 * dev ()
   * Added support for config files.
   * Added option to `--create` template translation files.
-  * The `--lang` now also supports comma separated arguments. 
+  * The `--lang` now also supports comma separated arguments.
   * Reworked documentation.
   * Added more unit tests.
 
