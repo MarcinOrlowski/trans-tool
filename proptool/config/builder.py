@@ -8,6 +8,7 @@
 """
 
 import argparse
+import re
 from pathlib import Path
 from typing import List, Union
 
@@ -80,8 +81,16 @@ class ConfigBuilder(object):
     def _validate_config(config: Config) -> None:
         if not config.files:
             ConfigBuilder._abort('No base file(s) specified.')
+
+        if config.languages:
+            pattern = re.compile(r'^[a-z]{2,}$')
+            for lang in config.languages:
+                if not pattern.match(lang):
+                    ConfigBuilder._abort(f'Invalid language: "{lang}".')
+
         if config.separator not in Config.ALLOWED_SEPARATORS:
             ConfigBuilder._abort('Invalid separator character.')
+
         if config.comment_marker not in Config.ALLOWED_COMMENT_MARKERS:
             ConfigBuilder._abort('Invalid comment marker.')
 
@@ -198,9 +207,27 @@ class ConfigBuilder(object):
 
         args = parser.parse_args()
 
+        # If user separated languages with comma instead of space, lets do some magic for it to work too.
+        args.languages = ConfigBuilder._process_comma_separated_langs(args.languages)
+
         ConfigBuilder._validate_args(args)
 
         return args
+
+    @staticmethod
+    def _process_comma_separated_langs(languages: Union[List[str], None]) -> Union[List[str], None]:
+        if languages is None:
+            return None
+
+        result = []
+        for lang in languages:
+            tmp = lang.split(',')
+            if len(tmp) > 1:
+                _ = [result.append(code) for code in tmp if code.strip() != '']  # noqa: WPS122
+            else:
+                result.append(lang)
+
+        return result
 
     @staticmethod
     def _validate_args(args):
