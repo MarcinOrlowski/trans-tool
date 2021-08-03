@@ -157,7 +157,7 @@ class ConfigBuilder(object):
         group = parser.add_argument_group('Base options')
         group.add_argument('--config', action = 'store', dest = 'config_file', nargs = 1, metavar = 'FILE',
                            help = 'Use specified config file. Command line arguments override config settings.')
-        group.add_argument('--config-dump', action = 'store_true', dest = 'config_file_dump',
+        group.add_argument('--config-dump', action = 'store_true', dest = 'config_dump',
                            help = 'Print config as seen by the app once config file and args are parsed.')
         group.add_argument('-b', '--base', action = 'store', dest = 'files', nargs = '+', metavar = 'FILE',
                            help = 'List of base files to check.')
