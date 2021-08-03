@@ -75,6 +75,12 @@ class ConfigReader(object):
                 if attr_name[:2] != '__':
                     print(f'{attr_name}: {getattr(config, attr_name)}')
 
+        # Load checker's configs
+        for checker_id, checker_info in config.checks.items():
+            if self.parser.has_section(checker_id):
+                checker = checker_info.callable(checker_info.config)
+                checker.load_config_ini(checker_info.config, self.parser, checker_id)
+
         return config
 
     # #################################################################################################

@@ -6,6 +6,9 @@
 
 # Changelog #
 
+* dev
+  * Corrected default `KeyFormat` pattern.
+
 * v2.0.0 (2021-08-02)
   * Added support for config files.
   * Added option to `--create` template translation files.

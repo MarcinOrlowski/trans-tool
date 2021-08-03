@@ -7,6 +7,7 @@
 #
 """
 
+from configparser import ConfigParser
 from typing import Dict, List, Union
 
 from proptool.decorators.overrides import overrides
@@ -110,3 +111,14 @@ class Brackets(Check):
             'opening': ['(', '[', '<', '{'],
             'closing': [')', ']', '>', '}'],
         }
+
+    @overrides(Check)
+    def load_config_ini(self, config: Dict, parser: ConfigParser, config_section: str) -> None:
+        print('x')
+        import json
+        option = 'opening'
+        if parser.has_option(config_section, option):
+            config[option] = json.loads(parser.get(config_section, option).replace('\n', ''))
+        option = 'closing'
+        if parser.has_option(config_section, option):
+            config[option] = json.loads(parser.get(config_section, option).replace('\n', ''))

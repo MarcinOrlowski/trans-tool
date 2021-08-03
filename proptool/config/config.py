@@ -65,3 +65,27 @@ class Config(object):
         if checker_id not in self.checks:
             raise KeyError(f'No config for {checker_id} found.')
         return self.checks[checker_id]
+
+    def _dump(self, items: Dict):
+        for key, val in items.items():
+            if isinstance(val, str):
+                print(f'{key} = "{val}"')
+            elif isinstance(val, (int, bool)):
+                print(f'{key} = {val}')
+            elif isinstance(val, dict):
+                print()
+                self._dump(val)
+            elif isinstance(val, list):
+                print(f'{key} = [{", ".join(val)}]')
+            elif isinstance(val, CheckerInfo):
+                print(f'[{val.id}]')
+                self._dump(val.config)
+                print()
+            elif val is None:
+                print(f'{key} = {val}')
+            else:
+                print(f'--> unknown type {type(val)}')
+                return
+
+    def dump(self) -> None:
+        self._dump(self.__dict__['checks'])

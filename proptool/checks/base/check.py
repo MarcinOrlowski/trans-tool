@@ -8,6 +8,7 @@
 """
 
 from abc import ABC, abstractmethod
+from configparser import ConfigParser
 from typing import Dict, Union
 
 from proptool.report.report import Report
@@ -42,3 +43,6 @@ class Check(ABC):
 
     def get_default_config(self) -> Dict:
         return Check.DEFAULT_CHECK_CONFIG
+
+    def load_config_ini(self, config: Dict, parser: ConfigParser, config_section: str) -> None:
+        pass

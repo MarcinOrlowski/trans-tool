@@ -79,9 +79,6 @@ class ConfigBuilder(object):
 
     @staticmethod
     def _validate_config(config: Config) -> None:
-        if not config.files:
-            ConfigBuilder._abort('No base file(s) specified.')
-
         if config.languages:
             pattern = re.compile(r'^[a-z]{2,}$')
             for lang in config.languages:
@@ -160,6 +157,8 @@ class ConfigBuilder(object):
         group = parser.add_argument_group('Base options')
         group.add_argument('--config', action = 'store', dest = 'config_file', nargs = 1, metavar = 'FILE',
                            help = 'Use specified config file. Command line arguments override config settings.')
+        group.add_argument('--config-dump', action = 'store_true', dest = 'config_file_dump',
+                           help = 'Print config as seen by the app once config file and args are parsed.')
         group.add_argument('-b', '--base', action = 'store', dest = 'files', nargs = '+', metavar = 'FILE',
                            help = 'List of base files to check.')
         group.add_argument('-l', '--lang', action = 'store', dest = 'languages', nargs = '+', metavar = 'LANG',
