@@ -124,6 +124,7 @@ class ConfigBuilder(object):
             'comment_marker',
             'quiet',
             'verbose',
+            'file_suffix',
         ]
         for option_name in optionals:
             opt_val = args.__getattribute__(option_name)
@@ -169,6 +170,8 @@ class ConfigBuilder(object):
                            help = 'Updates existing translation files in-place using base file as reference.')
         group.add_argument('--create', action = 'store_true', dest = 'create',
                            help = 'Creates new translation files using base file as reference if no file exists.')
+        group.add_argument('--with-reference', action = 'store_true', dest = 'with_reference',
+                           help = 'Includes comments with reference values from base string for every translation entry.')
         group.add_argument('--separator', action = 'store', dest = 'separator', metavar = 'CHAR', nargs = 1,
                            help = 'If specified, only given CHAR is considered a valid key/value separator.'
                                   + f'Must be one of the following: {", ".join(Config.ALLOWED_SEPARATORS)}')
