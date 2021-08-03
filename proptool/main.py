@@ -11,8 +11,8 @@ import copy
 import sys
 from pathlib import Path
 
-from proptool.config.config import Config
 from proptool.config.builder import ConfigBuilder
+from proptool.config.config import Config
 from proptool.prop.file import PropFile
 from .const import Const
 from .log import Log
@@ -40,6 +40,14 @@ class PropTool(object):
             ConfigBuilder.build(config)
             # Reconfigure once we got user settings handled.
             Log.configure(config)
+
+            if '--config-dump' in sys.argv:
+                config.dump()
+                return 0
+
+            if not config.files:
+                Log.e('No base file(s) specified.')
+                return 200  # noqa: WPS432
 
             errors = 0
             for file_str in config.files:

@@ -68,24 +68,6 @@ class TestConfigBuilder(TestCase):
         ConfigBuilder._validate_config(self.get_config_for_validate())
 
     @patch('proptool.log.Log.e')
-    def test_validate_config_no_files(self, log_e_mock: Mock) -> None:
-        """
-        Ensures empty list of files triggers expected error message and quits.
-
-        :param log_e_mock: Log.abort() mock.
-        """
-        config = self.get_config_for_validate()
-        config.files = []
-        with self.assertRaises(SystemExit) as context_manager:
-            ConfigBuilder._validate_config(config)
-            exp_calls = [call('No base file(s) specified.')]
-            log_e_mock.assert_has_calls(exp_calls)
-
-            # Check we got sys.exit called with non-zero return code
-            self.assertEqual(SystemExit, type(context_manager.exception))
-            self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
-
-    @patch('proptool.log.Log.e')
     def test_validate_config_invalid_separator(self, log_e_mock: Mock) -> None:
         """
         Ensures invalid separator char triggers expected error message and quits.
@@ -397,6 +379,7 @@ class TestConfigBuilder(TestCase):
         # Remove `show_version` as this is also not mapped.
         # FIXME: this should not be hardcoded here!
         del args['show_version']
+        del args['config_dump']
 
         self.assertEqual(len(args), len(config.__dict__))
 

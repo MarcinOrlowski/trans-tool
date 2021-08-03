@@ -7,8 +7,10 @@
 #
 """
 
+import json
 from abc import ABC, abstractmethod
-from typing import Dict, Union
+from configparser import ConfigParser
+from typing import Dict, List, Union
 
 from proptool.report.report import Report
 
@@ -42,3 +44,15 @@ class Check(ABC):
 
     def get_default_config(self) -> Dict:
         return Check.DEFAULT_CHECK_CONFIG
+
+    def load_config_ini(self, config: Dict, parser: ConfigParser, config_section: str) -> None:
+        options = list(self.get_default_config().keys())
+        self._set_config_option(config, parser, config_section, options)
+
+    def _set_config_option(self, config: Dict, parser: ConfigParser, config_section: str, options: Union[List[str], str]) -> None:
+        if isinstance(options, str):
+            options = [options]
+
+        for option in options:
+            if parser.has_option(config_section, option):
+                config[option] = json.loads(parser.get(config_section, option).replace('\n', ''))
