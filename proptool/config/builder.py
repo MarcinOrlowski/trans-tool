@@ -170,7 +170,7 @@ class ConfigBuilder(object):
                            help = 'Updates existing translation files in-place using base file as reference.')
         group.add_argument('--create', action = 'store_true', dest = 'create',
                            help = 'Creates new translation files using base file as reference if no file exists.')
-        group.add_argument('--with-reference', action = 'store_true', dest = 'with_reference',
+        group.add_argument('-wr', '--write-reference', action = 'store_true', dest = 'write_reference',
                            help = 'Includes comments with reference values from base string for every translation entry.')
         group.add_argument('--separator', action = 'store', dest = 'separator', metavar = 'CHAR', nargs = 1,
                            help = 'If specified, only given CHAR is considered a valid key/value separator.'

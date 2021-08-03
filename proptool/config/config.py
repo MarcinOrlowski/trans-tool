@@ -47,7 +47,7 @@ class Config(object):
 
         self.update: bool = False
         self.create: bool = False
-        self.with_reference: bool = False
+        self.write_reference: bool = False
 
         self.files: List[str] = []
         self.languages: List[str] = []

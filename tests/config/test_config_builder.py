@@ -24,7 +24,7 @@ class FakeArgs(object):
     def __init__(self):
         self.update: bool = False
         self.create: bool = False
-        self.with_reference: bool = False
+        self.write_reference: bool = False
 
         self.quiet: bool = False
         self.color: bool = False
@@ -411,11 +411,9 @@ class TestConfigBuilder(TestCase):
         del args['show_version']
         del args['config_dump']
 
-        self.assertEqual(len(args), len(config.__dict__))
-
         for key in args:
             # Ensure key args returns is what is present in Config as well.
-            self.assertIn(key, config.__dict__)
+            self.assertIn(key, config.__dict__, f'Config lacks "{key}" key.')
 
     # #################################################################################################
 
