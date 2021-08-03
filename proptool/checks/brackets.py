@@ -7,7 +7,6 @@
 #
 """
 
-from configparser import ConfigParser
 from typing import Dict, List, Union
 
 from proptool.decorators.overrides import overrides

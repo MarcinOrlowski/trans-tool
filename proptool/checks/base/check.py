@@ -7,6 +7,7 @@
 #
 """
 
+import json
 from abc import ABC, abstractmethod
 from configparser import ConfigParser
 from typing import Dict, List, Union
@@ -49,8 +50,6 @@ class Check(ABC):
         self._set_config_option(config, parser, config_section, options)
 
     def _set_config_option(self, config: Dict, parser: ConfigParser, config_section: str, options: Union[List[str], str]) -> None:
-        import json
-
         if isinstance(options, str):
             options = [options]
 

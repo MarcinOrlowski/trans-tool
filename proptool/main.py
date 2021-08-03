@@ -47,7 +47,7 @@ class PropTool(object):
 
             if not config.files:
                 Log.e('No base file(s) specified.')
-                return 200
+                return 200  # noqa: WPS432
 
             errors = 0
             for file_str in config.files:
