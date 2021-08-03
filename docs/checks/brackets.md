@@ -30,14 +30,15 @@
 
 ## Configuration file ##
 
-| Key       | Type      | Description | Example |
-|-----------|-----------|-------------|---------|
-| opening   | List of strings | List of opening brackets | `[ "[", "<" ]` |
-| closing   | List of strings | List of closing brackets | `[ "]", ">" ]` |
+| Key      | Type      | Description | Example |
+|----------|-----------|-------------|---------|
+| comments | Boolean | If `true` will scan comments too. Default `false`. |   | 
+| opening  | List of strings | List of opening brackets | `[ "[", "<" ]` |
+| closing  | List of strings | List of closing brackets | `[ "]", ">" ]` |
 
 ### Notes ###
 
-**IMPORTANT:** Opening and closing brackets from the same pair MUST be on the same position (i,e. if first element of `opening` list
+**IMPORTANT:** Opening and closing brackets from the same pair MUST be on the same position (i.e. if first element of `opening` list
 is `{` then the `}` MUST be first element on `closing` list.
 
 ### Example ###
@@ -47,6 +48,7 @@ is `{` then the `}` MUST be first element on `closing` list.
 version = 1
 
 [Brackets]
+comments = true
 opening = [ "(", "<", "{", "[" ]
 closing = [ ")", ">", "}", "]" ]
 ```

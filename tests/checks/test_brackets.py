@@ -46,12 +46,23 @@ class ChecksBrackets(ChecksTestCase):
         self.check_single_file(Comment('# (foo) '))
 
     def test_comment_with_faults(self) -> None:
-        # Tests error handling when we have popping bracket and empty stack.
-        self.check_single_file(Comment('# foo]"  '), exp_warnings = 1)
-        # Tests the case where we done with checks and something left on stack.
-        self.check_single_file(Comment('# <fo[o]" '), exp_warnings = 1)
-        # Text the case where we have matches, but not in order.
-        self.check_single_file(Comment('# [foo <]>" '), exp_warnings = 1)
+        faults = [
+            # Tests error handling when we have popping bracket and empty stack.
+            '# foo]"  ',
+            # Tests the case where we done with checks and something left on stack.
+            '# <fo[o]" ',
+            # Text the case where we have matches, but not in order.
+            '# [foo <]>" ',
+        ]
+
+        for fault in faults:
+            # We should see no issues if comment scanning is disabled.
+            self.checker.config['comments'] = False
+            self.check_single_file(Comment(fault))
+
+            # And some warnings when comment scanning in enabled.
+            self.checker.config['comments'] = True
+            self.check_single_file(Comment(fault), exp_warnings = 1)
 
     # #################################################################################################
 
@@ -95,10 +106,8 @@ class ChecksBrackets(ChecksTestCase):
             else:
                 del closing[random.randint(0, closing_cnt - 1)]
 
-        self.checker.config = {
-            'opening': opening,
-            'closing': closing,
-        }
+        self.checker.config['opening'] = opening
+        self.checker.config['closing'] = closing
 
         prop_file = PropFile(self.config)
         self.check(prop_file, exp_errors = 1)
@@ -108,23 +117,17 @@ class ChecksBrackets(ChecksTestCase):
         non_empty = [self.get_random_string(length = 1) for item in range(non_empty_cnt)]
         empty = []
 
-        self.checker.config = {
-            'opening': non_empty,
-            'closing': empty,
-        }
+        self.checker.config['opening'] = non_empty
+        self.checker.config['closing'] = empty
         prop_file = PropFile(self.config)
         self.check(prop_file, exp_warnings = 1)
 
-        self.checker.config = {
-            'opening': empty,
-            'closing': non_empty,
-        }
+        self.checker.config['opening'] = empty
+        self.checker.config['closing'] = non_empty
         prop_file = PropFile(self.config)
         self.check(prop_file, exp_warnings = 1)
 
-        self.checker.config = {
-            'opening': empty,
-            'closing': empty,
-        }
+        self.checker.config['opening'] = empty
+        self.checker.config['closing'] = empty
         prop_file = PropFile(self.config)
         self.check(prop_file, exp_warnings = 1)

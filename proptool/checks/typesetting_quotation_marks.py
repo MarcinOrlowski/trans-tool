@@ -33,6 +33,8 @@ class TypesettingQuotationMarks(Brackets):
     @overrides(Brackets)
     def get_default_config(self) -> Dict:
         return {
+            'comments': False,
+
             # Keep matching elements at the same positions
             # List based on:
             # * https://www.overleaf.com/learn/latex/Typesetting_quotations#Reference_guide

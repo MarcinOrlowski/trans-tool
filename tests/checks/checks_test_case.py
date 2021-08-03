@@ -32,12 +32,12 @@ class ChecksTestCase(TestCase):
     def get_checker(self, config: Union[Dict, None] = None) -> Check:
         raise NotImplementedError
 
-    def check_single_file(self, entry: PropItem, exp_errors: int = 0, exp_warnings: int = 0) -> None:
+    def check_single_file(self, entry: PropItem, exp_errors: int = 0, exp_warnings: int = 0, dump: bool = False) -> None:
         propfile = PropFile(self.config)
         propfile.loaded = True
         propfile.items.append(entry)
 
-        self.check(propfile, exp_errors = exp_errors, exp_warnings = exp_warnings)
+        self.check(propfile, exp_errors = exp_errors, exp_warnings = exp_warnings, dump = dump)
 
     def check(self, translation: PropFile, reference: Union[PropFile, None] = None,
               exp_errors: int = 0, exp_warnings: int = 0, dump = False, msg = None) -> None:

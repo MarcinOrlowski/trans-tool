@@ -11,6 +11,7 @@
   * Corrected config file syntax documentation.
   * Added `--config-dump` option that shows state of the configuration.
   * Corrected default `KeyFormat` pattern.
+  * Comment checks by `Brackets` and `TypesettingQuotationMarks` can now be configured. 
 
 * v2.0.0 (2021-08-02)
   * Added support for config files.
