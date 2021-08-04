@@ -39,6 +39,9 @@ class Check(ABC):
         :param item: instance of PropItem
         :return:
         """
+        if not issubclass(type(item), PropItem):
+            raise TypeError('Item should be subclass of PropItem.')
+
         return not (isinstance(item, Translation) or (isinstance(item, Comment) and self.config['comments']))
 
     def need_both_files(self, translation: 'PropFile', reference: Union['PropFile', None]) -> None:

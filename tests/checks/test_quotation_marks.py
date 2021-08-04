@@ -32,10 +32,16 @@ class TestQuotationMarks(ChecksTestCase):
     # #################################################################################################
 
     def test_comment_no_faults(self) -> None:
-        self.check_single_file(Comment('#  "foo" '))
+        tests = [
+            Comment('#  "foo" '),
+        ]
+        self._do_checker_comment_test(tests, 0)
 
     def test_comment_with_faults(self) -> None:
-        self.check_single_file(Comment('# "foo `"  '), exp_warnings = 1)
+        tests = [
+            Comment('# "foo `"  '),
+        ]
+        self._do_checker_comment_test(tests, 1)
 
     # #################################################################################################
 

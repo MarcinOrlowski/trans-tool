@@ -33,26 +33,21 @@ class ChecksBrackets(ChecksTestCase):
     # #################################################################################################
 
     def test_comment_no_faults(self) -> None:
-        self.check_single_file(Comment('# „ foo “ '))
+        tests = [
+            Comment('# „ foo “ '),
+        ]
+        self._do_checker_comment_test(tests, 0)
 
     def test_comment_with_faults(self) -> None:
         faults = [
             # Tests error handling when we have closing (popping) marker and empty stack.
-            '# foo“  ',
+            Comment('# foo“  '),
             # Tests the case where we done with checks and something left on stack.
-            '# „ «foo» ',
+            Comment('# „ «foo» '),
             # Text the case where we have matches, but not in order.
-            '# « „ foo» “ ',
+            Comment('# « „ foo» “ '),
         ]
-
-        for fault in faults:
-            # We should see no issues if comment scanning is disabled.
-            self.checker.config['comments'] = False
-            self.check_single_file(Comment(fault))
-
-            # And some warnings when comment scanning in enabled.
-            self.checker.config['comments'] = True
-            self.check_single_file(Comment(fault), exp_warnings = 1)
+        self._do_checker_comment_test(faults, 1)
 
     # #################################################################################################
 

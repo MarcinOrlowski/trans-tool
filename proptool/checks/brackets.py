@@ -40,17 +40,21 @@ class Brackets(Check):
 
         report = ReportGroup(self.report_title)
 
-        opening = self.config['opening']
-        closing = self.config['closing']
+        opening_key = 'opening'
+        closing_key = 'closing'
+
+        opening = self.config[opening_key]
+        closing = self.config[closing_key]
 
         opening_cnt = len(opening)
         closing_cnt = len(closing)
 
         if opening_cnt == 0 or closing_cnt == 0:
-            report.warn(line = None, msg = 'CONFIG: Empty "opening" and "closing" arrays.')
+            report.warn(line = None, msg = f'CONFIG: Empty "{opening_key}" and "{closing_key}" arrays.')
             return report
         if opening_cnt != closing_cnt:
-            report.error(line = None, msg = 'CONFIG: Both "opening" and "closing" arrays must contain the same number of elements.')
+            report.error(line = None,
+                         msg = f'CONFIG: Both "{opening_key}" and "{closing_key}" arrays must contain the same number of elements.')
             return report
 
         # We do that check at the end to ensure config is validated first.
