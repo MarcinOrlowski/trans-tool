@@ -7,7 +7,7 @@
 #
 """
 import random
-from typing import Dict, Union
+from typing import Dict, List, Tuple, Union
 
 from proptool.checks.base.check import Check
 from proptool.checks.starts_with_the_same_case import StartsWithTheSameCase
@@ -64,19 +64,28 @@ class TestStartsWithTheSameCase(ChecksTestCase):
             trans_file.append(Translation(key, trans_value))
         self.check(trans_file, ref_file, exp_warnings = expected_faults)
 
-    def test_valid_special_cases(self) -> None:
-        tests = [
-            ('%s Statistics', 'Statystyki %s'),
-            ('%s statistics', '123 statystyki %s'),
-            ('%s 123 Statistics', 'Statystyki %s'),
-        ]
+    def _do_scan_test(self, tests: List[Tuple[str, str]], exp_warnings = 0):
         for ref_value, trans_value in tests:
             ref_file = PropFile(self.config)
             trans_file = PropFile(self.config)
             key = self.get_random_string('key_')
             ref_file.append(Translation(key, ref_value))
             trans_file.append(Translation(key, trans_value))
-            self.check(trans_file, ref_file)
+            self.check(trans_file, ref_file, exp_warnings = exp_warnings)
+
+    def test_valid_special_cases(self) -> None:
+        """
+        Checks is checker will correctly compare sequences starting
+        with alphabetic characters, no matter where they are located
+        in the strings.
+        """
+        tests = [
+            # These should be matched correctly.
+            ('%s Statistics', 'Statystyki %s'),
+            ('%s statistics', '123 statystyki %s'),
+            ('%s 123 Statistics', 'Statystyki %s'),
+        ]
+        self._do_scan_test(tests, 0)
 
     def test_fault_special_cases(self) -> None:
         tests = [
@@ -90,13 +99,16 @@ class TestStartsWithTheSameCase(ChecksTestCase):
             # Base has words, translation does not.
             ('Some words here', '123 123 123'),
         ]
-        for ref_value, trans_value in tests:
-            ref_file = PropFile(self.config)
-            trans_file = PropFile(self.config)
-            key = self.get_random_string('key_')
-            ref_file.append(Translation(key, ref_value))
-            trans_file.append(Translation(key, trans_value))
-            self.check(trans_file, ref_file, exp_warnings = 1)
+        self._do_scan_test(tests, 1)
+
+    def test_no_alpha_words(self) -> None:
+        tests = [
+            # These should be skipped
+            ('', ''),
+            # No real words. This should be skipped
+            ('3434 3434 34', '123 123 123'),
+        ]
+        self._do_scan_test(tests, 1)
 
     # #################################################################################################
 

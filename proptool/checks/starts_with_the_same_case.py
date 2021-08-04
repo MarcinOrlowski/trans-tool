@@ -55,6 +55,10 @@ class StartsWithTheSameCase(Check):
             ref_word_idx, ref_word = self._find_word(ref.value)
             trans_word_idx, trans_word = self._find_word(trans.value)
 
+            # Skip line if both base and translation strings contain no words.
+            if not ref_word and not trans_word:
+                continue
+
             if ref_word and not trans_word:
                 report.warn(idx + 1, 'Translation contains no words starting with a letter, while original does.')
                 continue
