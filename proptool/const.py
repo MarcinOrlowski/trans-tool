@@ -20,3 +20,8 @@ class Const(object):
         'The *.properties file checker and syncing tool.',
         f'{APP_URL}',
     ]
+
+
+    class RC(object):
+        OK: int = 0
+        TRANSLATION_SYNTAX_ERROR = 200

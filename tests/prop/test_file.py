@@ -189,7 +189,8 @@ class TestPropFile(TestCase):
             with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))):
                 try:
                     propfile = PropFile(Config())
-                    propfile.load(Path(fake_file_name))
+                    with self.assertRaises(SyntaxError):
+                        propfile.load(Path(fake_file_name))
                 except SystemExit:
                     # sys.exit() happened after Log.e() is called, so we can check the error message here.
                     msg = log_e_mock.call_args_list[0][0][0]
@@ -354,7 +355,7 @@ class TestPropFile(TestCase):
 
             # Expecting no problems reported
             propfile.report.dump()
-            self.assertTrue(propfile.is_valid(ref_file))
+            self.assertTrue(propfile.validate(ref_file))
 
     # #################################################################################################
 

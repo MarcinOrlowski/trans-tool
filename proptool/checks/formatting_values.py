@@ -30,12 +30,11 @@ class FormattingValues(Check):
     """
 
     def _parse(self, item: str) -> List[Formatter]:
+        # Format String Syntax
         # https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html
-        # %[argument_index$][flags][width][.precision]conversion
-        result = []
-        for match in re.finditer('(%[a-zA-Z0-9$#+.(-]+)', item):
-            result.append(Formatter(match.start(), match.group(1)))
-        return result
+        # pattern = r'(%[a-zA-Z0-9$#+.(-]+)'
+        pattern = r'(%[a-zA-Z0-9$#+.(-]+)'
+        return [Formatter(match.start(), match.group(1)) for match in re.finditer(pattern, item)]
 
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!

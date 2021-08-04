@@ -117,6 +117,7 @@ class ConfigBuilder(object):
         # cmd fix
         config.update = args.update
         config.create = args.create
+        config.write_reference = args.write_reference
 
         # Set optional args, if set by user.
         optionals = [

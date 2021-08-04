@@ -24,27 +24,19 @@ class MissingTranslations(Check):
     def check(self, translation_file: 'PropFile', reference_file: 'PropFile' = None) -> ReportGroup:
         self.need_both_files(translation_file, reference_file)
 
-        report = ReportGroup('Missing keys')
+        report = ReportGroup('Missing translations')
 
-        translation_keys = translation_file.keys.copy()
+        missing_keys: List[str] = [ref_key for ref_key in reference_file.keys if ref_key not in translation_file.keys]
 
-        missing_keys: List[str] = []
-        for ref_key in reference_file.keys:
-            if ref_key in translation_keys:
-                translation_keys.remove(ref_key)
-            else:
-                missing_keys.append(ref_key)
-
-        # Commented out keys are also considered present in the translation unless
-        # we run in strict check mode.
+        # Commented out keys are also considered present in the translation
+        # unless we run in strict check mode.
         if not self.config['strict']:
-            commented_out_keys = translation_file.commented_out_keys
-            for comm_key in commented_out_keys:
+            for comm_key in translation_file.commented_out_keys:
                 if comm_key in missing_keys:
-                    missing_keys.remove(comm_key)
+                    del missing_keys[missing_keys.index(comm_key)]
 
-        for missing_key in missing_keys:
-            report.warn(None, f'Key "{missing_key}" not found.')
+        for comm_key in missing_keys:
+            report.warn(None, f'No translation: "{comm_key}"')
 
         return report
 
