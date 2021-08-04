@@ -64,6 +64,40 @@ class TestStartsWithTheSameCase(ChecksTestCase):
             trans_file.append(Translation(key, trans_value))
         self.check(trans_file, ref_file, exp_warnings = expected_faults)
 
+    def test_valid_special_cases(self) -> None:
+        tests = [
+            ('%s Statistics', 'Statystyki %s'),
+            ('%s statistics', '123 statystyki %s'),
+            ('%s 123 Statistics', 'Statystyki %s'),
+        ]
+        for ref_value, trans_value in tests:
+            ref_file = PropFile(self.config)
+            trans_file = PropFile(self.config)
+            key = self.get_random_string('key_')
+            ref_file.append(Translation(key, ref_value))
+            trans_file.append(Translation(key, trans_value))
+            self.check(trans_file, ref_file)
+
+    def test_fault_special_cases(self) -> None:
+        tests = [
+            ('%s Statistics', 'statystyki %s'),
+            ('%s statistics', '123 Statystyki %s'),
+            ('%s 123 tatistics', 'Statystyki %s'),
+
+            # Base has no real words, while translation has some.
+            ('123 123 123', 'Some words here'),
+
+            # Base has words, translation does not.
+            ('Some words here', '123 123 123'),
+        ]
+        for ref_value, trans_value in tests:
+            ref_file = PropFile(self.config)
+            trans_file = PropFile(self.config)
+            key = self.get_random_string('key_')
+            ref_file.append(Translation(key, ref_value))
+            trans_file.append(Translation(key, trans_value))
+            self.check(trans_file, ref_file, exp_warnings = 1)
+
     # #################################################################################################
 
     def test_handling_of_unsupported_types(self) -> None:

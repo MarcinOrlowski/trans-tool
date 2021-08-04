@@ -14,6 +14,7 @@
   * Comment checks by `Brackets` and `TypesettingQuotationMarks` can now be configured.
   * Fixed loader issue causing missing keys to reported twice.
   * Added `--write-reference` option that can include both base and translation in saved file.
+  * `StartsWithTheSameCase` now is smarter when looking for words to check.
 
 * v2.0.0 (2021-08-02)
   * Added support for config files.
