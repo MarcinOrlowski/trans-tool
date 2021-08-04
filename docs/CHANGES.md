@@ -7,7 +7,7 @@
 # Changelog #
 
 * dev
-  * Fixed config loader not handling Checks' sections properly.  
+  * Fixed config loader not handling Checks' sections properly.
   * Corrected config file syntax documentation.
   * Added `--config-dump` option that shows state of the configuration.
   * Corrected default `KeyFormat` pattern.
@@ -15,6 +15,8 @@
   * Fixed loader issue causing missing keys to reported twice.
   * Added `--write-reference` option that can include both base and translation in saved file.
   * `StartsWithTheSameCase` now is smarter when looking for words to check.
+  * Removed `<` and `>` from `Brackets` defaults as `>` is often used as "arrow" (`->`) raising false positives.
+  * Corrected default `KeyFormat` patter so it no longer allows digits at first position.
 
 * v2.0.0 (2021-08-02)
   * Added support for config files.

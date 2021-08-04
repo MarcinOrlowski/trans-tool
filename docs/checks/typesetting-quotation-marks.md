@@ -31,11 +31,23 @@ TypesettingQuotationMarks is a mixture of `QuotationMarks` and `Brackets` check 
 
 ## Configuration file ##
 
-| Key      | Type      | Description | Example |
-|----------|-----------|-------------|---------|
-| comments | Boolean         | If `true` will scan comments too. Default `false`. |   |
-| opening  | List of strings | List of opening brackets | `[ '‘', '«' ]` |
-| closing  | List of strings | List of closing brackets | `[ '’', '»' ]` |
+| Key      | Type      | Description | Defaults |
+|----------|-----------|-------------|----------|
+| comments | Boolean         | If `true` will scan comments too. | `false` |
+| opening  | List of strings | List of opening brackets | ``[ "‘", "«", "„", "「", "《" ]`` |
+| closing  | List of strings | List of closing brackets | ``[ "’", "»", "\“", "」", "》" ]`` |
+
+
+            'comments': False,
+
+            # Keep matching elements at the same positions
+            # List based on:
+            # * https://www.overleaf.com/learn/latex/Typesetting_quotations#Reference_guide
+            # * https://en.wikipedia.org/wiki/Quotation_mark
+            # BUG: https://github.com/MarcinOrlowski/prop-tool/issues/19
+            'opening': ``[ "‘", "«", "„", "「", "《" ]``
+            'closing': ``[ "’", "»", "\“", "」", "》" ]``
+
 
 ### Notes ###
 

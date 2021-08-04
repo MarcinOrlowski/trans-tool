@@ -31,9 +31,9 @@ conventcion across your files.
 
 ## Configuration file ##
 
-| Key       | Type      | Description | Example |
-|-----------|-----------|-------------|---------|
-| pattern   | Regular expression (string) | Pattern for that each key must match | `"^[a-zA-Z0-9]+[a-zA-Z0-9_.]*[a-zA-Z0-9]+$"` |
+| Key      | Type      | Description | Defaults |
+|----------|-----------|-------------|----------|
+| pattern  | Regular expression (string) | Pattern for that each key must match | `^[a-zA-Z]+[a-zA-Z0-9_.]*[a-zA-Z0-9]+$` |
 
 ### Notes ###
 

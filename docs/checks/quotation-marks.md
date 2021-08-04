@@ -49,9 +49,9 @@ Temporary workarounds:
 
 ## Configuration file ##
 
-| Key       | Type      | Description | Example |
-|-----------|-----------|-------------|---------|
-| chars   | List of strings | List of quotation marks | `[ '"', "`" ]` |
+| Key      | Type      | Description | Defaults |
+|----------|-----------|-------------|----------|
+| chars    | List of strings | List of quotation marks | ``[ "\"", "`" ]`` |
 
 ### Notes ###
 
@@ -65,5 +65,5 @@ version = 1
 
 [QuotationMarks]
 # Do NOT use apostrophe character for languages like English
-chars = [ "`", '"' ]
+chars = [ "`" ]
 ```

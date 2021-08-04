@@ -30,11 +30,11 @@
 
 ## Configuration file ##
 
-| Key      | Type      | Description | Example |
-|----------|-----------|-------------|---------|
-| comments | Boolean | If `true` will scan comments too. Default `false`. |   |
-| opening  | List of strings | List of opening brackets | `[ "[", "<" ]` |
-| closing  | List of strings | List of closing brackets | `[ "]", ">" ]` |
+| Key      | Type      | Description | Defaults |
+|----------|-----------|-------------|----------|
+| comments | Boolean | If `true` will scan comments too. | `false`  |
+| opening  | List of strings | List of opening brackets  | `[ "(", "{", "[" ]` |
+| closing  | List of strings | List of closing brackets  | `[ ")", "}", "]" ]` |
 
 ### Notes ###
 
@@ -49,6 +49,6 @@ version = 1
 
 [Brackets]
 comments = true
-opening = [ "(", "<", "{", "[" ]
-closing = [ ")", ">", "}", "]" ]
+opening = [ "(", "<", "{" ]
+closing = [ ")", ">", "}" ]
 ```
