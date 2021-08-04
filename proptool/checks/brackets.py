@@ -10,7 +10,6 @@
 from typing import Dict, List, Union
 
 from proptool.decorators.overrides import overrides
-from proptool.prop.items import Comment, Translation
 from proptool.report.group import ReportGroup
 from .base.check import Check
 
@@ -60,7 +59,7 @@ class Brackets(Check):
 
         for idx, item in enumerate(translation.items):
             # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
-            if not (isinstance(item, Translation) or (isinstance(item, Comment) and self.config['comments'])):
+            if self._shall_skip_item(item):
                 continue
 
             stack: List[Bracket] = []

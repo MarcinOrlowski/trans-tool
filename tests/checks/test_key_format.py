@@ -29,9 +29,10 @@ class TestKeyFormat(ChecksTestCase):
         self.check_single_file(Translation('validKey123', 'foo'))
         self.check_single_file(Translation('valid.Key', 'foo'))
         self.check_single_file(Translation('valid_Key', 'foo'))
-        self.check_single_file(Translation('k', 'foo'))
 
     def test_translation_with_faults(self) -> None:
+        # too short
+        self.check_single_file(Translation('k', 'foo'), exp_errors = 1)
         # starts with digits
         self.check_single_file(Translation('666keys.', 'foo'), exp_errors = 1)
 

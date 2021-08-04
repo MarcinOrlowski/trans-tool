@@ -31,6 +31,7 @@ Punctuation check ensures translation ends with punctuation mark (`:`, `.`, `?`,
 
 | Key      | Type      | Description | Defaults |
 |----------|-----------|-------------|----------|
+| comments | Boolean | If `true` will scan comments too. | `false`  |
 | chars    | List of strings | List of punctuation characters | `[ ".", "?", "!", ":", "\n" ]` |
 
 ### Example ###
@@ -40,5 +41,6 @@ Punctuation check ensures translation ends with punctuation mark (`:`, `.`, `?`,
 version = 1
 
 [Punctuation]
+comments = true
 chars = [ ".", "?" ]
 ```

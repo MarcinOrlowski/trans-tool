@@ -103,12 +103,12 @@ class TestStartsWithTheSameCase(ChecksTestCase):
 
     def test_no_alpha_words(self) -> None:
         tests = [
-            # These should be skipped
+            # These should be skipped silently.
             ('', ''),
-            # No real words. This should be skipped
+            # No real words. This should be skipped silently.
             ('3434 3434 34', '123 123 123'),
         ]
-        self._do_scan_test(tests, 1)
+        self._do_scan_test(tests)
 
     # #################################################################################################
 

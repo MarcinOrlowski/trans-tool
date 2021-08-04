@@ -37,18 +37,6 @@ TypesettingQuotationMarks is a mixture of `QuotationMarks` and `Brackets` check 
 | opening  | List of strings | List of opening brackets | ``[ "‘", "«", "„", "「", "《" ]`` |
 | closing  | List of strings | List of closing brackets | ``[ "’", "»", "\“", "」", "》" ]`` |
 
-
-            'comments': False,
-
-            # Keep matching elements at the same positions
-            # List based on:
-            # * https://www.overleaf.com/learn/latex/Typesetting_quotations#Reference_guide
-            # * https://en.wikipedia.org/wiki/Quotation_mark
-            # BUG: https://github.com/MarcinOrlowski/prop-tool/issues/19
-            'opening': ``[ "‘", "«", "„", "「", "《" ]``
-            'closing': ``[ "’", "»", "\“", "」", "》" ]``
-
-
 ### Notes ###
 
 *IMPORTANT:* This check usually needs some config tuning because it is not possible to create one universal set of quotation marks

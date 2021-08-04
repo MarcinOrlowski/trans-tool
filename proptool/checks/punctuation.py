@@ -10,7 +10,6 @@
 from typing import Dict
 
 from proptool.decorators.overrides import overrides
-from proptool.prop.items import Translation
 from proptool.report.group import ReportGroup
 from .base.check import Check
 
@@ -31,8 +30,8 @@ class Punctuation(Check):
         report = ReportGroup('Punctuation mismatch')
 
         for idx, item in enumerate(reference_file.items):
-            # We care translations only for now.
-            if not isinstance(item, Translation):
+            # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
+            if self._shall_skip_item(item):
                 continue
 
             for last_char in self.config['chars']:
@@ -52,5 +51,6 @@ class Punctuation(Check):
     @overrides(Check)
     def get_default_config(self) -> Dict:
         return {
+            'comments': False,
             'chars': ['.', '?', '!', ':', r'\n'],
         }

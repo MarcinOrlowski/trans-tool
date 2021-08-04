@@ -30,11 +30,11 @@ class ChecksBrackets(ChecksTestCase):
 
     def test_translation_with_faults(self) -> None:
         # Tests error handling when we have popping bracket and empty stack.
-        self.check_single_file(Translation('key', '>'), exp_errors = 1)
+        self.check_single_file(Translation('key', '}'), exp_errors = 1)
         # Tests the case where we done with checks and something left on stack.
-        self.check_single_file(Translation('key', '(<>'), exp_errors = 1)
+        self.check_single_file(Translation('key', '{()'), exp_errors = 1)
         # Text the case where we have matches, but not in order.
-        self.check_single_file(Translation('key', '<(>)'), exp_errors = 1)
+        self.check_single_file(Translation('key', '{(})'), exp_errors = 1)
 
     def test_empty_translation(self) -> None:
         propfile = PropFile(self.config)
@@ -50,9 +50,9 @@ class ChecksBrackets(ChecksTestCase):
             # Tests error handling when we have popping bracket and empty stack.
             '# foo]"  ',
             # Tests the case where we done with checks and something left on stack.
-            '# <fo[o]" ',
+            '# {fo[o]" ',
             # Text the case where we have matches, but not in order.
-            '# [foo <]>" ',
+            '# [foo {]}" ',
         ]
 
         for fault in faults:

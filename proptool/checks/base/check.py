@@ -13,6 +13,7 @@ from configparser import ConfigParser
 from typing import Dict, List, Union
 
 from proptool.report.report import Report
+from proptool.prop.items import Translation, Comment, PropItem
 
 
 # noinspection PyUnresolvedReferences
@@ -31,6 +32,14 @@ class Check(ABC):
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(self, translation: 'PropFile', reference: Union['PropFile', None] = None) -> Report:
         raise NotImplementedError
+
+    def _shall_skip_item(self, item: PropItem) -> bool:
+        """
+        Returns True if item is a Translation OR is a Comment, but checker's config "comments" option is True
+        :param item: instance of PropItem
+        :return:
+        """
+        return not (isinstance(item, Translation) or (isinstance(item, Comment) and self.config['comments']))
 
     def need_both_files(self, translation: 'PropFile', reference: Union['PropFile', None]) -> None:
         if translation is None:
