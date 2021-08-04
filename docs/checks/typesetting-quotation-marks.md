@@ -33,8 +33,8 @@ TypesettingQuotationMarks is a mixture of `QuotationMarks` and `Brackets` check 
 
 | Key      | Type      | Description | Defaults |
 |----------|-----------|-------------|----------|
-| comments | Boolean         | If `true` will scan comments too. | `false` |
-| opening  | List of strings | List of opening brackets | ``[ "‘", "«", "„", "「", "《" ]`` |
+| comments | Boolean         | If `true` will scan translations and comments too, when `false` will skip comments. | `false` |
+| opening  | List of strings | List of opening brackets | ``[ "‘", "«", "„", "「", "《" ]``  |
 | closing  | List of strings | List of closing brackets | ``[ "’", "»", "\“", "」", "》" ]`` |
 
 ### Notes ###

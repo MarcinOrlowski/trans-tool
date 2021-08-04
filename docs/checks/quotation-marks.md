@@ -51,6 +51,7 @@ Temporary workarounds:
 
 | Key      | Type      | Description | Defaults |
 |----------|-----------|-------------|----------|
+| comments | Boolean         | If `true` will scan translations and comments, when `false` will skip comments. | `true` |
 | chars    | List of strings | List of quotation marks | ``[ "\"", "`" ]`` |
 
 ### Notes ###
@@ -64,6 +65,7 @@ Temporary workarounds:
 version = 1
 
 [QuotationMarks]
+comments = false
 # Do NOT use apostrophe character for languages like English
 chars = [ "`" ]
 ```

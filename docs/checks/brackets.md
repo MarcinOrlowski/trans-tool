@@ -32,7 +32,7 @@
 
 | Key      | Type      | Description | Defaults |
 |----------|-----------|-------------|----------|
-| comments | Boolean | If `true` will scan comments too. | `false`  |
+| comments | Boolean         | If `true` will scan translations and comments, when `false` will skip comments. | `false` |
 | opening  | List of strings | List of opening brackets  | `[ "(", "{", "[" ]` |
 | closing  | List of strings | List of closing brackets  | `[ ")", "}", "]" ]` |
 

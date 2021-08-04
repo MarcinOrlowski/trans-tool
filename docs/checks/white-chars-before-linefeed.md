@@ -27,6 +27,20 @@
 This validator ensures there's no space nor tab character placed before linefeed literals (`\n` and `\r`)
 as this usually serves no purpose.
 
+
 ## Configuration file ##
 
-No dedicated configuration.
+| Key      | Type      | Description | Defaults |
+|----------|-----------|-------------|----------|
+| comments | Boolean   | If `true` will scan translations and comments, when `false` will skip comments. | `false` |
+
+
+### Example ###
+
+```ini
+[prop-tool]
+version = 1
+
+[WhiteCharsBeforeLinefeed]
+comments = true
+```

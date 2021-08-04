@@ -35,11 +35,13 @@ class QuotationMarks(Check):
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(self, translation_file: 'PropFile', reference_file: 'PropFile' = None) -> ReportGroup:
+        self.need_valid_config()
+
         report = ReportGroup('Quotation marks')
 
         for line_idx, item in enumerate(translation_file.items):
             # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
-            if not isinstance(item, (Translation, Comment)):
+            if self._shall_skip_item(item):
                 continue
 
             stack: List[Mark] = []
@@ -72,5 +74,6 @@ class QuotationMarks(Check):
     @overrides(Check)
     def get_default_config(self) -> Dict:
         return {
+            'comments': True,
             'chars': ['"', '`'],
         }
