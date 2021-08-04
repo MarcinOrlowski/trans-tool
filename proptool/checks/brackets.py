@@ -109,6 +109,6 @@ class Brackets(Check):
             'comments': False,
 
             # Keep matching elements at the same positions
-            'opening':  ['(', '[', '<', '{'],
-            'closing':  [')', ']', '>', '}'],
+            'opening':  ['(', '[', '{'],
+            'closing':  [')', ']', '}'],
         }
