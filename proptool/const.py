@@ -21,7 +21,10 @@ class Const(object):
         f'{APP_URL}',
     ]
 
+    class RC(object):  # noqa: WPS431
+        """
+        Application return codes.
+        """
 
-    class RC(object):
         OK: int = 0
         TRANSLATION_SYNTAX_ERROR = 200

@@ -8,7 +8,7 @@
 """
 from typing import Dict, Union
 
-from checks.brackets import Brackets
+from proptool.checks.brackets import Brackets
 from proptool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
 from proptool.decorators.overrides import overrides
 from proptool.prop.items import Blank, Comment, Translation

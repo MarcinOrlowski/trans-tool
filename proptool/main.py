@@ -65,8 +65,8 @@ class PropTool(object):
             reference = PropFile(config)
             try:
                 reference.load(reference_path)
-            except (FileNotFoundError, SyntaxError) as ex:
-                Log.e(str(ex))
+            except (FileNotFoundError, SyntaxError) as load_base_ex:
+                Log.e(str(load_base_ex))
                 Utils.abort()
 
             # Validate base file.
@@ -107,12 +107,12 @@ class PropTool(object):
                         translation.update(reference)
                         translation.save()
 
-                except SyntaxError as ex:
+                except SyntaxError as load_trans_ex:
                     # We need to stop when loading failed due to syntax error
-                    Log.e(str(ex))
+                    Log.e(str(load_trans_ex))
                     return Const.RC.TRANSLATION_SYNTAX_ERROR
 
-                except FileNotFoundError as ex:
+                except FileNotFoundError:
                     # Missing translation file is not a big deal.
                     if config.create:
                         translation.update(reference)

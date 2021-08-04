@@ -35,8 +35,8 @@ class MissingTranslations(Check):
                 if comm_key in missing_keys:
                     del missing_keys[missing_keys.index(comm_key)]
 
-        for comm_key in missing_keys:
-            report.warn(None, f'No translation: "{comm_key}"')
+        for missing_key in missing_keys:
+            report.warn(None, f'No translation: "{missing_key}"')
 
         return report
 

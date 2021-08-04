@@ -32,7 +32,6 @@ class FormattingValues(Check):
     def _parse(self, item: str) -> List[Formatter]:
         # Format String Syntax
         # https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html
-        # pattern = r'(%[a-zA-Z0-9$#+.(-]+)'
         pattern = r'(%[a-zA-Z0-9$#+.(-]+)'
         return [Formatter(match.start(), match.group(1)) for match in re.finditer(pattern, item)]
 

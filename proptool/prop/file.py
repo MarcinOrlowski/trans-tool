@@ -17,7 +17,6 @@ from proptool.log import Log
 from proptool.prop.items import Blank, Comment, PropItem, Translation
 from proptool.report.group import ReportGroup
 from proptool.report.report import Report
-from proptool.utils import Utils
 
 
 class PropFile(object):
@@ -213,7 +212,6 @@ class PropFile(object):
                     continue
 
                 self.append(Translation(key, val, separator))
-
 
             if not duplicated_keys.empty():
                 self.report.add(duplicated_keys)
