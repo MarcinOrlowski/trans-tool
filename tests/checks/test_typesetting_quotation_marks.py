@@ -8,6 +8,7 @@
 """
 from typing import Dict, Union
 
+from proptool.checks.brackets import Brackets
 from proptool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
 from proptool.decorators.overrides import overrides
 from proptool.prop.items import Blank, Comment, Translation
@@ -35,12 +36,23 @@ class ChecksBrackets(ChecksTestCase):
         self.check_single_file(Comment('# „ foo “ '))
 
     def test_comment_with_faults(self) -> None:
-        # Tests error handling when we have closing (popping) marker and empty stack.
-        self.check_single_file(Comment('# foo“  '), exp_warnings = 1)
-        # Tests the case where we done with checks and something left on stack.
-        self.check_single_file(Comment('# „ «foo» '), exp_warnings = 1)
-        # Text the case where we have matches, but not in order.
-        self.check_single_file(Comment('# « „ foo» “ '), exp_warnings = 1)
+        faults = [
+            # Tests error handling when we have closing (popping) marker and empty stack.
+            '# foo“  ',
+            # Tests the case where we done with checks and something left on stack.
+            '# „ «foo» ',
+            # Text the case where we have matches, but not in order.
+            '# « „ foo» “ ',
+        ]
+
+        for fault in faults:
+            # We should see no issues if comment scanning is disabled.
+            self.checker.config['comments'] = False
+            self.check_single_file(Comment(fault))
+
+            # And some warnings when comment scanning in enabled.
+            self.checker.config['comments'] = True
+            self.check_single_file(Comment(fault), exp_warnings = 1)
 
     # #################################################################################################
 
@@ -65,3 +77,16 @@ class ChecksBrackets(ChecksTestCase):
             self.assertFalse(op_marker in checker.closing, f'Marker {op_marker} (position: {op_idx}) is present in closing too.')
         for cl_idx, cl_marker in enumerate(checker.closing):
             self.assertFalse(cl_marker in checker.opening, f'Marker {cl_marker} (position: {cl_idx}) is present in opening too.')
+
+    # #################################################################################################
+
+    def test_config_sync(self) -> None:
+        """
+        Check if TypesettingQuotationMarks' config matches Brackets' one. This is currently needed
+        as Checks are using `dict` based configs and TQM extends Brackets, therefore any missing
+        key in TQM's config cause checker to fail with `KeyError`.
+        """
+        brackets = list(Brackets().get_default_config().keys())
+        tqm = list(TypesettingQuotationMarks().get_default_config().keys())
+
+        self.assertEqual(brackets, tqm)

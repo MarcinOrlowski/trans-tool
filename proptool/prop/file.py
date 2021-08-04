@@ -17,7 +17,6 @@ from proptool.log import Log
 from proptool.prop.items import Blank, Comment, PropItem, Translation
 from proptool.report.group import ReportGroup
 from proptool.report.report import Report
-from proptool.utils import Utils
 
 
 class PropFile(object):
@@ -122,11 +121,19 @@ class PropFile(object):
             if isinstance(item, (Comment, Blank)):
                 tmp.append(item)
             elif isinstance(item, Translation):
-                # If we do have the translation already
+                if self.config.write_reference:
+                    # Write reference even if we have a translation (for. i.e. proofreading).
+                    tmp.append(Comment(f'{self.config.comment_marker} {item.key} {self.config.separator} {item.value}'))
                 if item.key in self.keys:
+                    # Write existing translation
                     tmp.append(self.find_by_key(item.key))
                 else:
-                    tmp.append(Comment.get_commented_out_key_comment(self.config, item.key, item.value))
+                    # We do not have the translation yet.
+                    if self.config.write_reference:
+                        # But as we wrote reference comment already, let's put just a key, without the value.
+                        tmp.append(Comment.get_commented_out_key_comment(self.config, item.key))
+                    else:
+                        tmp.append(Comment.get_commented_out_key_comment(self.config, item.key, item.value))
             else:
                 raise RuntimeError(f'Unknown entry type: {type(item)} at position {idx + 1}')
 
@@ -136,7 +143,7 @@ class PropFile(object):
 
     # #################################################################################################
 
-    def is_valid(self, reference_file: 'PropFile') -> bool:
+    def validate(self, reference_file: 'PropFile') -> bool:
         """
         Validates given PropFile against provided reference file.
 
@@ -152,13 +159,12 @@ class PropFile(object):
 
     # #################################################################################################
 
-    def load(self, file: Path, language: str = None) -> bool:
+    def load(self, file: Path, language: str = None):
         """
         Loads and parses *.properties file.
 
         :param file: File to load.
         :param language: Optional language code the loaded data if for.
-        :return: True if file loaded correctly, False otherwise.
         """
 
         if not file.exists():
@@ -196,22 +202,19 @@ class PropFile(object):
                 # Whatever left should be valid key[:=]val entry
                 tmp = Translation.parse_translation_line(line)
                 if not tmp:
-                    Log.e(f'Invalid syntax at line {line_number} of "{file}".')
-                    Utils.abort()
+                    raise SyntaxError(f'Invalid syntax at line {line_number} of "{file}".')
 
                 key = tmp[0].strip()
                 separator = tmp[1].strip()
                 val = tmp[2].lstrip()
-                if key not in self.keys:
-                    self.append(Translation(key, val, separator))
-                    self.keys.append(key)
-                else:
+                if key in self.keys:
                     duplicated_keys.error(line_number, f'Duplicated key "{key}".')
+                    continue
+
+                self.append(Translation(key, val, separator))
 
             if not duplicated_keys.empty():
                 self.report.add(duplicated_keys)
-
-        return True
 
     # #################################################################################################
 

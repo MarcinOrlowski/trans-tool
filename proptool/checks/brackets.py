@@ -60,7 +60,7 @@ class Brackets(Check):
 
         for idx, item in enumerate(translation.items):
             # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
-            if not isinstance(item, (Translation, Comment)):
+            if not (isinstance(item, Translation) or (isinstance(item, Comment) and self.config['comments'])):
                 continue
 
             stack: List[Bracket] = []
@@ -106,7 +106,9 @@ class Brackets(Check):
     @overrides(Check)
     def get_default_config(self) -> Dict:
         return {
+            'comments': False,
+
             # Keep matching elements at the same positions
-            'opening': ['(', '[', '<', '{'],
-            'closing': [')', ']', '>', '}'],
+            'opening':  ['(', '[', '<', '{'],
+            'closing':  [')', ']', '>', '}'],
         }

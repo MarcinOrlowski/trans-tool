@@ -26,15 +26,16 @@
 
 ## Description ##
 
-TypesettingQuotationMarks is a mixture of `QuotationMarks` and `Brackets` check that understans quotation mark pairs
+TypesettingQuotationMarks is a mixture of `QuotationMarks` and `Brackets` check that understands quotation mark pairs
 (where you have separate quote opening and closing characters). It can look for them and ensure all is paired and properly nested.
 
 ## Configuration file ##
 
-| Key       | Type      | Description | Example |
-|-----------|-----------|-------------|---------|
-| opening   | List of strings | List of opening brackets | `[ '‘', '«' ]` |
-| closing   | List of strings | List of closing brackets | `[ '’', '»' ]` |
+| Key      | Type      | Description | Example |
+|----------|-----------|-------------|---------|
+| comments | Boolean         | If `true` will scan comments too. Default `false`. |   |
+| opening  | List of strings | List of opening brackets | `[ '‘', '«' ]` |
+| closing  | List of strings | List of closing brackets | `[ '’', '»' ]` |
 
 ### Notes ###
 
@@ -50,6 +51,7 @@ out how to handle such case automatically. The solution is to specify separate p
 version = 1
 
 [TypesettingQuotationMarks]
+comments = true
 opening = ['‘', '«', '„', '「', '《']
 closing = ['’', '»', '“', '」', '》']
 ```

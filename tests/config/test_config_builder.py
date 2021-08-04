@@ -24,18 +24,20 @@ class FakeArgs(object):
     def __init__(self):
         self.update: bool = False
         self.create: bool = False
+        self.write_reference: bool = False
 
         self.quiet: bool = False
         self.color: bool = False
+        self.debug: bool = False
+        self.verbose: bool = False
 
         self.files: List[str] = []
         self.languages: List[str] = []
         self.separator: Union[str, None] = None
         self.comment_marker: Union[str, None] = None
-        self.commented_translation_template: Union[str, None] = None
-        self.commented_translation_regexp: Union[str, None] = None
 
         self.config_file = None
+        self.file_suffix = Config.DEFAULT_FILE_SUFFIX
 
         # Initialize all on/off flags related attributes.
         for option_name in ConfigBuilder._on_off_pairs:
@@ -44,6 +46,34 @@ class FakeArgs(object):
 
 
 class TestConfigBuilder(TestCase):
+
+    def test_fake_args_matches_config(self) -> None:
+        """
+        Checks if FakeArgs provides what Config expects.
+        """
+        fake_args = FakeArgs()
+        config = Config()
+        for key, val in config.__dict__.items():
+            # Let's skip Checks' info.
+            if isinstance(val, dict):
+                continue
+
+            self.assertIn(key, fake_args.__dict__, f'FakeArgs lacks "{key}" key."')
+
+    def test_fake_args_matches_argparse(self) -> None:
+        """
+        Ensures FakeArgs matches what argparse returns.
+        """
+        fake_args = FakeArgs()
+
+        # Pass no args for parsing (this is legit as we have config file that can provide what's needed).
+        sys.argv[1:] = []  # noqa: WPS362
+        args = ConfigBuilder._parse_args()
+        for key in fake_args.__dict__:
+            self.assertIn(key, args)
+
+    # #################################################################################################
+
     def get_config_for_validate(self) -> Config:
         """
         Prepares instance of Config to be later manipulated and passed
@@ -381,11 +411,9 @@ class TestConfigBuilder(TestCase):
         del args['show_version']
         del args['config_dump']
 
-        self.assertEqual(len(args), len(config.__dict__))
-
         for key in args:
             # Ensure key args returns is what is present in Config as well.
-            self.assertIn(key, config.__dict__)
+            self.assertIn(key, config.__dict__, f'Config lacks "{key}" key.')
 
     # #################################################################################################
 

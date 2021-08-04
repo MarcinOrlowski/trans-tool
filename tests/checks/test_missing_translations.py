@@ -46,6 +46,7 @@ class TestMissingTranslations(ChecksTestCase):
 
         # have less keys for translation file
         how_many_less = random.randint(1, cnt_min - 1)
+        how_many_less = 1
         trans_keys = ref_keys[:(how_many_less * -1)]
 
         ref_file = self.build_prepfile(ref_keys)
