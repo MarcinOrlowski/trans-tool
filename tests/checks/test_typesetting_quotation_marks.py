@@ -84,4 +84,4 @@ class ChecksBrackets(ChecksTestCase):
         brackets = list(Brackets().get_default_config().keys())
         tqm = list(TypesettingQuotationMarks().get_default_config().keys())
 
-        self.assertEqual(brackets, tqm)
+        self.assertEqual(sorted(brackets), sorted(tqm))

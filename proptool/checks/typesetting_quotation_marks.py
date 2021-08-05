@@ -42,4 +42,8 @@ class TypesettingQuotationMarks(Brackets):
             # BUG: https://github.com/MarcinOrlowski/prop-tool/issues/19
             'opening': ['‘', '«', '„', '「', '《'],
             'closing': ['’', '»', '“', '」', '》'],
+
+            # For compatibility with Brackets.
+            'ignore_quoted':   False,
+            'quotation_marks': [],
         }

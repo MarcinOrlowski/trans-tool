@@ -33,6 +33,20 @@ class Brackets(Check):
 
     report_title = 'Brackets'
 
+    def _is_quoted(self, line: str, char_idx: int) -> bool:
+        """
+        Checks if char at position char_idx is quoted.
+        :param line: String to be processed
+        :param char_idx: Position of char we want to check quotation of.
+        :return: True if it is quoted, False otherwise.
+        """
+        if 0 < char_idx < len(line) - 1:
+            for quotation_mark in self.config['quotation_marks']:
+                if line[char_idx - 1] == quotation_mark and line[char_idx + 1] == quotation_mark:
+                    # It looks it is, so we are going to skip it.
+                    return True
+        return False
+
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(self, translation: 'PropFile', reference: 'PropFile' = None) -> ReportGroup:
@@ -71,12 +85,26 @@ class Brackets(Check):
             for char_idx, current_char in enumerate(item.value):
                 position: str = f'{idx + 1}:{char_idx + 1}'
 
+                in_opening = False
+                in_closing = False
+
                 if current_char in opening:
+                    in_opening = True
+                elif current_char in closing:
+                    in_closing = True
+                else:
+                    continue
+
+                # At this point we know we are dealing with known bracket.
+                if self.config['ignore_quoted'] and self._is_quoted(item.value, char_idx):
+                    continue
+
+                if in_opening:
                     # Every opening brace is pushed to the stack.
                     stack.append(Bracket(char_idx, current_char))
                     continue
 
-                if current_char in closing:
+                if in_closing:
                     # Every closing brace should take its own pair off the stack
 
                     if not stack:
@@ -109,9 +137,11 @@ class Brackets(Check):
     @overrides(Check)
     def get_default_config(self) -> Dict:
         return {
-            'comments': False,
+            'comments':        False,
+            'ignore_quoted':   True,
+            'quotation_marks': ['"', "'"],
 
             # Keep matching elements at the same positions
-            'opening':  ['(', '[', '{'],
-            'closing':  [')', ']', '}'],
+            'opening':         ['(', '[', '{'],
+            'closing':         [')', ']', '}'],
         }
