@@ -17,8 +17,9 @@
   * `StartsWithTheSameCase` now is smarter when looking for words to check.
   * Removed `<` and `>` from `Brackets` defaults as `>` is often used as "arrow" (`->`) raising false positives.
   * Corrected default `KeyFormat` patter so it no longer allows digits at first position.
-  * `QuotationMarks`, `TypesettingQuotationMarks`, `WhiteCharsBeforeLinefeed` and `TrailingWhiteChars` now
-    support `comments` config item to control whenever you want comments to be scanned.
+  * `QuotationMarks`, `TypesettingQuotationMarks`, `WhiteCharsBeforeLinefeed` and `TrailingWhiteChars` now support `comments` config
+    item to control whenever you want comments to be scanned.
+  * `StartsWithTheSameCase` now handles the case where base/translation can start with a digit which should be case match.
 
 * v2.0.0 (2021-08-02)
   * Added support for config files.
