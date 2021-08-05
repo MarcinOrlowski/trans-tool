@@ -208,7 +208,7 @@ class PropFile(object):
                 separator = tmp[1].strip()
                 val = tmp[2].lstrip()
                 if key in self.keys:
-                    duplicated_keys.error(line_number, f'Duplicated key "{key}".')
+                    duplicated_keys.error(line_number, 'Duplicated key.', key)
                     continue
 
                 self.append(Translation(key, val, separator))
