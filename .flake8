@@ -4,7 +4,7 @@
 #
 # in venv
 # pip install wemake-python-styleguide
-# flake8 transtool/report/
+# flake8 transtool/ tests/
 #
 # Refactoring hints:
 # https://flake8.codes/wemake-python-styleguide/0.15.3/index.html
@@ -37,7 +37,7 @@ ignore =
     E251, # E251 unexpected spaces around keyword / parameter equals
     F821, # F821 undefined name 'PropFile'
     I001, # I001 isort found an import in the wrong position
-    I003, # I003 isort expected 1 blank line in imports, found
+    I003, # I003 isort expected 1 blank line in imports,
     I004, # I004 isort found an unexpected blank line in imports
     I005, # I005 isort found an unexpected missing import
     RST213, # RST213 Inline emphasis start-string without end-string.
@@ -70,7 +70,7 @@ ignore =
     WPS360, # WPS360 Found an unnecessary use of a raw string
     WPS420, # WPS420 Found wrong keyword: pass
     WPS442, # WPS442 Found outer scope names shadowing:
-    WPS600, # I001 isort found an import in the wrong position
+    WPS600, # WPS600 Found subclassing a builtin: list
     WPS602, # WPS602 Found using `@staticmethod`
     WPS604, # WPS604 Found incorrect node inside `class` body
     WPS605, # WPS605 Found method without arguments
@@ -84,6 +84,7 @@ per-file-ignores =
 
     # WPS230 Found too many public instance attributes
     transtool/config/config.py: WPS230,
+
     # WPS204 Found overused expression: config['opening']; used 5 > 4
     # WPS213 Found too many expressions
     # WPS301 Found dotted raw import: transtool.checks
