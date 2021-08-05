@@ -56,7 +56,7 @@ punctuation, open brackets, quotation marks and more. It can also automatically 
 fresh template for your translators to work on.
 
 ```bash
-$ trans-tool -b soc -l pl -v
+$ trans-tool -b soc -l pl
 
 Base: src/main/resources/resources/logisim/strings/soc/soc.properties
   Errors: 1
