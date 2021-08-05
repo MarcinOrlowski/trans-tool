@@ -31,21 +31,21 @@ When `ignore_quoted` option is enabled and quotation mark is directly wrapped in
 in `quotation_marks` config list, then such bracket will be ignored. Note that bracket matching currently requires
 both opening and closing brackets to be the same as well as bracket to be directly wrapped in quotes as sole character:
 
-```
+```text
 This is ["[" fine].
 This is ']' fine too.
 ```
 
 These will not be skipped:
 
-```
+```text
 Mixed "[' quotes will not work.
 No quests "[[" allowed.
 ```
 
 As kind of special case, this will pass:
 
-```
+```text
 These will not skipped but will pass "[]" because brackets are paired.
 ```
 

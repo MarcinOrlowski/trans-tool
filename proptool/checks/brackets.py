@@ -139,7 +139,7 @@ class Brackets(Check):
         return {
             'comments':        False,
             'ignore_quoted':   True,
-            'quotation_marks': ['"', "'", ],
+            'quotation_marks': ['"', "'"],
 
             # Keep matching elements at the same positions
             'opening':         ['(', '[', '{'],
