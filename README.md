@@ -33,9 +33,12 @@
 
 ## Introduction ##
 
-`trans-tool` is a small but powerful utility aimed at your projects' `*.properties` files. It looks like text based INI file, but it
-is even simpler and because to its simplicity, this file format is often used to keep the configurations or translations (i.e. in
-Java world). Example file:
+`trans-tool` is a small but powerful utility aimed at your projects' translation files. It is armed
+with several validators to watch for common mistakes in translations as well as base strings. It currently
+loads `*.properties` files, which is file format often used in Java projects as the `trans-tool` was born
+while working on [Logisim-evolution](https://github.com/logisim-evolution/logisim-evolution/).
+
+Example `*.properties` file looks like simplified version of commonly used INI file:
 
 ```ini
 # Example of *.properties file
@@ -43,11 +46,14 @@ programTitle = trans-tool v2.0.0
 okButton = "OK"
 ```
 
-The main role of `trans-tool` is to help you keep your `*.properties` files in order, ensuring all files are
-syntactically correct and all the translation files are in sync with base (main language) file. It also comes with huge set of
+Internally, `trans-tool` works on abstract format, thus adding support for other file formats can easy be added
+which will happen upon demand.
+
+While loading your `*.properties` files `trans-tool` checks if files are in order, ensuring all of them are
+syntactically correct and all of the translations are in sync with main language. It also comes with huge set of
 various linters and checkers to guard quality of the files' contents. It can check for missing or dangling keys, inproper
-punctuation, open brackets, quotation marks and more. It can also automatically sync translation files quickly providing fresh
-template for your translators to work on.
+punctuation, open brackets, quotation marks and more. It can also automatically sync translation files quickly providing
+fresh template for your translators to work on.
 
 ```bash
 $ trans-tool -b soc -l pl -v
@@ -75,5 +81,5 @@ Base: src/main/resources/resources/logisim/strings/soc/soc.properties
 ## License ##
 
 * Written and copyrighted &copy;2021 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
-* trans-tool is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+* trans-tool is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
 * Project logo contains elements from [Flaticon.com](https://www.flaticon.com/free-icon/translation_99694).
