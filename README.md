@@ -50,29 +50,26 @@ punctuation, open brackets, quotation marks and more. It can also automatically 
 template for your translators to work on.
 
 ```bash
-$ prop-tool -b mark -l pl -v
-Base: mark.properties
-  Warnings: 1
+$ prop-tool -b soc -l pl -v
+
+Base: src/main/resources/resources/logisim/strings/soc/soc.properties
+  Errors: 1
     Brackets
-      W: Line 3:16: No closing bracket for "<"
-  PL: brackets_pl.properties
-    Errors: 8, warnings: 3
-      Sentence starts with different letter case.
-        E: Line 8: "missingClosing" starts with lower-cased character. Expected UPPER-cased.
-      Trailing white characters
-        W: line 2: In comment: 2
-        E: line 4: In "question" entry: 1
+      E: Line 163:90: "AssemblerRunSuccess": No opening character matching ")".
+  PL: src/main/resources/resources/logisim/strings/soc/soc_pl.properties
+    Errors: 3, warnings: 4
+      Brackets
+        E: Line 175:83: "AssemblerRunSuccess": No opening character matching ")".
+      Formatting values
+        E: Line 383:167: "PioMenuOutClearRemark": Expected "%s", found "%s.".
+        E: Line 387:167: "PioMenuOutSetRemark": Expected "%s", found "%s.".
+      Missing translations
+        W: "ElfHeaderEIDataError": Missing translation.
+        W: "AsmPanErrorCreateFile": Missing translation.
       Punctuation mismatch
-        E: line 3: "exclamation" ends with " ". Expected "!".
-        E: line 4: "newline" ends with "". Expected "\n".
-      Bracket mismatch
-        E: Line 2:1: "missingClosing": No closing bracket for "(".
-        W: Line 3:16: No closing bracket for "<"
-        E: Line 4:4: "missingOpening": No opening bracket matching ")".
-      Quotation marks
-        E: Line 12:5: "missingSingle": Quotation mark mismatch. Expected ", found `.
-        E: Line 13:5: "remaining": Quotation mark mismatch. Expected ", found `.
-        W: Line 14:11: No closing mark for ".
+        W: Line 12: "SocInsertTransWindowTitle": Ends with "y". Expected ":".
+      First words case mismatch.
+        W: Line 332: "Rv32imProgramCounter": Starts UPPER-cased, expected lower-case.
 ```
 
 ## License ##
