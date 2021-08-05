@@ -9,9 +9,9 @@
 
 from typing import Dict, Tuple, Union
 
-from proptool.decorators.overrides import overrides
-from proptool.prop.items import Translation
-from proptool.report.group import ReportGroup
+from transtool.decorators.overrides import overrides
+from transtool.prop.items import Translation
+from transtool.report.group import ReportGroup
 from .base.check import Check
 
 

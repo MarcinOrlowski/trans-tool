@@ -8,10 +8,10 @@
 """
 from typing import Dict, Union
 
-from proptool.checks.base.check import Check
-from proptool.checks.trailing_white_chars import TrailingWhiteChars
-from proptool.decorators.overrides import overrides
-from proptool.prop.items import Comment, Translation
+from transtool.checks.base.check import Check
+from transtool.checks.trailing_white_chars import TrailingWhiteChars
+from transtool.decorators.overrides import overrides
+from transtool.prop.items import Comment, Translation
 from tests.checks.checks_test_case import ChecksTestCase
 
 

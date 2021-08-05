@@ -8,8 +8,8 @@
 """
 import random
 
-from proptool.config.config import Config
-from proptool.prop.items import Translation
+from transtool.config.config import Config
+from transtool.prop.items import Translation
 from tests.test_case import TestCase
 
 

@@ -12,24 +12,24 @@ import re
 from pathlib import Path
 from typing import List, Union
 
-from proptool.checks.brackets import Brackets
-from proptool.checks.dangling_keys import DanglingKeys
-from proptool.checks.empty_translations import EmptyTranslations
-from proptool.checks.formatting_values import FormattingValues
-from proptool.checks.key_format import KeyFormat
-from proptool.checks.missing_translations import MissingTranslations
-from proptool.checks.punctuation import Punctuation
-from proptool.checks.quotation_marks import QuotationMarks
-from proptool.checks.starts_with_the_same_case import StartsWithTheSameCase
-from proptool.checks.trailing_white_chars import TrailingWhiteChars
-from proptool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
-from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
-from proptool.config.checker_info import CheckerInfo
-from proptool.config.config import Config
-from proptool.config.reader import ConfigReader
-from proptool.const import Const
-from proptool.log import Log
-from proptool.utils import Utils
+from transtool.checks.brackets import Brackets
+from transtool.checks.dangling_keys import DanglingKeys
+from transtool.checks.empty_translations import EmptyTranslations
+from transtool.checks.formatting_values import FormattingValues
+from transtool.checks.key_format import KeyFormat
+from transtool.checks.missing_translations import MissingTranslations
+from transtool.checks.punctuation import Punctuation
+from transtool.checks.quotation_marks import QuotationMarks
+from transtool.checks.starts_with_the_same_case import StartsWithTheSameCase
+from transtool.checks.trailing_white_chars import TrailingWhiteChars
+from transtool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
+from transtool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
+from transtool.config.checker_info import CheckerInfo
+from transtool.config.config import Config
+from transtool.config.reader import ConfigReader
+from transtool.const import Const
+from transtool.log import Log
+from transtool.utils import Utils
 
 
 class ConfigBuilder(object):

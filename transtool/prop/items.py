@@ -9,8 +9,8 @@
 
 from typing import Tuple, Union
 
-from proptool.config.config import Config
-from proptool.decorators.overrides import overrides
+from transtool.config.config import Config
+from transtool.decorators.overrides import overrides
 
 
 # #################################################################################################

@@ -7,9 +7,9 @@
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
-from proptool.checks.base.check import Check
-from proptool.config.config import Config
-from proptool.prop.file import PropFile
+from transtool.checks.base.check import Check
+from transtool.config.config import Config
+from transtool.prop.file import PropFile
 from tests.test_case import TestCase
 
 

@@ -8,7 +8,7 @@
 """
 from typing import Dict, List
 
-from proptool.config.checker_info import CheckerInfo
+from transtool.config.checker_info import CheckerInfo
 
 
 class Config(object):

@@ -11,9 +11,9 @@ from configparser import ConfigParser
 from pathlib import Path
 from typing import Dict, List
 
-from proptool.config.config import Config
-from proptool.log import Log
-from proptool.utils import Utils
+from transtool.config.config import Config
+from transtool.log import Log
+from transtool.utils import Utils
 
 
 class ConfigReader(object):

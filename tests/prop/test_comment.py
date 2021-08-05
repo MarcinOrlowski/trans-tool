@@ -7,8 +7,8 @@
 #
 """
 
-from proptool.config.config import Config
-from proptool.prop.items import Comment
+from transtool.config.config import Config
+from transtool.prop.items import Comment
 from tests.test_case import TestCase
 
 

@@ -8,8 +8,8 @@
 """
 import random
 
-from proptool.report.group import ReportGroup
-from proptool.report.items import Error, Warn
+from transtool.report.group import ReportGroup
+from transtool.report.items import Error, Warn
 from tests.test_case import TestCase
 
 

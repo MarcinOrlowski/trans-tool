@@ -9,10 +9,10 @@
 import random
 from typing import Dict, Union
 
-from proptool.checks.brackets import Brackets
-from proptool.decorators.overrides import overrides
-from proptool.prop.file import PropFile
-from proptool.prop.items import Blank, Comment, Translation
+from transtool.checks.brackets import Brackets
+from transtool.decorators.overrides import overrides
+from transtool.prop.file import PropFile
+from transtool.prop.items import Blank, Comment, Translation
 from tests.checks.checks_test_case import ChecksTestCase
 
 

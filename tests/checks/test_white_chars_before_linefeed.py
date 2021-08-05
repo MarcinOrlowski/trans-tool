@@ -8,11 +8,11 @@
 """
 from typing import Union
 
-from proptool.checks.base.check import Check
-from proptool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
-from proptool.config.config import Config
-from proptool.decorators.overrides import overrides
-from proptool.prop.items import Translation
+from transtool.checks.base.check import Check
+from transtool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
+from transtool.config.config import Config
+from transtool.decorators.overrides import overrides
+from transtool.prop.items import Translation
 from tests.checks.checks_test_case import ChecksTestCase
 
 

@@ -11,9 +11,9 @@ import copy
 import sys
 from pathlib import Path
 
-from proptool.config.builder import ConfigBuilder
-from proptool.config.config import Config
-from proptool.prop.file import PropFile
+from transtool.config.builder import ConfigBuilder
+from transtool.config.config import Config
+from transtool.prop.file import PropFile
 from .const import Const
 from .log import Log
 from .utils import Utils

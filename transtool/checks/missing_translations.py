@@ -8,8 +8,8 @@
 """
 
 from typing import Dict
-from proptool.decorators.overrides import overrides
-from proptool.report.group import ReportGroup
+from transtool.decorators.overrides import overrides
+from transtool.report.group import ReportGroup
 from .base.check import Check
 
 

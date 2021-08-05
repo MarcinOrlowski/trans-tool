@@ -7,7 +7,7 @@
 #
 """
 
-from proptool.prop.items import PropItem
+from transtool.prop.items import PropItem
 from tests.test_case import TestCase
 
 

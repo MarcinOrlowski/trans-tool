@@ -14,7 +14,7 @@ import sys
 from pathlib import PosixPath
 from typing import List, Union
 
-from proptool.config.config import Config
+from transtool.config.config import Config
 
 
 # #################################################################################################

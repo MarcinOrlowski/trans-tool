@@ -9,12 +9,12 @@
 import random
 from typing import Dict, List, Tuple, Union
 
-from proptool.checks.base.check import Check
-from proptool.checks.starts_with_the_same_case import StartsWithTheSameCase
-from proptool.decorators.overrides import overrides
-from proptool.prop.file import PropFile
-from proptool.prop.items import Translation
-from proptool.utils import Utils
+from transtool.checks.base.check import Check
+from transtool.checks.starts_with_the_same_case import StartsWithTheSameCase
+from transtool.decorators.overrides import overrides
+from transtool.prop.file import PropFile
+from transtool.prop.items import Translation
+from transtool.utils import Utils
 from tests.checks.checks_test_case import ChecksTestCase
 
 

@@ -9,9 +9,9 @@
 import random
 from typing import Dict, Union
 
-from proptool.checks.base.check import Check
-from proptool.checks.dangling_keys import DanglingKeys
-from proptool.decorators.overrides import overrides
+from transtool.checks.base.check import Check
+from transtool.checks.dangling_keys import DanglingKeys
+from transtool.decorators.overrides import overrides
 from tests.checks.checks_test_case import ChecksTestCase
 
 

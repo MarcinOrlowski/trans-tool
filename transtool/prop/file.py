@@ -12,11 +12,11 @@ import re
 from pathlib import Path
 from typing import List, Union
 
-from proptool.config.config import Config
-from proptool.log import Log
-from proptool.prop.items import Blank, Comment, PropItem, Translation
-from proptool.report.group import ReportGroup
-from proptool.report.report import Report
+from transtool.config.config import Config
+from transtool.log import Log
+from transtool.prop.items import Blank, Comment, PropItem, Translation
+from transtool.report.group import ReportGroup
+from transtool.report.report import Report
 
 
 class PropFile(object):

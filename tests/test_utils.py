@@ -9,7 +9,7 @@
 
 import random
 
-from proptool.utils import Utils
+from transtool.utils import Utils
 from tests.test_case import TestCase
 
 

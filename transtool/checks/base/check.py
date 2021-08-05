@@ -12,8 +12,8 @@ from abc import ABC, abstractmethod
 from configparser import ConfigParser
 from typing import Dict, List, Union
 
-from proptool.report.report import Report
-from proptool.prop.items import Translation, Comment, PropItem
+from transtool.report.report import Report
+from transtool.prop.items import Translation, Comment, PropItem
 
 
 # noinspection PyUnresolvedReferences

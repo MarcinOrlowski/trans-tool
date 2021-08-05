@@ -7,8 +7,8 @@
 #
 """
 
-from proptool.config.config import Config
-from proptool.report.report import Report
+from transtool.config.config import Config
+from transtool.report.report import Report
 from tests.test_case import TestCase
 
 
