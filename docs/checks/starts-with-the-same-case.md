@@ -41,18 +41,12 @@ key = %s 123 foo bar
 
 the words used for checking will be `Llorem` and `foo` respectively.
 
-`StartsWithTheSameCase` also can handle the case where either base string or translation starts with a digit which is some
-cases, depending on the languages used can qualify as matching translation as digits on front are language driven. For
-example
-
-```ini
-key = No support for 64-bit words.
-```
-
-while translator provides sentence that says `64-bit words are not supported.` which can be actually better form gramaticaly 
-in target language. In such case matching `No` from base with `words` from translation end up with "false positive". To support
-this, the `accept_digits` flag is provided and when its value is `true` (default) then sentence starting with a digit matches
-any case of the other language sentence.
+`StartsWithTheSameCase` also can handle the case where either base string or translation starts with a digit which is some cases,
+depending on the languages used can qualify as matching translation as digits on front are language driven. For example, original
+message says `No support for 64-bit words.` while translation can be more like `64-bit words are not supported.`. These are both
+equivalent but the other form can be actually better choice for the target language. In such case matching `No` from base
+with `words` from translation end up with "false positive". To support this, the `accept_digits` flag is provided and when its value
+is `true` (default) then sentence starting with a digit matches any case of the other language sentence.
 
 ### Notes ###
 
