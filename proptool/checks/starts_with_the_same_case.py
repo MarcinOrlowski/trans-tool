@@ -32,6 +32,7 @@ class StartsWithTheSameCase(Check):
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(self, translation_file: 'PropFile', reference_file: 'PropFile' = None) -> ReportGroup:
         self.need_both_files(translation_file, reference_file)
+        self.need_valid_config()
 
         report = ReportGroup('First words case mismatch.')
 
