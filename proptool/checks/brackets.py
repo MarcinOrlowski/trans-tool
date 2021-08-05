@@ -33,6 +33,20 @@ class Brackets(Check):
 
     report_title = 'Brackets'
 
+    def _is_quoted(self, line: str, char_idx: int) -> bool:
+        """
+        Checks if char at position char_idx is quoted.
+        :param line: String to be processed
+        :param char_idx: Position of char we want to check quotation of.
+        :return: True if it is quoted, False otherwise.
+        """
+        if 0 < char_idx < len(line):
+            for quotation_mark in self.config['quotation_marks']:
+                if line[char_idx - 1] == quotation_mark and line[char_idx + 1] == quotation_mark:
+                    # It looks it is, so we are going to skip it.
+                    return True
+        return False
+
     @overrides(Check)
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
     def check(self, translation: 'PropFile', reference: 'PropFile' = None) -> ReportGroup:
@@ -82,13 +96,8 @@ class Brackets(Check):
                     continue
 
                 # At this point we know we are dealing with known bracket.
-                if self.config['ignore_quoted']:
-                    # If char_idx allows, let check if this bracket isn't quoted by any chance.
-                    if 0 < char_idx < len(item.value):
-                        for quotation_mark in self.config['quotation_marks']:
-                            if item.value[char_idx - 1] == quotation_mark and item.value[char_idx + 1] == quotation_mark:
-                                # It looks it is, so we are going to skip it.
-                                continue
+                if self.config['ignore_quoted'] and self._is_quoted(item.value, char_idx):
+                    continue
 
                 if in_opening:
                     # Every opening brace is pushed to the stack.

@@ -66,6 +66,26 @@ class ChecksBrackets(ChecksTestCase):
 
     # #################################################################################################
 
+    def test_skipping_quoted_brakcets(self) -> None:
+        """
+        Check if correctly quoted brackets are ignored as expected.
+        """
+        tests = [
+            'Is "[" Ok',
+            "This shall ']' pass too",
+        ]
+        self.checker.config['comments'] = True
+        for test in tests:
+            # If we skip quoted brackets, nothing should be reported.
+            self.checker.config['ignore_quoted'] = True
+            self.check_single_file(Comment(test))
+
+            # And some warnings when quited brackets are not ignored.
+            self.checker.config['ignore_quoted'] = False
+            self.check_single_file(Comment(test), exp_warnings = 1)
+
+    # #################################################################################################
+
     def test_handling_of_unsupported_types(self) -> None:
         self.check_single_file(Blank())
 

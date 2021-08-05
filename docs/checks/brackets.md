@@ -27,6 +27,27 @@
 ## Description ##
 
 `Brackets` ensures all brackets that are found opened in the string are also closed and there's no unpaired bracket left.
+When `ignore_quoted` option is enabled and quotation mark is directly wrapped in one of the quotation marks specified
+in `quotation_marks` config list, then such bracket will be ignored. Note that bracket matching currently requires
+both opening and closing brackets to be the same as well as bracket to be directly wrapped in quotes as sole character:
+
+```
+This is ["[" fine].
+This is ']' fine too.
+```
+
+These will not be skipped:
+
+```
+Mixed "[' quotes will not work.
+No quests "[[" allowed.
+```
+
+As kind of special case, this will pass:
+
+```
+These will not skipped but will pass "[]" because brackets are paired.
+```
 
 ## Configuration file ##
 
