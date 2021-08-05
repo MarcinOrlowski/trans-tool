@@ -1,9 +1,9 @@
 """
-# prop-tool
+# trans-tool
 # Java *.properties file sync checker and syncing tool.
 #
 # Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
-# https://github.com/MarcinOrlowski/prop-tool/
+# https://github.com/MarcinOrlowski/trans-tool/
 #
 """
 
@@ -14,9 +14,9 @@ from pathlib import Path
 from typing import List, Union
 from unittest.mock import Mock, call, patch
 
-from proptool.config.config import Config
-from proptool.config.builder import ConfigBuilder
-from proptool.utils import Utils
+from transtool.config.config import Config
+from transtool.config.builder import ConfigBuilder
+from transtool.utils import Utils
 from tests.test_case import TestCase
 
 
@@ -97,7 +97,7 @@ class TestConfigBuilder(TestCase):
         """
         ConfigBuilder._validate_config(self.get_config_for_validate())
 
-    @patch('proptool.log.Log.e')
+    @patch('transtool.log.Log.e')
     def test_validate_config_invalid_separator(self, log_e_mock: Mock) -> None:
         """
         Ensures invalid separator char triggers expected error message and quits.
@@ -115,7 +115,7 @@ class TestConfigBuilder(TestCase):
             self.assertEqual(SystemExit, type(context_manager.exception))
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('proptool.log.Log.e')
+    @patch('transtool.log.Log.e')
     def test_validate_config_invalid_comment_marker(self, log_e_mock: Mock) -> None:
         """
         Ensures invalid comment marker triggers expected error message and quits.
@@ -133,7 +133,7 @@ class TestConfigBuilder(TestCase):
             self.assertEqual(SystemExit, type(context_manager.exception))
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('proptool.log.Log.e')
+    @patch('transtool.log.Log.e')
     def test_validate_config_invalid_languages(self, log_e_mock: Mock) -> None:
         # valid language code is just lowercased [a-z]{2,}
         faults = [
@@ -300,7 +300,7 @@ class TestConfigBuilder(TestCase):
             # We expect no problems.
             ConfigBuilder._validate_args(args)
 
-    @patch('proptool.log.Log.e')
+    @patch('transtool.log.Log.e')
     def test_validate_args_onoff_on_on(self, log_e_mock: Mock) -> None:
         for option_name in ConfigBuilder._on_off_pairs:
             args = FakeArgs()
@@ -317,7 +317,7 @@ class TestConfigBuilder(TestCase):
                 self.assertEqual(SystemExit, type(context_manager.exception))
                 self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('proptool.log.Log.e')
+    @patch('transtool.log.Log.e')
     def test_validate_args_quiet_and_verbose(self, log_e_mock: Mock) -> None:
         """
         Ensures use of mutually exclusive --quiet and --verbose is handled correctly.
@@ -337,7 +337,7 @@ class TestConfigBuilder(TestCase):
             self.assertEqual(SystemExit, type(context_manager.exception))
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('proptool.log.Log.e')
+    @patch('transtool.log.Log.e')
     def test_validate_args_invalid_separator(self, log_e_mock: Mock) -> None:
         """
         Checks if attempt to use invalid character as separator is correctly handled.
@@ -359,7 +359,7 @@ class TestConfigBuilder(TestCase):
             self.assertEqual(SystemExit, type(context_manager.exception))
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('proptool.log.Log.e')
+    @patch('transtool.log.Log.e')
     def test_validate_args_invalid_comment_marker(self, log_e_mock: Mock) -> None:
         args = FakeArgs()
 
@@ -428,7 +428,7 @@ class TestConfigBuilder(TestCase):
 
         # Pass no args for parsing (this is legit as we have config file that can provide what's needed).
         sys.argv[1:] = []  # noqa: WPS362
-        with patch('proptool.config.builder.ConfigBuilder._parse_args') as manager:
+        with patch('transtool.config.builder.ConfigBuilder._parse_args') as manager:
             manager.return_value = args
 
             ConfigBuilder.build(config)

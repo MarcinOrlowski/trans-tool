@@ -4,7 +4,7 @@
 #
 # in venv
 # pip install wemake-python-styleguide
-# flake8 proptool/report/
+# flake8 transtool/report/
 #
 # Refactoring hints:
 # https://flake8.codes/wemake-python-styleguide/0.15.3/index.html
@@ -79,22 +79,22 @@ ignore =
 per-file-ignores =
     # WPS420 Found wrong keyword: pass
     # WPS604 Found incorrect node inside `class` body
-    proptool/report/error.py: WPS420, WPS604,
-    proptool/report/warn.py: WPS420, WPS604,
+    transtool/report/error.py: WPS420, WPS604,
+    transtool/report/warn.py: WPS420, WPS604,
 
     # WPS230 Found too many public instance attributes
-    proptool/config/config.py: WPS230,
+    transtool/config/config.py: WPS230,
     # WPS204 Found overused expression: config['opening']; used 5 > 4
     # WPS213 Found too many expressions
-    # WPS301 Found dotted raw import: proptool.checks
+    # WPS301 Found dotted raw import: transtool.checks
     # WPS421 Found wrong function call: dir, print
     # WPS437 Found protected attribute usage
     # WPS529 Found implicit `.get()` dict usage
     # WPS609 Found direct magic attribute usage: __setattr__, __getattr__, ...
     # WPS433 Found nested import
     # WPS425 Found boolean non-keyword argument: True, False
-    proptool/config/reader.py: WPS609, WPS421, WPS204, WPS529, WPS433,
-    proptool/config/builder.py: WPS609, WPS301, WPS437, WPS213, WPS425,
+    transtool/config/reader.py: WPS609, WPS421, WPS204, WPS529, WPS433,
+    transtool/config/builder.py: WPS609, WPS301, WPS437, WPS213, WPS425,
 
     # WPS111 Found too short name
     # WPS214 Found too many methods
@@ -103,26 +103,26 @@ per-file-ignores =
     # WPS421 Found wrong function call: print
     # WPS437 Found protected attribute usage
     # WPS518 Found implicit `enumerate()` call
-    proptool/log.py: WPS214, WPS437, WPS111, WPS317, WPS421, WPS518, WPS323,
+    transtool/log.py: WPS214, WPS437, WPS111, WPS317, WPS421, WPS518, WPS323,
 
     # WPS201 Found module with too many imports: 13 > 12
     # WPS213 Found too many expressions: 13 > 9
     # WPS317 Found incorrect multi-line parameters
     # WPS323 Found `%` string formatting
-    proptool/main.py: WPS201, WPS213, WPS317, WPS323,
+    transtool/main.py: WPS201, WPS213, WPS317, WPS323,
 
     # S101 Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.
     # WPS421 Found wrong function call: dir
     # WPS430 Found nested function: overrider
-    proptool/decorators/overrides.py: WPS430, S101, WPS421,
+    transtool/decorators/overrides.py: WPS430, S101, WPS421,
 
     # WPS201 Found module with too many imports: 21 > 12
     # WPS230 Found too many public instance attributes
-    proptool/prop/file.py: WPS201, WPS230,
+    transtool/prop/file.py: WPS201, WPS230,
 
     # WPS100 Found wrong module name
     # WPS421 Found wrong function call: print
-    proptool/utils.py: WPS421, WPS100,
+    transtool/utils.py: WPS421, WPS100,
 
     # S311 Standard pseudo-random generators are not suitable for security/cryptographic purposes.
     # WPS118 Found too long name

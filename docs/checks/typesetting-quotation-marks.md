@@ -1,4 +1,4 @@
-![prop-tool logo](../../artwork/prop-tool-logo.png)
+![trans-tool logo](../../artwork/trans-tool-logo.png)
 
 ### The *.properties file checker and syncing tool ###
 
@@ -47,7 +47,7 @@ out how to handle such case automatically. The solution is to specify separate p
 ### Example ###
 
 ```ini
-[prop-tool]
+[trans-tool]
 version = 1
 
 [TypesettingQuotationMarks]

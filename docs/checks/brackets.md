@@ -1,4 +1,4 @@
-![prop-tool logo](../../artwork/prop-tool-logo.png)
+![trans-tool logo](../../artwork/trans-tool-logo.png)
 
 ### The *.properties file checker and syncing tool ###
 
@@ -67,7 +67,7 @@ is `{` then the `}` MUST be first element on `closing` list.
 ### Example ###
 
 ```ini
-[prop-tool]
+[trans-tool]
 version = 1
 
 [Brackets]

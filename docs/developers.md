@@ -1,4 +1,4 @@
-![prop-tool logo](../artwork/prop-tool-logo.png)
+![trans-tool logo](../artwork/trans-tool-logo.png)
 
 ### The *.properties file checker and syncing tool ###
 
@@ -15,7 +15,7 @@
 
 # Quality control #
 
-`prop-tool` is Python 3 application. It has no external runtime dependencies, however code quality is automatically checked using
+`trans-tool` is Python 3 application. It has no external runtime dependencies, however code quality is automatically checked using
 additional tools that require additional installation. These tests are run automatically on the code repository against any new
 commited code and each pull-request created using Github Actions feature (see `.github/workflows` folder for configuration details).
 

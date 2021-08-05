@@ -1,14 +1,14 @@
 """
-# prop-tool
+# trans-tool
 # Java *.properties file sync checker and syncing tool.
 #
 # Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
-# https://github.com/MarcinOrlowski/prop-tool/
+# https://github.com/MarcinOrlowski/trans-tool/
 #
 """
 
-from proptool.config.config import Config
-from proptool.prop.items import Comment
+from transtool.config.config import Config
+from transtool.prop.items import Comment
 from tests.test_case import TestCase
 
 

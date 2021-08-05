@@ -1,4 +1,4 @@
-![prop-tool logo](../artwork/prop-tool-logo.png)
+![trans-tool logo](../artwork/trans-tool-logo.png)
 
 ### The *.properties file checker and syncing tool ###
 
@@ -19,10 +19,10 @@
 
 ## Installation ##
 
-You can install `prop-tool` from [PyPi](https://pypi.org/project/prop-tool/):
+You can install `trans-tool` from [PyPi](https://pypi.org/project/trans-tool/):
 
 ```bash
-pip install prop-tool
+pip install trans-tool
 ```
 
 Alternatively, you can download `*.whl` archive and install it manually by issuing:
@@ -37,10 +37,10 @@ You may also want to setup [virtual environment](https://docs.python.org/3/libra
 
 ## Limitations ##
 
-* As of now `prop-tool` do not handle multiline entries.
+* As of now `trans-tool` do not handle multiline entries.
 * `FormattingValues` check will do not support positional placeholders, formats using space leading positive numbers.
 * `TypesettingQuotationMarks` is not covering all possible pairs yet due
-  to [limitations of current implementation](https://github.com/MarcinOrlowski/prop-tool/issues/19).
+  to [limitations of current implementation](https://github.com/MarcinOrlowski/trans-tool/issues/19).
 
 ## Additional links ##
 
