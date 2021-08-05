@@ -7,6 +7,7 @@
 # Changelog #
 
 * dev
+  * Rebranded project as 'trans-tool'.
   * Fixed config loader not handling Checks' sections properly.
   * Corrected config file syntax documentation.
   * Added `--config-dump` option that shows state of the configuration.
