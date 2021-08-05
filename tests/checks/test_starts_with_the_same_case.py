@@ -85,6 +85,7 @@ class TestStartsWithTheSameCase(ChecksTestCase):
             ('%s statistics', '123 statystyki %s'),
             ('%s 123 Statistics', 'Statystyki %s'),
         ]
+        self.checker.config['accept_digits'] = False
         self._do_scan_test(tests, 0)
 
     def test_fault_special_cases(self) -> None:
@@ -99,6 +100,7 @@ class TestStartsWithTheSameCase(ChecksTestCase):
             # Base has words, translation does not.
             ('Some words here', '123 123 123'),
         ]
+        self.checker.config['accept_digits'] = False
         self._do_scan_test(tests, 1)
 
     def test_no_alpha_words(self) -> None:
@@ -108,6 +110,21 @@ class TestStartsWithTheSameCase(ChecksTestCase):
             # No real words. This should be skipped silently.
             ('3434 3434 34', '123 123 123'),
         ]
+        self.checker.config['accept_digits'] = False
+        self._do_scan_test(tests)
+
+    # #################################################################################################
+
+    def test_opening_digits(self) -> None:
+        tests = [
+            ('Upper', '12345 lower'),
+            ('12345 Upper', 'lower'),
+            ('12345 Upper', '345345 lower'),
+        ]
+        self.checker.config['accept_digits'] = False
+        self._do_scan_test(tests, exp_warnings = 1)
+
+        self.checker.config['accept_digits'] = True
         self._do_scan_test(tests)
 
     # #################################################################################################

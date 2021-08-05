@@ -7,7 +7,7 @@
 #
 """
 
-from typing import Tuple, Union
+from typing import Dict, Tuple, Union
 
 from proptool.decorators.overrides import overrides
 from proptool.prop.items import Translation
@@ -33,7 +33,7 @@ class StartsWithTheSameCase(Check):
     def check(self, translation_file: 'PropFile', reference_file: 'PropFile' = None) -> ReportGroup:
         self.need_both_files(translation_file, reference_file)
 
-        report = ReportGroup('Sentence starts with different letter case.')
+        report = ReportGroup('First words case mismatch.')
 
         for idx, trans in enumerate(translation_file.items):
             # We care translations only for now.
@@ -51,6 +51,12 @@ class StartsWithTheSameCase(Check):
             if ref.value.strip() == '' or trans.value.strip() == '':
                 continue
 
+            # Before we look for words, let's check for digits (if enabled)
+            if self.config['accept_digits']:
+                # Any starting digit matches "opposite" sentence's case
+                if ref.value[0].isdigit() or trans.value[0].isdigit():
+                    continue
+
             # Find first 'word' that starts with a letter.
             ref_word_idx, ref_word = self._find_word(ref.value)
             trans_word_idx, trans_word = self._find_word(trans.value)
@@ -60,10 +66,10 @@ class StartsWithTheSameCase(Check):
                 continue
 
             if ref_word and not trans_word:
-                report.warn(idx + 1, 'Translation contains no words starting with a letter, while original does.')
+                report.warn(idx + 1, 'Translation contains no words starting with a letter, while original does.', trans.key)
                 continue
             if not ref_word and trans_word:
-                report.warn(idx + 1, 'Base string contains no words starting with a letter, but translation does.')
+                report.warn(idx + 1, 'Base string contains no words starting with a letter, but translation does.', trans.key)
                 continue
 
             ref_first_char = ref_word[0]
@@ -80,3 +86,9 @@ class StartsWithTheSameCase(Check):
                 report.warn(idx + 1, f'Value starts with {found} character. Expected {expected}.', trans.key)
 
         return report
+
+    @overrides(Check)
+    def get_default_config(self) -> Dict:
+        return {
+            'accept_digits': True,
+        }
