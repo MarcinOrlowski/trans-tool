@@ -85,6 +85,7 @@ class TestStartsWithTheSameCase(ChecksTestCase):
             ('%s statistics', '123 statystyki %s'),
             ('%s 123 Statistics', 'Statystyki %s'),
         ]
+        self.checker.config['accept_digits'] = False
         self._do_scan_test(tests, 0)
 
     def test_fault_special_cases(self) -> None:
@@ -99,6 +100,7 @@ class TestStartsWithTheSameCase(ChecksTestCase):
             # Base has words, translation does not.
             ('Some words here', '123 123 123'),
         ]
+        self.checker.config['accept_digits'] = False
         self._do_scan_test(tests, 1)
 
     def test_no_alpha_words(self) -> None:
@@ -108,38 +110,56 @@ class TestStartsWithTheSameCase(ChecksTestCase):
             # No real words. This should be skipped silently.
             ('3434 3434 34', '123 123 123'),
         ]
+        self.checker.config['accept_digits'] = False
         self._do_scan_test(tests)
 
     # #################################################################################################
 
-    def test_handling_of_unsupported_types(self) -> None:
-        self.check_skipping_blank_and_comment()
+    def test_opening_digits(self) -> None:
+        tests = [
+            ('Upper', '12345 lower'),
+            ('12345 Upper', 'lower'),
+            ('12345 Upper', '345345 lower'),
+        ]
+        self.checker.config['accept_digits'] = False
+        self._do_scan_test(tests, exp_warnings = 1)
 
-    def test_handling_of_dangling_translation_keys(self) -> None:
-        self.check_skipping_of_dangling_keys()
+        self.checker.config['accept_digits'] = True
+        self._do_scan_test(tests)
 
-    def test_skipping_of_entry_items(self) -> None:
-        """
-        Checks if item is silently skipped if its value is empty string or value of reference
-        string is empty.
-        :return:
-        """
-        # generate some keys for translation file
-        cnt_min = 20
-        cnt_max = 40
-        keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
+    # #################################################################################################
 
-        ref_file = self.build_prepfile(keys, lower = True)
-        trans_file = self.build_prepfile(keys, lower = True)
 
-        # Let's clear some values in both files
-        upper_bound = 10
-        for _ in range(random.randint(1, upper_bound)):
-            ref_idx = random.randrange(len(ref_file.items))
-            ref_file.items[ref_idx].value = ''
+def test_handling_of_unsupported_types(self) -> None:
+    self.check_skipping_blank_and_comment()
 
-            trans_idx = random.randrange(len(trans_file.items))
-            trans_file.items[trans_idx].value = ''
 
-        # We expect no problems.
-        self.check(trans_file, ref_file)
+def test_handling_of_dangling_translation_keys(self) -> None:
+    self.check_skipping_of_dangling_keys()
+
+
+def test_skipping_of_entry_items(self) -> None:
+    """
+    Checks if item is silently skipped if its value is empty string or value of reference
+    string is empty.
+    :return:
+    """
+    # generate some keys for translation file
+    cnt_min = 20
+    cnt_max = 40
+    keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
+
+    ref_file = self.build_prepfile(keys, lower = True)
+    trans_file = self.build_prepfile(keys, lower = True)
+
+    # Let's clear some values in both files
+    upper_bound = 10
+    for _ in range(random.randint(1, upper_bound)):
+        ref_idx = random.randrange(len(ref_file.items))
+        ref_file.items[ref_idx].value = ''
+
+        trans_idx = random.randrange(len(trans_file.items))
+        trans_file.items[trans_idx].value = ''
+
+    # We expect no problems.
+    self.check(trans_file, ref_file)
