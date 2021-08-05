@@ -6,7 +6,7 @@
    version="1.1"
    id="svg8"
    inkscape:version="1.1 (ce6663b3b7, 2021-05-25)"
-   sodipodi:docname="transtool-logo.svg"
+   sodipodi:docname="trans-tool-logo.svg"
    inkscape:export-filename="/home/carlos/dev/projects/prop-tool/artwork/trans-tool-logo.png"
    inkscape:export-xdpi="71.839996"
    inkscape:export-ydpi="71.839996"
@@ -18,7 +18,7 @@
    xmlns:cc="http://creativecommons.org/ns#"
    xmlns:dc="http://purl.org/dc/elements/1.1/">
   <title
-     id="title4925">Laravel API Response Builder logo</title>
+     id="title909">trans-tool project logo</title>
   <defs
      id="defs2">
     <rect
@@ -39,7 +39,7 @@
      inkscape:cx="824.0388"
      inkscape:cy="-54.59576"
      inkscape:document-units="mm"
-     inkscape:current-layer="g14564"
+     inkscape:current-layer="g14775"
      showgrid="false"
      width="5600mm"
      showguides="true"
@@ -57,7 +57,24 @@
     <rdf:RDF>
       <cc:Work
          rdf:about="">
-        <dc:title>Laravel API Response Builder logo</dc:title>
+        <dc:title>trans-tool project logo</dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Marcin Orlowski</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Marcin Orlowski</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:source>https://github.com/MarcinOrlowski/trans-tool</dc:source>
+        <dc:publisher>
+          <cc:Agent>
+            <dc:title>Marcin Orlowski</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:date>2021</dc:date>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -260,44 +277,44 @@
         </g>
         <g
            id="g62006"
-           transform="matrix(1.0446229,0,0,1.0744828,-12.952594,-9.8873609)"
-           style="stroke-width:0.943888">
+           transform="matrix(0.92613056,0,0,0.95260343,29.33422,10.418418)"
+           style="stroke-width:1.06465">
           <g
              id="g61977"
              transform="translate(-38.938309,1.7962658)"
-             style="stroke-width:0.943888">
+             style="stroke-width:1.06465">
             <g
                id="g1083-0-0"
                transform="matrix(0.06409891,0,0,0.07899872,257.89685,158.57104)"
-               style="stroke-width:6.7044" />
+               style="stroke-width:7.56218" />
             <text
                xml:space="preserve"
-               style="font-size:10.7669px;line-height:1.25;font-family:'a dripping marker';-inkscape-font-specification:'a dripping marker';letter-spacing:0px;word-spacing:0px;fill:#f1333f;fill-opacity:1;stroke-width:0.993433"
+               style="font-size:10.7669px;line-height:1.25;font-family:'a dripping marker';-inkscape-font-specification:'a dripping marker';letter-spacing:0px;word-spacing:0px;fill:#f1333f;fill-opacity:1;stroke-width:1.12054"
                x="319.13046"
                y="173.1644"
                id="text5759-7-7"><tspan
                  sodipodi:role="line"
-                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, ';fill:#f13360;fill-opacity:1;stroke-width:0.993433"
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, ';fill:#f13360;fill-opacity:1;stroke-width:1.12054"
                  x="319.13046"
                  y="173.1644"
                  id="tspan119569-7">a development tool</tspan><tspan
                  sodipodi:role="line"
-                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, ';fill:#f13360;fill-opacity:1;stroke-width:0.993433"
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, ';fill:#f13360;fill-opacity:1;stroke-width:1.12054"
                  x="319.13046"
                  y="186.71045"
                  id="tspan13760">by Marcin Orlowski</tspan></text>
             <g
                id="g59430"
                transform="translate(19.699781,54.181392)"
-               style="stroke-width:0.943888">
+               style="stroke-width:1.06465">
               <g
                  id="g31745-8"
                  transform="matrix(0.04649357,0,0,0.04649356,302.21383,113.19229)"
-                 style="display:inline;stroke-width:14.594">
+                 style="display:inline;stroke-width:16.4612">
                 <g
                    id="g36065-9"
                    transform="translate(28.160981,111.53962)"
-                   style="stroke-width:14.594" />
+                   style="stroke-width:16.4612" />
               </g>
             </g>
           </g>
@@ -316,7 +333,7 @@
            y="258.76547" /></text>
       <g
          id="g14564"
-         transform="translate(-4.1935014)">
+         transform="translate(-7.1436283)">
         <text
            xml:space="preserve"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3028px;line-height:1.25;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#f13360;fill-opacity:1;stroke-width:1.05249"
