@@ -33,6 +33,8 @@
 | Key      | Type      | Description | Defaults |
 |----------|-----------|-------------|----------|
 | comments | Boolean         | If `true` will scan translations and comments, when `false` will skip comments. | `false` |
+| ignore_quoted | Boolean | When `true`, any quoted bracket will be ignored. | `true` |
+| quotation_marks | List of strings | List of accepted quotation marks that `ignore_quoted` looks for. | `[ "\"", "'" ]` |
 | opening  | List of strings | List of opening brackets  | `[ "(", "{", "[" ]` |
 | closing  | List of strings | List of closing brackets  | `[ ")", "}", "]" ]` |
 
@@ -49,6 +51,8 @@ version = 1
 
 [Brackets]
 comments = true
+ignore_quoted = true
+quotation_marks = [ "\"", "'" ] 
 opening = [ "(", "<", "{" ]
 closing = [ ")", ">", "}" ]
 ```
