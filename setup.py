@@ -2,11 +2,11 @@
 
 """
 #
-# prop-tool
+# trans-tool
 # Java *.properties file sync checker and syncing tool.
 #
 # Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
-# https://github.com/MarcinOrlowski/prop-tool/
+# https://github.com/MarcinOrlowski/trans-tool/
 #
 #
 # python3 -m venv venv
@@ -35,7 +35,7 @@ setup(
     python_requires = '>=3.6',
     entry_points = {
         'console_scripts': [
-            'prop-tool = proptool.main:PropTool.start',
+            'trans-tool = proptool.main:PropTool.start',
             'proptool = proptool.main:PropTool.start',
         ],
     },
@@ -48,9 +48,9 @@ setup(
     url = Const.APP_URL,
     keywords = 'java properties sync check validation',
     project_urls = {
-        'Bug Tracker':   'https://github.com/MarcinOrlowski/prop-tool/issues/',
-        'Documentation': 'https://github.com/MarcinOrlowski/prop-tool/',
-        'Source Code':   'https://github.com/MarcinOrlowski/prop-tool/',
+        'Bug Tracker':   'https://github.com/MarcinOrlowski/trans-tool/issues/',
+        'Documentation': 'https://github.com/MarcinOrlowski/trans-tool/',
+        'Source Code':   'https://github.com/MarcinOrlowski/trans-tool/',
     },
     # https://choosealicense.com/
     license = 'MIT License',

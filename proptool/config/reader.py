@@ -1,9 +1,9 @@
 """
-# prop-tool
+# trans-tool
 # Java *.properties file sync checker and syncing tool.
 #
 # Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
-# https://github.com/MarcinOrlowski/prop-tool/
+# https://github.com/MarcinOrlowski/trans-tool/
 #
 """
 
@@ -45,8 +45,8 @@ class ConfigReader(object):
             # noinspection PyUnresolvedReferences
             self.abort(f'Failed parsing config INI file: {config_file_name}')
 
-        # Presence of "prop-tool" section is mandatory.
-        main_section = 'prop-tool'
+        # Presence of "trans-tool" section is mandatory.
+        main_section = 'trans-tool'
         if not self.parser.has_section(main_section):
             self.abort(f'Missing "{main_section}" section.')
 

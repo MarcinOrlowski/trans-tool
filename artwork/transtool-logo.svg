@@ -6,8 +6,8 @@
    version="1.1"
    id="svg8"
    inkscape:version="1.1 (ce6663b3b7, 2021-05-25)"
-   sodipodi:docname="prop-tool-logo.svg"
-   inkscape:export-filename="/home/carlos/dev/projects/prop-tool/artwork/prop-tool-logo.png"
+   sodipodi:docname="trans-tool-logo.svg"
+   inkscape:export-filename="/home/carlos/dev/projects/trans-tool/artwork/trans-tool-logo.png"
    inkscape:export-xdpi="71.839996"
    inkscape:export-ydpi="71.839996"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -256,7 +256,7 @@
                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, ';fill:#f13360;fill-opacity:1;stroke-width:5.27174"
                x="-214.49933"
                y="265.17487"
-               id="tspan139593">prop-tool</tspan></text>
+               id="tspan139593">trans-tool</tspan></text>
         </g>
         <g
            id="g62006"

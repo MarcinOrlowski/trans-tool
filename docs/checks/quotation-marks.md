@@ -1,4 +1,4 @@
-![prop-tool logo](../../artwork/prop-tool-logo.png)
+![trans-tool logo](../../artwork/trans-tool-logo.png)
 
 ### The *.properties file checker and syncing tool ###
 
@@ -61,7 +61,7 @@ Temporary workarounds:
 ### Example ###
 
 ```ini
-[prop-tool]
+[trans-tool]
 version = 1
 
 [QuotationMarks]

@@ -1,9 +1,9 @@
 """
-# prop-tool
+# trans-tool
 # Java *.properties file sync checker and syncing tool.
 #
 # Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
-# https://github.com/MarcinOrlowski/prop-tool/
+# https://github.com/MarcinOrlowski/trans-tool/
 #
 """
 
@@ -39,7 +39,7 @@ class TypesettingQuotationMarks(Brackets):
             # List based on:
             # * https://www.overleaf.com/learn/latex/Typesetting_quotations#Reference_guide
             # * https://en.wikipedia.org/wiki/Quotation_mark
-            # BUG: https://github.com/MarcinOrlowski/prop-tool/issues/19
+            # BUG: https://github.com/MarcinOrlowski/trans-tool/issues/19
             'opening': ['‘', '«', '„', '「', '《'],
             'closing': ['’', '»', '“', '」', '》'],
 

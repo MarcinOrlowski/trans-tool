@@ -1,4 +1,4 @@
-![prop-tool logo](../artwork/prop-tool-logo.png)
+![trans-tool logo](../artwork/trans-tool-logo.png)
 
 ### The *.properties file checker and syncing tool ###
 
@@ -12,14 +12,14 @@
   * [Config file](#config-file)
   * [Syntax file](#syntax)
   * [Structure](#structure)
-    * [The [prop-tool] section](#prop-tool-section)
+    * [The [trans-tool] section](#trans-tool-section)
 
 ---
 
 # Config file #
 
-You can drive and control `prop-tool` with use of configuration file, which gives you most control over application behavior. Almost
-all options, including validators' settings can be configured in configuration files, which helps for example using `prop-tool` as
+You can drive and control `trans-tool` with use of configuration file, which gives you most control over application behavior. Almost
+all options, including validators' settings can be configured in configuration files, which helps for example using `trans-tool` as
 part of CI/CD or GitHub Actions.
 
 Configuration file is plain text file, following [INI file format](https://en.wikipedia.org/wiki/INI_file) and can be created using
@@ -69,7 +69,7 @@ thisIsListToo = [
 
 # Structure #
 
-Presence of main section `[prop-tool]` in config file is mandatory, however with the exception for `version` element, all items are
+Presence of main section `[trans-tool]` in config file is mandatory, however with the exception for `version` element, all items are
 optional with application defaults used for non-specified elements.
 
 If any of available validators can be configured, all its settings are placed in separate section, witch name of the section being
@@ -80,7 +80,7 @@ configures [Brackets](checks/brackets.md)
 validator to only handle given set of brackets:
 
 ```ini
-[prop-tool]
+[trans-tool]
 # Version of configuration file format. Currently equals to 1
 version = 1
 
@@ -93,9 +93,9 @@ opening = ["(", "["]
 closing = [")", "]"]
 ```
 
-# prop-tool section #
+# trans-tool section #
 
-The following elements are supported in `[prop-tool]` section
+The following elements are supported in `[trans-tool]` section
 
 | Key       | CLI switch    | Argument type | Default | Description |
 |-----------|---------------|---------------|---------|-------------|

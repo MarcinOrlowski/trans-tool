@@ -1,4 +1,4 @@
-![prop-tool logo](../../artwork/prop-tool-logo.png)
+![trans-tool logo](../../artwork/trans-tool-logo.png)
 
 ### The *.properties file checker and syncing tool ###
 
@@ -36,7 +36,7 @@ Punctuation check ensures translation ends with punctuation mark (`:`, `.`, `?`,
 ### Example ###
 
 ```ini
-[prop-tool]
+[trans-tool]
 version = 1
 
 [Punctuation]

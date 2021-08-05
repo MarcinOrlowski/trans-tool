@@ -1,20 +1,20 @@
-![prop-tool logo](artwork/prop-tool-logo.png)
+![trans-tool logo](artwork/trans-tool-logo.png)
 
 ### The *.properties file checker and syncing tool ###
 
 ---
 
-[master](https://github.com/MarcinOrlowski/prop-tool/tree/master) branch:
-[![Unit tests](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/unittests.yml/badge.svg?branch=master)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/unittests.yml)
-[![codecov](https://codecov.io/gh/MarcinOrlowski/prop-tool/branch/master/graph/badge.svg?token=3THKJKSQ1G)](https://codecov.io/gh/MarcinOrlowski/prop-tool)
-[![Code lint](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/linter.yml/badge.svg?branch=master)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/linter.yml)
-[![MD Lint](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/markdown.yml/badge.svg?branch=master)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/markdown.yml)
+[master](https://github.com/MarcinOrlowski/trans-tool/tree/master) branch:
+[![Unit tests](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/unittests.yml/badge.svg?branch=master)](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/unittests.yml)
+[![codecov](https://codecov.io/gh/MarcinOrlowski/trans-tool/branch/master/graph/badge.svg?token=3THKJKSQ1G)](https://codecov.io/gh/MarcinOrlowski/trans-tool)
+[![Code lint](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/linter.yml/badge.svg?branch=master)](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/linter.yml)
+[![MD Lint](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/markdown.yml/badge.svg?branch=master)](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/markdown.yml)
 
-[development](https://github.com/MarcinOrlowski/prop-tool/tree/dev) branch:
-[![Unit tests](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/unittests.yml/badge.svg?branch=dev)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/unittests.yml)
-[![codecov](https://codecov.io/gh/MarcinOrlowski/prop-tool/branch/dev/graph/badge.svg?token=3THKJKSQ1G)](https://codecov.io/gh/MarcinOrlowski/prop-tool)
-[![Code lint](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/linter.yml/badge.svg?branch=dev)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/linter.yml)
-[![MD Lint](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/markdown.yml/badge.svg?branch=dev)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/markdown.yml)
+[development](https://github.com/MarcinOrlowski/trans-tool/tree/dev) branch:
+[![Unit tests](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/unittests.yml/badge.svg?branch=dev)](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/unittests.yml)
+[![codecov](https://codecov.io/gh/MarcinOrlowski/trans-tool/branch/dev/graph/badge.svg?token=3THKJKSQ1G)](https://codecov.io/gh/MarcinOrlowski/trans-tool)
+[![Code lint](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/linter.yml/badge.svg?branch=dev)](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/linter.yml)
+[![MD Lint](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/markdown.yml/badge.svg?branch=dev)](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/markdown.yml)
 
 ---
 
@@ -33,24 +33,24 @@
 
 ## Introduction ##
 
-`prop-tool` is a small but powerful utility aimed at your projects' `*.properties` files. It looks like text based INI file, but it
+`trans-tool` is a small but powerful utility aimed at your projects' `*.properties` files. It looks like text based INI file, but it
 is even simpler and because to its simplicity, this file format is often used to keep the configurations or translations (i.e. in
 Java world). Example file:
 
 ```ini
 # Example of *.properties file
-programTitle = Prop-Tool v2.0.0
+programTitle = trans-tool v2.0.0
 okButton = "OK"
 ```
 
-The main role of `prop-tool` is to help you keep your `*.properties` files in order, ensuring all files are
+The main role of `trans-tool` is to help you keep your `*.properties` files in order, ensuring all files are
 syntactically correct and all the translation files are in sync with base (main language) file. It also comes with huge set of
 various linters and checkers to guard quality of the files' contents. It can check for missing or dangling keys, inproper
 punctuation, open brackets, quotation marks and more. It can also automatically sync translation files quickly providing fresh
 template for your translators to work on.
 
 ```bash
-$ prop-tool -b soc -l pl -v
+$ trans-tool -b soc -l pl -v
 
 Base: src/main/resources/resources/logisim/strings/soc/soc.properties
   Errors: 1
@@ -75,4 +75,4 @@ Base: src/main/resources/resources/logisim/strings/soc/soc.properties
 ## License ##
 
 * Written and copyrighted &copy;2021 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
-* prop-tool is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+* trans-tool is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
