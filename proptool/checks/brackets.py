@@ -40,7 +40,7 @@ class Brackets(Check):
         :param char_idx: Position of char we want to check quotation of.
         :return: True if it is quoted, False otherwise.
         """
-        if 0 < char_idx < len(line):
+        if 0 < char_idx < len(line) - 1:
             for quotation_mark in self.config['quotation_marks']:
                 if line[char_idx - 1] == quotation_mark and line[char_idx + 1] == quotation_mark:
                     # It looks it is, so we are going to skip it.
