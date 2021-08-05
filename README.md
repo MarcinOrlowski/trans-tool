@@ -82,4 +82,4 @@ Base: src/main/resources/resources/logisim/strings/soc/soc.properties
 
 * Written and copyrighted &copy;2021 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
 * trans-tool is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
-* Project logo contains elements from [Flaticon.com](https://www.flaticon.com/free-icon/translation_99694).
+* Project logo contains [elements from Flaticon.com](https://www.flaticon.com/free-icon/translation_99694).
