@@ -12,12 +12,12 @@ from typing import List
 
 class Const(object):
     APP_NAME: str = 'trans-tool'
-    APP_VERSION: str = '2.0.0'
+    APP_VERSION: str = '2.1.0'
     APP_URL: str = 'https://github.com/MarcinOrlowski/trans-tool/'
 
     APP_DESCRIPTION: List[str] = [
         f'{APP_NAME} v{APP_VERSION} * Copyright 2021 by Marcin Orlowski.',
-        'The *.properties file checker and syncing tool.',
+        'The translation files checker and syncing tool.',
         f'{APP_URL}',
     ]
 

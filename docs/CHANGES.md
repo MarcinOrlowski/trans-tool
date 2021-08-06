@@ -6,7 +6,7 @@
 
 # Changelog #
 
-* dev
+* v2.1.0 (2021-08-06)
   * Rebranded and renamed project to `trans-tool`.
   * Fixed config loader not handling Checks' sections properly.
   * Corrected config file syntax documentation.
