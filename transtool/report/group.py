@@ -42,17 +42,24 @@ class ReportGroup(list):
     def empty(self) -> bool:
         return (self.errors + self.warnings) == 0
 
-    def warn(self, line: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> None:
+    @staticmethod
+    def build_warn(line: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> Warn:
         if line and not isinstance(line, str):
             line = str(line)
+        return Warn(line, msg, trans_key)
 
-        self.append(Warn(line, msg, trans_key))
+    def warn(self, line: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> None:
+        self.append(self.build_warn(line, msg, trans_key))
         self.warnings += 1
 
-    def error(self, line: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> None:
+    @staticmethod
+    def build_error(line: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> Error:
         if isinstance(line, int):
             line = str(line)
-        self.append(Error(line, msg, trans_key))
+        return Error(line, msg, trans_key)
+
+    def error(self, line: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> None:
+        self.append(self.build_error(line, msg, trans_key))
         self.errors += 1
 
     def dump(self, show_warnings_as_errors: bool = False):
