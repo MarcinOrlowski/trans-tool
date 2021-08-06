@@ -61,10 +61,10 @@ class Report(object):
         self._groups.append(report_group)
 
     def empty(self) -> bool:
-        return not self._groups
+        return len(self._groups) == 0  # noqa: WPS507
 
     def not_empty(self) -> bool:
-        return self._groups
+        return len(self._groups) > 0  # noqa: WPS507
 
     def dump(self):
         errors = self.errors
