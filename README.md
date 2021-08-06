@@ -1,20 +1,20 @@
-![prop-tool logo](artwork/prop-tool-logo.png)
+![trans-tool logo](artwork/trans-tool-logo.png)
 
-### The *.properties file checker and syncing tool ###
+### The translation files checker and syncing tool ###
 
 ---
 
-[master](https://github.com/MarcinOrlowski/prop-tool/tree/master) branch:
-[![Unit tests](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/unittests.yml/badge.svg?branch=master)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/unittests.yml)
-[![codecov](https://codecov.io/gh/MarcinOrlowski/prop-tool/branch/master/graph/badge.svg?token=3THKJKSQ1G)](https://codecov.io/gh/MarcinOrlowski/prop-tool)
-[![Code lint](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/linter.yml/badge.svg?branch=master)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/linter.yml)
-[![MD Lint](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/markdown.yml/badge.svg?branch=master)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/markdown.yml)
+[master](https://github.com/MarcinOrlowski/trans-tool/tree/master) branch:
+[![Unit tests](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/unittests.yml/badge.svg?branch=master)](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/unittests.yml)
+[![codecov](https://codecov.io/gh/MarcinOrlowski/trans-tool/branch/master/graph/badge.svg?token=3THKJKSQ1G)](https://codecov.io/gh/MarcinOrlowski/trans-tool)
+[![Code lint](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/linter.yml/badge.svg?branch=master)](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/linter.yml)
+[![MD Lint](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/markdown.yml/badge.svg?branch=master)](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/markdown.yml)
 
-[development](https://github.com/MarcinOrlowski/prop-tool/tree/dev) branch:
-[![Unit tests](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/unittests.yml/badge.svg?branch=dev)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/unittests.yml)
-[![codecov](https://codecov.io/gh/MarcinOrlowski/prop-tool/branch/dev/graph/badge.svg?token=3THKJKSQ1G)](https://codecov.io/gh/MarcinOrlowski/prop-tool)
-[![Code lint](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/linter.yml/badge.svg?branch=dev)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/linter.yml)
-[![MD Lint](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/markdown.yml/badge.svg?branch=dev)](https://github.com/MarcinOrlowski/prop-tool/actions/workflows/markdown.yml)
+[development](https://github.com/MarcinOrlowski/trans-tool/tree/dev) branch:
+[![Unit tests](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/unittests.yml/badge.svg?branch=dev)](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/unittests.yml)
+[![codecov](https://codecov.io/gh/MarcinOrlowski/trans-tool/branch/dev/graph/badge.svg?token=3THKJKSQ1G)](https://codecov.io/gh/MarcinOrlowski/trans-tool)
+[![Code lint](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/linter.yml/badge.svg?branch=dev)](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/linter.yml)
+[![MD Lint](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/markdown.yml/badge.svg?branch=dev)](https://github.com/MarcinOrlowski/trans-tool/actions/workflows/markdown.yml)
 
 ---
 
@@ -33,49 +33,53 @@
 
 ## Introduction ##
 
-`prop-tool` is a small but powerful utility aimed at your projects' `*.properties` files. It looks like text based INI file, but it
-is even simpler and because to its simplicity, this file format is often used to keep the configurations or translations (i.e. in
-Java world). Example file:
+`trans-tool` is a small but powerful utility aimed at your projects' translation files. It is armed
+with several validators to watch for common mistakes in translations as well as base strings. It currently
+loads `*.properties` files, which is file format often used in Java projects as the `trans-tool` was born
+while working on [Logisim-evolution](https://github.com/logisim-evolution/logisim-evolution/).
+
+Example `*.properties` file looks like simplified version of commonly used INI file:
 
 ```ini
 # Example of *.properties file
-programTitle = Prop-Tool v1.3
+programTitle = trans-tool v2.0.0
 okButton = "OK"
 ```
 
-The main role of `prop-tool` is to help you keep your `*.properties` files in order, ensuring all files are
-syntactically correct and all the translation files are in sync with base (main language) file. It also comes with huge set of
+Internally, `trans-tool` works on abstract format, thus adding support for other file formats can easy be added
+which will happen upon demand.
+
+While loading your `*.properties` files `trans-tool` checks if files are in order, ensuring all of them are
+syntactically correct and all of the translations are in sync with main language. It also comes with huge set of
 various linters and checkers to guard quality of the files' contents. It can check for missing or dangling keys, inproper
-punctuation, open brackets, quotation marks and more. It can also automatically sync translation files quickly providing fresh
-template for your translators to work on.
+punctuation, open brackets, quotation marks and more. It can also automatically sync translation files quickly providing
+fresh template for your translators to work on.
 
 ```bash
-$ prop-tool -b mark -l pl -v
-Base: mark.properties
-  Warnings: 1
+$ trans-tool -b soc -l pl
+
+Base: src/main/resources/resources/logisim/strings/soc/soc.properties
+  Errors: 1
     Brackets
-      W: Line 3:16: No closing bracket for "<"
-  PL: brackets_pl.properties
-    Errors: 8, warnings: 3
-      Sentence starts with different letter case.
-        E: Line 8: "missingClosing" starts with lower-cased character. Expected UPPER-cased.
-      Trailing white characters
-        W: line 2: In comment: 2
-        E: line 4: In "question" entry: 1
+      E: Line 163:90: "AssemblerRunSuccess": No opening character matching ")".
+  PL: src/main/resources/resources/logisim/strings/soc/soc_pl.properties
+    Errors: 3, warnings: 4
+      Brackets
+        E: Line 175:83: "AssemblerRunSuccess": No opening character matching ")".
+      Formatting values
+        E: Line 383:167: "PioMenuOutClearRemark": Expected "%s", found "%s.".
+        E: Line 387:167: "PioMenuOutSetRemark": Expected "%s", found "%s.".
+      Missing translations
+        W: "ElfHeaderEIDataError": Missing translation.
+        W: "AsmPanErrorCreateFile": Missing translation.
       Punctuation mismatch
-        E: line 3: "exclamation" ends with " ". Expected "!".
-        E: line 4: "newline" ends with "". Expected "\n".
-      Bracket mismatch
-        E: Line 2:1: "missingClosing": No closing bracket for "(".
-        W: Line 3:16: No closing bracket for "<"
-        E: Line 4:4: "missingOpening": No opening bracket matching ")".
-      Quotation marks
-        E: Line 12:5: "missingSingle": Quotation mark mismatch. Expected ", found `.
-        E: Line 13:5: "remaining": Quotation mark mismatch. Expected ", found `.
-        W: Line 14:11: No closing mark for ".
+        W: Line 12: "SocInsertTransWindowTitle": Ends with "y". Expected ":".
+      First words case mismatch.
+        W: Line 332: "Rv32imProgramCounter": Starts UPPER-cased, expected lower-case.
 ```
 
 ## License ##
 
 * Written and copyrighted &copy;2021 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
-* prop-tool is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+* trans-tool is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+* Project logo contains [elements from Flaticon.com](https://www.flaticon.com/free-icon/translation_99694).

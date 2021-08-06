@@ -1,16 +1,17 @@
 """
-# prop-tool
-# Java *.properties file sync checker and syncing tool.
+# trans-tool
+# The translation files checker and syncing tool.
 #
 # Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
-# https://github.com/MarcinOrlowski/prop-tool/
+# https://github.com/MarcinOrlowski/trans-tool/
 #
 """
 from typing import Dict, Union
 
-from proptool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
-from proptool.decorators.overrides import overrides
-from proptool.prop.items import Blank, Comment, Translation
+from transtool.checks.brackets import Brackets
+from transtool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
+from transtool.decorators.overrides import overrides
+from transtool.prop.items import Blank, Comment, Translation
 from tests.checks.checks_test_case import ChecksTestCase
 
 
@@ -32,15 +33,21 @@ class ChecksBrackets(ChecksTestCase):
     # #################################################################################################
 
     def test_comment_no_faults(self) -> None:
-        self.check_single_file(Comment('# „ foo “ '))
+        tests = [
+            Comment('# „ foo “ '),
+        ]
+        self._do_checker_comment_test(tests, 0)
 
     def test_comment_with_faults(self) -> None:
-        # Tests error handling when we have closing (popping) marker and empty stack.
-        self.check_single_file(Comment('# foo“  '), exp_warnings = 1)
-        # Tests the case where we done with checks and something left on stack.
-        self.check_single_file(Comment('# „ «foo» '), exp_warnings = 1)
-        # Text the case where we have matches, but not in order.
-        self.check_single_file(Comment('# « „ foo» “ '), exp_warnings = 1)
+        faults = [
+            # Tests error handling when we have closing (popping) marker and empty stack.
+            Comment('# foo“  '),
+            # Tests the case where we done with checks and something left on stack.
+            Comment('# „ «foo» '),
+            # Text the case where we have matches, but not in order.
+            Comment('# « „ foo» “ '),
+        ]
+        self._do_checker_comment_test(faults, 1)
 
     # #################################################################################################
 
@@ -65,3 +72,16 @@ class ChecksBrackets(ChecksTestCase):
             self.assertFalse(op_marker in checker.closing, f'Marker {op_marker} (position: {op_idx}) is present in closing too.')
         for cl_idx, cl_marker in enumerate(checker.closing):
             self.assertFalse(cl_marker in checker.opening, f'Marker {cl_marker} (position: {cl_idx}) is present in opening too.')
+
+    # #################################################################################################
+
+    def test_config_sync(self) -> None:
+        """
+        Check if TypesettingQuotationMarks' config matches Brackets' one. This is currently needed
+        as Checks are using `dict` based configs and TQM extends Brackets, therefore any missing
+        key in TQM's config cause checker to fail with `KeyError`.
+        """
+        brackets = list(Brackets().get_default_config().keys())
+        tqm = list(TypesettingQuotationMarks().get_default_config().keys())
+
+        self.assertEqual(sorted(brackets), sorted(tqm))

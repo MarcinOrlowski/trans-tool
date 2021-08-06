@@ -1,10 +1,28 @@
-![prop-tool logo](../artwork/prop-tool-logo.png)
+![trans-tool logo](../artwork/trans-tool-logo.png)
 
-### The *.properties file checker and syncing tool ###
+### The translation files checker and syncing tool ###
 
 ---
 
 # Changelog #
+
+* v2.1.0 (2021-08-06)
+  * Rebranded and renamed project to `trans-tool`.
+  * Fixed config loader not handling Checks' sections properly.
+  * Corrected config file syntax documentation.
+  * Added `--config-dump` option that shows state of the configuration.
+  * Corrected default `KeyFormat` pattern.
+  * Comment checks by `Brackets` and `TypesettingQuotationMarks` can now be configured.
+  * Fixed loader issue causing missing keys to reported twice.
+  * Added `--write-reference` option that can include both base and translation in saved file.
+  * `StartsWithTheSameCase` now is smarter when looking for words to check.
+  * Removed `<` and `>` from `Brackets` defaults as `>` is often used as "arrow" (`->`) raising false positives.
+  * Corrected default `KeyFormat` patter so it no longer allows digits at first position.
+  * `QuotationMarks`, `TypesettingQuotationMarks`, `WhiteCharsBeforeLinefeed` and `TrailingWhiteChars` now support `comments` config
+    item to control whenever you want comments to be scanned.
+  * `StartsWithTheSameCase` now handles the case where base/translation can start with a digit which should be case match.
+  * `Brackets` can now detect and ignore quoted brackets.
+  * Added `Substitutions` check.
 
 * v2.0.0 (2021-08-02)
   * Added support for config files.

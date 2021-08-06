@@ -1,17 +1,17 @@
 """
-# prop-tool
-# Java *.properties file sync checker and syncing tool.
+# trans-tool
+# The translation files checker and syncing tool.
 #
 # Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
-# https://github.com/MarcinOrlowski/prop-tool/
+# https://github.com/MarcinOrlowski/trans-tool/
 #
 """
 from typing import Dict, Union
 
-from proptool.checks.base.check import Check
-from proptool.checks.quotation_marks import QuotationMarks
-from proptool.decorators.overrides import overrides
-from proptool.prop.items import Blank, Comment, Translation
+from transtool.checks.base.check import Check
+from transtool.checks.quotation_marks import QuotationMarks
+from transtool.decorators.overrides import overrides
+from transtool.prop.items import Blank, Comment, Translation
 from tests.checks.checks_test_case import ChecksTestCase
 
 
@@ -32,10 +32,16 @@ class TestQuotationMarks(ChecksTestCase):
     # #################################################################################################
 
     def test_comment_no_faults(self) -> None:
-        self.check_single_file(Comment('#  "foo" '))
+        tests = [
+            Comment('#  "foo" '),
+        ]
+        self._do_checker_comment_test(tests, 0)
 
     def test_comment_with_faults(self) -> None:
-        self.check_single_file(Comment('# "foo `"  '), exp_warnings = 1)
+        tests = [
+            Comment('# "foo `"  '),
+        ]
+        self._do_checker_comment_test(tests, 1)
 
     # #################################################################################################
 

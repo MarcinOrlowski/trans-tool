@@ -1,6 +1,6 @@
-![prop-tool logo](../../artwork/prop-tool-logo.png)
+![trans-tool logo](../../artwork/trans-tool-logo.png)
 
-### The *.properties file checker and syncing tool ###
+### The translation files checker and syncing tool ###
 
 ---
 
@@ -49,9 +49,10 @@ Temporary workarounds:
 
 ## Configuration file ##
 
-| Key       | Type      | Description | Example |
-|-----------|-----------|-------------|---------|
-| chars   | List of strings | List of quotation marks | `[ '"', "`" ]` |
+| Key      | Type      | Description | Defaults |
+|----------|-----------|-------------|----------|
+| comments | Boolean         | If `true` will scan translations and comments, when `false` will skip comments. | `true` |
+| chars    | List of strings | List of quotation marks | ``[ "\"", "`" ]`` |
 
 ### Notes ###
 
@@ -60,10 +61,11 @@ Temporary workarounds:
 ### Example ###
 
 ```ini
-[prop-tool]
+[trans-tool]
 version = 1
 
 [QuotationMarks]
+comments = false
 # Do NOT use apostrophe character for languages like English
-chars = [ "`", '"' ]
+chars = [ "`" ]
 ```

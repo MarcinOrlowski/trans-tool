@@ -1,6 +1,6 @@
-![prop-tool logo](../../artwork/prop-tool-logo.png)
+![trans-tool logo](../../artwork/trans-tool-logo.png)
 
-### The *.properties file checker and syncing tool ###
+### The translation files checker and syncing tool ###
 
 ---
 
@@ -29,4 +29,16 @@ as this usually serves no purpose.
 
 ## Configuration file ##
 
-No dedicated configuration.
+| Key      | Type      | Description | Defaults |
+|----------|-----------|-------------|----------|
+| comments | Boolean   | If `true` will scan translations and comments, when `false` will skip comments. | `false` |
+
+### Example ###
+
+```ini
+[trans-tool]
+version = 1
+
+[WhiteCharsBeforeLinefeed]
+comments = true
+```

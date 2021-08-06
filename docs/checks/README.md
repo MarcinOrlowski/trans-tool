@@ -1,6 +1,6 @@
-![prop-tool logo](../../artwork/prop-tool-logo.png)
+![trans-tool logo](../../artwork/trans-tool-logo.png)
 
-### The *.properties file checker and syncing tool ###
+### The translation files checker and syncing tool ###
 
 ---
 
@@ -21,6 +21,7 @@
   * [Punctuation](punctuation.md)
   * [QuotationMarks](quotation-marks.md)
   * [StartsWithTheSameCase](starts-with-the-same-case.md)
+  * [Substitutions](substitutions.md)
   * [TrailingWhiteChars](trailing-white-chars.md)
   * [TypesettingQuotationMarks](typesetting-quotation-marks.md)
   * [WhiteCharsBeforeLinefeed](white-chars-before-linefeed.md)
@@ -29,9 +30,9 @@
 
 # Validators #
 
-The main purpose of `prop-tool` is to ensure all property files are correct and that translation files are in sync with the
-reference file. For that reason you need to have at least two `*.properties` files to use `prop-tool`. One is your base language
-(usually English texts) used as reference and all the others are your translations. `prop-tool` performs several checks on both
+The main purpose of `trans-tool` is to ensure all property files are correct and that translation files are in sync with the
+reference file. For that reason you need to have at least two `*.properties` files to use `trans-tool`. One is your base language
+(usually English texts) used as reference and all the others are your translations. `trans-tool` performs several checks on both
 base (reference) file and each translation.
 
 ## Checking base and translation files ##

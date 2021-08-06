@@ -1,9 +1,9 @@
 """
-# prop-tool
-# Java *.properties file sync checker and syncing tool.
+# trans-tool
+# The translation files checker and syncing tool.
 #
 # Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
-# https://github.com/MarcinOrlowski/prop-tool/
+# https://github.com/MarcinOrlowski/trans-tool/
 #
 """
 
@@ -14,9 +14,9 @@ from pathlib import Path
 from typing import List, Union
 from unittest.mock import Mock, call, patch
 
-from proptool.config.config import Config
-from proptool.config.builder import ConfigBuilder
-from proptool.utils import Utils
+from transtool.config.config import Config
+from transtool.config.builder import ConfigBuilder
+from transtool.utils import Utils
 from tests.test_case import TestCase
 
 
@@ -24,18 +24,20 @@ class FakeArgs(object):
     def __init__(self):
         self.update: bool = False
         self.create: bool = False
+        self.write_reference: bool = False
 
         self.quiet: bool = False
         self.color: bool = False
+        self.debug: bool = False
+        self.verbose: bool = False
 
         self.files: List[str] = []
         self.languages: List[str] = []
         self.separator: Union[str, None] = None
         self.comment_marker: Union[str, None] = None
-        self.commented_translation_template: Union[str, None] = None
-        self.commented_translation_regexp: Union[str, None] = None
 
         self.config_file = None
+        self.file_suffix = Config.DEFAULT_FILE_SUFFIX
 
         # Initialize all on/off flags related attributes.
         for option_name in ConfigBuilder._on_off_pairs:
@@ -44,6 +46,34 @@ class FakeArgs(object):
 
 
 class TestConfigBuilder(TestCase):
+
+    def test_fake_args_matches_config(self) -> None:
+        """
+        Checks if FakeArgs provides what Config expects.
+        """
+        fake_args = FakeArgs()
+        config = Config()
+        for key, val in config.__dict__.items():
+            # Let's skip Checks' info.
+            if isinstance(val, dict):
+                continue
+
+            self.assertIn(key, fake_args.__dict__, f'FakeArgs lacks "{key}" key."')
+
+    def test_fake_args_matches_argparse(self) -> None:
+        """
+        Ensures FakeArgs matches what argparse returns.
+        """
+        fake_args = FakeArgs()
+
+        # Pass no args for parsing (this is legit as we have config file that can provide what's needed).
+        sys.argv[1:] = []  # noqa: WPS362
+        args = ConfigBuilder._parse_args()
+        for key in fake_args.__dict__:
+            self.assertIn(key, args)
+
+    # #################################################################################################
+
     def get_config_for_validate(self) -> Config:
         """
         Prepares instance of Config to be later manipulated and passed
@@ -67,25 +97,7 @@ class TestConfigBuilder(TestCase):
         """
         ConfigBuilder._validate_config(self.get_config_for_validate())
 
-    @patch('proptool.log.Log.e')
-    def test_validate_config_no_files(self, log_e_mock: Mock) -> None:
-        """
-        Ensures empty list of files triggers expected error message and quits.
-
-        :param log_e_mock: Log.abort() mock.
-        """
-        config = self.get_config_for_validate()
-        config.files = []
-        with self.assertRaises(SystemExit) as context_manager:
-            ConfigBuilder._validate_config(config)
-            exp_calls = [call('No base file(s) specified.')]
-            log_e_mock.assert_has_calls(exp_calls)
-
-            # Check we got sys.exit called with non-zero return code
-            self.assertEqual(SystemExit, type(context_manager.exception))
-            self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
-
-    @patch('proptool.log.Log.e')
+    @patch('transtool.log.Log.e')
     def test_validate_config_invalid_separator(self, log_e_mock: Mock) -> None:
         """
         Ensures invalid separator char triggers expected error message and quits.
@@ -103,7 +115,7 @@ class TestConfigBuilder(TestCase):
             self.assertEqual(SystemExit, type(context_manager.exception))
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('proptool.log.Log.e')
+    @patch('transtool.log.Log.e')
     def test_validate_config_invalid_comment_marker(self, log_e_mock: Mock) -> None:
         """
         Ensures invalid comment marker triggers expected error message and quits.
@@ -121,7 +133,7 @@ class TestConfigBuilder(TestCase):
             self.assertEqual(SystemExit, type(context_manager.exception))
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('proptool.log.Log.e')
+    @patch('transtool.log.Log.e')
     def test_validate_config_invalid_languages(self, log_e_mock: Mock) -> None:
         # valid language code is just lowercased [a-z]{2,}
         faults = [
@@ -288,7 +300,7 @@ class TestConfigBuilder(TestCase):
             # We expect no problems.
             ConfigBuilder._validate_args(args)
 
-    @patch('proptool.log.Log.e')
+    @patch('transtool.log.Log.e')
     def test_validate_args_onoff_on_on(self, log_e_mock: Mock) -> None:
         for option_name in ConfigBuilder._on_off_pairs:
             args = FakeArgs()
@@ -305,7 +317,7 @@ class TestConfigBuilder(TestCase):
                 self.assertEqual(SystemExit, type(context_manager.exception))
                 self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('proptool.log.Log.e')
+    @patch('transtool.log.Log.e')
     def test_validate_args_quiet_and_verbose(self, log_e_mock: Mock) -> None:
         """
         Ensures use of mutually exclusive --quiet and --verbose is handled correctly.
@@ -325,7 +337,7 @@ class TestConfigBuilder(TestCase):
             self.assertEqual(SystemExit, type(context_manager.exception))
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('proptool.log.Log.e')
+    @patch('transtool.log.Log.e')
     def test_validate_args_invalid_separator(self, log_e_mock: Mock) -> None:
         """
         Checks if attempt to use invalid character as separator is correctly handled.
@@ -347,7 +359,7 @@ class TestConfigBuilder(TestCase):
             self.assertEqual(SystemExit, type(context_manager.exception))
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('proptool.log.Log.e')
+    @patch('transtool.log.Log.e')
     def test_validate_args_invalid_comment_marker(self, log_e_mock: Mock) -> None:
         args = FakeArgs()
 
@@ -397,12 +409,11 @@ class TestConfigBuilder(TestCase):
         # Remove `show_version` as this is also not mapped.
         # FIXME: this should not be hardcoded here!
         del args['show_version']
-
-        self.assertEqual(len(args), len(config.__dict__))
+        del args['config_dump']
 
         for key in args:
             # Ensure key args returns is what is present in Config as well.
-            self.assertIn(key, config.__dict__)
+            self.assertIn(key, config.__dict__, f'Config lacks "{key}" key.')
 
     # #################################################################################################
 
@@ -417,7 +428,7 @@ class TestConfigBuilder(TestCase):
 
         # Pass no args for parsing (this is legit as we have config file that can provide what's needed).
         sys.argv[1:] = []  # noqa: WPS362
-        with patch('proptool.config.builder.ConfigBuilder._parse_args') as manager:
+        with patch('transtool.config.builder.ConfigBuilder._parse_args') as manager:
             manager.return_value = args
 
             ConfigBuilder.build(config)

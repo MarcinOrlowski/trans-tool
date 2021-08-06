@@ -1,6 +1,6 @@
-![prop-tool logo](../../artwork/prop-tool-logo.png)
+![trans-tool logo](../../artwork/trans-tool-logo.png)
 
-### The *.properties file checker and syncing tool ###
+### The translation files checker and syncing tool ###
 
 ---
 
@@ -26,15 +26,16 @@
 
 ## Description ##
 
-TypesettingQuotationMarks is a mixture of `QuotationMarks` and `Brackets` check that understans quotation mark pairs
+TypesettingQuotationMarks is a mixture of `QuotationMarks` and `Brackets` check that understands quotation mark pairs
 (where you have separate quote opening and closing characters). It can look for them and ensure all is paired and properly nested.
 
 ## Configuration file ##
 
-| Key       | Type      | Description | Example |
-|-----------|-----------|-------------|---------|
-| opening   | List of strings | List of opening brackets | `[ '‘', '«' ]` |
-| closing   | List of strings | List of closing brackets | `[ '’', '»' ]` |
+| Key      | Type      | Description | Defaults |
+|----------|-----------|-------------|----------|
+| comments | Boolean         | If `true` will scan translations and comments too, when `false` will skip comments. | `false` |
+| opening  | List of strings | List of opening brackets | ``[ "‘", "«", "„", "「", "《" ]``  |
+| closing  | List of strings | List of closing brackets | ``[ "’", "»", "\“", "」", "》" ]`` |
 
 ### Notes ###
 
@@ -46,10 +47,11 @@ out how to handle such case automatically. The solution is to specify separate p
 ### Example ###
 
 ```ini
-[prop-tool]
+[trans-tool]
 version = 1
 
 [TypesettingQuotationMarks]
+comments = true
 opening = ['‘', '«', '„', '「', '《']
 closing = ['’', '»', '“', '」', '》']
 ```

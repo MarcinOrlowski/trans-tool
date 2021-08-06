@@ -1,18 +1,18 @@
 """
-# prop-tool
-# Java *.properties file sync checker and syncing tool.
+# trans-tool
+# The translation files checker and syncing tool.
 #
 # Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
-# https://github.com/MarcinOrlowski/prop-tool/
+# https://github.com/MarcinOrlowski/trans-tool/
 #
 """
 import random
 from typing import Dict, Union
 
-from proptool.checks.base.check import Check
-from proptool.checks.missing_translations import MissingTranslations
-from proptool.decorators.overrides import overrides
-from proptool.prop.items import Comment
+from transtool.checks.base.check import Check
+from transtool.checks.missing_translations import MissingTranslations
+from transtool.decorators.overrides import overrides
+from transtool.prop.items import Comment
 from tests.checks.checks_test_case import ChecksTestCase
 
 
@@ -46,6 +46,7 @@ class TestMissingTranslations(ChecksTestCase):
 
         # have less keys for translation file
         how_many_less = random.randint(1, cnt_min - 1)
+        how_many_less = 1
         trans_keys = ref_keys[:(how_many_less * -1)]
 
         ref_file = self.build_prepfile(ref_keys)

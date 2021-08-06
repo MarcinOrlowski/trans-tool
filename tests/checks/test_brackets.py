@@ -1,18 +1,18 @@
 """
-# prop-tool
-# Java *.properties file sync checker and syncing tool.
+# trans-tool
+# The translation files checker and syncing tool.
 #
 # Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
-# https://github.com/MarcinOrlowski/prop-tool/
+# https://github.com/MarcinOrlowski/trans-tool/
 #
 """
 import random
 from typing import Dict, Union
 
-from proptool.checks.brackets import Brackets
-from proptool.decorators.overrides import overrides
-from proptool.prop.file import PropFile
-from proptool.prop.items import Blank, Comment, Translation
+from transtool.checks.brackets import Brackets
+from transtool.decorators.overrides import overrides
+from transtool.prop.file import PropFile
+from transtool.prop.items import Blank, Comment, Translation
 from tests.checks.checks_test_case import ChecksTestCase
 
 
@@ -30,11 +30,11 @@ class ChecksBrackets(ChecksTestCase):
 
     def test_translation_with_faults(self) -> None:
         # Tests error handling when we have popping bracket and empty stack.
-        self.check_single_file(Translation('key', '>'), exp_errors = 1)
+        self.check_single_file(Translation('key', '}'), exp_errors = 1)
         # Tests the case where we done with checks and something left on stack.
-        self.check_single_file(Translation('key', '(<>'), exp_errors = 1)
+        self.check_single_file(Translation('key', '{()'), exp_errors = 1)
         # Text the case where we have matches, but not in order.
-        self.check_single_file(Translation('key', '<(>)'), exp_errors = 1)
+        self.check_single_file(Translation('key', '{(})'), exp_errors = 1)
 
     def test_empty_translation(self) -> None:
         propfile = PropFile(self.config)
@@ -46,12 +46,43 @@ class ChecksBrackets(ChecksTestCase):
         self.check_single_file(Comment('# (foo) '))
 
     def test_comment_with_faults(self) -> None:
-        # Tests error handling when we have popping bracket and empty stack.
-        self.check_single_file(Comment('# foo]"  '), exp_warnings = 1)
-        # Tests the case where we done with checks and something left on stack.
-        self.check_single_file(Comment('# <fo[o]" '), exp_warnings = 1)
-        # Text the case where we have matches, but not in order.
-        self.check_single_file(Comment('# [foo <]>" '), exp_warnings = 1)
+        faults = [
+            # Tests error handling when we have popping bracket and empty stack.
+            '# foo]"  ',
+            # Tests the case where we done with checks and something left on stack.
+            '# {fo[o]" ',
+            # Text the case where we have matches, but not in order.
+            '# [foo {]}" ',
+        ]
+
+        for fault in faults:
+            # We should see no issues if comment scanning is disabled.
+            self.checker.config['comments'] = False
+            self.check_single_file(Comment(fault))
+
+            # And some warnings when comment scanning in enabled.
+            self.checker.config['comments'] = True
+            self.check_single_file(Comment(fault), exp_warnings = 1)
+
+    # #################################################################################################
+
+    def test_skipping_quoted_brakcets(self) -> None:
+        """
+        Check if correctly quoted brackets are ignored as expected.
+        """
+        tests = [
+            'Is "[" Ok',
+            "This shall ']' pass too",
+        ]
+        self.checker.config['comments'] = True
+        for test in tests:
+            # If we skip quoted brackets, nothing should be reported.
+            self.checker.config['ignore_quoted'] = True
+            self.check_single_file(Comment(test))
+
+            # And some warnings when quited brackets are not ignored.
+            self.checker.config['ignore_quoted'] = False
+            self.check_single_file(Comment(test), exp_warnings = 1)
 
     # #################################################################################################
 
@@ -95,10 +126,8 @@ class ChecksBrackets(ChecksTestCase):
             else:
                 del closing[random.randint(0, closing_cnt - 1)]
 
-        self.checker.config = {
-            'opening': opening,
-            'closing': closing,
-        }
+        self.checker.config['opening'] = opening
+        self.checker.config['closing'] = closing
 
         prop_file = PropFile(self.config)
         self.check(prop_file, exp_errors = 1)
@@ -108,23 +137,17 @@ class ChecksBrackets(ChecksTestCase):
         non_empty = [self.get_random_string(length = 1) for item in range(non_empty_cnt)]
         empty = []
 
-        self.checker.config = {
-            'opening': non_empty,
-            'closing': empty,
-        }
+        self.checker.config['opening'] = non_empty
+        self.checker.config['closing'] = empty
         prop_file = PropFile(self.config)
         self.check(prop_file, exp_warnings = 1)
 
-        self.checker.config = {
-            'opening': empty,
-            'closing': non_empty,
-        }
+        self.checker.config['opening'] = empty
+        self.checker.config['closing'] = non_empty
         prop_file = PropFile(self.config)
         self.check(prop_file, exp_warnings = 1)
 
-        self.checker.config = {
-            'opening': empty,
-            'closing': empty,
-        }
+        self.checker.config['opening'] = empty
+        self.checker.config['closing'] = empty
         prop_file = PropFile(self.config)
         self.check(prop_file, exp_warnings = 1)

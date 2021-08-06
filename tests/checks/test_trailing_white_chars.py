@@ -1,17 +1,17 @@
 """
-# prop-tool
-# Java *.properties file sync checker and syncing tool.
+# trans-tool
+# The translation files checker and syncing tool.
 #
 # Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
-# https://github.com/MarcinOrlowski/prop-tool/
+# https://github.com/MarcinOrlowski/trans-tool/
 #
 """
 from typing import Dict, Union
 
-from proptool.checks.base.check import Check
-from proptool.checks.trailing_white_chars import TrailingWhiteChars
-from proptool.decorators.overrides import overrides
-from proptool.prop.items import Comment, Translation
+from transtool.checks.base.check import Check
+from transtool.checks.trailing_white_chars import TrailingWhiteChars
+from transtool.decorators.overrides import overrides
+from transtool.prop.items import Comment, Translation
 from tests.checks.checks_test_case import ChecksTestCase
 
 
@@ -30,9 +30,11 @@ class TestTrailingWhiteChars(ChecksTestCase):
         self.check_single_file(Translation('key', 'value  '), exp_errors = 1)
 
     def test_comment_no_trailing_white_chars(self) -> None:
+        self.checker.config['comments'] = True
         self.check_single_file(Comment('# value'))
 
     def test_comment_with_trailing_white_chars(self) -> None:
+        self.checker.config['comments'] = True
         self.check_single_file(Comment('# value  '), exp_warnings = 1)
 
     # #################################################################################################

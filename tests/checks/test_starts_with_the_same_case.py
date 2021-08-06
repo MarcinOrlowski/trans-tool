@@ -1,20 +1,20 @@
 """
-# prop-tool
-# Java *.properties file sync checker and syncing tool.
+# trans-tool
+# The translation files checker and syncing tool.
 #
 # Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
-# https://github.com/MarcinOrlowski/prop-tool/
+# https://github.com/MarcinOrlowski/trans-tool/
 #
 """
 import random
-from typing import Dict, Union
+from typing import Dict, List, Tuple, Union
 
-from proptool.checks.base.check import Check
-from proptool.checks.starts_with_the_same_case import StartsWithTheSameCase
-from proptool.decorators.overrides import overrides
-from proptool.prop.file import PropFile
-from proptool.prop.items import Translation
-from proptool.utils import Utils
+from transtool.checks.base.check import Check
+from transtool.checks.starts_with_the_same_case import StartsWithTheSameCase
+from transtool.decorators.overrides import overrides
+from transtool.prop.file import PropFile
+from transtool.prop.items import Translation
+from transtool.utils import Utils
 from tests.checks.checks_test_case import ChecksTestCase
 
 
@@ -63,6 +63,69 @@ class TestStartsWithTheSameCase(ChecksTestCase):
             ref_file.append(Translation(key, ref_value))
             trans_file.append(Translation(key, trans_value))
         self.check(trans_file, ref_file, exp_warnings = expected_faults)
+
+    def _do_scan_test(self, tests: List[Tuple[str, str]], exp_warnings = 0):
+        for ref_value, trans_value in tests:
+            ref_file = PropFile(self.config)
+            trans_file = PropFile(self.config)
+            key = self.get_random_string('key_')
+            ref_file.append(Translation(key, ref_value))
+            trans_file.append(Translation(key, trans_value))
+            self.check(trans_file, ref_file, exp_warnings = exp_warnings)
+
+    def test_valid_special_cases(self) -> None:
+        """
+        Checks is checker will correctly compare sequences starting
+        with alphabetic characters, no matter where they are located
+        in the strings.
+        """
+        tests = [
+            # These should be matched correctly.
+            ('%s Statistics', 'Statystyki %s'),
+            ('%s statistics', '123 statystyki %s'),
+            ('%s 123 Statistics', 'Statystyki %s'),
+        ]
+        self.checker.config['accept_digits'] = False
+        self._do_scan_test(tests, 0)
+
+    def test_fault_special_cases(self) -> None:
+        tests = [
+            ('%s Statistics', 'statystyki %s'),
+            ('%s statistics', '123 Statystyki %s'),
+            ('%s 123 tatistics', 'Statystyki %s'),
+
+            # Base has no real words, while translation has some.
+            ('123 123 123', 'Some words here'),
+
+            # Base has words, translation does not.
+            ('Some words here', '123 123 123'),
+        ]
+        self.checker.config['accept_digits'] = False
+        self._do_scan_test(tests, 1)
+
+    def test_no_alpha_words(self) -> None:
+        tests = [
+            # These should be skipped silently.
+            ('', ''),
+            # No real words. This should be skipped silently.
+            ('3434 3434 34', '123 123 123'),
+        ]
+        self.checker.config['accept_digits'] = False
+        self._do_scan_test(tests)
+
+    # #################################################################################################
+
+    def test_opening_digits(self) -> None:
+        tests = [
+            ('Upper', '12345 lower'),
+            ('12345 Upper', 'lower'),
+            ('12345 Upper', '345345 lower'),
+        ]
+        self.checker.config['accept_digits'] = False
+        self._do_scan_test(tests, exp_warnings = 1)
+
+        self.checker.config['accept_digits'] = True
+        self._do_scan_test(tests)
 
     # #################################################################################################
 

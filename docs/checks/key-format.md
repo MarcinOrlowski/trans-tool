@@ -1,6 +1,6 @@
-![prop-tool logo](../../artwork/prop-tool-logo.png)
+![trans-tool logo](../../artwork/trans-tool-logo.png)
 
-### The *.properties file checker and syncing tool ###
+### The translation files checker and syncing tool ###
 
 ---
 
@@ -31,9 +31,9 @@ conventcion across your files.
 
 ## Configuration file ##
 
-| Key       | Type      | Description | Example |
-|-----------|-----------|-------------|---------|
-| pattern   | Regular expression (string) | Pattern for that each key must match | `"^[a-zA-Z0-9_.]*[a-zA-Z0-9]+$"` |
+| Key      | Type      | Description | Defaults |
+|----------|-----------|-------------|----------|
+| pattern  | Regular expression (string) | Pattern for that each key must match | `^[a-zA-Z]+[a-zA-Z0-9_.]*[a-zA-Z0-9]+$` |
 
 ### Notes ###
 
@@ -52,7 +52,7 @@ sufficient to follow any tutorial that you find understandable.
 ### Example ###
 
 ```ini
-[prop-tool]
+[trans-tool]
 version = 1
 
 [KeyFormat]

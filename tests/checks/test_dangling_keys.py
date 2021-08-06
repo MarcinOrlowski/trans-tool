@@ -1,17 +1,17 @@
 """
-# prop-tool
-# Java *.properties file sync checker and syncing tool.
+# trans-tool
+# The translation files checker and syncing tool.
 #
 # Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
-# https://github.com/MarcinOrlowski/prop-tool/
+# https://github.com/MarcinOrlowski/trans-tool/
 #
 """
 import random
 from typing import Dict, Union
 
-from proptool.checks.base.check import Check
-from proptool.checks.dangling_keys import DanglingKeys
-from proptool.decorators.overrides import overrides
+from transtool.checks.base.check import Check
+from transtool.checks.dangling_keys import DanglingKeys
+from transtool.decorators.overrides import overrides
 from tests.checks.checks_test_case import ChecksTestCase
 
 
