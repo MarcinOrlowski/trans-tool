@@ -21,6 +21,7 @@
   * [Punctuation](punctuation.md)
   * [QuotationMarks](quotation-marks.md)
   * [StartsWithTheSameCase](starts-with-the-same-case.md)
+  * [Substitutions](substitutions.md)
   * [TrailingWhiteChars](trailing-white-chars.md)
   * [TypesettingQuotationMarks](typesetting-quotation-marks.md)
   * [WhiteCharsBeforeLinefeed](white-chars-before-linefeed.md)

@@ -22,6 +22,7 @@
     item to control whenever you want comments to be scanned.
   * `StartsWithTheSameCase` now handles the case where base/translation can start with a digit which should be case match.
   * `Brackets` can now detect and ignore quoted brackets.
+  * Added `Substitutions` check.
 
 * v2.0.0 (2021-08-02)
   * Added support for config files.
