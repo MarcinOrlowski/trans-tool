@@ -10,7 +10,7 @@
 from typing import Union
 
 from transtool.log import Log
-from transtool.report.items import Error, Warn
+from transtool.report.items import Error, ReportItem, Warn
 
 
 # #################################################################################################
@@ -42,18 +42,32 @@ class ReportGroup(list):
     def empty(self) -> bool:
         return (self.errors + self.warnings) == 0
 
-    def warn(self, line: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> None:
+    def add(self, item) -> None:
+        if not issubclass(type(item), ReportItem):
+            raise TypeError(f'Item must be subclass of ReportItem. "{type(item)}" given.')
+        self.append(item)
+        if isinstance(item, Warn):
+            self.warnings += 1
+        else:
+            self.errors += 1
+
+    @staticmethod
+    def build_warn(line: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> Warn:
         if line and not isinstance(line, str):
             line = str(line)
+        return Warn(line, msg, trans_key)
 
-        self.append(Warn(line, msg, trans_key))
-        self.warnings += 1
+    def warn(self, line: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> None:
+        self.add(self.build_warn(line, msg, trans_key))
 
-    def error(self, line: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> None:
+    @staticmethod
+    def build_error(line: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> Error:
         if isinstance(line, int):
             line = str(line)
-        self.append(Error(line, msg, trans_key))
-        self.errors += 1
+        return Error(line, msg, trans_key)
+
+    def error(self, line: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> None:
+        self.add(self.build_error(line, msg, trans_key))
 
     def dump(self, show_warnings_as_errors: bool = False):
         if show_warnings_as_errors:

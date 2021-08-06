@@ -22,7 +22,7 @@ from .utils import Utils
 # #################################################################################################
 
 
-class PropTool(object):
+class TransTool(object):
 
     @staticmethod
     def start() -> int:

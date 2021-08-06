@@ -22,6 +22,7 @@ from transtool.checks.punctuation import Punctuation
 from transtool.checks.quotation_marks import QuotationMarks
 from transtool.checks.starts_with_the_same_case import StartsWithTheSameCase
 from transtool.checks.trailing_white_chars import TrailingWhiteChars
+from transtool.checks.substitutions import Substitutions
 from transtool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
 from transtool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
 from transtool.config.checker_info import CheckerInfo
@@ -54,6 +55,7 @@ class ConfigBuilder(object):
             TrailingWhiteChars,
             TypesettingQuotationMarks,
             WhiteCharsBeforeLinefeed,
+            Substitutions,
         ]
 
         for checker in checkers:
