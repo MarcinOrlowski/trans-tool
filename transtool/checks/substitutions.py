@@ -14,7 +14,7 @@ from transtool.report.group import ReportGroup
 from transtool.report.items import ReportItem
 from .base.check import Check
 
-from proptool.prop.file import PropItem
+from transtool.prop.file import PropItem
 
 
 # noinspection PyUnresolvedReferences
