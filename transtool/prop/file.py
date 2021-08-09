@@ -135,7 +135,7 @@ class PropFile(object):
                     else:
                         tmp.append(Comment.get_commented_out_key_comment(self.config, item.key, item.value))
             else:
-                raise RuntimeError(f'Unknown entry type: {type(item)} at position {idx + 1}')
+                raise TypeError(f'Unknown entry type: {type(item)} at position {idx + 1}')
 
         self._items = tmp.items
         self.keys = tmp.keys

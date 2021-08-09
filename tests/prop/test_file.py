@@ -461,3 +461,20 @@ class TestPropFile(TestCase):
                     continue
 
             self.fail(f'Unknown item type: {type(trans_item)}')
+
+    def test_update_fail_on_unknown_type(self) -> None:
+        """
+        Ensures unexpected and unsupported content will be caught and raise TypeError.
+        """
+        config = Config()
+
+        # GIVEN Translation and Reference objects
+        reference = PropFile(config)
+        trans = PropFile(config)
+
+        # When reference contents contain invalid item
+        reference.items.append(False)
+
+        # THEN attempt to update() should fail with error raised.
+        with self.assertRaises(TypeError):
+            trans.update(reference)
