@@ -42,6 +42,22 @@ class ConfigBuilder(object):
 
     @staticmethod
     def build(config_defaults: Config):
+        ConfigBuilder._setup_checkers(config_defaults)
+
+        # Handler CLI args so we can see if there's config file to load
+        args = ConfigBuilder._parse_args()
+        if args.config_file:
+            config_file = Path(args.config_file[0])
+            # override with loaded user config file
+            config_defaults = ConfigReader().read(config_defaults, config_file)
+
+        # override with command line arguments
+        ConfigBuilder._set_from_args(config_defaults, args)
+
+        ConfigBuilder._validate_config(config_defaults)
+
+    @staticmethod
+    def _setup_checkers(config:Config) -> None:
         checkers = [
             Brackets,
             DanglingKeys,
@@ -60,19 +76,9 @@ class ConfigBuilder(object):
 
         for checker in checkers:
             checker_id = checker.__name__
-            config_defaults.checks[checker_id] = CheckerInfo(checker_id, checker, (checker()).get_default_config())
+            config.checks[checker_id] = CheckerInfo(checker_id, checker, (checker()).get_default_config())
 
-        # Handler CLI args so we can see if there's config file to load
-        args = ConfigBuilder._parse_args()
-        if args.config_file:
-            config_file = Path(args.config_file[0])
-            # override with loaded user config file
-            config_defaults = ConfigReader().read(config_defaults, config_file)
 
-        # override with command line arguments
-        ConfigBuilder._set_from_args(config_defaults, args)
-
-        ConfigBuilder._validate_config(config_defaults)
 
     @staticmethod
     def _abort(msg: str) -> None:

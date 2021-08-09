@@ -8,9 +8,11 @@
 """
 import copy
 import random
+import sys
 from pathlib import Path
 from unittest.mock import Mock, mock_open, patch
 
+from transtool.config.builder import ConfigBuilder
 from transtool.config.config import Config
 from transtool.prop.file import PropFile
 from transtool.prop.items import Blank, Comment, PropItem, Translation
@@ -51,6 +53,18 @@ class TestPropFile(TestCase):
 
         # WHEN we try to append object of unsupported type
         obj = 'INVALID'
+
+        # THEN Exception should be thrown.
+        with self.assertRaises(TypeError):
+            # noinspection PyTypeChecker
+            propfile.append(obj)
+
+    def test_append_list_of_wrong_arg_type(self) -> None:
+        # GIVEN normal instance of PropFile
+        propfile = PropFile(Config())
+
+        # WHEN we try to append list of object of unsupported type
+        obj = ['INVALID']
 
         # THEN Exception should be thrown.
         with self.assertRaises(TypeError):
@@ -339,9 +353,10 @@ class TestPropFile(TestCase):
     # #################################################################################################
 
     @patch('pathlib.Path.exists')
-    def test_is_valid_on_empty_files(self, path_exists_mock: Mock) -> None:
-
+    def test_validate_on_empty_files(self, path_exists_mock: Mock) -> None:
         config = Config()
+        ConfigBuilder._setup_checkers(config)
+
         fake_file = Path(f'/does/not/matter/{self.get_random_string()}')
         with patch('builtins.open', mock_open(read_data = '')):
             # Lie our fake file exists
@@ -357,10 +372,29 @@ class TestPropFile(TestCase):
             propfile.report.dump()
             self.assertTrue(propfile.validate(ref_file))
 
+    @patch('pathlib.Path.exists')
+    def test_validate_no_checkers_configured(self, path_exists_mock: Mock) -> None:
+        # GIVEN empty config without checkers set up
+        config = Config()
+
+        # and GIVEN fake file
+        fake_file = Path(f'/does/not/matter/{self.get_random_string()}')
+        with patch('builtins.open', mock_open(read_data = '')):
+            # Lie our fake file exists
+            path_exists_mock.return_value = True
+            propfile = PropFile(config)
+            propfile.load(fake_file)
+
+            # THEN we expect error raised
+            with self.assertRaises(RuntimeError):
+                # attempting to validate the file
+                propfile.validate(propfile)
+
     # #################################################################################################
 
     def test_update(self) -> None:
         config = Config()
+        ConfigBuilder._setup_checkers(config)
 
         # Generate reference file and its contents
         reference = self._generate_propfile_with_content(config)
