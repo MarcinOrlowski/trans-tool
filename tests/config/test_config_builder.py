@@ -265,7 +265,7 @@ class TestConfigBuilder(TestCase):
         dests = copy.copy(srcs)
         # WHEN we process it
         ConfigBuilder._add_file_suffix(config, dests)
-        # THEN all file names should have file suffix appened.
+        # THEN all file names should have file suffix appended.
         for idx, src in enumerate(srcs):
             self.assertEqual(f'{str(src)}{config.file_suffix}', str(dests[idx]))
 

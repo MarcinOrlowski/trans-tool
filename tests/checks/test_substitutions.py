@@ -6,7 +6,6 @@
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
-import random
 from typing import Dict, Union, List
 
 from transtool.checks.substitutions import Substitutions

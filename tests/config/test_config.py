@@ -27,7 +27,7 @@ class TestConfig(TestCase):
         checker_id = self.get_random_string('checker_id')
         checker_config = {}
         max_items = 10
-        for id in range(random.randint(1, 10)):
+        for id in range(random.randint(1, max_items)):
             checker_config[self.get_random_string(f'key{id}')] = self.get_random_string(f'val{id}')
         config.set_checker_config(checker_id, checker_config)
 
@@ -49,7 +49,7 @@ class TestConfig(TestCase):
         checker_id = self.get_random_string('checker_id')
         checker_config = {}
         max_items = 10
-        for id in range(random.randint(1, 10)):
+        for id in range(random.randint(1, max_items)):
             checker_config[self.get_random_string(f'key{id}')] = self.get_random_string(f'val{id}')
         config.set_checker_config(checker_id, checker_config)
 
