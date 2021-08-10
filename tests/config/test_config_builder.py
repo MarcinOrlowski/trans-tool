@@ -423,7 +423,7 @@ class TestConfigBuilder(TestCase):
         args = self._generate_fake_args(languages)
 
         config = Config()
-        file = self.get_random_string('file_')
+        file = self.get_random_string('file')
         config.files.append(file)
 
         # Pass no args for parsing (this is legit as we have config file that can provide what's needed).

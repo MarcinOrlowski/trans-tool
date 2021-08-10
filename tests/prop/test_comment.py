@@ -33,7 +33,7 @@ class TestComment(TestCase):
         Checks if constructing Comment without valid marker in passed value
         would automatically add such marker.
         """
-        val = self.get_random_string('no_maker_')
+        val = self.get_random_string('no_maker')
         # No valid comment marker
         comment = Comment(val)
         self.assertEqual(f'{Config.ALLOWED_COMMENT_MARKERS[0]} {val}', comment.to_string())

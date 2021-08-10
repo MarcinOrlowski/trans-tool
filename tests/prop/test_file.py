@@ -33,11 +33,11 @@ class TestPropFile(TestCase):
         new_items = 50
         for new_item_cls in random.choices(item_types, item_weights, k = new_items):
             if issubclass(new_item_cls, Translation):
-                key = self.get_random_string('key_')
-                val = self.get_random_string('ref_val_')
+                key = self.get_random_string('key')
+                val = self.get_random_string('ref_val')
                 propfile.append(Translation(key, val))
             elif issubclass(new_item_cls, Comment):
-                propfile.append(Comment(self.get_random_string('comment_')))
+                propfile.append(Comment(self.get_random_string('comment')))
             elif issubclass(new_item_cls, Blank):
                 propfile.append(Blank())
             else:
@@ -238,18 +238,18 @@ class TestPropFile(TestCase):
             self.assertIsNone(blank.value)
 
         comment1_marker = '#'
-        comment1_value = self.get_random_string('comment_')
+        comment1_value = self.get_random_string('comment')
 
-        key1 = self.get_random_string('key1_')
+        key1 = self.get_random_string('key1')
         sep1 = '='
-        val1 = self.get_random_string('val1_')
+        val1 = self.get_random_string('val1')
 
         comment2_marker = '!'
-        comment2_value = self.get_random_string('comment_')
+        comment2_value = self.get_random_string('comment')
 
-        key2 = self.get_random_string('key2_')
+        key2 = self.get_random_string('key2')
         sep2 = '='
-        val2 = self.get_random_string('val2_')
+        val2 = self.get_random_string('val2')
 
         fake_data_src = [
             '',
@@ -431,7 +431,7 @@ class TestPropFile(TestCase):
         for _ in range(max_items):
             translation.append([
                 Blank(),
-                Comment(self.get_random_string('comment_')),
+                Comment(self.get_random_string('comment')),
             ])
 
         # THEN after update
