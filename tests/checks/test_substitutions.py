@@ -11,7 +11,7 @@ from typing import Dict, Union, List
 from transtool.checks.substitutions import Substitutions
 from transtool.decorators.overrides import overrides
 from transtool.prop.file import PropFile
-from transtool.prop.items import Blank, Comment, Translation
+from transtool.prop.items import Comment, Translation
 from tests.checks.checks_test_case import ChecksTestCase
 
 

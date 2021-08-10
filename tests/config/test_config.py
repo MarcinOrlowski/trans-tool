@@ -7,17 +7,10 @@
 #
 """
 
-import copy
 import random
-import sys
-from pathlib import Path
-from typing import List, Union
-from unittest.mock import Mock, call, patch
 
-from transtool.config.config import Config
-from transtool.config.builder import ConfigBuilder
-from transtool.utils import Utils
 from tests.test_case import TestCase
+from transtool.config.config import Config
 
 
 class TestConfig(TestCase):
@@ -27,8 +20,8 @@ class TestConfig(TestCase):
         checker_id = self.get_random_string('checker_id')
         checker_config = {}
         max_items = 10
-        for id in range(random.randint(1, max_items)):
-            checker_config[self.get_random_string(f'key{id}')] = self.get_random_string(f'val{id}')
+        for idx in range(random.randint(1, max_items)):
+            checker_config[self.get_random_string(f'key{idx}')] = self.get_random_string(f'val{idx}')
         config.set_checker_config(checker_id, checker_config)
 
         self.assertIn(checker_id, config.checks)
@@ -42,15 +35,15 @@ class TestConfig(TestCase):
         checker_id = self.get_random_string('checker_id')
         with self.assertRaises(TypeError):
             # noinspection PyTypeChecker
-            config.set_checker_config(checker_id, False)
+            config.set_checker_config(checker_id, False)  # noqa: WPS425
 
     def test_get_checker_config(self) -> None:
         config = Config()
         checker_id = self.get_random_string('checker_id')
         checker_config = {}
         max_items = 10
-        for id in range(random.randint(1, max_items)):
-            checker_config[self.get_random_string(f'key{id}')] = self.get_random_string(f'val{id}')
+        for idx in range(random.randint(1, max_items)):
+            checker_config[self.get_random_string(f'key{idx}')] = self.get_random_string(f'val{idx}')
         config.set_checker_config(checker_id, checker_config)
 
         read_config = config.get_checker_config(checker_id)

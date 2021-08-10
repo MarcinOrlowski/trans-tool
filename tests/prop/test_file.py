@@ -8,7 +8,6 @@
 """
 import copy
 import random
-import sys
 from pathlib import Path
 from unittest.mock import Mock, mock_open, patch
 
@@ -355,7 +354,7 @@ class TestPropFile(TestCase):
     @patch('pathlib.Path.exists')
     def test_validate_on_empty_files(self, path_exists_mock: Mock) -> None:
         config = Config()
-        ConfigBuilder._setup_checkers(config)
+        ConfigBuilder._setup_checkers(config)  # noqa: WPS437
 
         fake_file = Path(f'/does/not/matter/{self.get_random_string()}')
         with patch('builtins.open', mock_open(read_data = '')):
@@ -394,7 +393,7 @@ class TestPropFile(TestCase):
 
     def test_update(self) -> None:
         config = Config()
-        ConfigBuilder._setup_checkers(config)
+        ConfigBuilder._setup_checkers(config)  # noqa: WPS437
 
         # Generate reference file and its contents
         reference = self._generate_propfile_with_content(config)

@@ -54,7 +54,8 @@ class Substitutions(Check):
 
         report = ReportGroup('Substitutions')
         if translation.items:
-            report.add([self._find_most_important_issue(idx, item) for idx, item in enumerate(translation.items) if not self._shall_skip_item(item)])
+            report.add([self._find_most_important_issue(idx, item) for idx, item in enumerate(translation.items) if
+                        not self._shall_skip_item(item)])
 
         return report
 
@@ -64,19 +65,20 @@ class Substitutions(Check):
             'comments': False,
 
             # Keep matching elements at the same positions
-            'map': [{
-                    'regexp':  r'([\.]{3})',
+            'map': [
+                {
+                    'regexp': r'([\.]{3})',
                     'replace': '…',
                     'flag': self.FLAG_DEFAULT,
                 }, {
-                    'regexp':  r'([\.]{4,})',
+                    'regexp': r'([\.]{4,})',
                     'flag': self.FLAG_FAIL_WITH_ERROR,
                 }, {
-                    'regexp':  r'([\s]{2,})',
+                    'regexp': r'([\s]{2,})',
                     'replace': ' ',
                     'flag': self.FLAG_DEFAULT,
                 }, {
-                    'regexp':  r'([\!]{2,})',
+                    'regexp': r'([\!]{2,})',
                     'replace': '!',
                     'flag': self.FLAG_DEFAULT,
                 },
