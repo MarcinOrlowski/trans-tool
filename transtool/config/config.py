@@ -67,7 +67,7 @@ class Config(object):
             raise KeyError(f'No config for {checker_id} found.')
         return self.checks[checker_id]
 
-    def _dump(self, items: Dict):
+    def _dump_recursive(self, items: Dict):
         for key, val in items.items():
             if isinstance(val, str):
                 print(f'{key} = "{val}"')  # noqa: WPS421
@@ -79,7 +79,7 @@ class Config(object):
 
             if isinstance(val, dict):
                 print()  # noqa: WPS421
-                self._dump(val)
+                self._dump_recursive(val)
                 continue
 
             if isinstance(val, list):
@@ -88,7 +88,7 @@ class Config(object):
 
             if isinstance(val, CheckerInfo):
                 print(f'[{val.id}]')  # noqa: WPS421
-                self._dump(val.config)
+                self._dump_recursive(val.config)
                 print()  # noqa: WPS421
                 continue
 
@@ -100,4 +100,4 @@ class Config(object):
             return
 
     def dump(self) -> None:
-        self._dump(self.__dict__['checks'])
+        self._dump_recursive(self.__dict__['checks'])
