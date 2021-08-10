@@ -60,6 +60,8 @@ class Config(object):
         }
 
     def set_checker_config(self, checker_id: str, config: Dict) -> None:
+        if not isinstance(config, dict):
+            raise TypeError(f'Checker config must be a dictionary, {type(config)} given.')
         self.checks[checker_id] = config
 
     def get_checker_config(self, checker_id: str) -> Dict:
