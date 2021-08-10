@@ -62,3 +62,23 @@ class TestReportGroup(TestCase):
         self.assertIsInstance(item, Error)
         self.assertEqual(0, self.rg.warnings)
         self.assertEqual(1, self.rg.errors)
+
+    def test_add_with_list(self) -> None:
+        """
+        Ensures add() deals with all the cases properly.
+        :return:
+        """
+
+        reports = [
+            Warn(None, msg = self.get_random_string()),
+            Error(None, msg = self.get_random_string()),
+        ]
+        nones = [
+            None,
+            None,
+        ]
+
+        rg = ReportGroup(self.get_random_string('label'))
+        rg.add(reports + nones)
+        # None's should be silently skipped
+        self.assertEqual(len(reports), rg.errors + rg.warnings)

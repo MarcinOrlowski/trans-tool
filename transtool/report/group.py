@@ -7,7 +7,7 @@
 #
 """
 
-from typing import Union
+from typing import Union, List
 
 from transtool.log import Log
 from transtool.report.items import Error, ReportItem, Warn
@@ -42,14 +42,23 @@ class ReportGroup(list):
     def empty(self) -> bool:
         return (self.errors + self.warnings) == 0
 
-    def add(self, item) -> None:
-        if not issubclass(type(item), ReportItem):
-            raise TypeError(f'Item must be subclass of ReportItem. "{type(item)}" given.')
-        self.append(item)
-        if isinstance(item, Warn):
-            self.warnings += 1
-        else:
-            self.errors += 1
+    def add(self, items: Union[ReportItem, List[ReportItem], None]) -> None:
+        if not items:
+            return
+
+        if not isinstance(items, list):
+            items = [items]
+
+        for item in items:
+            if item is None:
+                continue
+            if not issubclass(type(item), ReportItem):
+                raise TypeError(f'Item must be subclass of ReportItem. "{type(item)}" given.')
+            self.append(item)
+            if isinstance(item, Warn):
+                self.warnings += 1
+            else:
+                self.errors += 1
 
     @staticmethod
     def build_warn(line: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> Warn:
