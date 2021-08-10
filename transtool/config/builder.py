@@ -60,8 +60,6 @@ class ConfigBuilder(object):
     @staticmethod
     def build(config_defaults: Config):
         # Let's populate default config with all the supported checkers first
-        config_defaults.checkers = copy.copy(ConfigBuilder._default_checkers)
-        # Then let's have their config defaults
         ConfigBuilder._setup_checkers(config_defaults)
 
         # Handler CLI args so we can see if there's config file to load
@@ -79,8 +77,10 @@ class ConfigBuilder(object):
         ConfigBuilder._validate_config(config_defaults)
 
     @staticmethod
-    def _setup_checkers(config: Config) -> None:
-        for checker in config.checkers:
+    def _setup_checkers(config: Config, checkers_list: Union[List[str], None] = None) -> None:
+        if checkers_list is None:
+            checkers_list = ConfigBuilder._default_checkers
+        for checker in checkers_list:
             checker_id = checker.__name__
             config.checks[checker_id] = CheckerInfo(checker_id, checker, (checker()).get_default_config())
 
@@ -168,8 +168,7 @@ class ConfigBuilder(object):
                 if id.lower() not in map:
                     ConfigBuilder._abort(f'Unknown checker ID "{id}".')
                 Utils.add_if_not_in_list(checkers, id)
-            print(checkers)
-            config.checkers = checkers
+            ConfigBuilder._setup_checkers(config, checkers)
 
     @staticmethod
     def _add_file_suffix(config: Config, files: Union[List[Path], None]) -> None:
