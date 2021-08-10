@@ -6,6 +6,7 @@
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
+import copy
 
 import argparse
 import re
@@ -36,12 +37,31 @@ from transtool.utils import Utils
 class ConfigBuilder(object):
     # List of options that can be either turned on or off.
     _on_off_pairs = [
-        'fatal',
         'color',
+        'fatal',
+    ]
+
+    _default_checkers = [
+        Brackets,
+        DanglingKeys,
+        EmptyTranslations,
+        FormattingValues,
+        KeyFormat,
+        MissingTranslations,
+        Punctuation,
+        QuotationMarks,
+        StartsWithTheSameCase,
+        Substitutions,
+        TrailingWhiteChars,
+        TypesettingQuotationMarks,
+        WhiteCharsBeforeLinefeed,
     ]
 
     @staticmethod
     def build(config_defaults: Config):
+        # Let's populate default config with all the supported checkers first
+        config_defaults.checkers = copy.copy(ConfigBuilder._default_checkers)
+        # Then let's have their config defaults
         ConfigBuilder._setup_checkers(config_defaults)
 
         # Handler CLI args so we can see if there's config file to load
@@ -54,27 +74,13 @@ class ConfigBuilder(object):
         # override with command line arguments
         ConfigBuilder._set_from_args(config_defaults, args)
 
+        ConfigBuilder._get_checkers_from_args(config_defaults, args.checkers)
+
         ConfigBuilder._validate_config(config_defaults)
 
     @staticmethod
     def _setup_checkers(config: Config) -> None:
-        checkers = [
-            Brackets,
-            DanglingKeys,
-            EmptyTranslations,
-            FormattingValues,
-            KeyFormat,
-            MissingTranslations,
-            Punctuation,
-            QuotationMarks,
-            StartsWithTheSameCase,
-            TrailingWhiteChars,
-            TypesettingQuotationMarks,
-            WhiteCharsBeforeLinefeed,
-            Substitutions,
-        ]
-
-        for checker in checkers:
+        for checker in config.checkers:
             checker_id = checker.__name__
             config.checks[checker_id] = CheckerInfo(checker_id, checker, (checker()).get_default_config())
 
@@ -148,6 +154,24 @@ class ConfigBuilder(object):
             Utils.add_if_not_in_list(config.files, args.files)
 
     @staticmethod
+    def _get_checkers_from_args(config: Config, args_checkers: Union[List[str], None]) -> None:
+        """
+        If `--checks` argument list is provided, used checkers will be adjusted according to
+        values (Checker IDs) provided.
+        :param config:
+        :param args_checkers:
+        """
+        map = {checker.__name__.lower(): checker for checker in ConfigBuilder._default_checkers}
+        if args_checkers:
+            checkers = []
+            for id in args_checkers:
+                if id.lower() not in map:
+                    ConfigBuilder._abort(f'Unknown checker ID "{id}".')
+                Utils.add_if_not_in_list(checkers, id)
+            print(checkers)
+            config.checkers = checkers
+
+    @staticmethod
     def _add_file_suffix(config: Config, files: Union[List[Path], None]) -> None:
         if files:
             suffix_len = len(config.file_suffix)
@@ -189,7 +213,7 @@ class ConfigBuilder(object):
                            help = f'Default file name suffix. Default: "{Config.DEFAULT_FILE_SUFFIX}".')
 
         group = parser.add_argument_group('Checks controlling options')
-        group.add_argument('--checks', action = 'store', dest = 'checks', nargs = '+', metavar = 'CHECK_ID',
+        group.add_argument('--checks', action = 'store', dest = 'checkers', nargs = '+', metavar = 'CHECK_ID',
                            help = 'List of checks ID to be executed. By default all available checks are run.')
 
         group.add_argument('-f', '--fatal', action = 'store_true', dest = 'fatal',

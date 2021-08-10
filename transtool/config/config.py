@@ -6,7 +6,7 @@
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
-from typing import Dict, List
+from typing import Dict, List, Callable
 
 from transtool.config.checker_info import CheckerInfo
 
@@ -54,6 +54,10 @@ class Config(object):
 
         self.separator: str = '='
         self.comment_marker: str = '#'
+
+        self.checkers: List[Callable] = [
+            # empty list. Populated and manipulated by ConfigBuilder.
+        ]
 
         self.checks: Dict[str, CheckerInfo] = {
             # empty set. Populated and manipulated by ConfigBuilder.
