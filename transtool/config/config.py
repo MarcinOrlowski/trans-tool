@@ -6,7 +6,7 @@
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
-from typing import Dict, List, Callable
+from typing import Dict, List
 
 from transtool.config.checker_info import CheckerInfo
 

@@ -56,9 +56,9 @@ class TestConfigBuilder(TestCase):
         """
         fake_args = FakeArgs()
         config = Config()
-        for key, val in config.__dict__.items():
+        for key in config.__dict__:
             # Let's skip Checks' info.
-            if key not in ['checks', 'checkers']:
+            if key not in {'checks'}:  # noqa: WPS525
                 self.assertIn(key, fake_args.__dict__, f'FakeArgs lacks "{key}" key."')
 
     def test_fake_args_matches_argparse(self) -> None:
@@ -71,7 +71,7 @@ class TestConfigBuilder(TestCase):
         sys.argv[1:] = []  # noqa: WPS362
         args = ConfigBuilder._parse_args()
         for key in fake_args.__dict__:
-            if key not in ['checks']:
+            if key not in {'checks'}:  # noqa: WPS525
                 self.assertIn(key, args)
 
     # #################################################################################################
@@ -387,7 +387,7 @@ class TestConfigBuilder(TestCase):
         sys.argv[1:] = []  # noqa: WPS362
         args = ConfigBuilder._parse_args()
         for key in config.__dict__:
-            if key not in ['checks', 'checkers']:
+            if key not in {'checks'}:  # noqa: WPS525
                 self.assertIn(key, args)
 
     # #################################################################################################
@@ -403,7 +403,7 @@ class TestConfigBuilder(TestCase):
         sys.argv[1:] = []  # noqa: WPS362
         args = ConfigBuilder._parse_args()
         for key in config.__dict__:
-            if key not in ['checks', 'checkers']:
+            if key not in {'checks'}:  # noqa: WPS525
                 self.assertIn(key, args)
 
     def test_parse_args_returns_no_more_keys(self) -> None:

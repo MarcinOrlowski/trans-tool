@@ -6,8 +6,6 @@
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
-import copy
-
 import argparse
 import re
 from pathlib import Path
@@ -161,13 +159,13 @@ class ConfigBuilder(object):
         :param config:
         :param args_checkers:
         """
-        map = {checker.__name__.lower(): checker for checker in ConfigBuilder._default_checkers}
+        all_checkers = {checker.__name__.lower(): checker for checker in ConfigBuilder._default_checkers}
         if args_checkers:
             checkers = []
-            for id in args_checkers:
-                if id.lower() not in map:
-                    ConfigBuilder._abort(f'Unknown checker ID "{id}".')
-                Utils.add_if_not_in_list(checkers, id)
+            for checker_id in args_checkers:
+                if checker_id.lower() not in all_checkers:
+                    ConfigBuilder._abort(f'Unknown checker ID "{checker_id}".')
+                Utils.add_if_not_in_list(checkers, checker_id)
             ConfigBuilder._setup_checkers(config, checkers)
 
     @staticmethod
