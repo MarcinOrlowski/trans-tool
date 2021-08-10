@@ -57,7 +57,7 @@ class ConfigBuilder(object):
         ConfigBuilder._validate_config(config_defaults)
 
     @staticmethod
-    def _setup_checkers(config:Config) -> None:
+    def _setup_checkers(config: Config) -> None:
         checkers = [
             Brackets,
             DanglingKeys,
@@ -77,8 +77,6 @@ class ConfigBuilder(object):
         for checker in checkers:
             checker_id = checker.__name__
             config.checks[checker_id] = CheckerInfo(checker_id, checker, (checker()).get_default_config())
-
-
 
     @staticmethod
     def _abort(msg: str) -> None:
@@ -154,7 +152,7 @@ class ConfigBuilder(object):
         if files:
             suffix_len = len(config.file_suffix)
             for idx, file in enumerate(files):
-                # 'PosixPath' object is not subscriptable, so we cannot slice it.
+                # 'PosixPath' object cannot be sliced.
                 path_str = str(file)
                 if path_str[suffix_len * -1:] != config.file_suffix:
                     files[idx] = Path(f'{path_str}{config.file_suffix}')
