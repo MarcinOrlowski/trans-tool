@@ -24,7 +24,8 @@ class Substitutions(Check):
     checks if all opened brackets are closed.
     """
 
-    FAIL = -1
+    FLAG_DEFAULT = 0
+    FLAG_FAIL_WITH_ERROR = -1
 
     def __init__(self, config: Union[Dict, None] = None):
         super().__init__(config)
@@ -34,13 +35,15 @@ class Substitutions(Check):
         warns = []
         for config in self.config['map']:
             for match in re.finditer(config['regexp'], item.value):
-                if config['replace'] == self.FAIL:
-                    return ReportGroup.build_error(f'{idx + 1}:{match.start()}', f'Invalid sequence "{match.group(1)}".', item.key)
-                else:
-                    replacement = config['replace']
-                    warns.append(
-                        ReportGroup.build_warn(f'{idx + 1}:{match.start()}', f'Sequence can be replaced with "{replacement}".',
-                                               item.key))
+                at = f'{idx + 1}:{match.start()}'
+
+                if 'flag' in config and config['flag'] == self.FLAG_FAIL_WITH_ERROR:
+                    msg = f'Invalid sequence "{match.group(1)}".'
+                    return ReportGroup.build_error(at, msg, item.key)
+
+                replacement = config['replace']
+                msg = f'Sequence at {at} can be replaced with "{replacement}".'
+                warns.append(ReportGroup.build_warn(at, msg, item.key))
 
         return warns[0] if (isinstance(warns, list) and warns) else None
 
@@ -50,18 +53,8 @@ class Substitutions(Check):
         self.need_valid_config()
 
         report = ReportGroup('Substitutions')
-
-        if not translation.items:
-            return report
-
-        for idx, item in enumerate(translation.items):
-            # Do not try to be clever and filter() data first, because line_number values will no longer be correct.
-            if self._shall_skip_item(item):
-                continue
-
-            check_result = self._find_most_important_issue(idx, item)
-            if check_result is not None:
-                report.add(check_result)
+        if translation.items:
+            report.add([self._find_most_important_issue(idx, item) for idx, item in enumerate(translation.items) if not self._shall_skip_item(item)])
 
         return report
 
@@ -71,23 +64,21 @@ class Substitutions(Check):
             'comments': False,
 
             # Keep matching elements at the same positions
-            'map':      [
-                {
+            'map': [{
                     'regexp':  r'([\.]{3})',
                     'replace': '…',
-                },
-                {
+                    'flag': self.FLAG_DEFAULT,
+                }, {
                     'regexp':  r'([\.]{4,})',
-                    'replace': self.FAIL,
-                },
-
-                {
+                    'flag': self.FLAG_FAIL_WITH_ERROR,
+                }, {
                     'regexp':  r'([\s]{2,})',
                     'replace': ' ',
-                },
-                {
+                    'flag': self.FLAG_DEFAULT,
+                }, {
                     'regexp':  r'([\!]{2,})',
                     'replace': '!',
+                    'flag': self.FLAG_DEFAULT,
                 },
             ],
         }
