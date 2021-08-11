@@ -125,6 +125,17 @@ class TestTranslation(TestCase):
             self.assertEqual(test.sep, res_sep)
             self.assertEqual(test.val, res_val)
 
+    def test_parse_translation_line_too_short(self) -> None:
+        """
+        Ensures strings too short to form valid translation syntax are skipped
+        without parse attempt.
+        """
+        max_len = Translation.MIN_LINE_LENGTH - 1
+        self.assertGreater(max_len, 0)
+        line = ' ' * max_len
+        res = Translation.parse_translation_line(line)
+        self.assertIsNone(res)
+
     def test_parse_translation_line_invalid_entries(self) -> None:
         lines = [
             '{sep}{val}',
