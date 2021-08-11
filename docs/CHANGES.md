@@ -6,6 +6,10 @@
 
 # Changelog #
 
+* v2.2.0 (2021-08-11)
+  * Added ability to specify checks to run with `--checks` option.
+  * Added more unit tests.
+
 * v2.1.0 (2021-08-06)
   * Rebranded and renamed project to `trans-tool`.
   * Fixed config loader not handling Checks' sections properly.

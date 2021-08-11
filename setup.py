@@ -23,6 +23,8 @@ from setuptools import setup, find_packages
 
 with open('README.md', 'r') as fh:
     readme = fh.read()
+    readme.replace('![trans-tool logo](artwork/trans-tool-logo.png)',
+                   'https://raw.githubusercontent.com/MarcinOrlowski/trans-tool/master/artwork/trans-tool-logo.png', 1)
 
 setup(
     name = Const.APP_NAME,

@@ -27,7 +27,7 @@ class TestDanglingKeys(ChecksTestCase):
         # generate some keys for translation file
         cnt_min = 20
         cnt_max = 40
-        keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
+        keys = [self.get_random_string('key') for _ in range(random.randint(cnt_min, cnt_max))]
         ref_file = self.build_prepfile(keys)
         trans_file = self.build_prepfile(keys)
         self.check(trans_file, ref_file)
@@ -36,7 +36,7 @@ class TestDanglingKeys(ChecksTestCase):
         # generate some keys for translation file
         cnt_min = 20
         cnt_max = 40
-        trans_keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
+        trans_keys = [self.get_random_string('key') for _ in range(random.randint(cnt_min, cnt_max))]
 
         # have less keys for reference file
         upper_bound = 10

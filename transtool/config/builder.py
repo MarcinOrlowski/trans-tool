@@ -6,7 +6,6 @@
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
-
 import argparse
 import re
 from pathlib import Path
@@ -36,31 +35,30 @@ from transtool.utils import Utils
 class ConfigBuilder(object):
     # List of options that can be either turned on or off.
     _on_off_pairs = [
-        'fatal',
         'color',
+        'fatal',
+    ]
+
+    _default_checkers = [
+        Brackets,
+        DanglingKeys,
+        EmptyTranslations,
+        FormattingValues,
+        KeyFormat,
+        MissingTranslations,
+        Punctuation,
+        QuotationMarks,
+        StartsWithTheSameCase,
+        Substitutions,
+        TrailingWhiteChars,
+        TypesettingQuotationMarks,
+        WhiteCharsBeforeLinefeed,
     ]
 
     @staticmethod
     def build(config_defaults: Config):
-        checkers = [
-            Brackets,
-            DanglingKeys,
-            EmptyTranslations,
-            FormattingValues,
-            KeyFormat,
-            MissingTranslations,
-            Punctuation,
-            QuotationMarks,
-            StartsWithTheSameCase,
-            TrailingWhiteChars,
-            TypesettingQuotationMarks,
-            WhiteCharsBeforeLinefeed,
-            Substitutions,
-        ]
-
-        for checker in checkers:
-            checker_id = checker.__name__
-            config_defaults.checks[checker_id] = CheckerInfo(checker_id, checker, (checker()).get_default_config())
+        # Let's populate default config with all the supported checkers first
+        ConfigBuilder._setup_checkers(config_defaults)
 
         # Handler CLI args so we can see if there's config file to load
         args = ConfigBuilder._parse_args()
@@ -72,7 +70,17 @@ class ConfigBuilder(object):
         # override with command line arguments
         ConfigBuilder._set_from_args(config_defaults, args)
 
+        ConfigBuilder._get_checkers_from_args(config_defaults, args.checkers)
+
         ConfigBuilder._validate_config(config_defaults)
+
+    @staticmethod
+    def _setup_checkers(config: Config, checkers_list: Union[List[str], None] = None) -> None:
+        if checkers_list is None:
+            checkers_list = ConfigBuilder._default_checkers
+        for checker in checkers_list:
+            checker_id = checker.__name__
+            config.checks[checker_id] = CheckerInfo(checker_id, checker, (checker()).get_default_config())
 
     @staticmethod
     def _abort(msg: str) -> None:
@@ -144,11 +152,28 @@ class ConfigBuilder(object):
             Utils.add_if_not_in_list(config.files, args.files)
 
     @staticmethod
+    def _get_checkers_from_args(config: Config, args_checkers: Union[List[str], None]) -> None:
+        """
+        If `--checks` argument list is provided, used checkers will be adjusted according to
+        values (Checker IDs) provided.
+        :param config:
+        :param args_checkers:
+        """
+        all_checkers = {checker.__name__.lower(): checker for checker in ConfigBuilder._default_checkers}
+        if args_checkers:
+            checkers = []
+            for checker_id in args_checkers:
+                if checker_id.lower() not in all_checkers:
+                    ConfigBuilder._abort(f'Unknown checker ID "{checker_id}".')
+                Utils.add_if_not_in_list(checkers, checker_id)
+            ConfigBuilder._setup_checkers(config, checkers)
+
+    @staticmethod
     def _add_file_suffix(config: Config, files: Union[List[Path], None]) -> None:
         if files:
             suffix_len = len(config.file_suffix)
             for idx, file in enumerate(files):
-                # 'PosixPath' object is not subscriptable, so we cannot slice it.
+                # 'PosixPath' object cannot be sliced.
                 path_str = str(file)
                 if path_str[suffix_len * -1:] != config.file_suffix:
                     files[idx] = Path(f'{path_str}{config.file_suffix}')
@@ -185,7 +210,7 @@ class ConfigBuilder(object):
                            help = f'Default file name suffix. Default: "{Config.DEFAULT_FILE_SUFFIX}".')
 
         group = parser.add_argument_group('Checks controlling options')
-        group.add_argument('--checks', action = 'store', dest = 'checks', nargs = '+', metavar = 'CHECK_ID',
+        group.add_argument('--checks', action = 'store', dest = 'checkers', nargs = '+', metavar = 'CHECK_ID',
                            help = 'List of checks ID to be executed. By default all available checks are run.')
 
         group.add_argument('-f', '--fatal', action = 'store_true', dest = 'fatal',

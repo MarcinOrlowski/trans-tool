@@ -60,6 +60,8 @@ class Config(object):
         }
 
     def set_checker_config(self, checker_id: str, config: Dict) -> None:
+        if not isinstance(config, dict):
+            raise TypeError(f'Checker config must be a dictionary, {type(config)} given.')
         self.checks[checker_id] = config
 
     def get_checker_config(self, checker_id: str) -> Dict:
@@ -67,7 +69,7 @@ class Config(object):
             raise KeyError(f'No config for {checker_id} found.')
         return self.checks[checker_id]
 
-    def _dump(self, items: Dict):
+    def _dump_recursive(self, items: Dict):
         for key, val in items.items():
             if isinstance(val, str):
                 print(f'{key} = "{val}"')  # noqa: WPS421
@@ -79,7 +81,7 @@ class Config(object):
 
             if isinstance(val, dict):
                 print()  # noqa: WPS421
-                self._dump(val)
+                self._dump_recursive(val)
                 continue
 
             if isinstance(val, list):
@@ -88,7 +90,7 @@ class Config(object):
 
             if isinstance(val, CheckerInfo):
                 print(f'[{val.id}]')  # noqa: WPS421
-                self._dump(val.config)
+                self._dump_recursive(val.config)
                 print()  # noqa: WPS421
                 continue
 
@@ -100,4 +102,4 @@ class Config(object):
             return
 
     def dump(self) -> None:
-        self._dump(self.__dict__['checks'])
+        self._dump_recursive(self.__dict__['checks'])

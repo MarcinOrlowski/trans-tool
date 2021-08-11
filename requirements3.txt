@@ -1,0 +1,6 @@
+argparse
+wemake-python-styleguide
+pytest
+wheel
+setuptools
+twine

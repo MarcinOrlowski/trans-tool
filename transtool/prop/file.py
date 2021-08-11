@@ -135,7 +135,7 @@ class PropFile(object):
                     else:
                         tmp.append(Comment.get_commented_out_key_comment(self.config, item.key, item.value))
             else:
-                raise RuntimeError(f'Unknown entry type: {type(item)} at position {idx + 1}')
+                raise TypeError(f'Unknown entry type: {type(item)} at position {idx + 1}')
 
         self._items = tmp.items
         self.keys = tmp.keys
@@ -150,6 +150,9 @@ class PropFile(object):
         :param reference_file:
         :return: True if file is valid, False if there were errors.
         """
+        if not self.config.checks:
+            raise RuntimeError('Checks config element cannot be empty.')
+
         for _, checker_info in self.config.checks.items():
             checker = checker_info.callable(checker_info.config)
             # Each validator gets copy of the files, to prevent any potential destructive operation.

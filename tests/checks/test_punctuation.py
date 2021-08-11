@@ -29,7 +29,7 @@ class TestPunctuation(ChecksTestCase):
         # generate some keys for translation file
         cnt_min = 20
         cnt_max = 40
-        keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
+        keys = [self.get_random_string('key') for _ in range(random.randint(cnt_min, cnt_max))]
 
         marks = self.checker.config['chars']
         punct_idx = 0
@@ -48,7 +48,7 @@ class TestPunctuation(ChecksTestCase):
         # generate some keys for translation file
         cnt_min = 20
         cnt_max = 40
-        keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
+        keys = [self.get_random_string('key') for _ in range(random.randint(cnt_min, cnt_max))]
 
         marks = self.checker.config['chars']
         punct_idx = 0

@@ -28,7 +28,7 @@ class TestMissingTranslations(ChecksTestCase):
         # generate some keys for translation file
         cnt_min = 20
         cnt_max = 40
-        keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
+        keys = [self.get_random_string('key') for _ in range(random.randint(cnt_min, cnt_max))]
         ref_file = self.build_prepfile(keys)
         trans_file = self.build_prepfile(keys)
         self.check(trans_file, ref_file)
@@ -42,7 +42,7 @@ class TestMissingTranslations(ChecksTestCase):
         # Generate some keys for reference file.
         cnt_min = 10
         cnt_max = 15
-        ref_keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
+        ref_keys = [self.get_random_string('key') for _ in range(random.randint(cnt_min, cnt_max))]
 
         # have less keys for translation file
         how_many_less = random.randint(1, cnt_min - 1)
@@ -58,7 +58,7 @@ class TestMissingTranslations(ChecksTestCase):
             if random.randint(0, 1) == 0:
                 comment = Comment.get_commented_out_key_comment(self.config, key)
             else:
-                val = self.get_random_string('translation_')
+                val = self.get_random_string('translation')
                 comment = Comment.get_commented_out_key_comment(self.config, key, val)
             trans_file.append(comment)
 
@@ -74,7 +74,7 @@ class TestMissingTranslations(ChecksTestCase):
         # generate some keys for reference file
         cnt_min = 20
         cnt_max = 40
-        ref_keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
+        ref_keys = [self.get_random_string('key') for _ in range(random.randint(cnt_min, cnt_max))]
 
         # have less keys for translation file
         how_many_less = random.randint(1, cnt_min - 1)

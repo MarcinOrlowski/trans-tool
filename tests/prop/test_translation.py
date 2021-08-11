@@ -20,7 +20,7 @@ class SplitTest(TestCase):
     """
 
     def __init__(self, fmt: str, mid_val_sep = True):
-        key = self.get_random_string('key_', length = 10)
+        key = self.get_random_string('key', length = 10)
         sep = random.choice(Config.ALLOWED_SEPARATORS)
         val_sep = random.choice(Config.ALLOWED_SEPARATORS) if mid_val_sep else ''
         val = self.get_random_string(length = 10) + val_sep + self.get_random_string(length = 10)
@@ -142,7 +142,7 @@ class TestTranslation(TestCase):
     def test_parse_translation_line_escaped_chars(self) -> None:
         key = r'this\=is\:\key'
         sep = random.choice(Config.ALLOWED_SEPARATORS)
-        val = self.get_random_string('value_')
+        val = self.get_random_string('value')
         line = f'{key}{sep}{val}'
 
         res = Translation.parse_translation_line(line)
