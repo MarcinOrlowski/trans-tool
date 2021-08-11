@@ -6,6 +6,10 @@
 
 # Changelog #
 
+* v2.2.1 (2021-08-11)
+  * Corrected `setup.py` to properly modify image reference.
+  * Added more unit tests.
+
 * v2.2.0 (2021-08-11)
   * Added ability to specify checks to run with `--checks` option.
   * Added more unit tests.
