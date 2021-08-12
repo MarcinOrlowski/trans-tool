@@ -6,7 +6,7 @@
 
 # Changelog #
 
-* v2.2.1 (2021-08-11)
+* v2.2.1 (2021-08-12)
   * Corrected `setup.py` to properly modify image reference.
   * Added more unit tests.
 
