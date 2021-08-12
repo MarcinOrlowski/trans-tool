@@ -83,4 +83,3 @@ Base: src/main/resources/resources/logisim/strings/soc/soc.properties
 * trans-tool is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
 * Project logo contains [elements from Flaticon.com](https://www.flaticon.com/free-icon/translation_99694).
 * trans-tool project [PyPi page](https://pypi.org/project/trans-tool/).
-
