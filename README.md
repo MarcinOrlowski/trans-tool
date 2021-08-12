@@ -25,7 +25,6 @@
   * [Available validators](docs/checks/README.md)
   * [Usage examples](docs/usage.md)
   * [Config file](docs/config.md)
-* [Features](#features)
 * [Changelog](docs/CHANGES.md)
 * [License](#license)
 
@@ -83,3 +82,4 @@ Base: src/main/resources/resources/logisim/strings/soc/soc.properties
 * Written and copyrighted &copy;2021 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
 * trans-tool is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
 * Project logo contains [elements from Flaticon.com](https://www.flaticon.com/free-icon/translation_99694).
+* trans-tool project [PyPi page](https://pypi.org/project/trans-tool/).

@@ -31,6 +31,8 @@ class Translation(PropItem):
     Class representing a translation entry.
     """
 
+    MIN_LINE_LENGTH = 2
+
     def __init__(self, key: str, value: Union[str, None] = None, separator: str = '=') -> None:
         if not key:
             raise ValueError('No empty key allowed.')
@@ -58,7 +60,7 @@ class Translation(PropItem):
     @staticmethod
     def parse_translation_line(line: str) -> Union[Tuple[str, str, str], None]:
         # Min two chars (one letter key and separator)
-        if len(line) < 2:
+        if len(line) < Translation.MIN_LINE_LENGTH:
             return None
 
         # Find used separator first
@@ -105,10 +107,12 @@ class Comment(PropItem):
     def __init__(self, value: str = '', marker: str = None) -> None:
         if not marker:
             marker = Config.ALLOWED_COMMENT_MARKERS[0]
+        if not isinstance(marker, str):
+            raise TypeError('Marker must be a string.')
         if marker not in Config.ALLOWED_COMMENT_MARKERS:
             raise ValueError(f'Invalid comment marker: "{marker}".')
         if not isinstance(value, str):
-            raise ValueError('Value must be a string.')
+            raise TypeError('Value must be a string.')
         if not value:
             value = f'{marker}'
 

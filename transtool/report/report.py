@@ -44,8 +44,6 @@ class Report(object):
     def is_fatal(self) -> bool:
         """
         Helper to determine if report contains fatal errors.
-
-        :return:
         """
         cnt = self.errors
         if self.config.fatal:
