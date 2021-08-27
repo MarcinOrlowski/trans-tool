@@ -41,7 +41,7 @@ class Config(object):
         self.fatal = False
 
         self.debug = False
-        self.color = True
+        self.color = False
         self.quiet: bool = False
         self.verbose: bool = False
 

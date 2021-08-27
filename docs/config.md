@@ -113,4 +113,4 @@ and turning it off (`--no-<OPTION>`). Only one command line argument can be used
 | Key       | CLI switches |Argument type      | Default | Description |
 |-----------|-----------|-------------|---------|------------|
 | fatal   | `--fatal`, `--no-fatal` | Boolean | `false` | When used all validators' warnings are fatal as errors. |
-| color   | `--color`/`--no-color` | Boolean | `true` | When `true`, application output will be using ANSI colors.|
+| color   | `--color`/`--no-color` | Boolean | `false` | When `true`, application output will be using ANSI colors.|
