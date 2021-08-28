@@ -261,7 +261,7 @@ class TestConfigBuilder(TestCase):
         """
         # FIXME: make list more random
         lang = ['de', 'fr', 'en']
-        lang_str = " ".join(lang)
+        lang_str = ' '.join(lang)
         args = self._generate_fake_args([lang_str])
 
         # This is going to be our reference default config instance.
