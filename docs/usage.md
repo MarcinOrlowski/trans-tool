@@ -62,7 +62,7 @@ it will then look for `test_de.properties` file in the same folder `test.propert
 Check if `de`, `pl` and `fr` translations of `test.properties` and `gui.properties` exist and are in sync:
 
 ```bash
-trans-tool --base test gui --lang de pl fr
+trans-tool --base test gui --lang "de pl fr"
 ```
 
 it will then look for and validate following files
@@ -74,6 +74,23 @@ test_fr.properties
 gui_de.properties
 gui_pl.properties
 gui_fr.properties
+```
+
+If you want to use `trans-tool` as part of your CI/CD pipeline, you may end up with the scenario, where
+list of languages to work on is not hardcoded in CI/CD/helper script but read from project sources. This
+may also include base language (i.e. `en`) leading to `trans-tool` attempts to read `*_en.properties`
+and failing. In such case you may specify languages(s) that shall be skipped, regadless being specified
+with `--lang`, i.e.
+
+```bash
+trans-tool --base test --lang en,pl,fr --lang-skip en
+```
+
+it will then look for and validate following files
+
+```bash
+test_pl.properties
+test_fr.properties
 ```
 
 ---

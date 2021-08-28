@@ -33,6 +33,7 @@ class FakeArgs(object):
 
         self.files: List[str] = []
         self.languages: List[str] = []
+        self.languages_skip: List[str] = []
         self.separator: Union[str, None] = None
         self.comment_marker: Union[str, None] = None
 

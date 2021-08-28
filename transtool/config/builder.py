@@ -145,6 +145,8 @@ class ConfigBuilder(object):
         # languages
         if args.languages:
             Utils.add_if_not_in_list(config.languages, args.languages)
+        if args.languages_skip:
+            Utils.add_if_not_in_list(config.languages_skip, args.languages_skip)
 
         # base files
         if args.files:
@@ -180,6 +182,16 @@ class ConfigBuilder(object):
 
     @staticmethod
     def _parse_args() -> argparse:
+        """
+        When you add new argparse based option to the tool, you need to:
+        * add a proper entry to the argument group, with correct key and type,
+        * Edit Config class and ensure new option is mapped to Config attribute.
+        * Update `_set_from_args()` method to copy data to Config instance.
+        * for entries used for argparse that should not be part of Config object, you need to exclude them, so tests checking
+        for Config <-> args match won't fail
+        * Edit FakeArgs class (of TestConfigBuilder test class) and ensure it matches edited Config (there are tests that
+        should detect if something is wrong, so always run unit tests!).
+        """
         parser = argparse.ArgumentParser(prog = Const.APP_NAME.lower(), formatter_class = argparse.RawTextHelpFormatter,
                                          description = '\n'.join(Const.APP_DESCRIPTION))
 
@@ -191,7 +203,10 @@ class ConfigBuilder(object):
         group.add_argument('-b', '--base', action = 'store', dest = 'files', nargs = '+', metavar = 'FILE',
                            help = 'List of base files to check.')
         group.add_argument('-l', '--lang', action = 'store', dest = 'languages', nargs = '+', metavar = 'LANG',
-                           help = 'List of languages to check (space separated if more than one, i.e. "de pl").')
+                           help = 'List of languages to check (space or comma separated if more than one, i.e. "de pl").')
+        group.add_argument('-ls', '--lang-skip', action = 'store', dest = 'languages_skip', nargs = '+', metavar = 'LANG',
+                           help = 'List of languages to ignore. This overrides languages provided by `--lang` '
+                                  + ' (which can be sourced from application config file).')
 
         group = parser.add_argument_group('Additional options')
         group.add_argument('--update', action = 'store_true', dest = 'update',
