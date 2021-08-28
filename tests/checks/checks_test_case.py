@@ -104,7 +104,7 @@ class ChecksTestCase(TestCase):
         # generate some keys for translation file
         cnt_min = 20
         cnt_max = 40
-        trans_keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
+        trans_keys = [self.get_random_string('key') for _ in range(random.randint(cnt_min, cnt_max))]
 
         # have less keys for reference file
         upper_bound = 10

@@ -6,8 +6,16 @@
 
 # Changelog #
 
-* v2.2.0 (2021-08-28)
+* v2.3.0 (2021-08-28)
   * Added `--lang-skip` option for easier integration with CI/CD.
+* 
+* v2.2.1 (2021-08-12)
+  * Corrected `setup.py` to properly modify image reference.
+  * Added more unit tests.
+
+* v2.2.0 (2021-08-11)
+  * Added ability to specify checks to run with `--checks` option.
+  * Added more unit tests.
 
 * v2.1.0 (2021-08-06)
   * Rebranded and renamed project to `trans-tool`.

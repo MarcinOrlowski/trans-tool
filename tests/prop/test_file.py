@@ -11,6 +11,7 @@ import random
 from pathlib import Path
 from unittest.mock import Mock, mock_open, patch
 
+from transtool.config.builder import ConfigBuilder
 from transtool.config.config import Config
 from transtool.prop.file import PropFile
 from transtool.prop.items import Blank, Comment, PropItem, Translation
@@ -31,11 +32,11 @@ class TestPropFile(TestCase):
         new_items = 50
         for new_item_cls in random.choices(item_types, item_weights, k = new_items):
             if issubclass(new_item_cls, Translation):
-                key = self.get_random_string('key_')
-                val = self.get_random_string('ref_val_')
+                key = self.get_random_string('key')
+                val = self.get_random_string('ref_val')
                 propfile.append(Translation(key, val))
             elif issubclass(new_item_cls, Comment):
-                propfile.append(Comment(self.get_random_string('comment_')))
+                propfile.append(Comment(self.get_random_string('comment')))
             elif issubclass(new_item_cls, Blank):
                 propfile.append(Blank())
             else:
@@ -51,6 +52,18 @@ class TestPropFile(TestCase):
 
         # WHEN we try to append object of unsupported type
         obj = 'INVALID'
+
+        # THEN Exception should be thrown.
+        with self.assertRaises(TypeError):
+            # noinspection PyTypeChecker
+            propfile.append(obj)
+
+    def test_append_list_of_wrong_arg_type(self) -> None:
+        # GIVEN normal instance of PropFile
+        propfile = PropFile(Config())
+
+        # WHEN we try to append list of object of unsupported type
+        obj = ['INVALID']
 
         # THEN Exception should be thrown.
         with self.assertRaises(TypeError):
@@ -224,18 +237,18 @@ class TestPropFile(TestCase):
             self.assertIsNone(blank.value)
 
         comment1_marker = '#'
-        comment1_value = self.get_random_string('comment_')
+        comment1_value = self.get_random_string('comment')
 
-        key1 = self.get_random_string('key1_')
+        key1 = self.get_random_string('key1')
         sep1 = '='
-        val1 = self.get_random_string('val1_')
+        val1 = self.get_random_string('val1')
 
         comment2_marker = '!'
-        comment2_value = self.get_random_string('comment_')
+        comment2_value = self.get_random_string('comment')
 
-        key2 = self.get_random_string('key2_')
+        key2 = self.get_random_string('key2')
         sep2 = '='
-        val2 = self.get_random_string('val2_')
+        val2 = self.get_random_string('val2')
 
         fake_data_src = [
             '',
@@ -339,9 +352,10 @@ class TestPropFile(TestCase):
     # #################################################################################################
 
     @patch('pathlib.Path.exists')
-    def test_is_valid_on_empty_files(self, path_exists_mock: Mock) -> None:
-
+    def test_validate_on_empty_files(self, path_exists_mock: Mock) -> None:
         config = Config()
+        ConfigBuilder._setup_checkers(config)  # noqa: WPS437
+
         fake_file = Path(f'/does/not/matter/{self.get_random_string()}')
         with patch('builtins.open', mock_open(read_data = '')):
             # Lie our fake file exists
@@ -357,10 +371,29 @@ class TestPropFile(TestCase):
             propfile.report.dump()
             self.assertTrue(propfile.validate(ref_file))
 
+    @patch('pathlib.Path.exists')
+    def test_validate_no_checkers_configured(self, path_exists_mock: Mock) -> None:
+        # GIVEN empty config without checkers set up
+        config = Config()
+
+        # and GIVEN fake file
+        fake_file = Path(f'/does/not/matter/{self.get_random_string()}')
+        with patch('builtins.open', mock_open(read_data = '')):
+            # Lie our fake file exists
+            path_exists_mock.return_value = True
+            propfile = PropFile(config)
+            propfile.load(fake_file)
+
+            # THEN we expect error raised
+            with self.assertRaises(RuntimeError):
+                # attempting to validate the file
+                propfile.validate(propfile)
+
     # #################################################################################################
 
     def test_update(self) -> None:
         config = Config()
+        ConfigBuilder._setup_checkers(config)  # noqa: WPS437
 
         # Generate reference file and its contents
         reference = self._generate_propfile_with_content(config)
@@ -397,7 +430,7 @@ class TestPropFile(TestCase):
         for _ in range(max_items):
             translation.append([
                 Blank(),
-                Comment(self.get_random_string('comment_')),
+                Comment(self.get_random_string('comment')),
             ])
 
         # THEN after update
@@ -427,3 +460,20 @@ class TestPropFile(TestCase):
                     continue
 
             self.fail(f'Unknown item type: {type(trans_item)}')
+
+    def test_update_fail_on_unknown_type(self) -> None:
+        """
+        Ensures unexpected and unsupported content will be caught and raise TypeError.
+        """
+        config = Config()
+
+        # GIVEN Translation and Reference objects
+        reference = PropFile(config)
+        trans = PropFile(config)
+
+        # When reference contents contain invalid item
+        reference.items.append(False)
+
+        # THEN attempt to update() should fail with error raised.
+        with self.assertRaises(TypeError):
+            trans.update(reference)

@@ -82,7 +82,7 @@ class TestUtils(TestCase):
 
         # Try adding new elements
         for _ in range(count):
-            key = self.get_random_string('key_')
+            key = self.get_random_string('key')
             val = self.get_random_string()
             Utils.add_if_not_in_dict(src, key, val)
             Utils.add_if_not_in_dict(target, key, val)
@@ -125,7 +125,7 @@ class TestUtils(TestCase):
             self.assertEqual(item, val)
 
     def test_remove_quotes_from_dict(self) -> None:
-        key = self.get_random_string('key_')
+        key = self.get_random_string('key')
         val_1 = self.get_random_string()
         val_2 = self.get_random_string()
         val_3 = self.get_random_string()

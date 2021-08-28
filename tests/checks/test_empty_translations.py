@@ -28,7 +28,7 @@ class TestEmptyTranslations(ChecksTestCase):
         # generate some keys for translation file
         cnt_min = 20
         cnt_max = 40
-        keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
+        keys = [self.get_random_string('key') for _ in range(random.randint(cnt_min, cnt_max))]
         ref_file = self.build_prepfile(keys)
         trans_file = self.build_prepfile(keys)
         self.check(trans_file, ref_file)
@@ -40,7 +40,7 @@ class TestEmptyTranslations(ChecksTestCase):
         cnt_min = 10
         cnt_max = 20
         key_cnt = random.randint(cnt_min, cnt_max)
-        keys = [self.get_random_string('key_') for _ in range(key_cnt)]
+        keys = [self.get_random_string('key') for _ in range(key_cnt)]
         ref_file = self.build_prepfile(keys)
         trans_file = self.build_prepfile(keys)
 
@@ -72,7 +72,7 @@ class TestEmptyTranslations(ChecksTestCase):
         cnt_min = 10
         cnt_max = 20
         key_cnt = random.randint(cnt_min, cnt_max)
-        keys = [self.get_random_string('key_') for _ in range(key_cnt)]
+        keys = [self.get_random_string('key') for _ in range(key_cnt)]
         ref_file = self.build_prepfile(keys)
         trans_file = self.build_prepfile(keys)
 
@@ -100,7 +100,7 @@ class TestEmptyTranslations(ChecksTestCase):
         cnt_min = 10
         cnt_max = 20
         key_cnt = random.randint(cnt_min, cnt_max)
-        keys = [self.get_random_string('key_') for _ in range(key_cnt)]
+        keys = [self.get_random_string('key') for _ in range(key_cnt)]
 
         ref_file = self.build_prepfile(keys)
         trans_file = self.build_prepfile(keys)

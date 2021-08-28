@@ -28,7 +28,7 @@ class TestWhiteCharsBeforeLinefeed(ChecksTestCase):
         self.check_single_file(Translation('key', r'This is\nall\nOK'))
 
     def test_translation_string_too_short(self) -> None:
-        # Checks behavior when the string is too short to fit space and litera,
+        # Checks behavior when the string is too short to fit space and literals,
         self.check_single_file(Translation('key', r' X'))
         self.check_single_file(Translation('key', r'\n'))
 

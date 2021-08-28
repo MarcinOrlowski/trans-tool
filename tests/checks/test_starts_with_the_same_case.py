@@ -29,7 +29,7 @@ class TestStartsWithTheSameCase(ChecksTestCase):
     def test_no_faults(self) -> None:
         cnt_min = 20
         cnt_max = 40
-        keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
+        keys = [self.get_random_string('key') for _ in range(random.randint(cnt_min, cnt_max))]
 
         ref_file = PropFile(self.config)
         trans_file = PropFile(self.config)
@@ -43,7 +43,7 @@ class TestStartsWithTheSameCase(ChecksTestCase):
     def test_with_faults(self) -> None:
         cnt_min = 20
         cnt_max = 40
-        keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
+        keys = [self.get_random_string('key') for _ in range(random.randint(cnt_min, cnt_max))]
 
         expected_faults = 0
 
@@ -68,7 +68,7 @@ class TestStartsWithTheSameCase(ChecksTestCase):
         for ref_value, trans_value in tests:
             ref_file = PropFile(self.config)
             trans_file = PropFile(self.config)
-            key = self.get_random_string('key_')
+            key = self.get_random_string('key')
             ref_file.append(Translation(key, ref_value))
             trans_file.append(Translation(key, trans_value))
             self.check(trans_file, ref_file, exp_warnings = exp_warnings)
@@ -144,7 +144,7 @@ class TestStartsWithTheSameCase(ChecksTestCase):
         # generate some keys for translation file
         cnt_min = 20
         cnt_max = 40
-        keys = [self.get_random_string('key_') for _ in range(random.randint(cnt_min, cnt_max))]
+        keys = [self.get_random_string('key') for _ in range(random.randint(cnt_min, cnt_max))]
 
         ref_file = self.build_prepfile(keys, lower = True)
         trans_file = self.build_prepfile(keys, lower = True)

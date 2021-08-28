@@ -10,7 +10,7 @@
 * [« Documentation table of contents](README.md)
 * **Configuration**
   * [Config file](#config-file)
-  * [Syntax file](#syntax)
+  * [Syntax](#syntax)
   * [Structure](#structure)
     * [The [trans-tool] section](#trans-tool-section)
 
@@ -27,7 +27,7 @@ any text editor. Please see commented [config.ini](../config.ini) for example co
 
 You should be using standard `UTF-8` encoding for your configuration file.
 
-## Syntax ##
+# Syntax #
 
 Configuration file is separated into sections. Each section starts with section header put in separate line between square brackets,
 followed by section related configuration items. Items are usually in `key = value` form. All keys are always lower-cased, and for
@@ -99,6 +99,7 @@ The following elements are supported in `[trans-tool]` section
 
 | Key       | CLI switch    | Argument type | Default | Description |
 |-----------|---------------|---------------|---------|-------------|
+| checks    | `--checks`    | List of strings | `[ Brackets, ... ]` | List of Checks IDs to be used for content validation. |
 | comment   | `--comment`   | String        | `#`     | TODO |
 | separator | `--separator` | String        | `=`     | TODO |
 | quiet     | `--quiet`     | Boolean       | `false` | Quiet mode. If enabled, all but fatal errors are muted. |

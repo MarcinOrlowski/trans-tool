@@ -20,7 +20,7 @@ class SplitTest(TestCase):
     """
 
     def __init__(self, fmt: str, mid_val_sep = True):
-        key = self.get_random_string('key_', length = 10)
+        key = self.get_random_string('key', length = 10)
         sep = random.choice(Config.ALLOWED_SEPARATORS)
         val_sep = random.choice(Config.ALLOWED_SEPARATORS) if mid_val_sep else ''
         val = self.get_random_string(length = 10) + val_sep + self.get_random_string(length = 10)
@@ -125,6 +125,17 @@ class TestTranslation(TestCase):
             self.assertEqual(test.sep, res_sep)
             self.assertEqual(test.val, res_val)
 
+    def test_parse_translation_line_too_short(self) -> None:
+        """
+        Ensures strings too short to form valid translation syntax are skipped
+        without parse attempt.
+        """
+        max_len = Translation.MIN_LINE_LENGTH - 1
+        self.assertGreater(max_len, 0)
+        line = ' ' * max_len
+        res = Translation.parse_translation_line(line)
+        self.assertIsNone(res)
+
     def test_parse_translation_line_invalid_entries(self) -> None:
         lines = [
             '{sep}{val}',
@@ -142,7 +153,7 @@ class TestTranslation(TestCase):
     def test_parse_translation_line_escaped_chars(self) -> None:
         key = r'this\=is\:\key'
         sep = random.choice(Config.ALLOWED_SEPARATORS)
-        val = self.get_random_string('value_')
+        val = self.get_random_string('value')
         line = f'{key}{sep}{val}'
 
         res = Translation.parse_translation_line(line)

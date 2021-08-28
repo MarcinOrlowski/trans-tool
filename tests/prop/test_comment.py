@@ -23,24 +23,45 @@ class TestComment(TestCase):
             self.assertIsNone(item.key)
 
     def test_invalid_value(self) -> None:
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             # Invalid value type
             # noinspection PyTypeChecker
             Comment(1234)
 
-    def test_without_marker(self) -> None:
+    def test_constructor_value_with_no_marker(self) -> None:
         """
         Checks if constructing Comment without valid marker in passed value
         would automatically add such marker.
         """
-        val = self.get_random_string('no_maker_')
+        val = self.get_random_string('no_maker')
         # No valid comment marker
         comment = Comment(val)
         self.assertEqual(f'{Config.ALLOWED_COMMENT_MARKERS[0]} {val}', comment.to_string())
 
+    def test_constructor_marker_invalid_value(self) -> None:
+        """
+        Checks if constructing Comment with invalid marker would raise an Error.
+        """
+        marker = self.get_random_string(length = 1)
+        self.assertNotIn(marker, Config.ALLOWED_COMMENT_MARKERS)
+        val = self.get_random_string()
+        with self.assertRaises(ValueError):
+            Comment(value = val, marker = marker)
+
+    def test_constructor_marker_wrong_type(self) -> None:
+        """
+        Ensures marker type is checked.
+        """
+        with self.assertRaises(TypeError):
+            # Marker must be a string or TypeError is expected.
+            # noinspection PyTypeChecker
+            Comment(value = '', marker = 123)
+
     def test_empty_value(self) -> None:
         comment = Comment('')
         self.assertEqual(Config.ALLOWED_COMMENT_MARKERS[0], comment.to_string())
+
+    # #################################################################################################
 
     def test_to_string(self) -> None:
         config = Config()

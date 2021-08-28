@@ -19,9 +19,6 @@ from .log import Log
 from .utils import Utils
 
 
-# #################################################################################################
-
-
 class TransTool(object):
 
     @staticmethod

@@ -45,6 +45,9 @@ class FakeArgs(object):
             self.__setattr__(option_name, False)
             self.__setattr__(f'no_{option_name}', False)
 
+        self.checkers = []
+        self.checks = {}
+
 
 class TestConfigBuilder(TestCase):
 
@@ -54,12 +57,10 @@ class TestConfigBuilder(TestCase):
         """
         fake_args = FakeArgs()
         config = Config()
-        for key, val in config.__dict__.items():
+        for key in config.__dict__:
             # Let's skip Checks' info.
-            if isinstance(val, dict):
-                continue
-
-            self.assertIn(key, fake_args.__dict__, f'FakeArgs lacks "{key}" key."')
+            if key not in {'checks'}:  # noqa: WPS525
+                self.assertIn(key, fake_args.__dict__, f'FakeArgs lacks "{key}" key."')
 
     def test_fake_args_matches_argparse(self) -> None:
         """
@@ -71,7 +72,8 @@ class TestConfigBuilder(TestCase):
         sys.argv[1:] = []  # noqa: WPS362
         args = ConfigBuilder._parse_args()
         for key in fake_args.__dict__:
-            self.assertIn(key, args)
+            if key not in {'checks'}:  # noqa: WPS525
+                self.assertIn(key, args)
 
     # #################################################################################################
 
@@ -266,7 +268,7 @@ class TestConfigBuilder(TestCase):
         dests = copy.copy(srcs)
         # WHEN we process it
         ConfigBuilder._add_file_suffix(config, dests)
-        # THEN all file names should have file suffix appened.
+        # THEN all file names should have file suffix appended.
         for idx, src in enumerate(srcs):
             self.assertEqual(f'{str(src)}{config.file_suffix}', str(dests[idx]))
 
@@ -379,6 +381,18 @@ class TestConfigBuilder(TestCase):
 
     # #################################################################################################
 
+    def test_get_checkers_from_args(self) -> None:
+        config = Config()
+
+        # Pass no args for parsing (this is legit as we have config file that can provide what's needed).
+        sys.argv[1:] = []  # noqa: WPS362
+        args = ConfigBuilder._parse_args()
+        for key in config.__dict__:
+            if key not in {'checks'}:  # noqa: WPS525
+                self.assertIn(key, args)
+
+    # #################################################################################################
+
     def test_parse_args_returns_all_keys(self) -> None:
         """
         Checks if argparse returned dict contains all the keys we expect to be present while building
@@ -390,7 +404,8 @@ class TestConfigBuilder(TestCase):
         sys.argv[1:] = []  # noqa: WPS362
         args = ConfigBuilder._parse_args()
         for key in config.__dict__:
-            self.assertIn(key, args)
+            if key not in {'checks'}:  # noqa: WPS525
+                self.assertIn(key, args)
 
     def test_parse_args_returns_no_more_keys(self) -> None:
         """
@@ -411,6 +426,7 @@ class TestConfigBuilder(TestCase):
         # FIXME: this should not be hardcoded here!
         del args['show_version']
         del args['config_dump']
+        del args['checkers']
 
         for key in args:
             # Ensure key args returns is what is present in Config as well.
@@ -424,7 +440,7 @@ class TestConfigBuilder(TestCase):
         args = self._generate_fake_args(languages)
 
         config = Config()
-        file = self.get_random_string('file_')
+        file = self.get_random_string('file')
         config.files.append(file)
 
         # Pass no args for parsing (this is legit as we have config file that can provide what's needed).
@@ -434,7 +450,7 @@ class TestConfigBuilder(TestCase):
 
             ConfigBuilder.build(config)
 
-            # TODO: make comparision more detailed; add test for langs as well
+            # TODO: make comparison more detailed; add test for langs as well
             self.assertEqual(len(config.files), len(config.files))
             for idx, def_file in enumerate(config.files):
                 self.assertEqual(def_file, config.files[idx])

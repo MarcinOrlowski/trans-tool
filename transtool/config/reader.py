@@ -69,6 +69,7 @@ class ConfigReader(object):
 
         self._merge_if_exists(self.parser, config.files, main_section, 'files')
         self._merge_if_exists(self.parser, config.languages, main_section, 'languages')
+        self._merge_if_exists(self.parser, config.checks, main_section, 'checks')
 
         if config.debug:
             for attr_name in dir(config):
