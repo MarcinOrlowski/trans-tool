@@ -51,6 +51,7 @@ class Config(object):
 
         self.files: List[str] = []
         self.languages: List[str] = []
+        self.languages_skip: List[str] = []
 
         self.separator: str = '='
         self.comment_marker: str = '#'
