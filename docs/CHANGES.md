@@ -6,7 +6,7 @@
 
 # Changelog #
 
-* dev
+* v2.2.0 (2021-08-28)
   * Added `--lang-skip` option for easier integration with CI/CD.
 
 * v2.1.0 (2021-08-06)
