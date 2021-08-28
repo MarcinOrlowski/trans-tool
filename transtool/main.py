@@ -28,7 +28,7 @@ class TransTool(object):
     def start() -> int:
         # Cannot rely on argparse here as we have required arguments there.
         if '--version' in sys.argv:
-            Log.banner(Const.APP_DESCRIPTION)
+            Log.banner(Const.APP_DESCRIPTION, top = False, bottom = False)
             return 0
 
         # Config with built-in defaults
