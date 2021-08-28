@@ -6,7 +6,7 @@
 
 # Changelog #
 
-* v2.4.0
+* v2.4.0 (2021-08-28)
   * Both `--lang` and `--lang-skip` now support space separator too.
 
 * v2.3.0 (2021-08-28)
