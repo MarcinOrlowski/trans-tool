@@ -255,6 +255,42 @@ class TestConfigBuilder(TestCase):
         self.assertEqual(args.separator, config.separator)
         self.assertEqual(args.comment_marker, config.comment_marker)
 
+    def test_set_from_args_with_spaces(self) -> None:
+        """
+        Ensures languages specified as space separated string are processed as expected.
+        """
+        # FIXME: make list more random
+        lang = ['de', 'fr', 'en']
+        lang_str = ' '.join(lang)
+        args = self._generate_fake_args([lang_str])
+
+        # This is going to be our reference default config instance.
+        config_defaults = Config()
+
+        # Process args and update config
+        config = Config()
+        ConfigBuilder._set_from_args(config, args)
+
+        # Ensure config reflects changes from command line
+        exp_fatal = self._get_expectation(config_defaults.fatal, args.fatal, args.no_fatal)
+        self.assertEqual(exp_fatal, config.fatal)
+        exp_color = self._get_expectation(config_defaults.color, args.color, args.no_color)
+        self.assertEqual(exp_color, config.color)
+
+        self.assertEqual(args.update, config.update)
+        self.assertEqual(args.create, config.create)
+
+        # log_level controlled by `quiet` and `verbose`.
+        self.assertEqual(args.quiet, config.quiet)
+        self.assertEqual(args.verbose, config.verbose)
+
+        # Ensure all files are there and still with proper suffix.
+        for idx, args_file in enumerate(args.files):
+            self.assertEqual(config.files[idx], args_file)
+        self.assertEqual(lang, config.languages)
+        self.assertEqual(args.separator, config.separator)
+        self.assertEqual(args.comment_marker, config.comment_marker)
+
     # #################################################################################################
 
     def test_add_file_suffix_missing_suffix(self) -> None:
