@@ -144,9 +144,13 @@ class ConfigBuilder(object):
 
         # languages
         if args.languages:
-            Utils.add_if_not_in_list(config.languages, args.languages)
+            for lang in args.languages:
+                for sub_lang in lang.split():
+                    Utils.add_if_not_in_list(config.languages, sub_lang)
         if args.languages_skip:
-            Utils.add_if_not_in_list(config.languages_skip, args.languages_skip)
+            for lang in args.languages_skip:
+                for sub_lang in lang.split():
+                    Utils.add_if_not_in_list(config.languages_skip, sub_lang)
 
         # base files
         if args.files:

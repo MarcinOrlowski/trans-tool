@@ -6,6 +6,9 @@
 
 # Changelog #
 
+* v2.4.0
+  * Both `--lang` and `--lang-skip` now support space separator too.
+
 * v2.3.0 (2021-08-28)
   * Added `--lang-skip` option for easier integration with CI/CD.
 
