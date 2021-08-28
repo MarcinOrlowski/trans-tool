@@ -6,6 +6,9 @@
 
 # Changelog #
 
+* dev
+  * Added `--lang-skip` option for easier integration with CI/CD.
+
 * v2.1.0 (2021-08-06)
   * Rebranded and renamed project to `trans-tool`.
   * Fixed config loader not handling Checks' sections properly.

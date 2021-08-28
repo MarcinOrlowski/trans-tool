@@ -94,6 +94,11 @@ class TransTool(object):
                 translation = PropFile(config)
 
                 trans_level_label = f'{lang.upper()}: {translation_path}'
+
+                if lang in config.languages_skip:
+                    Log.v(f'{trans_level_label}: SKIPPED')
+                    continue
+
                 Log.push(trans_level_label, deferred = True)
 
                 try:
