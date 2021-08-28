@@ -188,9 +188,9 @@ class ConfigBuilder(object):
         * Edit Config class and ensure new option is mapped to Config attribute.
         * Update `_set_from_args()` method to copy data to Config instance.
         * for entries used for argparse that should not be part of Config object, you need to exclude them, so tests checking
-          for Config <-> args match won't fail
+        for Config <-> args match won't fail
         * Edit FakeArgs class (of TestConfigBuilder test class) and ensure it matches edited Config (there are tests that
-          should detect if something is wrong, so always run unit tests!).
+        should detect if something is wrong, so always run unit tests!).
         """
         parser = argparse.ArgumentParser(prog = Const.APP_NAME.lower(), formatter_class = argparse.RawTextHelpFormatter,
                                          description = '\n'.join(Const.APP_DESCRIPTION))
