@@ -212,7 +212,7 @@ class ConfigBuilder(object):
                                   + ' (which can be sourced from application config file).')
 
         group = parser.add_argument_group('Additional options')
-        group.add_argument('--write', action = 'store_true', dest = 'write',
+        group.add_argument('-w', '--write', action = 'store_true', dest = 'write',
                            help = 'Creates or Updates existing translation files in-place using base file as reference.')
         group.add_argument('-wr', '--write-reference', action = 'store_true', dest = 'write_reference',
                            help = 'Includes comments with reference values from base string for every translation entry.')
