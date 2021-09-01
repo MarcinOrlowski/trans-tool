@@ -125,8 +125,11 @@ class ConfigBuilder(object):
             ConfigBuilder._set_on_off_option(config, args, pair_option_name)
 
         # cmd fix
-        config.update = args.update
-        config.create = args.create
+        if args.write_content or args.write_reference:
+            args.write = True
+
+        config.write = args.write
+        config.write_content = args.write_content
         config.write_reference = args.write_reference
 
         # Set optional args, if set by user.
@@ -213,11 +216,11 @@ class ConfigBuilder(object):
                                   + ' (which can be sourced from application config file).')
 
         group = parser.add_argument_group('Additional options')
-        group.add_argument('--update', action = 'store_true', dest = 'update',
-                           help = 'Updates existing translation files in-place using base file as reference.')
-        group.add_argument('--create', action = 'store_true', dest = 'create',
-                           help = 'Creates new translation files using base file as reference if no file exists.')
-        group.add_argument('-wr', '--write-reference', action = 'store_true', dest = 'write_reference',
+        group.add_argument('-w', '--write', action = 'store_true', dest = 'write',
+                           help = 'Creates or Updates existing translation files in-place using base file as reference.')
+        group.add_argument('-wc', '--write-content', action = 'store_true', dest = 'write_content',
+                           help = 'Non existing translations are writted with default value taken from base file.')
+        group.add_argument('-wr', '--write-ref', action = 'store_true', dest = 'write_reference',
                            help = 'Includes comments with reference values from base string for every translation entry.')
         group.add_argument('--separator', action = 'store', dest = 'separator', metavar = 'CHAR', nargs = 1,
                            help = 'If specified, only given CHAR is considered a valid key/value separator.'

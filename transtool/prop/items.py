@@ -127,7 +127,7 @@ class Comment(PropItem):
         return self.value
 
     @staticmethod
-    def comment_out_key(config: Config, key: str, value: Union[str, None]) -> str:
+    def comment_out_key(config: Config, key: str, value: Union[str, None] = None) -> str:
         """
         Helper method that returns translation key formatted as commented-out item.
         :param config: Application config.

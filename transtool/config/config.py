@@ -45,8 +45,8 @@ class Config(object):
         self.quiet: bool = False
         self.verbose: bool = False
 
-        self.update: bool = False
-        self.create: bool = False
+        self.write: bool = False
+        self.write_content: bool = False
         self.write_reference: bool = False
 
         self.files: List[str] = []

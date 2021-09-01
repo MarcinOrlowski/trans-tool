@@ -105,7 +105,7 @@ class TransTool(object):
                         translation.report.dump()
                         errors += translation.report.errors
 
-                    if config.update:
+                    if config.write:
                         translation.update(reference)
                         translation.save()
 
@@ -116,7 +116,7 @@ class TransTool(object):
 
                 except FileNotFoundError:
                     # Missing translation file is not a big deal.
-                    if config.create:
+                    if config.write:
                         translation.update(reference)
                         Log.push('Creating new translation file')
                         translation.save(translation_path)
