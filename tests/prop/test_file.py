@@ -468,7 +468,7 @@ class TestPropFile(TestCase):
                     if write_content:
                         expected = Comment.comment_out_key(config, ref_item.key, ref_item.value)
                     else:
-                        expected = Comment.comment_out_key(config, ref_item.key, "")
+                        expected = Comment.comment_out_key(config, ref_item.key)
                     self.assertEqual(expected, trans_item.to_string())
                     continue
 
