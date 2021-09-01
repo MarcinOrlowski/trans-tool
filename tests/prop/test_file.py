@@ -465,7 +465,10 @@ class TestPropFile(TestCase):
                         self.assertIsNone(trans_item.value)
                     continue
                 if isinstance(trans_item, Comment):
-                    expected = Comment.comment_out_key(config, ref_item.key, ref_item.value)
+                    if write_content:
+                        expected = Comment.comment_out_key(config, ref_item.key, ref_item.value)
+                    else:
+                        expected = Comment.comment_out_key(config, ref_item.key, "")
                     self.assertEqual(expected, trans_item.to_string())
                     continue
 
