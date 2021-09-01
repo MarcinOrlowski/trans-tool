@@ -22,8 +22,7 @@ from tests.test_case import TestCase
 
 class FakeArgs(object):
     def __init__(self):
-        self.update: bool = False
-        self.create: bool = False
+        self.write: bool = False
         self.write_reference: bool = False
 
         self.quiet: bool = False
@@ -184,8 +183,8 @@ class TestConfigBuilder(TestCase):
         args = FakeArgs()
 
         # Lets set up args to some random state
-        args.update = self.get_random_bool()
-        args.create = self.get_random_bool()
+        args.write = self.get_random_bool()
+        args.write_reference = self.get_random_bool()
 
         args.quiet = self.get_random_bool()
         args.verbose = self.get_random_bool()
@@ -241,8 +240,8 @@ class TestConfigBuilder(TestCase):
         exp_color = self._get_expectation(config_defaults.color, args.color, args.no_color)
         self.assertEqual(exp_color, config.color)
 
-        self.assertEqual(args.update, config.update)
-        self.assertEqual(args.create, config.create)
+        self.assertEqual(args.write, config.write)
+        self.assertEqual(args.write_reference, config.write_reference)
 
         # log_level controlled by `quiet` and `verbose`.
         self.assertEqual(args.quiet, config.quiet)
@@ -277,8 +276,8 @@ class TestConfigBuilder(TestCase):
         exp_color = self._get_expectation(config_defaults.color, args.color, args.no_color)
         self.assertEqual(exp_color, config.color)
 
-        self.assertEqual(args.update, config.update)
-        self.assertEqual(args.create, config.create)
+        self.assertEqual(args.write, config.write)
+        self.assertEqual(args.write_reference, config.write_reference)
 
         # log_level controlled by `quiet` and `verbose`.
         self.assertEqual(args.quiet, config.quiet)

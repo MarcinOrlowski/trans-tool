@@ -6,6 +6,9 @@
 
 # Changelog #
 
+* dev
+  * The `--update` and `--create` options are now replaced with `--write`.
+
 * v2.4.0 (2021-08-28)
   * Both `--lang` and `--lang-skip` now support space separator too.
 
