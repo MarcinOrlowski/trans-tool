@@ -125,6 +125,9 @@ class ConfigBuilder(object):
             ConfigBuilder._set_on_off_option(config, args, pair_option_name)
 
         # cmd fix
+        if args.write_content or args.write_reference:
+            args.write = True
+
         config.write = args.write
         config.write_content = args.write_content
         config.write_reference = args.write_reference
