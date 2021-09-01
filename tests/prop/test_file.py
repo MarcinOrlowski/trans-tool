@@ -391,8 +391,15 @@ class TestPropFile(TestCase):
 
     # #################################################################################################
 
-    def test_update(self) -> None:
+    def test_update_just_keys(self) -> None:
+        self.do_test_update(write_content = False)
+
+    def test_update_with_write_content(self) -> None:
+        self.do_test_update(write_content = True)
+
+    def do_test_update(self, write_content: bool) -> None:
         config = Config()
+        config.write_content = write_content
         ConfigBuilder._setup_checkers(config)  # noqa: WPS437
 
         # Generate reference file and its contents
@@ -455,7 +462,10 @@ class TestPropFile(TestCase):
                     self.assertEqual(translation_clone.items[ref_idx].value, trans_item.value)
                     continue
                 if isinstance(trans_item, Comment):
-                    expected = Comment.comment_out_key(config, ref_item.key, ref_item.value)
+                    if write_content:
+                        expected = Comment.comment_out_key(config, ref_item.key, ref_item.value)
+                    else:
+                        expected = Comment.comment_out_key(config, ref_item.key)
                     self.assertEqual(expected, trans_item.to_string())
                     continue
 

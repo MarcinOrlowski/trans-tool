@@ -133,7 +133,10 @@ class PropFile(object):
                         # But as we wrote reference comment already, let's put just a key, without the value.
                         tmp.append(Comment.get_commented_out_key_comment(self.config, item.key))
                     else:
-                        tmp.append(Comment.get_commented_out_key_comment(self.config, item.key, item.value))
+                        if self.config.write_content:
+                            tmp.append(Comment.get_commented_out_key_comment(self.config, item.key, item.value))
+                        else:
+                            tmp.append(Comment.get_commented_out_key_comment(self.config, item.key))
             else:
                 raise TypeError(f'Unknown entry type: {type(item)} at position {idx + 1}')
 

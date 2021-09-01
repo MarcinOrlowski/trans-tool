@@ -6,6 +6,13 @@
 
 # Changelog #
 
+* v2.5.0 (2021-09-01)
+  * The `--update`, `--create` options are now replaced with `--write` (`-w`).
+  * By default `--write` saves just keys. Use `--write-content` (`-wc`)
+    to include original texts too.
+  * Using either `--write-reference` or `--write-contents` implies `--write`.
+  * The `--write-reference` option is now `--write-ref` (`-wr`).
+
 * v2.4.0 (2021-08-28)
   * Both `--lang` and `--lang-skip` now support space separator too.
 
