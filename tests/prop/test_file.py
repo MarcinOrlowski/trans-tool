@@ -392,7 +392,7 @@ class TestPropFile(TestCase):
     # #################################################################################################
 
     def test_update_just_keys(self) -> None:
-        self.do_test_update(write_content = True)
+        self.do_test_update(write_content = False)
 
     def test_update_with_write_content(self) -> None:
         self.do_test_update(write_content = True)
