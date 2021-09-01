@@ -391,8 +391,15 @@ class TestPropFile(TestCase):
 
     # #################################################################################################
 
-    def test_update(self) -> None:
+    def test_update_just_keys(self) -> None:
+        self.do_test_update(write_content = True)
+
+    def test_update_with_write_content(self) -> None:
+        self.do_test_update(write_content = True)
+
+    def do_test_update(self, write_content: bool) -> None:
         config = Config()
+        config.write_content = write_content
         ConfigBuilder._setup_checkers(config)  # noqa: WPS437
 
         # Generate reference file and its contents
@@ -452,7 +459,10 @@ class TestPropFile(TestCase):
                 if isinstance(trans_item, Translation):
                     # FIXME: we shall check the separator too.
                     self.assertEqual(ref_item.key, trans_item.key)
-                    self.assertEqual(translation_clone.items[ref_idx].value, trans_item.value)
+                    if write_content:
+                        self.assertEqual(translation_clone.items[ref_idx].value, trans_item.value)
+                    else:
+                        self.assertIsNone(trans_item.value)
                     continue
                 if isinstance(trans_item, Comment):
                     expected = Comment.comment_out_key(config, ref_item.key, ref_item.value)
