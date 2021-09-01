@@ -459,10 +459,7 @@ class TestPropFile(TestCase):
                 if isinstance(trans_item, Translation):
                     # FIXME: we shall check the separator too.
                     self.assertEqual(ref_item.key, trans_item.key)
-                    if write_content:
-                        self.assertEqual(translation_clone.items[ref_idx].value, trans_item.value)
-                    else:
-                        self.assertIsNone(trans_item.value)
+                    self.assertEqual(translation_clone.items[ref_idx].value, trans_item.value)
                     continue
                 if isinstance(trans_item, Comment):
                     if write_content:

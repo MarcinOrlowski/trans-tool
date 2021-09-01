@@ -126,11 +126,7 @@ class PropFile(object):
                     tmp.append(Comment(f'{self.config.comment_marker} {item.key} {self.config.separator} {item.value}'))
                 if item.key in self.keys:
                     # Write existing translation
-                    orig_line = self.find_by_key(item.key)
-                    if self.config.write_content:
-                        tmp.append(orig_line)
-                    else:
-                        tmp.append(Translation(orig_line.key))
+                    tmp.append(self.find_by_key(item.key))
                 else:
                     # We do not have the translation yet.
                     if self.config.write_reference:
