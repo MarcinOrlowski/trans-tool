@@ -23,6 +23,7 @@ from tests.test_case import TestCase
 class FakeArgs(object):
     def __init__(self):
         self.write: bool = False
+        self.write_content: bool = False
         self.write_reference: bool = False
 
         self.quiet: bool = False
@@ -184,6 +185,7 @@ class TestConfigBuilder(TestCase):
 
         # Lets set up args to some random state
         args.write = self.get_random_bool()
+        args.write_content = self.get_random_bool()
         args.write_reference = self.get_random_bool()
 
         args.quiet = self.get_random_bool()
@@ -241,6 +243,7 @@ class TestConfigBuilder(TestCase):
         self.assertEqual(exp_color, config.color)
 
         self.assertEqual(args.write, config.write)
+        self.assertEqual(args.write_content, config.write_content)
         self.assertEqual(args.write_reference, config.write_reference)
 
         # log_level controlled by `quiet` and `verbose`.

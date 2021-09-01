@@ -126,6 +126,7 @@ class ConfigBuilder(object):
 
         # cmd fix
         config.write = args.write
+        config.write_content = args.write_content
         config.write_reference = args.write_reference
 
         # Set optional args, if set by user.
@@ -214,6 +215,8 @@ class ConfigBuilder(object):
         group = parser.add_argument_group('Additional options')
         group.add_argument('-w', '--write', action = 'store_true', dest = 'write',
                            help = 'Creates or Updates existing translation files in-place using base file as reference.')
+        group.add_argument('-wc', '--write-content', action = 'store_true', dest = 'write_content',
+                           help = 'Non existing translations are writted with default value taken from base file.')
         group.add_argument('-wr', '--write-reference', action = 'store_true', dest = 'write_reference',
                            help = 'Includes comments with reference values from base string for every translation entry.')
         group.add_argument('--separator', action = 'store', dest = 'separator', metavar = 'CHAR', nargs = 1,

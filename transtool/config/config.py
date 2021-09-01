@@ -46,6 +46,7 @@ class Config(object):
         self.verbose: bool = False
 
         self.write: bool = False
+        self.write_content: bool = False
         self.write_reference: bool = False
 
         self.files: List[str] = []

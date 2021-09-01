@@ -126,14 +126,21 @@ class PropFile(object):
                     tmp.append(Comment(f'{self.config.comment_marker} {item.key} {self.config.separator} {item.value}'))
                 if item.key in self.keys:
                     # Write existing translation
-                    tmp.append(self.find_by_key(item.key))
+                    orig_line = self.find_by_key(item.key)
+                    if self.config.write_content:
+                        tmp.append(orig_line)
+                    else:
+                        tmp.append(Translation(orig_line.key))
                 else:
                     # We do not have the translation yet.
                     if self.config.write_reference:
                         # But as we wrote reference comment already, let's put just a key, without the value.
                         tmp.append(Comment.get_commented_out_key_comment(self.config, item.key))
                     else:
-                        tmp.append(Comment.get_commented_out_key_comment(self.config, item.key, item.value))
+                        if self.config.write_content:
+                            tmp.append(Comment.get_commented_out_key_comment(self.config, item.key, item.value))
+                        else:
+                            tmp.append(Comment.get_commented_out_key_comment(self.config, item.key))
             else:
                 raise TypeError(f'Unknown entry type: {type(item)} at position {idx + 1}')
 
