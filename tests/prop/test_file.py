@@ -9,6 +9,7 @@
 import copy
 import random
 from pathlib import Path
+from typing import List
 from unittest.mock import Mock, mock_open, patch
 
 from transtool.config.builder import ConfigBuilder
@@ -314,10 +315,6 @@ class TestPropFile(TestCase):
                     expected.append(item.to_string())
 
                 fh = manager()
-<<<<<<< HEAD
-=======
-
->>>>>>> 3055eb66200087fdc2e5f50204cfcc5e24f77c2b
                 # FIXME: LF/CRLF should be configurable
                 fh.write.assert_called_once_with('\n'.join(expected))
 
@@ -346,12 +343,52 @@ class TestPropFile(TestCase):
         """
         Checks if save() will fail if no target file name is given nor object's
         `file` property is `None`.
-        :return:
         """
         config = Config()
         propfile = PropFile(config)
         with self.assertRaises(ValueError):
             propfile.save()
+
+    def test_save_no_trailing_lf(self) -> None:
+        """
+        Ensures that save() will not add any trailing LF as last line
+        if source data do not end up with empty line.
+        """
+        config = Config()
+        propfile = PropFile(config)
+
+        item = Translation(self.get_random_string('key'), self.get_random_string('value'))
+        propfile.append(item)
+
+        # Check file content is written as expected.
+        expected = [item.to_string()]
+
+        self.do_compare_output_with_saved_content(propfile, expected)
+
+    def test_save_trailing_lf_is_saved(self) -> None:
+        """
+        Ensures that save() will do add any trailing LF as last line
+        if source data ends with empty line.
+        """
+        config = Config()
+        propfile = PropFile(config)
+
+        item = Translation(self.get_random_string('key'), self.get_random_string('value'))
+        propfile.append(item)
+        propfile.append(Blank())
+
+        # Check file content is written as expected.
+        expected = [item.to_string(), '']
+
+        self.do_compare_output_with_saved_content(propfile, expected)
+
+    def do_compare_output_with_saved_content(self, propfile: PropFile, expected: List[str]) -> None:
+        with patch('builtins.open', mock_open()) as manager:
+            with patch('transtool.log.Log.i') as log_i_mock:
+                propfile.save(self.get_random_string())
+                fh = manager()
+                # FIXME: LF/CRLF should be configurable
+                fh.write.assert_called_once_with('\n'.join(expected))
 
     # #################################################################################################
 
