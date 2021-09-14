@@ -34,11 +34,11 @@ class ChecksTestCase(TestCase):
 
     def check_single_file(self, entry: PropItem, exp_errors: int = 0, exp_warnings: int = 0,
                           force_report_dump: bool = False) -> None:
-        propfile = PropFile(self.config)
-        propfile.loaded = True
-        propfile.items.append(entry)
+        prop_file = PropFile(self.config)
+        prop_file.loaded = True
+        prop_file.items.append(entry)
 
-        self.check(propfile, exp_errors = exp_errors, exp_warnings = exp_warnings, force_report_dump = force_report_dump)
+        self.check(prop_file, exp_errors = exp_errors, exp_warnings = exp_warnings, force_report_dump = force_report_dump)
 
     def check(self, translation: PropFile, reference: Union[PropFile, None] = None,
               exp_errors: int = 0, exp_warnings: int = 0, force_report_dump = False, msg = None) -> None:
@@ -54,7 +54,7 @@ class ChecksTestCase(TestCase):
 
     # #################################################################################################
 
-    def build_prepfile(self, contents: Union[List[str], List[PropItem]], lower: bool = False) -> PropFile:
+    def build_propfile(self, contents: Union[List[str], List[PropItem]], lower: bool = False) -> PropFile:
         prep_file = PropFile(self.config)
         prep_file.loaded = True
 
@@ -111,8 +111,8 @@ class ChecksTestCase(TestCase):
         how_many_less = random.randint(1, upper_bound)
         ref_keys = trans_keys[:(how_many_less * -1)]
 
-        ref_file = self.build_prepfile(ref_keys, lower = True)
-        trans_file = self.build_prepfile(trans_keys, lower = True)
+        ref_file = self.build_propfile(ref_keys, lower = True)
+        trans_file = self.build_propfile(trans_keys, lower = True)
         self.check(trans_file, ref_file)
 
     # #################################################################################################
@@ -120,14 +120,14 @@ class ChecksTestCase(TestCase):
     def _do_checker_comment_test(self, tests: List[Comment], comm_exp_warnings: int) -> None:
         """
         Helper method to test certain checkers against faults in comments where checker supports
-        `comments` configuration option that lets user include or exlude comments for checking.
+        `comments` configuration option that lets user include or exclude comments for checking.
 
         :param tests: List of instances of Comment
         :param comm_exp_warnings: number of expected warnings that should be spotted if scanning comments is enabled.
         """
         for test in tests:
             if not isinstance(test, Comment):
-                self.fail(f'Test item must be instance of Comment ({type(item)} given).')
+                self.fail(f'Test item must be instance of Comment ({type(test)} given).')
 
             # Expect no issues if comment scanning is disabled
             self.checker.config['comments'] = False

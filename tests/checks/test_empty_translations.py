@@ -29,8 +29,8 @@ class TestEmptyTranslations(ChecksTestCase):
         cnt_min = 20
         cnt_max = 40
         keys = [self.get_random_string('key') for _ in range(random.randint(cnt_min, cnt_max))]
-        ref_file = self.build_prepfile(keys)
-        trans_file = self.build_prepfile(keys)
+        ref_file = self.build_propfile(keys)
+        trans_file = self.build_propfile(keys)
         self.check(trans_file, ref_file)
 
     def test_if_both_are_empty(self) -> None:
@@ -41,8 +41,8 @@ class TestEmptyTranslations(ChecksTestCase):
         cnt_max = 20
         key_cnt = random.randint(cnt_min, cnt_max)
         keys = [self.get_random_string('key') for _ in range(key_cnt)]
-        ref_file = self.build_prepfile(keys)
-        trans_file = self.build_prepfile(keys)
+        ref_file = self.build_propfile(keys)
+        trans_file = self.build_propfile(keys)
 
         # Now, make some translations empty.
         how_many = random.randint(1, cnt_min)
@@ -73,8 +73,8 @@ class TestEmptyTranslations(ChecksTestCase):
         cnt_max = 20
         key_cnt = random.randint(cnt_min, cnt_max)
         keys = [self.get_random_string('key') for _ in range(key_cnt)]
-        ref_file = self.build_prepfile(keys)
-        trans_file = self.build_prepfile(keys)
+        ref_file = self.build_propfile(keys)
+        trans_file = self.build_propfile(keys)
 
         # Now, make some translations empty.
         how_many = random.randint(1, cnt_min)
@@ -102,8 +102,8 @@ class TestEmptyTranslations(ChecksTestCase):
         key_cnt = random.randint(cnt_min, cnt_max)
         keys = [self.get_random_string('key') for _ in range(key_cnt)]
 
-        ref_file = self.build_prepfile(keys)
-        trans_file = self.build_prepfile(keys)
+        ref_file = self.build_propfile(keys)
+        trans_file = self.build_propfile(keys)
 
         # Now, make some translations empty.
         how_many = random.randint(1, cnt_min)

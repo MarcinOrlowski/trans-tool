@@ -27,7 +27,7 @@
 
 `StartsWithTheSameCase` ensures first word found in translation starts with the same character case (be it upper or lower cased) as
 first word found in base string. Please note that the checkers looks for words to match first, skipping character sequences that do
-not start with aplhabetic character. For example, having base string:
+not start with alphabetic character. For example, having base string:
 
 ```ini
 key = Llorem ipsum: %s
@@ -39,7 +39,7 @@ and translation:
 key = %s 123 foo bar
 ```
 
-the words used for checking will be `Llorem` and `foo` respectively.
+Words used for checking will be `Llorem` and `foo` respectively.
 
 `StartsWithTheSameCase` also can handle the case where either base string or translation starts with a digit which is some cases,
 depending on the languages used can qualify as matching translation as digits on front are language driven. For example, original
@@ -50,7 +50,7 @@ is `true` (default) then sentence starting with a digit matches any case of the 
 
 ### Notes ###
 
-*NOTE:* This check most likely makes no sense for languages like Asian (i.e. Chinese, Japanese etc) and you should configure
+*NOTE:* This check most likely makes no sense for languages like Asian (i.e. Chinese, Japanese etc.) and you should configure
 language exception list for `StartsWithTheSameCase` to make is skip such translations from being checked.
 
 ## Configuration file ##
