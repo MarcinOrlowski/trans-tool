@@ -6,6 +6,9 @@
 
 # Changelog #
 
+* v2.5.2 (2021-09-14)
+  * Added tests for last line's LF handling.
+
 * v2.5.1 (2021-09-14)
   * `--write` now preserves LF of base file's last line (if present).
 
