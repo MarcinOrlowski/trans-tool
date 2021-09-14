@@ -384,11 +384,10 @@ class TestPropFile(TestCase):
 
     def do_compare_output_with_saved_content(self, propfile: PropFile, expected: List[str]) -> None:
         with patch('builtins.open', mock_open()) as manager:
-            with patch('transtool.log.Log.i') as log_i_mock:
-                propfile.save(self.get_random_string())
-                fh = manager()
-                # FIXME: LF/CRLF should be configurable
-                fh.write.assert_called_once_with('\n'.join(expected))
+            propfile.save(self.get_random_string())
+            fh = manager()
+            # FIXME: LF/CRLF should be configurable
+            fh.write.assert_called_once_with('\n'.join(expected))
 
     # #################################################################################################
 
