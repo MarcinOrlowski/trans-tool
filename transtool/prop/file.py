@@ -242,3 +242,7 @@ class PropFile(object):
         with open(target_file_name, 'w') as fh:
             # FIXME: LF/CRLF should configurable
             fh.write('\n'.join(content))
+
+            # If last line is empty line, we need to add LF manually as join() won't do that.
+            if self.items[len(self.items)-1].to_string() == '':
+                fh.write('\n')

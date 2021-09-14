@@ -6,6 +6,9 @@
 
 # Changelog #
 
+* dev
+  * `--write` now preserves LF of base file's last line (if present). 
+
 * v2.5.0 (2021-09-01)
   * The `--update`, `--create` options are now replaced with `--write` (`-w`).
   * By default `--write` saves just keys. Use `--write-content` (`-wc`)
