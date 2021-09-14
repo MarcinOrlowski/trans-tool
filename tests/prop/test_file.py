@@ -314,10 +314,6 @@ class TestPropFile(TestCase):
                     expected.append(item.to_string())
 
                 fh = manager()
-<<<<<<< HEAD
-=======
-
->>>>>>> 3055eb66200087fdc2e5f50204cfcc5e24f77c2b
                 # FIXME: LF/CRLF should be configurable
                 fh.write.assert_called_once_with('\n'.join(expected))
 
