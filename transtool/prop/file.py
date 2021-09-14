@@ -238,6 +238,12 @@ class PropFile(object):
         for item in self.items:
             content.append(item.to_string())
 
+        # If last line is empty line, we need to add LF manually as join() won't do that.
+        if self.items:
+            last_item_idx = len(self.items) - 1
+            if isinstance(self.items[last_item_idx], Blank) == '':
+                content.append('')
+
         Log.i(f'Writing: {target_file_name}')
         with open(target_file_name, 'w') as fh:
             # FIXME: LF/CRLF should configurable
