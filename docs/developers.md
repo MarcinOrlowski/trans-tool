@@ -17,7 +17,7 @@
 
 `trans-tool` is Python 3 application. It has no external runtime dependencies, however code quality is automatically checked using
 additional tools that require additional installation. These tests are run automatically on the code repository against any new
-commited code and each pull-request created using Github Actions feature (see `.github/workflows` folder for configuration details).
+committed code and each pull-request created using Github Actions feature (see `.github/workflows` folder for configuration details).
 
 If you'd like to run them locally by hand, here's how.
 

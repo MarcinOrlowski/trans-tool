@@ -50,7 +50,7 @@ which will happen upon demand.
 
 While loading your `*.properties` files `trans-tool` checks if files are in order, ensuring all of them are
 syntactically correct and all of the translations are in sync with main language. It also comes with huge set of
-various linters and checkers to guard quality of the files' contents. It can check for missing or dangling keys, inproper
+various linters and checkers to guard quality of the files' contents. It can check for missing or dangling keys, improper
 punctuation, open brackets, quotation marks and more. It can also automatically sync translation files quickly providing
 fresh template for your translators to work on.
 

@@ -226,7 +226,7 @@ class PropFile(object):
 
     def save(self, target_file_name: Union[Path, None] = None) -> None:
         """
-        Saves content of the propfile.
+        Saves content of the properties file.
         """
 
         if not target_file_name:

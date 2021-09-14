@@ -314,7 +314,7 @@ class TestPropFile(TestCase):
                     expected.append(item.to_string())
 
                 fh = manager()
-                # FIXME: LF/CRLF should configurable
+                # FIXME: LF/CRLF should be configurable
                 fh.write.assert_called_once_with('\n'.join(expected))
 
     def test_save(self) -> None:
