@@ -22,7 +22,7 @@ class TestPropFile(TestCase):
 
     def _generate_propfile_with_content(self, config: Config) -> PropFile:
         """
-        Creates instance of PropFile and fills it with randonly generated content.
+        Creates instance of PropFile and fills it with randomly generated content.
         :param config: Config to be used while constructing instance.
         """
         propfile = PropFile(config)
@@ -314,6 +314,7 @@ class TestPropFile(TestCase):
                     expected.append(item.to_string())
 
                 fh = manager()
+
                 # FIXME: LF/CRLF should be configurable
                 fh.write.assert_called_once_with('\n'.join(expected))
 
