@@ -29,8 +29,8 @@ class TestMissingTranslations(ChecksTestCase):
         cnt_min = 20
         cnt_max = 40
         keys = [self.get_random_string('key') for _ in range(random.randint(cnt_min, cnt_max))]
-        ref_file = self.build_prepfile(keys)
-        trans_file = self.build_prepfile(keys)
+        ref_file = self.build_propfile(keys)
+        trans_file = self.build_propfile(keys)
         self.check(trans_file, ref_file)
 
     def test_translation_with_keys_in_comments(self) -> None:
@@ -46,11 +46,10 @@ class TestMissingTranslations(ChecksTestCase):
 
         # have less keys for translation file
         how_many_less = random.randint(1, cnt_min - 1)
-        how_many_less = 1
         trans_keys = ref_keys[:(how_many_less * -1)]
 
-        ref_file = self.build_prepfile(ref_keys)
-        trans_file = self.build_prepfile(trans_keys)
+        ref_file = self.build_propfile(ref_keys)
+        trans_file = self.build_propfile(trans_keys)
 
         # Put remaining keys into comments.
         remaining_keys = ref_keys[(how_many_less * -1):]
@@ -80,8 +79,8 @@ class TestMissingTranslations(ChecksTestCase):
         how_many_less = random.randint(1, cnt_min - 1)
         trans_keys = ref_keys[:(how_many_less * -1)]
 
-        ref_file = self.build_prepfile(ref_keys)
-        trans_file = self.build_prepfile(trans_keys)
+        ref_file = self.build_propfile(ref_keys)
+        trans_file = self.build_propfile(trans_keys)
         self.check(trans_file, ref_file, exp_warnings = how_many_less)
 
     # #################################################################################################

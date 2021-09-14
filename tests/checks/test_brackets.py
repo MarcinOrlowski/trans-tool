@@ -37,8 +37,8 @@ class ChecksBrackets(ChecksTestCase):
         self.check_single_file(Translation('key', '{(})'), exp_errors = 1)
 
     def test_empty_translation(self) -> None:
-        propfile = PropFile(self.config)
-        self.check(propfile)
+        prop_file = PropFile(self.config)
+        self.check(prop_file)
 
     # #################################################################################################
 
@@ -66,7 +66,7 @@ class ChecksBrackets(ChecksTestCase):
 
     # #################################################################################################
 
-    def test_skipping_quoted_brakcets(self) -> None:
+    def test_skipping_quoted_brakces(self) -> None:
         """
         Check if correctly quoted brackets are ignored as expected.
         """
@@ -115,10 +115,10 @@ class ChecksBrackets(ChecksTestCase):
         lists contain different number of elements.
         """
         opening_cnt = random.randint(10, 20)
-        opening = [self.get_random_string(length = 1) for item in range(opening_cnt)]
+        opening = [self.get_random_string(length = 1) for _ in range(opening_cnt)]
 
         closing_cnt = random.randint(10, 20)
-        closing = [self.get_random_string(length = 1) for item in range(closing_cnt)]
+        closing = [self.get_random_string(length = 1) for _ in range(closing_cnt)]
 
         if closing_cnt == opening_cnt:
             if random.randint(0, 1) == 0:
@@ -134,7 +134,7 @@ class ChecksBrackets(ChecksTestCase):
 
     def test_empty_opening_or_closing_lists(self) -> None:
         non_empty_cnt = random.randint(10, 20)
-        non_empty = [self.get_random_string(length = 1) for item in range(non_empty_cnt)]
+        non_empty = [self.get_random_string(length = 1) for _ in range(non_empty_cnt)]
         empty = []
 
         self.checker.config['opening'] = non_empty

@@ -65,7 +65,7 @@ class Config(object):
             raise TypeError(f'Checker config must be a dictionary, {type(config)} given.')
         self.checks[checker_id] = config
 
-    def get_checker_config(self, checker_id: str) -> Dict:
+    def get_checker_config(self, checker_id: str) -> CheckerInfo:
         if checker_id not in self.checks:
             raise KeyError(f'No config for {checker_id} found.')
         return self.checks[checker_id]

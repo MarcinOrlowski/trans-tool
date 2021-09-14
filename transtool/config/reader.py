@@ -55,7 +55,7 @@ class ConfigReader(object):
         if config_version < Config.VERSION:
             self.abort(f'Old version ({config_version}) of config INI file. Required {Config.VERSION}')
 
-        bools = [
+        bool_opts = [
             'debug',
             'fatal',
             'color',
@@ -63,7 +63,7 @@ class ConfigReader(object):
             'strict',
             'verbose',
         ]
-        for single_bool in bools:
+        for single_bool in bool_opts:
             if self.parser.has_option(main_section, single_bool):
                 config.__setattr__(single_bool, self.parser.get(main_section, single_bool))
 

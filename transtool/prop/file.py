@@ -226,7 +226,7 @@ class PropFile(object):
 
     def save(self, target_file_name: Union[Path, None] = None) -> None:
         """
-        Saves content of the propfile.
+        Saves content of the properties file.
         """
 
         if not target_file_name:
@@ -237,6 +237,12 @@ class PropFile(object):
         content = []
         for item in self.items:
             content.append(item.to_string())
+
+        # If last line is empty line, we need to add LF manually as join() won't do that.
+        if self.items:
+            last_item_idx = len(self.items) - 1
+            if isinstance(self.items[last_item_idx], Blank) == '':
+                content.append('')
 
         Log.i(f'Writing: {target_file_name}')
         with open(target_file_name, 'w') as fh:

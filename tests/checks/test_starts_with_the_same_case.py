@@ -146,8 +146,8 @@ class TestStartsWithTheSameCase(ChecksTestCase):
         cnt_max = 40
         keys = [self.get_random_string('key') for _ in range(random.randint(cnt_min, cnt_max))]
 
-        ref_file = self.build_prepfile(keys, lower = True)
-        trans_file = self.build_prepfile(keys, lower = True)
+        ref_file = self.build_propfile(keys, lower = True)
+        trans_file = self.build_propfile(keys, lower = True)
 
         # Let's clear some values in both files
         upper_bound = 10
