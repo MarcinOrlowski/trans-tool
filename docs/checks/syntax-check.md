@@ -18,13 +18,15 @@
 
 ## Summary ##
 
-* Check ID: None. This is built-in check which is always triggered on file load. It cannot be configured nor user controlled.
+* Check ID: **None**. This is built-in check which is always triggered on file load. It cannot be
+  configured nor user controlled.
 * Checks base file: YES
 * Checks translations: YES
 
 ## Description ##
 
-This validators ensures proper structire of the files, use of allowed comment markers, key - value separators etc.
+This validators ensures proper structure of the files, use of allowed comment markers, key - value
+separators etc.
 
 ## Configuration file ##
 

@@ -25,13 +25,14 @@
 
 ## Description ##
 
-Punctuation check ensures translation ends with punctuation mark (`:`, `.`, `?`, `!`) if entry in base file ends that way.
+Punctuation check ensures translation ends with punctuation mark (`:`, `.`, `?`, `!`) if entry in
+base file ends that way.
 
 ## Configuration file ##
 
-| Key      | Type      | Description | Defaults |
-|----------|-----------|-------------|----------|
-| chars    | List of strings | List of punctuation characters | `[ ".", "?", "!", ":", "\n" ]` |
+| Key     | Type             | Description                     | Defaults                        |
+|---------|------------------|---------------------------------|---------------------------------|
+| `chars` | List of strings. | List of punctuation characters. | `[ ".", "?", "!", ":", "\n" ]`  |
 
 ### Example ###
 

@@ -24,7 +24,8 @@
 
 ## Description ##
 
-This validator looks at the end of your strings and comments and flags trailing spaces or tab charactes noticed.
+This validator looks at the end of your strings and comments and flags trailing spaces or tab
+characters noticed.
 
 ## Configuration file ##
 

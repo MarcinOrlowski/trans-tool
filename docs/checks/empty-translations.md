@@ -24,7 +24,8 @@
 
 ## Description ##
 
-This validator looks for translations that provide no content (empty string) for non-empty text in base file.
+This validator looks for translations that provide no content (empty string) for non-empty text in
+base file.
 
 ## Configuration file ##
 

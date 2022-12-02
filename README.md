@@ -33,9 +33,10 @@
 ## Introduction ##
 
 `trans-tool` is a small but powerful utility aimed at your projects' translation files. It is armed
-with several validators to watch for common mistakes in translations as well as base strings. It currently
-loads `*.properties` files, which is file format often used in Java projects as the `trans-tool` was born
-while working on [Logisim-evolution](https://github.com/logisim-evolution/logisim-evolution/).
+with several validators to watch for common mistakes in translations as well as base strings. It
+currently loads `*.properties` files, which is file format often used in Java projects as
+the `trans-tool` was born while working
+on [Logisim-evolution](https://github.com/logisim-evolution/logisim-evolution/).
 
 Example `*.properties` file looks like simplified version of commonly used INI file:
 
@@ -45,14 +46,16 @@ programTitle = trans-tool v2.0.0
 okButton = "OK"
 ```
 
-Internally, `trans-tool` works on abstract format, thus adding support for other file formats can easy be added
-which will happen upon demand.
+Internally, `trans-tool` works on abstract format, thus adding support for other file formats can
+easy be added which will happen upon demand.
 
-While loading your `*.properties` files `trans-tool` checks if files are in order, ensuring all of them are
-syntactically correct and all of the translations are in sync with main language. It also comes with huge set of
-various linters and checkers to guard quality of the files' contents. It can check for missing or dangling keys, improper
-punctuation, open brackets, quotation marks and more. It can also automatically sync translation files quickly providing
-fresh template for your translators to work on.
+While loading your `*.properties` files `trans-tool` checks if files are in order, ensuring all of
+them are syntactically correct and all of the translations are in sync with main language. It also
+comes with huge set of various linters and checkers to guard quality of the files' contents. It can
+check for missing or dangling keys, improper punctuation, open brackets, quotation marks and more.
+It can also automatically sync translation files quickly providing fresh template for your
+translators to work
+on.
 
 ```bash
 $ trans-tool -b soc -l pl
@@ -80,6 +83,8 @@ Base: src/main/resources/resources/logisim/strings/soc/soc.properties
 ## License ##
 
 * Written and copyrighted &copy;2021 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
-* trans-tool is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
-* Project logo contains [elements from Flaticon.com](https://www.flaticon.com/free-icon/translation_99694).
+* trans-tool is open-sourced software licensed under
+  the [MIT license](http://opensource.org/licenses/MIT).
+* Project logo
+  contains [elements from Flaticon.com](https://www.flaticon.com/free-icon/translation_99694).
 * trans-tool project [PyPi page](https://pypi.org/project/trans-tool/).

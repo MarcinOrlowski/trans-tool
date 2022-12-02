@@ -15,23 +15,25 @@
 
 # Quality control #
 
-`trans-tool` is Python 3 application. It has no external runtime dependencies, however code quality is automatically checked using
-additional tools that require additional installation. These tests are run automatically on the code repository against any new
-committed code and each pull-request created using Github Actions feature (see `.github/workflows` folder for configuration details).
+`trans-tool` is Python 3 application. It has no external runtime dependencies, however code quality
+is automatically checked using additional tools that require additional installation. These tests
+are run automatically on the code repository against any new committed code and each pull-request
+created using Github Actions feature (see `.github/workflows` folder for configuration details).
 
 If you'd like to run them locally by hand, here's how.
 
 ## Virtual environment ##
 
-Fist, create virtual environment and activate it. **ALL Python related examples are assumed to be executed withing virtual
-environment and your working directory points to root folder of the project.**
+Fist, create virtual environment and activate it. **ALL Python related examples are assumed to be
+executed withing virtual environment and your working directory points to root folder of the
+project.**
 
 ```bash
 $ python -m venv venv
 ```
 
-Activate your environment in Bash compatible shell (if you are using different shell, i.e. Fish, check contents of `venv/bin/`
-folder for alternative scripts):
+Activate your environment in Bash compatible shell (if you are using different shell, i.e. Fish,
+check contents of `venv/bin/` folder for alternative scripts):
 
 ```bash
 $ source venv/bin/activate
@@ -41,7 +43,8 @@ $ source venv/bin/activate
 
 ## Unit tests ##
 
-Run unit tests using standard `unittest` feature (if you want more detailed output, add `-v` to the invocation):
+Run unit tests using standard `unittest` feature (if you want more detailed output, add `-v` to the
+invocation):
 
 ```bash
 $ python -m unittest discover
@@ -52,8 +55,8 @@ Ran 111 tests in 0.047s
 OK
 ```
 
-Unit tests can be run using [pytest](https://pytest.org/) package too (remove `--quiet` if you want to see tests details).
-Install `pytest` first:
+Unit tests can be run using [pytest](https://pytest.org/) package too (remove `--quiet` if you want
+to see tests details). Install `pytest` first:
 
 ```bash
 $ pip install pytest
@@ -72,14 +75,16 @@ $ pytest --quiet
 
 ## Python code QA ##
 
-I use `Flake8` and [wemake-python-styleguide](https://wemake-python-stylegui.de/en/latest/) and additional plugins to ensure code
+I use `Flake8` and [wemake-python-styleguide](https://wemake-python-stylegui.de/en/latest/) and
+additional plugins to ensure code
 quality:
 
 ```bash
 $ pip install wemake-python-styleguide
 ```
 
-Lint the code (Default settings is very aggressive so `.flake8` config file tunes it to my requirements):
+Lint the code (Default settings is very aggressive so `.flake8` config file tunes it to my
+requirements):
 
 ```bash
 $ flake8 proptool/ tests/
@@ -115,15 +120,17 @@ $ pip install --upgrade dist/prop_tool-<VERSION>-py3-none-any.whl
 
 Documentation is written using [markdown](https://en.wikipedia.org/wiki/Markdown) and is checked
 using [MarkdownLint](https://github.com/DavidAnson/markdownlint) with use
-of [markdown-cli](https://github.com/igorshubovych/markdownlint-cli) wrapper. This linter is unfortunately not a Python
-application, so virtual environment won't help here much. You need to install `MarkdownLint` using `npm` package manager
-(you may also need to install `npm` first as it usually is not preinstalled):
+of [markdown-cli](https://github.com/igorshubovych/markdownlint-cli) wrapper. This linter is
+unfortunately not a Python application, so virtual environment won't help here much. You need to
+install `MarkdownLint` using `npm` package manager (you may also need to install `npm` first as it
+usually is not preinstalled):
 
 ```bash
 sudo apt install npm
 ```
 
-Next, install the linter (see [markdown-cli](https://github.com/igorshubovych/markdownlint-cli) page for more info):
+Next, install the linter (see [markdown-cli](https://github.com/igorshubovych/markdownlint-cli) page
+for more info):
 
 ```bash
 npm install -g markdownlint-cli

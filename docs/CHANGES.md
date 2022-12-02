@@ -43,11 +43,14 @@
   * Fixed loader issue causing missing keys to reported twice.
   * Added `--write-reference` option that can include both base and translation in saved file.
   * `StartsWithTheSameCase` now is smarter when looking for words to check.
-  * Removed `<` and `>` from `Brackets` defaults as `>` is often used as "arrow" (`->`) raising false positives.
+  * Removed `<` and `>` from `Brackets` defaults as `>` is often used as "arrow" (`->`) raising
+    false positives.
   * Corrected default `KeyFormat` patter so it no longer allows digits at first position.
-  * `QuotationMarks`, `TypesettingQuotationMarks`, `WhiteCharsBeforeLinefeed` and `TrailingWhiteChars` now support `comments` config
-    item to control whenever you want comments to be scanned.
-  * `StartsWithTheSameCase` now handles the case where base/translation can start with a digit which should be case match.
+  * `QuotationMarks`, `TypesettingQuotationMarks`, `WhiteCharsBeforeLinefeed`
+    and `TrailingWhiteChars` now support `comments` config item to control whenever you want
+    comments to be scanned.
+  * `StartsWithTheSameCase` now handles the case where base/translation can start with a digit which
+    should be case match.
   * `Brackets` can now detect and ignore quoted brackets.
   * Added `Substitutions` check.
 
