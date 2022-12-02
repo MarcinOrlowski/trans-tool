@@ -139,3 +139,5 @@ dmypy.json
 
 upd.sh
 testfiles
+
+/.pre-commit-config.yaml
