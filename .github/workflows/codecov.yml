@@ -24,7 +24,7 @@ jobs:
 
     env:
       OS: ${{ matrix.os }}
-      PYTHON: '3.8'
+      PYTHON: '3.11'
 
     steps:
       # https://github.com/marketplace/actions/checkout
