@@ -21,7 +21,8 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest ]
-        python: [3.8, 3.9, 3.10, 3.11, 3.12]
+        # quotes are needed it is treated as a number and zero at decimal part is gone at runtime
+        python: ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
     steps:
       # https://github.com/marketplace/actions/checkout
