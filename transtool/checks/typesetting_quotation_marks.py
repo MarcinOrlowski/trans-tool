@@ -17,8 +17,8 @@ from .brackets import Brackets
 # noinspection PyUnresolvedReferences
 class TypesettingQuotationMarks(Brackets):
     """
-    Checks if print quotation marks (the ones having different opening and closing marks) are used in translation and if so,
-    ensures proper nesting and checks if all opened brackets are closed.
+    Checks if print quotation marks (the ones having different opening and closing marks) are used in the translation
+    and if so, ensures proper nesting and checks if all opened brackets are closed.
     """
 
     def __init__(self, config: Optional[Dict] = None):
