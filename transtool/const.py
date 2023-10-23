@@ -14,7 +14,7 @@ class Const(object):
     APP_NAME: str = 'trans-tool'
     APP_VERSION: str = '2.5.3'
     APP_URL: str = 'https://github.com/MarcinOrlowski/trans-tool/'
-    APP_YEARS: str = '2021-2023';
+    APP_YEARS: str = '2021-2023'
 
     APP_DESCRIPTION: List[str] = [
         f'{APP_NAME} v{APP_VERSION} * Copyright {APP_YEARS} by Marcin Orlowski.',
