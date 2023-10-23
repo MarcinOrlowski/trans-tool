@@ -386,7 +386,7 @@ class TestConfigBuilder(TestCase):
         """
         args = FakeArgs()
 
-        separator = self.get_random_string(lengtha=1)
+        separator = self.get_random_string(length=1)
         self.assertNotIn(separator, Config.ALLOWED_SEPARATORS)
         args.separator = separator
 

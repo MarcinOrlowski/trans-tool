@@ -227,13 +227,15 @@ class PropFile(object):
         """
         Saves content of the properties file.
         """
+        if isinstance(target_file_name, str):
+            target_file_name = Path(target_file_name)
 
         if target_file_name is None:
             if not self.file:
                 raise ValueError('No target file name given.')
             target_file_name = self.file
-        elif isinstance(target_file_name, Path):
-            target_file_name = str(target_file_name)
+        elif isinstance(target_file_name, str):
+            target_file_name = Path(target_file_name)
 
         content = []
         for item in self.items:

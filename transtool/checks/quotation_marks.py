@@ -6,7 +6,7 @@
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 
-from typing import Dict, List, Union
+from typing import Dict, List, Optional
 
 from transtool.decorators.overrides import overrides
 from transtool.report.group import ReportGroup
