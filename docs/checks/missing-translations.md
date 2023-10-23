@@ -33,8 +33,6 @@ translation file contains a translation key commented out (using the specified s
 not the translation itself. This is sufficient for the translator to catch up and indicates that the
 translation file was updated once the base file changed. For example, given this `base.properties`:
 
-```
-
 ```ini
 someKey = Hello
 newlyAddedKey = I'm new here!

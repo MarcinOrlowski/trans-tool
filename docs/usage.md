@@ -29,7 +29,6 @@ The configuration file is a plain text file, following the
 Please see the commented [config.ini](../config.ini) for an example configuration file and all
 available options.
 
-
 > NOTE: when using configuration file and command line arguments, the order of precedence is this:
 >
 > * default configuration goes first,

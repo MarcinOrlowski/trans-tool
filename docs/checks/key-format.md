@@ -29,7 +29,6 @@
 This validator ensures strings used as keys in your `*.properties` file match the specified pattern,
 which helps in maintaining a unified naming convention across your files.
 
-
 ## Configuration file ##
 
 | Key       | Type                         | Description                           | Defaults                                |

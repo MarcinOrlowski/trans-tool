@@ -86,7 +86,6 @@ The example config file below disables ANSI colors in program output and enables
 mode. It also configures the [Brackets](checks/brackets.md) validator to only handle a given set
 of brackets:
 
-
 ```ini
 [trans-tool]
 # Version of configuration file format. Currently equals to 1
