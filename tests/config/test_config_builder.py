@@ -100,7 +100,7 @@ class TestConfigBuilder(TestCase):
         """
         ConfigBuilder._validate_config(self.get_config_for_validate())
 
-    @patch('transtool.log.Log.e')
+    @patch('simplelog.log.Log.e')
     def test_validate_config_invalid_separator(self, log_e_mock: Mock) -> None:
         """
         Ensures invalid separator char triggers expected error message and quits.
@@ -118,7 +118,7 @@ class TestConfigBuilder(TestCase):
             self.assertEqual(SystemExit, type(context_manager.exception))
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('transtool.log.Log.e')
+    @patch('simplelog.log.Log.e')
     def test_validate_config_invalid_comment_marker(self, log_e_mock: Mock) -> None:
         """
         Ensures invalid comment marker triggers expected error message and quits.
@@ -136,7 +136,7 @@ class TestConfigBuilder(TestCase):
             self.assertEqual(SystemExit, type(context_manager.exception))
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('transtool.log.Log.e')
+    @patch('simplelog.log.Log.e')
     def test_validate_config_invalid_languages(self, log_e_mock: Mock) -> None:
         # valid language code is just lowercased [a-z]{2,}
         faults = [
@@ -341,7 +341,7 @@ class TestConfigBuilder(TestCase):
             # We expect no problems.
             ConfigBuilder._validate_args(args)
 
-    @patch('transtool.log.Log.e')
+    @patch('simplelog.log.Log.e')
     def test_validate_args_onoff_on_on(self, log_e_mock: Mock) -> None:
         for option_name in ConfigBuilder._on_off_pairs:
             args = FakeArgs()
@@ -358,7 +358,7 @@ class TestConfigBuilder(TestCase):
                 self.assertEqual(SystemExit, type(context_manager.exception))
                 self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('transtool.log.Log.e')
+    @patch('simplelog.log.Log.e')
     def test_validate_args_quiet_and_verbose(self, log_e_mock: Mock) -> None:
         """
         Ensures use of mutually exclusive --quiet and --verbose is handled correctly.
@@ -378,7 +378,7 @@ class TestConfigBuilder(TestCase):
             self.assertEqual(SystemExit, type(context_manager.exception))
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('transtool.log.Log.e')
+    @patch('simplelog.log.Log.e')
     def test_validate_args_invalid_separator(self, log_e_mock: Mock) -> None:
         """
         Checks if attempt to use invalid character as separator is correctly handled.
@@ -400,7 +400,7 @@ class TestConfigBuilder(TestCase):
             self.assertEqual(SystemExit, type(context_manager.exception))
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('transtool.log.Log.e')
+    @patch('simplelog.log.Log.e')
     def test_validate_args_invalid_comment_marker(self, log_e_mock: Mock) -> None:
         args = FakeArgs()
 

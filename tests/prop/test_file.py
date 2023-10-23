@@ -196,7 +196,7 @@ class TestPropFile(TestCase):
         trap_position = random.randint(0, len(fake_data_src) - 1)
         fake_data_src.insert(trap_position, 'WRONG SYNTAX')
 
-        with patch('transtool.log.Log.e') as log_e_mock:
+        with patch('simplelog.log.Log.e') as log_e_mock:
             # Lie our fake file exists
             path_exists_mock.return_value = True
 
@@ -298,7 +298,7 @@ class TestPropFile(TestCase):
 
     def _check_written_content(self, propfile: PropFile, verify_file_name, save_file_name = None):
         with patch('builtins.open', mock_open()) as manager:
-            with patch('transtool.log.Log.i') as log_i_mock:
+            with patch('simplelog.log.Log.i') as log_i_mock:
                 if save_file_name:
                     propfile.save(save_file_name)
                 else:
