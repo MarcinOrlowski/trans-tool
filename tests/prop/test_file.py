@@ -9,7 +9,7 @@
 import copy
 import random
 from pathlib import Path
-from typing import List
+from typing import List, Union
 from unittest.mock import Mock, mock_open, patch
 
 from transtool.config.builder import ConfigBuilder
@@ -297,7 +297,9 @@ class TestPropFile(TestCase):
 
     # #################################################################################################
 
-    def _check_written_content(self, propfile: PropFile, verify_file_name, save_file_name=None):
+    def _check_written_content(self, propfile: PropFile,
+                               verify_file_name: Union[str | Path],
+                               save_file_name: Union[str, Path] = None):
         with patch('builtins.open', mock_open()) as manager:
             with patch('simplelog.log.Log.i') as log_i_mock:
                 if save_file_name:
