@@ -1,0 +1,6 @@
+-r requirements.txt
+wemake-python-styleguide
+pytest
+wheel
+setuptools
+twine
