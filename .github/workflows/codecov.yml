@@ -29,12 +29,12 @@ jobs:
     steps:
       # https://github.com/marketplace/actions/checkout
       - name: "Checkout sources"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: "Setup Python"
         uses: actions/setup-python@master
         with:
-          python-version: 3.8
+          python-version: 3.11
 
       - name: "Generate coverage report"
         run: |
