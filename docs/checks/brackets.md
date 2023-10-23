@@ -26,11 +26,11 @@
 
 ## Description ##
 
-`Brackets` ensures all brackets that are found opened in the string are also closed and there's no
-unpaired bracket left. When `ignore_quoted` option is enabled and quotation mark is directly wrapped
-in one of the quotation marks specified in `quotation_marks` config list, then such bracket will be
-ignored. Note that bracket matching currently requires both opening and closing brackets to be the
-same as well as bracket to be directly wrapped in quotes as sole character:
+`Brackets` ensures all brackets found opened in the string are also closed, and there's no
+unpaired bracket left. When the `ignore_quoted` option is enabled and a bracket is directly wrapped
+in one of the quotation marks specified in the `quotation_marks` config list, then such bracket will
+be ignored. Note that bracket matching currently requires both opening and closing brackets to be
+the same, as well as the bracket to be directly wrapped in quotes as a sole character:
 
 ```text
 This is ["[" fine].
@@ -62,8 +62,9 @@ These will not skipped but will pass "[]" because brackets are paired.
 
 ### Notes ###
 
-**IMPORTANT:** Opening and closing brackets from the same pair MUST be on the same position (i.e. if
-first element of `opening` list is `{` then the `}` MUST be first element on `closing` list.
+**IMPORTANT:** Opening and closing brackets from the same pair MUST be in the same position (i.e.,
+if the first element of the `opening` list is `{`, then `}` MUST be the first element in
+the `closing` list).
 
 ### Example ###
 

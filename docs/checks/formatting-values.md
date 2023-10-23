@@ -24,12 +24,12 @@
 
 ## Description ##
 
-The `FormattingValues` validators looks for commonly used `print()`-alike formatting values syntax,
+The `FormattingValues` validator looks for commonly used `print()`-like formatting values syntax,
 where placeholders like `%s` or `%d` are replaced with corresponding values at runtime. It assumes
-that the code expects the same placeholders to be available regardless of language version therefore
-it check if all placeholders used in original string are also present in translation string and if
-the order of said placeholders is preserved as this is also often crucial for the application to run
-properly.
+that the code expects the same placeholders to be available regardless of the language version;
+therefore, it checks if all placeholders used in the original string are also present in the
+translation string and if the order of said placeholders is preserved, as this is often crucial for
+the application to run properly.
 
 ## Configuration file ##
 

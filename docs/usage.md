@@ -17,17 +17,18 @@
 
 ---
 
-## Config file and command line ##
+## Config File and Command Line ##
 
-You can use `trans-tool` by providing all required parameters directly from command line (
-see `--help`), or you can create configuration file and use `--config` option to make `trans-tool`
-load it and use. Almost all options can be set in configuration files, which helps, for example
-using `trans-tool` as part of CI/CD or GitHub Actions.
+You can use `trans-tool` by providing all required parameters directly from the command line (see
+`--help`), or you can create a configuration file and use the `--config` option to have `trans-tool`
+load and utilize it. Almost all options can be set in configuration files, which helps, for example,
+when using `trans-tool` as part of CI/CD or GitHub Actions.
 
-Configuration file is plain text file, following
-[INI file format](https://en.wikipedia.org/wiki/INI_file) and can be created using any text editor.
-Please see commented [config.ini](../config.ini) for example configuration file and all available
-options.
+The configuration file is a plain text file, following the
+[INI file format](https://en.wikipedia.org/wiki/INI_file), and can be created using any text editor.
+Please see the commented [config.ini](../config.ini) for an example configuration file and all
+available options.
+
 
 > NOTE: when using configuration file and command line arguments, the order of precedence is this:
 >
@@ -102,24 +103,24 @@ test_fr.properties
 
 ---
 
-### Update existing translations ###
+### Update Existing Translations ###
 
-You can use `trans-tool` to update your translation files by using `--update` option. In such
-case `trans-tool` will completely rewrite translation files, adding missing keys (in commented out
-form).
+You can use `trans-tool` to update your translation files by using the `--update` option. In such
+a case, `trans-tool` will completely rewrite the translation files, adding missing keys (in a
+commented out form).
 
-While content of written file is strongly based on a reference file. Some normalization will be made
-though:
+While the content of the written file is strongly based on a reference file, some normalization will
+be made:
 
-* There will be no more than one empty consequent empty line written,
-* There will be no more than one consequent empty comment line (just comment marker) written.
+* There will be no more than one consecutive empty line written,
+* There will be no more than one consecutive empty comment line (just comment marker) written.
 
-Be aware that `--update` do NOT update existing translation file but builds it completely using base
-file as reference and existing translations (if present). No other content of translation files (for
-example additional comments etc.) will be preserved.
+Be aware that `--update` does NOT update the existing translation file, but builds it completely
+using the base file as a reference and existing translations (if present). No other content of the
+translation files (for example, additional comments, etc.) will be preserved.
 
-This will check if `es` translation of `gui.properties` is in sync and if there are any issues,
-rewrite translation file to contain all keys from base:
+This will check if the `es` translation of `gui.properties` is in sync and, if there are any issues,
+rewrite the translation file to contain all keys from the base:
 
 ```bash
 trans-tool --base gui --lang es --update
@@ -127,15 +128,15 @@ trans-tool --base gui --lang es --update
 
 ---
 
-### Create new translation files ###
+### Create New Translation Files ###
 
-The `--update` only acts if target translation file exists and `trans-tool` will abort with error if
-you try to update non-existing file. However it's also often required to be able to create empty
-translation file (i.e. to hand it to the translator) and `trans-tool` can do that that too with use
-of `--create` switch.
+The `--update` option only acts if the target translation file exists, and `trans-tool` will abort
+with an error if you try to update a non-existing file. However, it's also often required to be able
+to create an empty translation file (i.e., to hand it to the translator), and `trans-tool` can
+accommodate that too with the use of the `--create` switch.
 
-This will check if `de` translation of `gui.properties` but if file does not exist, then it will
-create and empty "template" file:
+This will check the `de` translation of `gui.properties`, but if the file does not exist, then it
+will create an empty "template" file:
 
 ```bash
 trans-tool --base gui --lang de --create

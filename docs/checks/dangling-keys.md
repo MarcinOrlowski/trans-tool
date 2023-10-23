@@ -24,7 +24,7 @@
 
 ## Description ##
 
-Checks if keys found in translation file are also present in base file.
+Checks if keys found in the translation file are also present in the base file.
 
 ## Configuration file ##
 

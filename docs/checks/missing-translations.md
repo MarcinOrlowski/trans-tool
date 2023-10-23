@@ -24,29 +24,32 @@
 
 ## Description ##
 
-`MissingTranslations` looks texts present in base file that are not provided in the translation.
+`MissingTranslations` identifies texts present in the base file that are not provided in the
+translation.
 
-*NOTE:* as it's pretty often the case that translation files are not always update at the same time
-base files changes, `MissingTranslations` is smart enough to accept situation where translation file
-contains translation key commented (using specified string format) out but not the translation
-itself. This is sufficient for the translator to catch up and indicates that translation file was
-updated once base file changed. For example, given this `base.properties`:
+*NOTE:* As it's quite common for translation files to not always be updated at the same time
+as base files change, `MissingTranslations` is smart enough to accept situations where the
+translation file contains a translation key commented out (using the specified string format) but
+not the translation itself. This is sufficient for the translator to catch up and indicates that the
+translation file was updated once the base file changed. For example, given this `base.properties`:
+
+```
 
 ```ini
 someKey = Hello
 newlyAddedKey = I'm new here!
 ```
 
-and following translation file: `base_xx.properties`
+and the following translation file: `base_xx.properties`
 
 ```ini
 someKey = Hello
 # ==> newlyAddedKey =
 ```
 
-the `newlyAddedKey` will be considered "present" in translation, despite being commented out. If you
-want to ensure there are all translated, you need to use `--strict` mode instead of default loose
-check mode.
+the `newlyAddedKey` will be considered "present" in the translation, despite being commented out. If
+you want to ensure they are all translated, you need to use `--strict` mode instead of the default
+loose check mode.
 
 ## Configuration file ##
 

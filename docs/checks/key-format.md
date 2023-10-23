@@ -26,8 +26,9 @@
 
 ## Description ##
 
-This validator ensures strings used as keys in you `*.properties` file matches specified pattern
-which helps keeping unified naming convention across your files.
+This validator ensures strings used as keys in your `*.properties` file match the specified pattern,
+which helps in maintaining a unified naming convention across your files.
+
 
 ## Configuration file ##
 
@@ -47,7 +48,7 @@ which helps keeping unified naming convention across your files.
   * [Python Regular Expressions](https://developers.google.com/edu/python/regular-expressions#repetition-examples)
   * **[Find moar!](https://duckduckgo.com/?q=regular+expression+tutorials)**
 
-Note, as regular expression are programming language independent, it's more than sufficient to
+Note, as regular expressions are programming language independent, it's more than sufficient to
 follow any tutorial that you find understandable.
 
 ### Example ###
