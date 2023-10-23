@@ -2,7 +2,7 @@
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <mail [@] MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 
@@ -45,7 +45,7 @@ jobs:
 
       - name: "Installing dependencies..."
         if: steps.filter.outputs.srcs == 'true'
-        run: pip install -r requirements.txt
+        run: pip install -r requirements-dev.txt
 
       - name: "Running unit tests..."
         if: steps.filter.outputs.srcs == 'true'
