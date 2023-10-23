@@ -1,5 +1,12 @@
 # test files
 *.properties
+*.swp
+*~
+
+# Linters
+/.flake8
+/.markdownlint.yml
+/.pre-commit-config.yaml
 
 # IDEA
 .idea/
@@ -139,5 +146,3 @@ dmypy.json
 
 upd.sh
 testfiles
-
-/.pre-commit-config.yaml
