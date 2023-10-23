@@ -1,11 +1,10 @@
-"""
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
-"""
 
 import copy
 import sys
@@ -15,17 +14,16 @@ from transtool.config.builder import ConfigBuilder
 from transtool.config.config import Config
 from transtool.prop.file import PropFile
 from .const import Const
-from .log import Log
+from simplelog.log import Log
 from .utils import Utils
 
 
 class TransTool(object):
-
     @staticmethod
     def start() -> int:
         # Cannot rely on argparse here as we have required arguments there.
         if '--version' in sys.argv:
-            Log.banner(Const.APP_DESCRIPTION, top = False, bottom = False)
+            Log.banner(Const.APP_DESCRIPTION, top=False, bottom=False)
             return 0
 
         # Config with built-in defaults
@@ -96,7 +94,7 @@ class TransTool(object):
                     Log.v(f'{trans_level_label}: SKIPPED')
                     continue
 
-                Log.push(trans_level_label, deferred = True)
+                Log.push(trans_level_label, deferred=True)
 
                 try:
                     translation.load(translation_path, lang)

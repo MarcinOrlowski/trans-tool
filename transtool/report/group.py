@@ -1,14 +1,14 @@
-"""
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
-"""
+
 from typing import Union, List
 
-from transtool.log import Log
+from simplelog.log import Log
 from transtool.report.items import Error, ReportItem, Warn
 
 

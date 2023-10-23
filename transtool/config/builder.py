@@ -1,11 +1,11 @@
-"""
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
-"""
+
 import argparse
 import re
 from pathlib import Path
@@ -28,8 +28,9 @@ from transtool.config.checker_info import CheckerInfo
 from transtool.config.config import Config
 from transtool.config.reader import ConfigReader
 from transtool.const import Const
-from transtool.log import Log
 from transtool.utils import Utils
+
+from simplelog.log import Log
 
 
 class ConfigBuilder(object):

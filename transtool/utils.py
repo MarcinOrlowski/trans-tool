@@ -1,18 +1,13 @@
-"""
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
-"""
 
 from sys import exit
 from typing import Dict, List, Union
-
-
-# DO NOT use Log class in Utils. That causes some dependency issues which are NOT
-# worth solving.
 
 
 class Utils(object):

@@ -1,17 +1,18 @@
-"""
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
-"""
+
 from typing import Dict, List
+from simplelog.config import Config as SimpleLogConfig
 
 from transtool.config.checker_info import CheckerInfo
 
 
-class Config(object):
+class Config(SimpleLogConfig):
     VERSION = 1
 
     ALLOWED_SEPARATORS: List[str] = ['=', ':']
@@ -34,6 +35,8 @@ class Config(object):
         NOTE: Do NOT put any non-configurable elements as Config's instance attributes as by design
         it is assumed that any attribute can be modified, while consts cannot.
         """
+        super().__init__()
+
         self.config_file = None
 
         self.file_suffix = Config.DEFAULT_FILE_SUFFIX

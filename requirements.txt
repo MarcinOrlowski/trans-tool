@@ -4,3 +4,4 @@ pytest
 wheel
 setuptools
 twine
+python-simple-log

@@ -1,19 +1,18 @@
-"""
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
-"""
 
 from configparser import ConfigParser
 from pathlib import Path
 from typing import Dict, List
 
 from transtool.config.config import Config
-from transtool.log import Log
 from transtool.utils import Utils
+from simplelog.log import Log
 
 
 class ConfigReader(object):
@@ -53,7 +52,7 @@ class ConfigReader(object):
         # Ensure we know how to read this config file.
         config_version = self.parser.getint(main_section, 'version')
         if config_version < Config.VERSION:
-            self.abort(f'Old version ({config_version}) of config INI file. Required {Config.VERSION}')
+            self.abort(f'Old version ({config_version}) of config INI file. Required {ClientConfig.VERSION}')
 
         bool_opts = [
             'debug',
@@ -86,7 +85,8 @@ class ConfigReader(object):
 
     # #################################################################################################
 
-    def _merge_if_exists(self, parser: ConfigParser, target_list: List[str], config_section: str, config_option: str) -> None:
+    def _merge_if_exists(self, parser: ConfigParser, target_list: List[str], config_section: str,
+                         config_option: str) -> None:
         if parser.has_option(config_section, config_option):
             self._merge_list(target_list, parser, config_section, config_option)
 

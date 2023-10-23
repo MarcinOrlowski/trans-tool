@@ -6,6 +6,10 @@
 
 # Changelog #
 
+* v2.5.3 (2023-10-24)
+  * Replaced built-in logger class with external package.  
+  * Updated documentation.
+
 * v2.5.2 (2021-09-14)
   * Added tests for last line's LF handling.
 
