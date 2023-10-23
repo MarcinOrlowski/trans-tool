@@ -7,7 +7,7 @@
 # Changelog #
 
 * v2.5.3 (2023-10-24)
-  * Replaced built-in logger class with external package.  
+  * Replaced built-in logger class with external package (reinstall depdendencies!)
   * Updated documentation.
 
 * v2.5.2 (2021-09-14)
