@@ -68,7 +68,7 @@ class Brackets(Check):
             return report
         if opening_cnt != closing_cnt:
             report.error(line = None,
-                         msg = f'CONFIG: Both "{opening_key}" and "{closing_key}" arrays must contain the same number of elements.')
+                         msg = f'CONFIG: Size of "{opening_key}" and "{closing_key}" arrays must be equal.')
             return report
 
         # We do that check at the end to ensure config is validated first.
