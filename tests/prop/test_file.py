@@ -300,7 +300,7 @@ class TestPropFile(TestCase):
     # #################################################################################################
 
     def _check_written_content(self, propfile: PropFile,
-                               verify_file_name: Union[str | Path],
+                               verify_file_name: Union[str, Path],
                                save_file_name: Union[str, Path] = None):
         with patch('builtins.open', mock_open()) as manager:
             with patch('simplelog.log.Log.i') as log_i_mock:
