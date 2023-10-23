@@ -64,11 +64,11 @@ class Brackets(Check):
         closing_cnt = len(closing)
 
         if opening_cnt == 0 or closing_cnt == 0:
-            report.warn(line = None, msg = f'CONFIG: Empty "{opening_key}" and "{closing_key}" arrays.')
+            report.warn(line=None, msg=f'CONFIG: Empty "{opening_key}" and "{closing_key}" arrays.')
             return report
         if opening_cnt != closing_cnt:
-            report.error(line = None,
-                         msg = f'CONFIG: Size of "{opening_key}" and "{closing_key}" arrays must be equal.')
+            report.error(line=None,
+                         msg=f'CONFIG: Size of "{opening_key}" and "{closing_key}" arrays must be equal.')
             return report
 
         # We do that check at the end to ensure config is validated first.
@@ -137,11 +137,11 @@ class Brackets(Check):
     @overrides(Check)
     def get_default_config(self) -> Dict:
         return {
-            'comments':        False,
-            'ignore_quoted':   True,
+            'comments': False,
+            'ignore_quoted': True,
             'quotation_marks': ['"', "'"],
 
             # Keep matching elements at the same positions
-            'opening':         ['(', '[', '{'],
-            'closing':         [')', ']', '}'],
+            'opening': ['(', '[', '{'],
+            'closing': [')', ']', '}'],
         }

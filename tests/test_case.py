@@ -17,7 +17,7 @@ class TestCase(unittest.TestCase):
     def get_random_string_list(self, count, str_prefix: str = '', str_length: int = 16) -> List[str]:
         return [self.get_random_string(str_prefix, str_length) for _ in range(count)]
 
-    def get_random_string(self, prefix: str = '', length: int = 16, prefix_end = '_') -> str:
+    def get_random_string(self, prefix: str = '', length: int = 16, prefix_end='_') -> str:
         if prefix:
             if prefix[-1] != prefix_end:
                 prefix += prefix_end

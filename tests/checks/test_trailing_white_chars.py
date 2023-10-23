@@ -27,7 +27,7 @@ class TestTrailingWhiteChars(ChecksTestCase):
         self.check_single_file(Translation('key', 'value'))
 
     def test_translation_with_trailing_white_chars(self) -> None:
-        self.check_single_file(Translation('key', 'value  '), exp_errors = 1)
+        self.check_single_file(Translation('key', 'value  '), exp_errors=1)
 
     def test_comment_no_trailing_white_chars(self) -> None:
         self.checker.config['comments'] = True
@@ -35,7 +35,7 @@ class TestTrailingWhiteChars(ChecksTestCase):
 
     def test_comment_with_trailing_white_chars(self) -> None:
         self.checker.config['comments'] = True
-        self.check_single_file(Comment('# value  '), exp_warnings = 1)
+        self.check_single_file(Comment('# value  '), exp_warnings=1)
 
     # #################################################################################################
 

@@ -28,7 +28,7 @@ class ChecksBrackets(ChecksTestCase):
 
     def test_translation_with_faults(self) -> None:
         for mark in self.checker.opening + self.checker.closing:
-            self.check_single_file(Translation('key', mark), exp_errors = 1)
+            self.check_single_file(Translation('key', mark), exp_errors=1)
 
     # #################################################################################################
 
@@ -69,9 +69,11 @@ class ChecksBrackets(ChecksTestCase):
 
         # ensure no marker is in both lists
         for op_idx, op_marker in enumerate(checker.opening):
-            self.assertFalse(op_marker in checker.closing, f'Marker {op_marker} (position: {op_idx}) is present in closing too.')
+            self.assertFalse(op_marker in checker.closing,
+                             f'Marker {op_marker} (position: {op_idx}) is present in closing too.')
         for cl_idx, cl_marker in enumerate(checker.closing):
-            self.assertFalse(cl_marker in checker.opening, f'Marker {cl_marker} (position: {cl_idx}) is present in opening too.')
+            self.assertFalse(cl_marker in checker.opening,
+                             f'Marker {cl_marker} (position: {cl_idx}) is present in opening too.')
 
     # #################################################################################################
 

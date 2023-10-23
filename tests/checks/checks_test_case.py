@@ -38,10 +38,10 @@ class ChecksTestCase(TestCase):
         prop_file.loaded = True
         prop_file.items.append(entry)
 
-        self.check(prop_file, exp_errors = exp_errors, exp_warnings = exp_warnings, force_report_dump = force_report_dump)
+        self.check(prop_file, exp_errors=exp_errors, exp_warnings=exp_warnings, force_report_dump=force_report_dump)
 
     def check(self, translation: PropFile, reference: Optional[PropFile] = None,
-              exp_errors: int = 0, exp_warnings: int = 0, force_report_dump = False, msg = None) -> None:
+              exp_errors: int = 0, exp_warnings: int = 0, force_report_dump=False, msg=None) -> None:
         report = self.checker.check(translation, reference)
 
         # Dump the report details if there's mismatch between results and expectations or if dump is enforced.
@@ -111,8 +111,8 @@ class ChecksTestCase(TestCase):
         how_many_less = random.randint(1, upper_bound)
         ref_keys = trans_keys[:(how_many_less * -1)]
 
-        ref_file = self.build_propfile(ref_keys, lower = True)
-        trans_file = self.build_propfile(trans_keys, lower = True)
+        ref_file = self.build_propfile(ref_keys, lower=True)
+        trans_file = self.build_propfile(trans_keys, lower=True)
         self.check(trans_file, ref_file)
 
     # #################################################################################################
@@ -135,4 +135,4 @@ class ChecksTestCase(TestCase):
 
             # Expect warning raised.
             self.checker.config['comments'] = True
-            self.check_single_file(test, exp_warnings = comm_exp_warnings)
+            self.check_single_file(test, exp_warnings=comm_exp_warnings)

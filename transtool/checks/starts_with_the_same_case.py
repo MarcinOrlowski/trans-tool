@@ -67,10 +67,12 @@ class StartsWithTheSameCase(Check):
                 continue
 
             if ref_word and not trans_word:
-                report.warn(idx + 1, 'Translation contains no words starting with a letter, while original does.', trans.key)
+                report.warn(idx + 1, 'Translation contains no words starting with a letter, while original does.',
+                            trans.key)
                 continue
             if not ref_word and trans_word:
-                report.warn(idx + 1, 'Base string contains no words starting with a letter, but translation does.', trans.key)
+                report.warn(idx + 1, 'Base string contains no words starting with a letter, but translation does.',
+                            trans.key)
                 continue
 
             ref_first_char = ref_word[0]

@@ -25,10 +25,10 @@ class Config(SimpleLogConfig):
     # VAL: original string
     COMMENTED_TRANS_TPL: str = 'COM ==> KEY SEP VAL'
     COMMENTED_TRANS_REGEXP = r'^[{com}]\s*==>\s*{key}\s*[{sep}].*'.format(
-        com = ''.join(ALLOWED_COMMENT_MARKERS),
+        com=''.join(ALLOWED_COMMENT_MARKERS),
         # must be in () brackets to form a group used later!
-        key = r'([a-zAz][a-zA-z0-9_.-]+)',
-        sep = ''.join(ALLOWED_SEPARATORS))
+        key=r'([a-zAz][a-zA-z0-9_.-]+)',
+        sep=''.join(ALLOWED_SEPARATORS))
 
     def __init__(self):
         """

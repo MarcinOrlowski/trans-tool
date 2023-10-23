@@ -62,16 +62,16 @@ class TestStartsWithTheSameCase(ChecksTestCase):
                     trans_value = Utils.upper_first(trans_value)
             ref_file.append(Translation(key, ref_value))
             trans_file.append(Translation(key, trans_value))
-        self.check(trans_file, ref_file, exp_warnings = expected_faults)
+        self.check(trans_file, ref_file, exp_warnings=expected_faults)
 
-    def _do_scan_test(self, tests: List[Tuple[str, str]], exp_warnings = 0):
+    def _do_scan_test(self, tests: List[Tuple[str, str]], exp_warnings=0):
         for ref_value, trans_value in tests:
             ref_file = PropFile(self.config)
             trans_file = PropFile(self.config)
             key = self.get_random_string('key')
             ref_file.append(Translation(key, ref_value))
             trans_file.append(Translation(key, trans_value))
-            self.check(trans_file, ref_file, exp_warnings = exp_warnings)
+            self.check(trans_file, ref_file, exp_warnings=exp_warnings)
 
     def test_valid_special_cases(self) -> None:
         """
@@ -122,7 +122,7 @@ class TestStartsWithTheSameCase(ChecksTestCase):
             ('12345 Upper', '345345 lower'),
         ]
         self.checker.config['accept_digits'] = False
-        self._do_scan_test(tests, exp_warnings = 1)
+        self._do_scan_test(tests, exp_warnings=1)
 
         self.checker.config['accept_digits'] = True
         self._do_scan_test(tests)
@@ -146,8 +146,8 @@ class TestStartsWithTheSameCase(ChecksTestCase):
         cnt_max = 40
         keys = [self.get_random_string('key') for _ in range(random.randint(cnt_min, cnt_max))]
 
-        ref_file = self.build_propfile(keys, lower = True)
-        trans_file = self.build_propfile(keys, lower = True)
+        ref_file = self.build_propfile(keys, lower=True)
+        trans_file = self.build_propfile(keys, lower=True)
 
         # Let's clear some values in both files
         upper_bound = 10

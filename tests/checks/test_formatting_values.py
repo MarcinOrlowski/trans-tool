@@ -62,7 +62,7 @@ class TestFormattingValues(ChecksTestCase):
             ref_file.append(Translation(key, test_case[0]))
             trans_file.append(Translation(key, test_case[1]))
             # This checker always return one error (if there's any fault).
-            self.check(trans_file, ref_file, exp_errors = 1, msg = f"'{test_case[0]}' vs. '{test_case[1]}'")
+            self.check(trans_file, ref_file, exp_errors=1, msg=f"'{test_case[0]}' vs. '{test_case[1]}'")
 
     # #################################################################################################
 

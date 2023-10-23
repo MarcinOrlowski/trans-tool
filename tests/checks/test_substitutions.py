@@ -58,7 +58,7 @@ class SubstitutionsTests(ChecksTestCase):
 
             # And some warnings when comment scanning in enabled.
             self.checker.config['comments'] = True
-            self.check_single_file(Comment(fault), exp_warnings = 1)
+            self.check_single_file(Comment(fault), exp_warnings=1)
 
     # #################################################################################################
 
@@ -71,7 +71,7 @@ class SubstitutionsTests(ChecksTestCase):
         self.checker.config['map'] = [cfg]
 
         cfg['flag'] = Substitutions.FLAG_DEFAULT
-        self.check_single_file(Translation('key', 'Triple dots...'), exp_warnings = 1)
+        self.check_single_file(Translation('key', 'Triple dots...'), exp_warnings=1)
 
         cfg['flag'] = Substitutions.FLAG_FAIL_WITH_ERROR
-        self.check_single_file(Translation('key', 'Triple dots...'), exp_errors = 1)
+        self.check_single_file(Translation('key', 'Triple dots...'), exp_errors=1)

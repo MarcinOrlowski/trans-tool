@@ -387,13 +387,14 @@ class TestConfigBuilder(TestCase):
         """
         args = FakeArgs()
 
-        separator = self.get_random_string(length = 1)
+        separator = self.get_random_string(lengtha=1)
         self.assertNotIn(separator, Config.ALLOWED_SEPARATORS)
         args.separator = separator
 
         with self.assertRaises(SystemExit) as context_manager:
             ConfigBuilder._validate_args(args)
-            exp_calls = [call(f'Invalid separator. Must be one of the following: {", ".join(Config.ALLOWED_SEPARATORS)}')]
+            exp_calls = [
+                call(f'Invalid separator. Must be one of the following: {", ".join(Config.ALLOWED_SEPARATORS)}')]
             log_e_mock.assert_has_calls(exp_calls)
 
             # Check we got sys.exit called with non-zero return code
@@ -404,13 +405,14 @@ class TestConfigBuilder(TestCase):
     def test_validate_args_invalid_comment_marker(self, log_e_mock: Mock) -> None:
         args = FakeArgs()
 
-        marker = self.get_random_string(length = 1)
+        marker = self.get_random_string(length=1)
         self.assertNotIn(marker, Config.ALLOWED_COMMENT_MARKERS)
         args.comment_marker = marker
 
         with self.assertRaises(SystemExit) as context_manager:
             ConfigBuilder._validate_args(args)
-            exp_calls = [call(f'Invalid comment marker. Must be one of the following: {", ".join(Config.ALLOWED_COMMENT_MARKERS)}')]
+            exp_calls = [call(
+                f'Invalid comment marker. Must be one of the following: {", ".join(Config.ALLOWED_COMMENT_MARKERS)}')]
             log_e_mock.assert_has_calls(exp_calls)
 
             # Check we got sys.exit called with non-zero return code
@@ -501,7 +503,7 @@ class TestConfigBuilder(TestCase):
         """
 
         max_cnt = random.randint(5, 20)  # noqa: WPS432
-        src_langs = [self.get_random_string(length = 5) for _ in range(max_cnt)]
+        src_langs = [self.get_random_string(length=5) for _ in range(max_cnt)]
         result = ConfigBuilder._process_comma_separated_langs(src_langs)
 
         self.assertEqual(len(src_langs), len(result))
@@ -514,7 +516,7 @@ class TestConfigBuilder(TestCase):
         """
 
         max_cnt = random.randint(5, 20)  # noqa: WPS432
-        src_langs = [self.get_random_string(length = 5) for _ in range(max_cnt)]
+        src_langs = [self.get_random_string(length=5) for _ in range(max_cnt)]
 
         comma_separated = [
             'foo,bar',

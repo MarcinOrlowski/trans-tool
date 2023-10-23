@@ -69,7 +69,7 @@ class TestPunctuation(ChecksTestCase):
             ref_file.append(Translation(key, ref_value))
             trans_file.append(Translation(key, trans_value))
             punct_idx += 1
-        self.check(trans_file, ref_file, exp_warnings = expected_faults)
+        self.check(trans_file, ref_file, exp_warnings=expected_faults)
 
     # #################################################################################################
 

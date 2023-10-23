@@ -117,7 +117,7 @@ class TestEmptyTranslations(ChecksTestCase):
                 trans_file.items[idx] = trans
                 processed -= 1
 
-        self.check(trans_file, ref_file, exp_warnings = how_many)
+        self.check(trans_file, ref_file, exp_warnings=how_many)
 
     # #################################################################################################
 

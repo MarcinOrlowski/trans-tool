@@ -44,6 +44,6 @@ class TypesettingQuotationMarks(Brackets):
             'closing': ['’', '»', '“', '」', '》'],
 
             # For compatibility with Brackets.
-            'ignore_quoted':   False,
+            'ignore_quoted': False,
             'quotation_marks': [],
         }

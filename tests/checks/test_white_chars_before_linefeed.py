@@ -34,7 +34,7 @@ class TestWhiteCharsBeforeLinefeed(ChecksTestCase):
 
     def test_translation_with_faults(self) -> None:
         self.check_single_file(
-            Translation('key', r'This is NOT \n OK.'), exp_warnings = 1)
+            Translation('key', r'This is NOT \n OK.'), exp_warnings=1)
 
     # #################################################################################################
 

@@ -31,7 +31,7 @@ class TestPropFile(TestCase):
         item_types = [Blank, Comment, Translation]
         item_weights = [2, 5, 10]
         new_items = 50
-        for new_item_cls in random.choices(item_types, item_weights, k = new_items):
+        for new_item_cls in random.choices(item_types, item_weights, k=new_items):
             if issubclass(new_item_cls, Translation):
                 key = self.get_random_string('key')
                 val = self.get_random_string('ref_val')
@@ -106,7 +106,7 @@ class TestPropFile(TestCase):
                     f'{key1} {key_val_sep} {val2}\r\n',
                 ]
 
-                with patch('builtins.open', mock_open(read_data = ''.join(fake_data_src))):
+                with patch('builtins.open', mock_open(read_data=''.join(fake_data_src))):
                     # Lie our fake file exists
                     path_exists_mock.return_value = True
                     propfile = PropFile(Config())
@@ -152,7 +152,7 @@ class TestPropFile(TestCase):
             '\t\t\t\t',
             '\t\t\t   \t\t\t',
         ]
-        with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))):
+        with patch('builtins.open', mock_open(read_data='\n'.join(fake_data_src))):
             # Lie our fake file exists
             path_exists_mock.return_value = True
             propfile = PropFile(Config())
@@ -168,7 +168,7 @@ class TestPropFile(TestCase):
         Checks if empty file is not too confusing.
         """
         fake_file_name = f'/does/not/matter/{self.get_random_string()}'
-        with patch('builtins.open', mock_open(read_data = '')):
+        with patch('builtins.open', mock_open(read_data='')):
             # Lie our fake file exists
             path_exists_mock.return_value = True
             propfile = PropFile(Config())
@@ -190,7 +190,8 @@ class TestPropFile(TestCase):
         # I could use list comprehension but cannot guarantee key uniqueness that way. I need unique prefix then.
         max_elements = 30
         for idx in range(random.randint(10, max_elements)):
-            fake_data_src.append(f'key{idx}_{self.get_random_string()} {Config.ALLOWED_SEPARATORS[0]} {self.get_random_string()}')
+            fake_data_src.append(
+                f'key{idx}_{self.get_random_string()} {Config.ALLOWED_SEPARATORS[0]} {self.get_random_string()}')
 
         # # Insert incorrect syntax at random line
         trap_position = random.randint(0, len(fake_data_src) - 1)
@@ -200,7 +201,7 @@ class TestPropFile(TestCase):
             # Lie our fake file exists
             path_exists_mock.return_value = True
 
-            with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))):
+            with patch('builtins.open', mock_open(read_data='\n'.join(fake_data_src))):
                 try:
                     propfile = PropFile(Config())
                     with self.assertRaises(SyntaxError):
@@ -260,7 +261,7 @@ class TestPropFile(TestCase):
             f'{key2} {sep2} {val2}',
         ]
 
-        with patch('builtins.open', mock_open(read_data = '\n'.join(fake_data_src))):
+        with patch('builtins.open', mock_open(read_data='\n'.join(fake_data_src))):
             # Lie our fake file exists
             path_mock.return_value = True
             propfile = PropFile(Config())
@@ -296,7 +297,7 @@ class TestPropFile(TestCase):
 
     # #################################################################################################
 
-    def _check_written_content(self, propfile: PropFile, verify_file_name, save_file_name = None):
+    def _check_written_content(self, propfile: PropFile, verify_file_name, save_file_name=None):
         with patch('builtins.open', mock_open()) as manager:
             with patch('simplelog.log.Log.i') as log_i_mock:
                 if save_file_name:
@@ -397,7 +398,7 @@ class TestPropFile(TestCase):
         ConfigBuilder._setup_checkers(config)  # noqa: WPS437
 
         fake_file = Path(f'/does/not/matter/{self.get_random_string()}')
-        with patch('builtins.open', mock_open(read_data = '')):
+        with patch('builtins.open', mock_open(read_data='')):
             # Lie our fake file exists
             path_exists_mock.return_value = True
 
@@ -418,7 +419,7 @@ class TestPropFile(TestCase):
 
         # and GIVEN fake file
         fake_file = Path(f'/does/not/matter/{self.get_random_string()}')
-        with patch('builtins.open', mock_open(read_data = '')):
+        with patch('builtins.open', mock_open(read_data='')):
             # Lie our fake file exists
             path_exists_mock.return_value = True
             propfile = PropFile(config)
@@ -432,10 +433,10 @@ class TestPropFile(TestCase):
     # #################################################################################################
 
     def test_update_just_keys(self) -> None:
-        self.do_test_update(write_content = False)
+        self.do_test_update(write_content=False)
 
     def test_update_with_write_content(self) -> None:
-        self.do_test_update(write_content = True)
+        self.do_test_update(write_content=True)
 
     def do_test_update(self, write_content: bool) -> None:
         config = Config()
@@ -457,7 +458,7 @@ class TestPropFile(TestCase):
 
         for ref_idx, ref_item in enumerate(reference.items):
             if isinstance(ref_item, Translation):
-                mutation = random.choices(mutation_items, mutation_weights, k = 1)[0]
+                mutation = random.choices(mutation_items, mutation_weights, k=1)[0]
                 if mutation == mut_none:
                     translation.append(Translation(ref_item.key, self.get_random_string(f'translation_{ref_idx}')))
                 else:

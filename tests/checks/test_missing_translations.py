@@ -67,7 +67,7 @@ class TestMissingTranslations(ChecksTestCase):
 
         # We expect warnings in strict mode
         self.checker.config['strict'] = True
-        self.check(trans_file, ref_file, exp_warnings = len(remaining_keys))
+        self.check(trans_file, ref_file, exp_warnings=len(remaining_keys))
 
     def test_translation_with_faults(self) -> None:
         # generate some keys for reference file
@@ -81,7 +81,7 @@ class TestMissingTranslations(ChecksTestCase):
 
         ref_file = self.build_propfile(ref_keys)
         trans_file = self.build_propfile(trans_keys)
-        self.check(trans_file, ref_file, exp_warnings = how_many_less)
+        self.check(trans_file, ref_file, exp_warnings=how_many_less)
 
     # #################################################################################################
 

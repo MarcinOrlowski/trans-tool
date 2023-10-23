@@ -45,7 +45,7 @@ class TestDanglingKeys(ChecksTestCase):
 
         ref_file = self.build_propfile(ref_keys)
         trans_file = self.build_propfile(trans_keys)
-        self.check(trans_file, ref_file, exp_errors = how_many_less)
+        self.check(trans_file, ref_file, exp_errors=how_many_less)
 
     # #################################################################################################
 

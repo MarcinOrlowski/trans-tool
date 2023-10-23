@@ -27,7 +27,7 @@ class TestQuotationMarks(ChecksTestCase):
         self.check_single_file(Translation('key', '""'))
 
     def test_translation_with_faults(self) -> None:
-        self.check_single_file(Translation('key', '"""'), exp_errors = 1)
+        self.check_single_file(Translation('key', '"""'), exp_errors=1)
 
     # #################################################################################################
 
