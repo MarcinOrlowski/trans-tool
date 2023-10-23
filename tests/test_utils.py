@@ -1,8 +1,9 @@
 """
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
@@ -130,9 +131,9 @@ class TestUtils(TestCase):
         val_2 = self.get_random_string()
         val_3 = self.get_random_string()
         src = {
-            f'"{key}_1':  f'"{val_1}',
+            f'"{key}_1': f'"{val_1}',
             f'"{key}_2"': f'"{val_2}"',
-            f'{key}_3"':  f'{val_3}"',
+            f'{key}_3"': f'{val_3}"',
         }
 
         # It's expected to be handled by remove_quotes_from_dict()
@@ -160,7 +161,7 @@ class TestUtils(TestCase):
 
     def test_upper_first(self) -> None:
         # Get random string. Ensure first letter is lower-cased.
-        string = self.get_random_string(length = 1).lower() + self.get_random_string()
+        string = self.get_random_string(length=1).lower() + self.get_random_string()
         # Generate upper/lower map of current string.
         case_map = [char.isupper() for idx, char in enumerate(string)]
         # Ensure first character is lower-cased.
@@ -179,7 +180,7 @@ class TestUtils(TestCase):
 
     def test_lower_first(self) -> None:
         # Get random string. Ensure first letter is upper-cased.
-        string = self.get_random_string(length = 1).upper() + self.get_random_string()
+        string = self.get_random_string(length=1).upper() + self.get_random_string()
         # Generate upper/lower map of current string.
         case_map = [char.isupper() for idx, char in enumerate(string)]
         # Ensure first character is lower-upper.

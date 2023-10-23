@@ -1,13 +1,14 @@
 """
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
 
-from typing import Dict, List, Union
+from typing import Dict, List, Optional
 
 from transtool.decorators.overrides import overrides
 from transtool.report.group import ReportGroup
@@ -17,11 +18,11 @@ from .brackets import Brackets
 # noinspection PyUnresolvedReferences
 class TypesettingQuotationMarks(Brackets):
     """
-    Checks if print quotation marks (the ones having different opening and closing marks) are used in translation and if so,
-    ensures proper nesting and checks if all opened brackets are closed.
+    Checks if print quotation marks (the ones having different opening and closing marks) are used in the translation
+    and if so, ensures proper nesting and checks if all opened brackets are closed.
     """
 
-    def __init__(self, config: Union[Dict, None] = None):
+    def __init__(self, config: Optional[Dict] = None):
         super().__init__(config)
         self.is_single_file_check = True
 
@@ -44,6 +45,6 @@ class TypesettingQuotationMarks(Brackets):
             'closing': ['’', '»', '“', '」', '》'],
 
             # For compatibility with Brackets.
-            'ignore_quoted':   False,
+            'ignore_quoted': False,
             'quotation_marks': [],
         }

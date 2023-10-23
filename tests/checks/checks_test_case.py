@@ -1,14 +1,16 @@
 """
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
+
 import random
 from abc import abstractmethod
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Optional
 
 from transtool.checks.base.check import Check
 from transtool.config.config import Config
@@ -29,7 +31,7 @@ class ChecksTestCase(TestCase):
         self.checker = checker
 
     @abstractmethod
-    def get_checker(self, config: Union[Dict, None] = None) -> Check:
+    def get_checker(self, config: Optional[Dict] = None) -> Check:
         raise NotImplementedError
 
     def check_single_file(self, entry: PropItem, exp_errors: int = 0, exp_warnings: int = 0,
@@ -38,10 +40,10 @@ class ChecksTestCase(TestCase):
         prop_file.loaded = True
         prop_file.items.append(entry)
 
-        self.check(prop_file, exp_errors = exp_errors, exp_warnings = exp_warnings, force_report_dump = force_report_dump)
+        self.check(prop_file, exp_errors=exp_errors, exp_warnings=exp_warnings, force_report_dump=force_report_dump)
 
-    def check(self, translation: PropFile, reference: Union[PropFile, None] = None,
-              exp_errors: int = 0, exp_warnings: int = 0, force_report_dump = False, msg = None) -> None:
+    def check(self, translation: PropFile, reference: Optional[PropFile] = None,
+              exp_errors: int = 0, exp_warnings: int = 0, force_report_dump=False, msg=None) -> None:
         report = self.checker.check(translation, reference)
 
         # Dump the report details if there's mismatch between results and expectations or if dump is enforced.
@@ -111,8 +113,8 @@ class ChecksTestCase(TestCase):
         how_many_less = random.randint(1, upper_bound)
         ref_keys = trans_keys[:(how_many_less * -1)]
 
-        ref_file = self.build_propfile(ref_keys, lower = True)
-        trans_file = self.build_propfile(trans_keys, lower = True)
+        ref_file = self.build_propfile(ref_keys, lower=True)
+        trans_file = self.build_propfile(trans_keys, lower=True)
         self.check(trans_file, ref_file)
 
     # #################################################################################################
@@ -135,4 +137,4 @@ class ChecksTestCase(TestCase):
 
             # Expect warning raised.
             self.checker.config['comments'] = True
-            self.check_single_file(test, exp_warnings = comm_exp_warnings)
+            self.check_single_file(test, exp_warnings=comm_exp_warnings)

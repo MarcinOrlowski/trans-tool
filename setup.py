@@ -5,9 +5,8 @@
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
-#
 #
 # python3 -m venv venv
 # source venv/activate.fish
@@ -27,36 +26,36 @@ with open('README.md', 'r') as fh:
                                f'![trans-tool logo]({logo_url})', 1)
 
     setup(
-        name = Const.APP_NAME,
-        version = Const.APP_VERSION,
-        packages = find_packages(),
+        name=Const.APP_NAME,
+        version=Const.APP_VERSION,
+        packages=find_packages(),
 
-        install_requires = [
+        install_requires=[
             'argparse>=1.4.0',
         ],
-        python_requires = '>=3.6',
-        entry_points = {
+        python_requires='>=3.6',
+        entry_points={
             'console_scripts': [
                 'trans-tool = transtool.main:TransTool.start',
                 'transtool = transtool.main:TransTool.start',
             ],
         },
 
-        author = 'Marcin Orlowski',
-        author_email = 'mail@marcinOrlowski.com',
-        description = 'The translation files checker and syncing tool.',
-        long_description = readme,
-        long_description_content_type = 'text/markdown',
-        url = Const.APP_URL,
-        keywords = 'translation helper locale language sync check validation',
-        project_urls = {
-            'Bug Tracker':   'https://github.com/MarcinOrlowski/trans-tool/issues/',
+        author='Marcin Orlowski',
+        author_email='mail@marcinOrlowski.com',
+        description='The translation files checker and syncing tool.',
+        long_description=readme,
+        long_description_content_type='text/markdown',
+        url=Const.APP_URL,
+        keywords='translation helper locale language sync check validation',
+        project_urls={
+            'Bug Tracker': 'https://github.com/MarcinOrlowski/trans-tool/issues/',
             'Documentation': 'https://github.com/MarcinOrlowski/trans-tool/',
-            'Source Code':   'https://github.com/MarcinOrlowski/trans-tool/',
+            'Source Code': 'https://github.com/MarcinOrlowski/trans-tool/',
         },
         # https://choosealicense.com/
-        license = 'MIT License',
-        classifiers = [
+        license='MIT License',
+        classifiers=[
             'Programming Language :: Python :: 3',
             'License :: OSI Approved :: MIT License',
             'Operating System :: OS Independent',

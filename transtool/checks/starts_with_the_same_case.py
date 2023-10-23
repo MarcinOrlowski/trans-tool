@@ -1,13 +1,14 @@
 """
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
 
-from typing import Dict, Tuple, Union
+from typing import Dict, Tuple, Optional
 
 from transtool.decorators.overrides import overrides
 from transtool.prop.items import Translation
@@ -21,7 +22,7 @@ class StartsWithTheSameCase(Check):
     This check verifies translation first letter is the same lower/upper cased as original text.
     """
 
-    def _find_word(self, line: str) -> Tuple[Union[int, None], Union[str, None]]:
+    def _find_word(self, line: str) -> Tuple[Optional[int], Optional[str]]:
         words = line.strip().split()
         for idx, word in enumerate(words):
             if word[0].isalpha():
@@ -67,10 +68,12 @@ class StartsWithTheSameCase(Check):
                 continue
 
             if ref_word and not trans_word:
-                report.warn(idx + 1, 'Translation contains no words starting with a letter, while original does.', trans.key)
+                report.warn(idx + 1, 'Translation contains no words starting with a letter, while original does.',
+                            trans.key)
                 continue
             if not ref_word and trans_word:
-                report.warn(idx + 1, 'Base string contains no words starting with a letter, but translation does.', trans.key)
+                report.warn(idx + 1, 'Base string contains no words starting with a letter, but translation does.',
+                            trans.key)
                 continue
 
             ref_first_char = ref_word[0]

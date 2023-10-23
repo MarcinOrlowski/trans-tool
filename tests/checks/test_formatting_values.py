@@ -1,12 +1,14 @@
 """
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
-from typing import Dict, Union
+
+from typing import Dict, Optional
 
 from transtool.checks.base.check import Check
 from transtool.checks.formatting_values import FormattingValues
@@ -19,7 +21,7 @@ from tests.checks.checks_test_case import ChecksTestCase
 class TestFormattingValues(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Union[Dict, None] = None) -> Check:
+    def get_checker(self, config: Optional[Dict] = None) -> Check:
         return FormattingValues(config)
 
     # #################################################################################################
@@ -62,7 +64,7 @@ class TestFormattingValues(ChecksTestCase):
             ref_file.append(Translation(key, test_case[0]))
             trans_file.append(Translation(key, test_case[1]))
             # This checker always return one error (if there's any fault).
-            self.check(trans_file, ref_file, exp_errors = 1, msg = f"'{test_case[0]}' vs. '{test_case[1]}'")
+            self.check(trans_file, ref_file, exp_errors=1, msg=f"'{test_case[0]}' vs. '{test_case[1]}'")
 
     # #################################################################################################
 

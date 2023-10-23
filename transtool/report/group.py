@@ -1,14 +1,16 @@
 """
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
-from typing import Union, List
 
-from transtool.log import Log
+from typing import Union, List, Optional
+
+from simplelog.log import Log
 from transtool.report.items import Error, ReportItem, Warn
 
 
@@ -21,7 +23,7 @@ class ReportGroup(list):
         self.warnings = 0
         self.errors = 0
 
-    def create(self, position: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> None:
+    def create(self, position: Optional[Union[str, int]], msg: str, trans_key: Optional[str] = None) -> None:
         """
         Helper to create either Error() or Warn() items that share the message (to remove duplicated code and logic).
         If trans_key is None, it is assumed report message relates
@@ -41,7 +43,7 @@ class ReportGroup(list):
     def empty(self) -> bool:
         return (self.errors + self.warnings) == 0
 
-    def add(self, items: Union[ReportItem, List[ReportItem], None]) -> None:
+    def add(self, items: Optional[Union[ReportItem, List[ReportItem]]]) -> None:
         if not items:
             return
 
@@ -60,7 +62,7 @@ class ReportGroup(list):
                 self.errors += 1
 
     @staticmethod
-    def _to_list(line: Union[str, int, None]) -> Union[List[str], None]:
+    def _to_list(line: Optional[Union[str, int]]) -> Optional[List[str]]:
         """
         Accepts line variable (of various types) and converts to list of strings.
         Raises TypeError is provided argument is of not supported type.
@@ -73,17 +75,17 @@ class ReportGroup(list):
         return line
 
     @staticmethod
-    def build_warn(line: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> Warn:
+    def build_warn(line: Optional[Union[str, int]], msg: str, trans_key: Optional[str] = None) -> Warn:
         return Warn(ReportGroup._to_list(line), msg, trans_key)
 
-    def warn(self, line: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> None:
+    def warn(self, line: Optional[Union[str, int]], msg: str, trans_key: Optional[str] = None) -> None:
         self.add(self.build_warn(line, msg, trans_key))
 
     @staticmethod
-    def build_error(line: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> Error:
+    def build_error(line: Optional[Union[str, int]], msg: str, trans_key: Optional[str] = None) -> Error:
         return Error(ReportGroup._to_list(line), msg, trans_key)
 
-    def error(self, line: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> None:
+    def error(self, line: Optional[Union[str, int]], msg: str, trans_key: Optional[str] = None) -> None:
         self.add(self.build_error(line, msg, trans_key))
 
     def dump(self, show_warnings_as_errors: bool = False):

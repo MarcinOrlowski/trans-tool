@@ -1,13 +1,14 @@
 """
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
 
-from typing import Dict, List, Union
+from typing import Dict, List, Optional
 
 from transtool.decorators.overrides import overrides
 from transtool.report.group import ReportGroup
@@ -27,7 +28,7 @@ class Brackets(Check):
     opened brackets are closed.
     """
 
-    def __init__(self, config: Union[Dict, None] = None):
+    def __init__(self, config: Optional[Dict] = None):
         super().__init__(config)
         self.is_single_file_check = True
 
@@ -64,11 +65,11 @@ class Brackets(Check):
         closing_cnt = len(closing)
 
         if opening_cnt == 0 or closing_cnt == 0:
-            report.warn(line = None, msg = f'CONFIG: Empty "{opening_key}" and "{closing_key}" arrays.')
+            report.warn(line=None, msg=f'CONFIG: Empty "{opening_key}" and "{closing_key}" arrays.')
             return report
         if opening_cnt != closing_cnt:
-            report.error(line = None,
-                         msg = f'CONFIG: Both "{opening_key}" and "{closing_key}" arrays must contain the same number of elements.')
+            report.error(line=None,
+                         msg=f'CONFIG: Size of "{opening_key}" and "{closing_key}" arrays must be equal.')
             return report
 
         # We do that check at the end to ensure config is validated first.
@@ -137,11 +138,11 @@ class Brackets(Check):
     @overrides(Check)
     def get_default_config(self) -> Dict:
         return {
-            'comments':        False,
-            'ignore_quoted':   True,
+            'comments': False,
+            'ignore_quoted': True,
             'quotation_marks': ['"', "'"],
 
             # Keep matching elements at the same positions
-            'opening':         ['(', '[', '{'],
-            'closing':         [')', ']', '}'],
+            'opening': ['(', '[', '{'],
+            'closing': [')', ']', '}'],
         }

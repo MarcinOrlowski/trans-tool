@@ -1,12 +1,14 @@
 """
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
-from typing import Dict, Union, List
+
+from typing import Dict, Optional, List
 
 from transtool.checks.substitutions import Substitutions
 from transtool.decorators.overrides import overrides
@@ -18,7 +20,7 @@ from tests.checks.checks_test_case import ChecksTestCase
 class SubstitutionsTests(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Union[Dict, None] = None) -> Substitutions:
+    def get_checker(self, config: Optional[Dict] = None) -> Substitutions:
         return Substitutions(config)
 
     # #################################################################################################
@@ -58,7 +60,7 @@ class SubstitutionsTests(ChecksTestCase):
 
             # And some warnings when comment scanning in enabled.
             self.checker.config['comments'] = True
-            self.check_single_file(Comment(fault), exp_warnings = 1)
+            self.check_single_file(Comment(fault), exp_warnings=1)
 
     # #################################################################################################
 
@@ -67,14 +69,11 @@ class SubstitutionsTests(ChecksTestCase):
         Ensures FLAG_FAIL_WITH_ERROR flag aborts scanning and returns error while
         FLAG_DEFAULT yields warning.
         """
-        cfg = {
-            'regexp': r'([\.]{3})',
-            'replace': '…',
-        }
+        cfg = {'regexp': r'([\.]{3})', 'replace': '…'}
         self.checker.config['map'] = [cfg]
 
         cfg['flag'] = Substitutions.FLAG_DEFAULT
-        self.check_single_file(Translation('key', 'Triple dots...'), exp_warnings = 1)
+        self.check_single_file(Translation('key', 'Triple dots...'), exp_warnings=1)
 
         cfg['flag'] = Substitutions.FLAG_FAIL_WITH_ERROR
-        self.check_single_file(Translation('key', 'Triple dots...'), exp_errors = 1)
+        self.check_single_file(Translation('key', 'Triple dots...'), exp_errors=1)

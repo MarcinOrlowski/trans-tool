@@ -1,17 +1,17 @@
 """
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
+
 import random
 
 from transtool.config.config import Config
-
 from transtool.report.report import Report
-
 from transtool.report.group import ReportGroup
 from transtool.report.items import Error, Warn
 from tests.test_case import TestCase
@@ -74,8 +74,8 @@ class TestReportGroup(TestCase):
         """
 
         reports = [
-            Warn(None, msg = self.get_random_string()),
-            Error(None, msg = self.get_random_string()),
+            Warn(None, msg=self.get_random_string()),
+            Error(None, msg=self.get_random_string()),
         ]
         nones = [
             None,
@@ -95,7 +95,7 @@ class TestReportGroup(TestCase):
         self.assertFalse(report.not_empty())
 
         rg = ReportGroup(self.get_random_string('report_group'))
-        rg.warn(line = None, msg = self.get_random_string('warn'))
+        rg.warn(line=None, msg=self.get_random_string('warn'))
 
         report.add(rg)
 
@@ -110,12 +110,12 @@ class TestReportGroup(TestCase):
         self.assertFalse(report.is_fatal())
 
         rg = ReportGroup(self.get_random_string('group'))
-        report.add(rg, skip_empty = False)
+        report.add(rg, skip_empty=False)
 
-        rg.warn(line = None, msg = self.get_random_string('warn'))
+        rg.warn(line=None, msg=self.get_random_string('warn'))
         self.assertTrue(report.is_ok())
         self.assertFalse(report.is_fatal())
 
-        rg.error(line = None, msg = self.get_random_string('error'))
+        rg.error(line=None, msg=self.get_random_string('error'))
         self.assertFalse(report.is_ok())
         self.assertTrue(report.is_fatal())

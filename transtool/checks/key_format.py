@@ -1,14 +1,15 @@
 """
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
 
 import re
-from typing import Dict, Union
+from typing import Dict, Optional
 
 from transtool.decorators.overrides import overrides
 from transtool.prop.items import Translation
@@ -22,7 +23,7 @@ class KeyFormat(Check):
     This check verifies that translation keys follow specified naming convention.
     """
 
-    def __init__(self, config: Union[Dict, None] = None):
+    def __init__(self, config: Optional[Dict] = None):
         super().__init__(config)
         self.is_single_file_check = True
 

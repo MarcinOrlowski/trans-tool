@@ -1,8 +1,9 @@
 """
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
@@ -15,6 +16,7 @@ def overrides(contract) -> callable:
     :param contract: Class of method being overridden
     :return:
     """
+
     def overrider(method):
         assert method.__name__ in dir(contract), f"No '{method.__name__}()' to override in '{contract.__name__}' class"
         return method

@@ -1,8 +1,9 @@
 """
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
@@ -42,11 +43,11 @@ class TestComment(TestCase):
         """
         Checks if constructing Comment with invalid marker would raise an Error.
         """
-        marker = self.get_random_string(length = 1)
+        marker = self.get_random_string(length=1)
         self.assertNotIn(marker, Config.ALLOWED_COMMENT_MARKERS)
         val = self.get_random_string()
         with self.assertRaises(ValueError):
-            Comment(value = val, marker = marker)
+            Comment(value=val, marker=marker)
 
     def test_constructor_marker_wrong_type(self) -> None:
         """
@@ -55,7 +56,7 @@ class TestComment(TestCase):
         with self.assertRaises(TypeError):
             # Marker must be a string or TypeError is expected.
             # noinspection PyTypeChecker
-            Comment(value = '', marker = 123)
+            Comment(value='', marker=123)
 
     def test_empty_value(self) -> None:
         comment = Comment('')

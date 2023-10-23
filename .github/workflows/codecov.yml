@@ -2,7 +2,7 @@
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 
@@ -24,22 +24,22 @@ jobs:
 
     env:
       OS: ${{ matrix.os }}
-      PYTHON: '3.8'
+      PYTHON: '3.11'
 
     steps:
       # https://github.com/marketplace/actions/checkout
       - name: "Checkout sources"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: "Setup Python"
         uses: actions/setup-python@master
         with:
-          python-version: 3.8
+          python-version: 3.11
 
       - name: "Generate coverage report"
         run: |
           python -m pip install --upgrade pip
-          pip install pytest
+          pip install -r requirements-dev.txt
           pip install pytest-cov
           echo "****************************************"
           python --version

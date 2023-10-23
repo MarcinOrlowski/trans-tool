@@ -1,12 +1,14 @@
 """
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
-from typing import Dict, Union
+
+from typing import Dict, Optional
 
 from transtool.checks.brackets import Brackets
 from transtool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
@@ -18,7 +20,7 @@ from tests.checks.checks_test_case import ChecksTestCase
 class ChecksBrackets(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Union[Dict, None] = None) -> TypesettingQuotationMarks:
+    def get_checker(self, config: Optional[Dict] = None) -> TypesettingQuotationMarks:
         return TypesettingQuotationMarks(config)
 
     # #################################################################################################
@@ -28,7 +30,7 @@ class ChecksBrackets(ChecksTestCase):
 
     def test_translation_with_faults(self) -> None:
         for mark in self.checker.opening + self.checker.closing:
-            self.check_single_file(Translation('key', mark), exp_errors = 1)
+            self.check_single_file(Translation('key', mark), exp_errors=1)
 
     # #################################################################################################
 
@@ -69,9 +71,11 @@ class ChecksBrackets(ChecksTestCase):
 
         # ensure no marker is in both lists
         for op_idx, op_marker in enumerate(checker.opening):
-            self.assertFalse(op_marker in checker.closing, f'Marker {op_marker} (position: {op_idx}) is present in closing too.')
+            self.assertFalse(op_marker in checker.closing,
+                             f'Marker {op_marker} (position: {op_idx}) is present in closing too.')
         for cl_idx, cl_marker in enumerate(checker.closing):
-            self.assertFalse(cl_marker in checker.opening, f'Marker {cl_marker} (position: {cl_idx}) is present in opening too.')
+            self.assertFalse(cl_marker in checker.opening,
+                             f'Marker {cl_marker} (position: {cl_idx}) is present in opening too.')
 
     # #################################################################################################
 

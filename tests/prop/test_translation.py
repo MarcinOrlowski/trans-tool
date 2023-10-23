@@ -1,11 +1,13 @@
 """
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
+
 import random
 
 from transtool.config.config import Config
@@ -19,11 +21,13 @@ class SplitTest(TestCase):
     Helper class to reduce bolderplate code in in
     """
 
-    def __init__(self, fmt: str, mid_val_sep = True):
-        key = self.get_random_string('key', length = 10)
+    def __init__(self, fmt: str, mid_val_sep=True):
+        super().__init__()
+
+        key = self.get_random_string('key', length=10)
         sep = random.choice(Config.ALLOWED_SEPARATORS)
         val_sep = random.choice(Config.ALLOWED_SEPARATORS) if mid_val_sep else ''
-        val = self.get_random_string(length = 10) + val_sep + self.get_random_string(length = 10)
+        val = self.get_random_string(length=10) + val_sep + self.get_random_string(length=10)
 
         self.key = key
         self.sep = sep
@@ -144,7 +148,7 @@ class TestTranslation(TestCase):
             '{sep}{val}',
             '{sep}{key}{sep} {val}',
         ]
-        tests = [SplitTest(fmt, mid_val_sep = False) for fmt in lines]
+        tests = [SplitTest(fmt, mid_val_sep=False) for fmt in lines]
 
         for test in tests:
             res = Translation.parse_translation_line(test.line)

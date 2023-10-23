@@ -2,7 +2,7 @@
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 # Runs markdownlint on all *.md files
@@ -24,7 +24,7 @@ jobs:
     steps:
     # https://github.com/marketplace/actions/checkout
     - name: "Checkout sources"
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     # https://github.com/marketplace/actions/paths-changes-filter
     - name: "Look for changed doc related files..."
@@ -42,5 +42,4 @@ jobs:
       with:
         # LICENSE is externally sourced and we're not going to fix it.
         exclude: "LICENSE.md"
-        config_file: .markdownlint.yml
-
+        config_file: .markdownlint.yml.dist

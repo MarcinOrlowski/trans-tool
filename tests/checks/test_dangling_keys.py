@@ -1,13 +1,15 @@
 """
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
+
 import random
-from typing import Dict, Union
+from typing import Dict, Optional
 
 from transtool.checks.base.check import Check
 from transtool.checks.dangling_keys import DanglingKeys
@@ -18,7 +20,7 @@ from tests.checks.checks_test_case import ChecksTestCase
 class TestDanglingKeys(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Union[Dict, None] = None) -> Check:
+    def get_checker(self, config: Optional[Dict] = None) -> Check:
         return DanglingKeys(config)
 
     # #################################################################################################
@@ -45,7 +47,7 @@ class TestDanglingKeys(ChecksTestCase):
 
         ref_file = self.build_propfile(ref_keys)
         trans_file = self.build_propfile(trans_keys)
-        self.check(trans_file, ref_file, exp_errors = how_many_less)
+        self.check(trans_file, ref_file, exp_errors=how_many_less)
 
     # #################################################################################################
 

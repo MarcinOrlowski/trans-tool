@@ -9,8 +9,9 @@
 # Refactoring hints:
 # https://flake8.codes/wemake-python-styleguide/0.15.3/index.html
 
-# https://pypi.org/project/flake8-noqa/
-noqa-require-code
+#  https://pypi.org/project/flake8-noqa/
+
+##noqa-require-code
 max-line-length = 132
 
 exclude =
@@ -22,60 +23,119 @@ exclude =
 
 # it's not a bug that we aren't using all of hacking
 ignore =
-    D101, # D101 Missing docstring in public class
-    D102, # D102 Missing docstring in public method
-    D107, # D107 Missing docstring in __init__
-    D200, # D200 One-line docstring should fit on one line with quotes
-    D202, # D202 No blank lines allowed after function docstring
-    D205, # D205 1 blank line required between summary line and description
-    D400, # D400 First line should end with a period
-    D401, # D401 First line should be in imperative mood
-    DAR101, # DAR101 Missing parameter(s) in Docstring
-    DAR201, # DAR201 Missing "Returns" in Docstring: - return
-    DAR401, # DAR401 Missing exception(s) in Raises section: -r TypeError
-    E241, # E241 multiple spaces after ':'
-    E251, # E251 unexpected spaces around keyword / parameter equals
-    F821, # F821 undefined name 'PropFile'
-    I001, # I001 isort found an import in the wrong position
-    I003, # I003 isort expected 1 blank line in imports,
-    I004, # I004 isort found an unexpected blank line in imports
-    I005, # I005 isort found an unexpected missing import
-    RST213, # RST213 Inline emphasis start-string without end-string.
-    W503, # W503 line break before binary operator
-    WPS110, # WPS110 Found wrong variable name: item
-    WPS114, # WPS114 Found underscored number name pattern: val_1
-    WPS115, # WPS115 Found upper-case constant in a class
-    WPS201, # WPS201 Found module with too many imports: 13 > 12
-    WPS204, #WPS204 Found overused expression: config['opening']; used 5 > 4
-    WPS210, # WPS210 Found too many local variables: 14 > 5
-    WPS211, # WPS211 Found too many arguments: 6 > 5
-    WPS213, # WPS213 Found too many expressions: 10 > 9
-    WPS214, # WPS214 Found too many methods: 9 > 7
-    WPS220, # WPS220 Found too deep nesting: 28 > 20
-    WPS221, # WPS221 Found line with high Jones Complexity: 17 > 14
-    WPS226, # WPS226 Found string constant over-use: " > 3
-    WPS229, # WPS229 Found too long ``try`` body length: 2 > 1
-    WPS231, # WPS231 Found function with too much cognitive complexity: 83 > 12
-    WPS232, # WPS232 Found module cognitive complexity that is too high: 27.7 > 8
-    WPS237, # WPS237 Found a too complex `f` string
-    WPS238, # WPS238 Found too many raises in a function: 5 > 3
-    WPS300, # WPS300 Found local folder import
-    WPS302, # WPS302 Found unicode string prefix
-    WPS305, # WPS305 Found `f` string
-    WPS317, # WPS317 Found incorrect multi-line parameters
-    WPS318, # WPS318 Found extra indentation
-    WPS319, # WPS319 Found bracket in wrong position
-    WPS336, # WPS336 Found explicit string concatenation
-    WPS338, # WPS338 Found incorrect order of methods in a class
-    WPS360, # WPS360 Found an unnecessary use of a raw string
-    WPS402, # WPS402 Found `noqa` comments overuse: 12
-    WPS420, # WPS420 Found wrong keyword: pass
-    WPS442, # WPS442 Found outer scope names shadowing:
-    WPS600, # WPS600 Found subclassing a builtin: list
-    WPS602, # WPS602 Found using `@staticmethod`
-    WPS604, # WPS604 Found incorrect node inside `class` body
-    WPS605, # WPS605 Found method without arguments
-    WPS615, # WPS615 Found unpythonic getter or setter
+    # D101 Missing docstring in public class
+    D101,
+    # D102 Missing docstring in public method
+    D102,
+    # D107 Missing docstring in __init_
+    D107,
+    # D200 One-line docstring should fit on one line with quotes
+    D200,
+    # D202 No blank lines allowed after function docstring
+    D202,
+    # D205 1 blank line required between summary line and description
+    D205,
+    # D400 First line should end with a period
+    D400,
+    # D401 First line should be in imperative mood
+    D401,
+    # DAR101 Missing parameter(s) in Docstring
+    DAR101,
+    # DAR201 Missing "Returns" in Docstring: - return
+    DAR201,
+    # DAR401 Missing exception(s) in Raises section: -r TypeError
+    DAR401,
+
+    # E241 multiple spaces after ':'
+    E241,
+    # E251 unexpected spaces around keyword / parameter equals
+    E251,
+    # F821 undefined name 'PropFile'
+    F821,
+    # I001 isort found an import in the wrong position
+    I001,
+    # I003 isort expected 1 blank line in imports,
+    I003,
+    # I004 isort found an unexpected blank line in imports
+    I004,
+    # I005 isort found an unexpected missing import
+    I005,
+
+    # RST213 Inline emphasis start-string without end-string.
+    RST213,
+    # W503 line break before binary operator
+    W503,
+    # WPS110 Found wrong variable name: item
+    WPS110,
+    # WPS114 Found underscored number name pattern: val_1
+    WPS114,
+    # WPS115 Found upper-case constant in a class
+    WPS115,
+    # WPS201 Found module with too many imports: 13 > 12
+    WPS201,
+    # WPS204 Found overused expression: config['opening']; used 5 > 4
+    WPS204,
+    # WPS210 Found too many local variables: 14 > 5
+    WPS210,
+    # WPS211 Found too many arguments: 6 > 5
+    WPS211,
+    # WPS213 Found too many expressions: 10 > 9
+    WPS213,
+    # WPS214 Found too many methods: 9 > 7
+    WPS214,
+    # WPS220 Found too deep nesting: 28 > 20
+    WPS220,
+    # WPS221 Found line with high Jones Complexity: 17 > 14
+    WPS221,
+    # WPS226 Found string constant over-use: " > 3
+    WPS226,
+    # WPS229 Found too long ``try`` body length: 2 > 1
+    WPS229,
+    # WPS231 Found function with too much cognitive complexity: 83 > 12
+    WPS231,
+    # WPS232 Found module cognitive complexity that is too high: 27.7 > 8
+    WPS232,
+    # WPS237 Found a too complex `f` string
+    WPS237,
+    # WPS238 Found too many raises in a function: 5 > 3
+    WPS238,
+    # WPS300 Found local folder import
+    WPS300,
+    # WPS302 Found unicode string prefix
+    WPS302,
+    # WPS305 Found `f` string
+    WPS305,
+    # WPS317 Found incorrect multi-line parameters
+    WPS317,
+    # WPS318 Found extra indentation
+    WPS318,
+    # WPS319 Found bracket in wrong position
+    WPS319,
+    # WPS336 Found explicit string concatenation
+    WPS336,
+    # WPS338 Found incorrect order of methods in a class
+    WPS338,
+    # WPS360 Found an unnecessary use of a raw string
+    WPS360,
+    # WPS402 Found `noqa` comments overuse: 12
+    WPS402,
+    # WPS420 Found wrong keyword: pass
+    WPS420,
+    # WPS442 Found outer scope names shadowing:
+    WPS442,
+    # WPS600 Found subclassing a builtin: list
+    WPS600,
+    # WPS602 Found using `@staticmethod`
+    WPS602,
+    # WPS604 Found incorrect node inside `class` body
+    WPS604,
+    # WPS605 Found method without arguments
+    WPS605,
+    # WPS615 Found unpythonic getter or setter
+    WPS615,
+
+    # WPS234 Found overly complex annotation: 4 > 3
+    WPS234,
 
 per-file-ignores =
     # WPS420 Found wrong keyword: pass
@@ -108,7 +168,7 @@ per-file-ignores =
     # WPS421 Found wrong function call: print
     # WPS437 Found protected attribute usage
     # WPS518 Found implicit `enumerate()` call
-    transtool/log.py: WPS214, WPS437, WPS111, WPS317, WPS421, WPS518, WPS323,
+    # transtool/log.py: WPS214, WPS437, WPS111, WPS317, WPS421, WPS518, WPS323,
 
     # WPS201 Found module with too many imports: 13 > 12
     # WPS213 Found too many expressions: 13 > 9
@@ -123,7 +183,8 @@ per-file-ignores =
 
     # WPS201 Found module with too many imports: 21 > 12
     # WPS230 Found too many public instance attributes
-    transtool/prop/file.py: WPS201, WPS230,
+    # WPS473 Found too many empty lines in `def`: 7 > 6
+    transtool/prop/file.py: WPS201, WPS230, WPS473,
 
     # WPS100 Found wrong module name
     # WPS421 Found wrong function call: print
@@ -154,4 +215,3 @@ per-file-ignores =
     # WPS609 Found direct magic attribute usage: __setattr__
     # S311 Standard pseudo-random generators are not suitable for security/cryptographic purposes.
     tests/config/test_config_builder.py: WPS437, WPS425, WPS431, WPS230, WPS414, WPS609, S311,
-

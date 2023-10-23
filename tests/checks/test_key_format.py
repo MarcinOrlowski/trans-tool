@@ -1,12 +1,14 @@
 """
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
-from typing import Dict, Union
+
+from typing import Dict, Optional
 
 from transtool.checks.base.check import Check
 from transtool.checks.key_format import KeyFormat
@@ -18,7 +20,7 @@ from tests.checks.checks_test_case import ChecksTestCase
 class TestKeyFormat(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Union[Dict, None] = None) -> Check:
+    def get_checker(self, config: Optional[Dict] = None) -> Check:
         return KeyFormat(config)
 
     # #################################################################################################
@@ -32,9 +34,9 @@ class TestKeyFormat(ChecksTestCase):
 
     def test_translation_with_faults(self) -> None:
         # too short
-        self.check_single_file(Translation('k', 'foo'), exp_errors = 1)
+        self.check_single_file(Translation('k', 'foo'), exp_errors=1)
         # starts with digits
-        self.check_single_file(Translation('666keys.', 'foo'), exp_errors = 1)
+        self.check_single_file(Translation('666keys.', 'foo'), exp_errors=1)
 
     # #################################################################################################
 

@@ -24,9 +24,9 @@
 
 ## Description ##
 
-`Substitutions` looks for sequence of characters that can be replaced, i.e. subsequent three dots `...` can be replaced
-by single ellipsis `…` character. The check also looks for faulty sequences (i.e. it will report an error if more
-than 3 dots are put in sequence.
+`Substitutions` looks for sequence of characters that can be replaced, i.e. subsequent three
+dots `...` can be replaced by single ellipsis `…` character. The check also looks for faulty
+sequences (i.e. it will report an error if more than 3 dots are put in sequence.
 
 ## Configuration file ##
 

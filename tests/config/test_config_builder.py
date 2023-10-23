@@ -1,8 +1,9 @@
 """
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
@@ -11,7 +12,7 @@ import copy
 import random
 import sys
 from pathlib import Path
-from typing import List, Union
+from typing import List, Optional
 from unittest.mock import Mock, call, patch
 
 from transtool.config.config import Config
@@ -34,8 +35,8 @@ class FakeArgs(object):
         self.files: List[str] = []
         self.languages: List[str] = []
         self.languages_skip: List[str] = []
-        self.separator: Union[str, None] = None
-        self.comment_marker: Union[str, None] = None
+        self.separator: Optional[str] = None
+        self.comment_marker: Optional[str] = None
 
         self.config_file = None
         self.file_suffix = Config.DEFAULT_FILE_SUFFIX
@@ -100,7 +101,7 @@ class TestConfigBuilder(TestCase):
         """
         ConfigBuilder._validate_config(self.get_config_for_validate())
 
-    @patch('transtool.log.Log.e')
+    @patch('simplelog.log.Log.e')
     def test_validate_config_invalid_separator(self, log_e_mock: Mock) -> None:
         """
         Ensures invalid separator char triggers expected error message and quits.
@@ -118,7 +119,7 @@ class TestConfigBuilder(TestCase):
             self.assertEqual(SystemExit, type(context_manager.exception))
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('transtool.log.Log.e')
+    @patch('simplelog.log.Log.e')
     def test_validate_config_invalid_comment_marker(self, log_e_mock: Mock) -> None:
         """
         Ensures invalid comment marker triggers expected error message and quits.
@@ -136,7 +137,7 @@ class TestConfigBuilder(TestCase):
             self.assertEqual(SystemExit, type(context_manager.exception))
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('transtool.log.Log.e')
+    @patch('simplelog.log.Log.e')
     def test_validate_config_invalid_languages(self, log_e_mock: Mock) -> None:
         # valid language code is just lowercased [a-z]{2,}
         faults = [
@@ -341,7 +342,7 @@ class TestConfigBuilder(TestCase):
             # We expect no problems.
             ConfigBuilder._validate_args(args)
 
-    @patch('transtool.log.Log.e')
+    @patch('simplelog.log.Log.e')
     def test_validate_args_onoff_on_on(self, log_e_mock: Mock) -> None:
         for option_name in ConfigBuilder._on_off_pairs:
             args = FakeArgs()
@@ -358,7 +359,7 @@ class TestConfigBuilder(TestCase):
                 self.assertEqual(SystemExit, type(context_manager.exception))
                 self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('transtool.log.Log.e')
+    @patch('simplelog.log.Log.e')
     def test_validate_args_quiet_and_verbose(self, log_e_mock: Mock) -> None:
         """
         Ensures use of mutually exclusive --quiet and --verbose is handled correctly.
@@ -378,7 +379,7 @@ class TestConfigBuilder(TestCase):
             self.assertEqual(SystemExit, type(context_manager.exception))
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('transtool.log.Log.e')
+    @patch('simplelog.log.Log.e')
     def test_validate_args_invalid_separator(self, log_e_mock: Mock) -> None:
         """
         Checks if attempt to use invalid character as separator is correctly handled.
@@ -387,30 +388,32 @@ class TestConfigBuilder(TestCase):
         """
         args = FakeArgs()
 
-        separator = self.get_random_string(length = 1)
+        separator = self.get_random_string(length=1)
         self.assertNotIn(separator, Config.ALLOWED_SEPARATORS)
         args.separator = separator
 
         with self.assertRaises(SystemExit) as context_manager:
             ConfigBuilder._validate_args(args)
-            exp_calls = [call(f'Invalid separator. Must be one of the following: {", ".join(Config.ALLOWED_SEPARATORS)}')]
+            exp_calls = [
+                call(f'Invalid separator. Must be one of the following: {", ".join(Config.ALLOWED_SEPARATORS)}')]
             log_e_mock.assert_has_calls(exp_calls)
 
             # Check we got sys.exit called with non-zero return code
             self.assertEqual(SystemExit, type(context_manager.exception))
             self.assertEquals(Utils.ABORT_RETURN_CODE, context_manager.exception.code)
 
-    @patch('transtool.log.Log.e')
+    @patch('simplelog.log.Log.e')
     def test_validate_args_invalid_comment_marker(self, log_e_mock: Mock) -> None:
         args = FakeArgs()
 
-        marker = self.get_random_string(length = 1)
+        marker = self.get_random_string(length=1)
         self.assertNotIn(marker, Config.ALLOWED_COMMENT_MARKERS)
         args.comment_marker = marker
 
         with self.assertRaises(SystemExit) as context_manager:
             ConfigBuilder._validate_args(args)
-            exp_calls = [call(f'Invalid comment marker. Must be one of the following: {", ".join(Config.ALLOWED_COMMENT_MARKERS)}')]
+            exp_calls = [call(
+                f'Invalid comment marker. Must be one of the following: {", ".join(Config.ALLOWED_COMMENT_MARKERS)}')]
             log_e_mock.assert_has_calls(exp_calls)
 
             # Check we got sys.exit called with non-zero return code
@@ -501,7 +504,7 @@ class TestConfigBuilder(TestCase):
         """
 
         max_cnt = random.randint(5, 20)  # noqa: WPS432
-        src_langs = [self.get_random_string(length = 5) for _ in range(max_cnt)]
+        src_langs = [self.get_random_string(length=5) for _ in range(max_cnt)]
         result = ConfigBuilder._process_comma_separated_langs(src_langs)
 
         self.assertEqual(len(src_langs), len(result))
@@ -514,7 +517,7 @@ class TestConfigBuilder(TestCase):
         """
 
         max_cnt = random.randint(5, 20)  # noqa: WPS432
-        src_langs = [self.get_random_string(length = 5) for _ in range(max_cnt)]
+        src_langs = [self.get_random_string(length=5) for _ in range(max_cnt)]
 
         comma_separated = [
             'foo,bar',

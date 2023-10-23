@@ -1,8 +1,9 @@
 """
+#
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
@@ -44,7 +45,8 @@ class Punctuation(Check):
                     if translation:
                         trans_last_char = translation.value[(last_char_len * -1):]
                         if trans_last_char != ref_last_char:
-                            report.warn(idx + 1, f'Ends with "{trans_last_char}". Expected "{ref_last_char}".', item.key)
+                            report.warn(idx + 1, f'Ends with "{trans_last_char}". Expected "{ref_last_char}".',
+                                        item.key)
                     break
 
         return report
