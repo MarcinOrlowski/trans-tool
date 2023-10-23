@@ -1,10 +1,12 @@
+"""
 #
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021-2023 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
+"""
 
 from transtool.config.config import Config
 from transtool.prop.items import Comment

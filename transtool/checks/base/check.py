@@ -1,10 +1,12 @@
+"""
 #
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021-2023 Marcin Orlowski <mail [@] MarcinOrlowski.com>
+# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
+"""
 
 import json
 from abc import ABC, abstractmethod
@@ -21,6 +23,7 @@ class Check(ABC):
     Abstract base class for implementing checks on translation and reference PropFile objects.
     Provides methods for configuring checks, validating input, and determining whether to skip certain items.
     """
+
     DEFAULT_CHECK_CONFIG = {}
 
     def __init__(self, config: Optional[Dict] = None):
