@@ -7,7 +7,7 @@
 #
 
 import re
-from typing import Dict, Union
+from typing import Dict, Optional
 
 from transtool.decorators.overrides import overrides
 from transtool.report.group import ReportGroup
@@ -27,11 +27,11 @@ class Substitutions(Check):
     FLAG_DEFAULT = 0
     FLAG_FAIL_WITH_ERROR = -1
 
-    def __init__(self, config: Union[Dict, None] = None):
+    def __init__(self, config: Optional[Dict] = None):
         super().__init__(config)
         self.is_single_file_check = True
 
-    def _find_most_important_issue(self, idx: int, item: PropItem) -> Union[ReportItem, None]:
+    def _find_most_important_issue(self, idx: int, item: PropItem) -> Optional[ReportItem]:
         warns = []
         for config in self.config['map']:
             for match in re.finditer(config['regexp'], item.value):

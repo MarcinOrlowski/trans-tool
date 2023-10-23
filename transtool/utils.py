@@ -7,7 +7,7 @@
 #
 
 from sys import exit
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Optional
 
 
 class Utils(object):
@@ -84,13 +84,13 @@ class Utils(object):
         return [Utils.remove_quotes(item) for item in src_list]
 
     @staticmethod
-    def upper_first(src_str: Union[str, None]) -> str:
+    def upper_first(src_str: Optional[str]) -> str:
         if src_str:
             return src_str[0].upper() + src_str[1:]
         return src_str
 
     @staticmethod
-    def lower_first(src_str: Union[str, None]) -> str:
+    def lower_first(src_str: Optional[str]) -> str:
         if src_str:
             return src_str[0].lower() + src_str[1:]
         return src_str

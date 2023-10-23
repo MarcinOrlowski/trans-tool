@@ -7,7 +7,7 @@
 #
 
 
-from typing import Dict, Tuple, Union
+from typing import Dict, Tuple, Optional
 
 from transtool.decorators.overrides import overrides
 from transtool.prop.items import Translation
@@ -21,7 +21,7 @@ class StartsWithTheSameCase(Check):
     This check verifies translation first letter is the same lower/upper cased as original text.
     """
 
-    def _find_word(self, line: str) -> Tuple[Union[int, None], Union[str, None]]:
+    def _find_word(self, line: str) -> Tuple[Optional[int], Optional[str]]:
         words = line.strip().split()
         for idx, word in enumerate(words):
             if word[0].isalpha():

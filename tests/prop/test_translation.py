@@ -20,6 +20,8 @@ class SplitTest(TestCase):
     """
 
     def __init__(self, fmt: str, mid_val_sep = True):
+        super().__init__()
+
         key = self.get_random_string('key', length = 10)
         sep = random.choice(Config.ALLOWED_SEPARATORS)
         val_sep = random.choice(Config.ALLOWED_SEPARATORS) if mid_val_sep else ''

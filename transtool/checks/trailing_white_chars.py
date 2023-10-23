@@ -6,8 +6,7 @@
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 
-
-from typing import Dict, Union
+from typing import Dict, Optional
 
 from transtool.decorators.overrides import overrides
 from transtool.report.group import ReportGroup
@@ -20,7 +19,7 @@ class TrailingWhiteChars(Check):
     Checks if file has trailing white characters at the end of each line.
     """
 
-    def __init__(self, config: Union[Dict, None] = None):
+    def __init__(self, config: Optional[Dict] = None):
         super().__init__(config)
         self.is_single_file_check = True
 

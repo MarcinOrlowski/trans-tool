@@ -9,7 +9,7 @@
 import copy
 import re
 from pathlib import Path
-from typing import List, Union
+from typing import List, Union, Optional
 
 from simplelog.log import Log
 from transtool.config.config import Config
@@ -26,7 +26,7 @@ class PropFile(object):
 
         self._items: List[PropItem] = []
 
-        self.file: Union[Path, None] = None
+        self.file: Optional[Path] = None
         self.loaded: bool = False
 
         # All the keys of 'regular' translations
@@ -58,7 +58,7 @@ class PropFile(object):
 
     # #################################################################################################
 
-    def find_by_key(self, key: str) -> Union[Translation, None]:
+    def find_by_key(self, key: str) -> Optional[Translation]:
         """
         Returns translation entry referenced by given key or None.
 
@@ -223,15 +223,17 @@ class PropFile(object):
 
     # #################################################################################################
 
-    def save(self, target_file_name: Union[Path, None] = None) -> None:
+    def save(self, target_file_name: Optional[Union[Path, str]] = None) -> None:
         """
         Saves content of the properties file.
         """
 
-        if not target_file_name:
+        if target_file_name is None:
             if not self.file:
                 raise ValueError('No target file name given.')
             target_file_name = self.file
+        elif isinstance(target_file_name, Path):
+            target_file_name = str(target_file_name)
 
         content = []
         for item in self.items:

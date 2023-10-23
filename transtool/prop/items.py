@@ -6,8 +6,7 @@
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 
-
-from typing import Tuple, Union
+from typing import Tuple, Optional
 
 from transtool.config.config import Config
 from transtool.decorators.overrides import overrides
@@ -16,7 +15,7 @@ from transtool.decorators.overrides import overrides
 # #################################################################################################
 
 class PropItem(object):
-    def __init__(self, value: Union[str, None] = None, key: Union[str, None] = None):
+    def __init__(self, value: Optional[str] = None, key: Optional[str] = None):
         self.value = value
         self.key = key
 
@@ -33,7 +32,7 @@ class Translation(PropItem):
 
     MIN_LINE_LENGTH = 2
 
-    def __init__(self, key: str, value: Union[str, None] = None, separator: str = '=') -> None:
+    def __init__(self, key: str, value: Optional[str] = None, separator: str = '=') -> None:
         if not key:
             raise ValueError('No empty key allowed.')
         if not isinstance(key, str):
@@ -58,7 +57,7 @@ class Translation(PropItem):
         return f'{self.key} {self.separator} {self.value}'
 
     @staticmethod
-    def parse_translation_line(line: str) -> Union[Tuple[str, str, str], None]:
+    def parse_translation_line(line: str) -> Optional[Tuple[str, str, str]]:
         # Min two chars (one letter key and separator)
         if len(line) < Translation.MIN_LINE_LENGTH:
             return None
@@ -127,7 +126,7 @@ class Comment(PropItem):
         return self.value
 
     @staticmethod
-    def comment_out_key(config: Config, key: str, value: Union[str, None] = None) -> str:
+    def comment_out_key(config: Config, key: str, value: Optional[str] = None) -> str:
         """
         Helper method that returns translation key formatted as commented-out item.
         :param config: Application config.
@@ -145,7 +144,7 @@ class Comment(PropItem):
             'VAL', value).strip()
 
     @staticmethod
-    def get_commented_out_key_comment(config: Config, key: str, value: Union[str, None] = None) -> 'Comment':
+    def get_commented_out_key_comment(config: Config, key: str, value: Optional[str] = None) -> 'Comment':
         """
         Returns instance of Comment with content being commented-out key
         formatted according to current configuration

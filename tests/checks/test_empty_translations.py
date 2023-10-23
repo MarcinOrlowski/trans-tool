@@ -7,7 +7,7 @@
 #
 """
 import random
-from typing import Dict, Union
+from typing import Dict, Optional
 
 from transtool.checks.base.check import Check
 from transtool.checks.empty_translations import EmptyTranslations
@@ -19,7 +19,7 @@ from tests.checks.checks_test_case import ChecksTestCase
 class TestEmptyTranslations(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Union[Dict, None] = None) -> Check:
+    def get_checker(self, config: Optional[Dict] = None) -> Check:
         return EmptyTranslations(config)
 
     # #################################################################################################

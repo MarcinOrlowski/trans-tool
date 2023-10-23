@@ -52,7 +52,7 @@ class ConfigReader(object):
         # Ensure we know how to read this config file.
         config_version = self.parser.getint(main_section, 'version')
         if config_version < Config.VERSION:
-            self.abort(f'Old version ({config_version}) of config INI file. Required {ClientConfig.VERSION}')
+            self.abort(f'Old version ({config_version}) of config INI file. Required {Config.VERSION}')
 
         bool_opts = [
             'debug',

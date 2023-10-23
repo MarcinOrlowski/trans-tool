@@ -11,7 +11,7 @@ import copy
 import random
 import sys
 from pathlib import Path
-from typing import List, Union
+from typing import List, Optional
 from unittest.mock import Mock, call, patch
 
 from transtool.config.config import Config
@@ -34,8 +34,8 @@ class FakeArgs(object):
         self.files: List[str] = []
         self.languages: List[str] = []
         self.languages_skip: List[str] = []
-        self.separator: Union[str, None] = None
-        self.comment_marker: Union[str, None] = None
+        self.separator: Optional[str] = None
+        self.comment_marker: Optional[str] = None
 
         self.config_file = None
         self.file_suffix = Config.DEFAULT_FILE_SUFFIX

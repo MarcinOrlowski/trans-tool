@@ -10,7 +10,7 @@
 import json
 from abc import ABC, abstractmethod
 from configparser import ConfigParser
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Optional
 
 from transtool.report.report import Report
 from transtool.prop.items import Translation, Comment, PropItem
@@ -24,7 +24,7 @@ class Check(ABC):
     """
     DEFAULT_CHECK_CONFIG = {}
 
-    def __init__(self, config: Union[Dict, None] = None):
+    def __init__(self, config: Optional[Dict] = None):
         if config is not None:
             if not isinstance(config, Dict):
                 raise ValueError(f'Configuration object must be instance of Dict ("{type(config)}" given).')
@@ -34,7 +34,7 @@ class Check(ABC):
 
     @abstractmethod
     # Do NOT "fix" the PropFile reference and do not import it, or you step on circular dependency!
-    def check(self, translation: 'PropFile', reference: Union['PropFile', None] = None) -> Report:
+    def check(self, translation: 'PropFile', reference: Optional['PropFile'] = None) -> Report:
         """
         Abstract method for performing check on translation PropFile with optional reference PropFile.
         :param translation: PropFile object containing translations to be checked.
@@ -54,7 +54,7 @@ class Check(ABC):
 
         return not (isinstance(item, Translation) or (isinstance(item, Comment) and self.config['comments']))
 
-    def need_both_files(self, translation: 'PropFile', reference: Union['PropFile', None]) -> None:
+    def need_both_files(self, translation: 'PropFile', reference: Optional['PropFile']) -> None:
         """
         Validates that both translation and reference are valid PropFile objects.
         :param translation: PropFile object containing translations.

@@ -6,13 +6,13 @@
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 
-from typing import Union
+from typing import Union, Optional
 
 
 # #################################################################################################
 
 class ReportItem(object):
-    def __init__(self, position: Union[str, int, None], msg: str, trans_key: Union[str, None] = None) -> None:
+    def __init__(self, position: Optional[Union[str, int]], msg: str, trans_key: Optional[str] = None) -> None:
         if position is not None:
             if isinstance(position, int):
                 position = str(position)

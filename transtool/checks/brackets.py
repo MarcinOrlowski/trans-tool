@@ -7,7 +7,7 @@
 #
 
 
-from typing import Dict, List, Union
+from typing import Dict, List, Optional
 
 from transtool.decorators.overrides import overrides
 from transtool.report.group import ReportGroup
@@ -27,7 +27,7 @@ class Brackets(Check):
     opened brackets are closed.
     """
 
-    def __init__(self, config: Union[Dict, None] = None):
+    def __init__(self, config: Optional[Dict] = None):
         super().__init__(config)
         self.is_single_file_check = True
 

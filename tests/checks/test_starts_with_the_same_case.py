@@ -7,7 +7,7 @@
 #
 """
 import random
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple, Optional
 
 from transtool.checks.base.check import Check
 from transtool.checks.starts_with_the_same_case import StartsWithTheSameCase
@@ -21,7 +21,7 @@ from tests.checks.checks_test_case import ChecksTestCase
 class TestStartsWithTheSameCase(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Union[Dict, None] = None) -> Check:
+    def get_checker(self, config: Optional[Dict] = None) -> Check:
         return StartsWithTheSameCase(config)
 
     # #################################################################################################

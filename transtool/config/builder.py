@@ -9,7 +9,7 @@
 import argparse
 import re
 from pathlib import Path
-from typing import List, Union
+from typing import List, Optional
 
 from transtool.checks.brackets import Brackets
 from transtool.checks.dangling_keys import DanglingKeys
@@ -87,7 +87,7 @@ class ConfigBuilder(object):
         ConfigBuilder._validate_config(config_defaults)
 
     @staticmethod
-    def _setup_checkers(config: Config, checkers_list: Union[List[str], None] = None) -> None:
+    def _setup_checkers(config: Config, checkers_list: Optional[List[str]] = None) -> None:
         """
         Populates the configuration object with default or specified checkers.
         :param config: Config object to populate.
@@ -191,7 +191,7 @@ class ConfigBuilder(object):
             Utils.add_if_not_in_list(config.files, args.files)
 
     @staticmethod
-    def _get_checkers_from_args(config: Config, args_checkers: Union[List[str], None]) -> None:
+    def _get_checkers_from_args(config: Config, args_checkers: Optional[List[str]]) -> None:
         """
         If `--checks` argument list is provided, used checkers will be adjusted according to
         values (Checker IDs) provided.
@@ -209,7 +209,7 @@ class ConfigBuilder(object):
             ConfigBuilder._setup_checkers(config, checkers)
 
     @staticmethod
-    def _add_file_suffix(config: Config, files: Union[List[Path], None]) -> None:
+    def _add_file_suffix(config: Config, files: Optional[List[Path]]) -> None:
         """
         Ensures the specified files have the correct suffix.
 
@@ -308,7 +308,7 @@ class ConfigBuilder(object):
         return args
 
     @staticmethod
-    def _process_comma_separated_langs(languages: Union[List[str], None]) -> Union[List[str], None]:
+    def _process_comma_separated_langs(languages: Optional[List[str]]) -> Optional[List[str]]:
         """
         Processes language arguments, splitting comma-separated values into separate strings.
 

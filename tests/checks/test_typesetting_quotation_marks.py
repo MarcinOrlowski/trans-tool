@@ -6,7 +6,7 @@
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
-from typing import Dict, Union
+from typing import Dict, Optional
 
 from transtool.checks.brackets import Brackets
 from transtool.checks.typesetting_quotation_marks import TypesettingQuotationMarks
@@ -18,7 +18,7 @@ from tests.checks.checks_test_case import ChecksTestCase
 class ChecksBrackets(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Union[Dict, None] = None) -> TypesettingQuotationMarks:
+    def get_checker(self, config: Optional[Dict] = None) -> TypesettingQuotationMarks:
         return TypesettingQuotationMarks(config)
 
     # #################################################################################################

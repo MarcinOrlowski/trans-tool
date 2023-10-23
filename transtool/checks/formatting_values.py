@@ -6,7 +6,6 @@
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 
-
 import re
 from typing import List
 

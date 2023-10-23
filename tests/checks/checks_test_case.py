@@ -8,7 +8,7 @@
 """
 import random
 from abc import abstractmethod
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Optional
 
 from transtool.checks.base.check import Check
 from transtool.config.config import Config
@@ -29,7 +29,7 @@ class ChecksTestCase(TestCase):
         self.checker = checker
 
     @abstractmethod
-    def get_checker(self, config: Union[Dict, None] = None) -> Check:
+    def get_checker(self, config: Optional[Dict] = None) -> Check:
         raise NotImplementedError
 
     def check_single_file(self, entry: PropItem, exp_errors: int = 0, exp_warnings: int = 0,
@@ -40,7 +40,7 @@ class ChecksTestCase(TestCase):
 
         self.check(prop_file, exp_errors = exp_errors, exp_warnings = exp_warnings, force_report_dump = force_report_dump)
 
-    def check(self, translation: PropFile, reference: Union[PropFile, None] = None,
+    def check(self, translation: PropFile, reference: Optional[PropFile] = None,
               exp_errors: int = 0, exp_warnings: int = 0, force_report_dump = False, msg = None) -> None:
         report = self.checker.check(translation, reference)
 

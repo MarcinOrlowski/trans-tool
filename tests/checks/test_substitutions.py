@@ -6,7 +6,7 @@
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
-from typing import Dict, Union, List
+from typing import Dict, Optional, List
 
 from transtool.checks.substitutions import Substitutions
 from transtool.decorators.overrides import overrides
@@ -18,7 +18,7 @@ from tests.checks.checks_test_case import ChecksTestCase
 class SubstitutionsTests(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Union[Dict, None] = None) -> Substitutions:
+    def get_checker(self, config: Optional[Dict] = None) -> Substitutions:
         return Substitutions(config)
 
     # #################################################################################################
@@ -67,10 +67,7 @@ class SubstitutionsTests(ChecksTestCase):
         Ensures FLAG_FAIL_WITH_ERROR flag aborts scanning and returns error while
         FLAG_DEFAULT yields warning.
         """
-        cfg = {
-            'regexp': r'([\.]{3})',
-            'replace': '…',
-        }
+        cfg = {'regexp': r'([\.]{3})', 'replace': '…'}
         self.checker.config['map'] = [cfg]
 
         cfg['flag'] = Substitutions.FLAG_DEFAULT

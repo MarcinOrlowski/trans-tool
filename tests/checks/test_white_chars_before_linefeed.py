@@ -6,7 +6,7 @@
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
-from typing import Union
+from typing import Optional
 
 from transtool.checks.base.check import Check
 from transtool.checks.white_chars_before_linefeed import WhiteCharsBeforeLinefeed
@@ -19,7 +19,7 @@ from tests.checks.checks_test_case import ChecksTestCase
 class TestWhiteCharsBeforeLinefeed(ChecksTestCase):
 
     @overrides(ChecksTestCase)
-    def get_checker(self, config: Union[Config, None] = None) -> Check:
+    def get_checker(self, config: Optional[Config] = None) -> Check:
         return WhiteCharsBeforeLinefeed(config)
 
     # #################################################################################################
