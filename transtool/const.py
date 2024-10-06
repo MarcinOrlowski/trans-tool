@@ -12,9 +12,16 @@ from typing import List
 
 
 class Const(object):
+    # The name of the application.
     APP_NAME: str = 'trans-tool'
+
+    # The version of the application.
     APP_VERSION: str = '2.5.3'
+
+    # The URL of the application's repository.
     APP_URL: str = 'https://github.com/MarcinOrlowski/trans-tool/'
+
+    # The years during which the application was developed.
     APP_YEARS: str = '2021-2023'
 
     APP_DESCRIPTION: List[str] = [

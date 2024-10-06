@@ -33,7 +33,8 @@ class Utils(object):
         if isinstance(items, str):
             items = [items]
         if not isinstance(items, list):
-            raise TypeError(f'add_if_not_in_list() accepts str or List[str] only. {type(items)} passed')
+            raise TypeError(
+                f'add_if_not_in_list() accepts str or List[str] only. {type(items)} passed')
 
         for entry in items:
             if entry not in target_list:
@@ -56,6 +57,15 @@ class Utils(object):
 
     @staticmethod
     def remove_quotes(src: Union[str, List, Dict]):
+        """
+        Removes quotes from the given input, which can be a string, list, or dictionary.
+
+        :param src: The input from which to remove quotes. It can be a string, list, or dictionary.
+        :type src: Union[str, List, Dict]
+        :return: The input with quotes removed.
+        :rtype: Union[str, List, Dict]
+        :raises TypeError: If the input is not of type str, list, or dict.
+        """
         src_type = type(src)
         if issubclass(src_type, str):
             return Utils.remove_quotes_str(src)
@@ -67,6 +77,14 @@ class Utils(object):
 
     @staticmethod
     def remove_quotes_str(src_str: str) -> str:
+        """
+        Removes quotes from the given string.
+
+        :param src_str: The string from which to remove quotes.
+        :type src_str: st
+        :return: The string with quotes removed.
+        :rtype: str
+        """
         # FIXME: shall only removed if we have 2 quotes!
         if len(src_str) >= 2:
             if src_str[0] == '"':
@@ -79,20 +97,53 @@ class Utils(object):
 
     @staticmethod
     def remove_quotes_from_dict(src_dict: Dict) -> Dict:
-        return {Utils.remove_quotes(key): Utils.remove_quotes(value) for key, value in src_dict.items()}
+        """
+        Removes quotes from both keys and values in the given dictionary.
+
+        :param src_dict: The dictionary from which to remove quotes.
+        :type src_dict: Dict
+        :return: A new dictionary with quotes removed from keys and values.
+        :rtype: Dict
+        """
+        return {Utils.remove_quotes(key): Utils.remove_quotes(value) for key, value in
+                src_dict.items()}
 
     @staticmethod
     def remove_quotes_from_list(src_list: List) -> List:
+        """
+        Removes quotes from each element in the given list.
+
+        :param src_list: The list from which to remove quotes.
+        :type src_list: List
+        :return: A new list with quotes removed from each element.
+        :rtype: List
+        """
         return [Utils.remove_quotes(item) for item in src_list]
 
     @staticmethod
     def upper_first(src_str: Optional[str]) -> str:
+        """
+        Converts the first character of the string to uppercase.
+
+        :param src_str: The string to modify.
+        :type src_str: Optional[str]
+        :return: The modified string with the first character in uppercase.
+        :rtype: str
+        """
         if src_str:
             return src_str[0].upper() + src_str[1:]
         return src_str
 
     @staticmethod
     def lower_first(src_str: Optional[str]) -> str:
+        """
+        Converts the first character of the string to lowercase.
+
+        :param src_str: The string to modify.
+        :type src_str: Optional[str]
+        :return: The modified string with the first character in lowercase.
+        :rtype: str
+        """
         if src_str:
             return src_str[0].lower() + src_str[1:]
         return src_str
