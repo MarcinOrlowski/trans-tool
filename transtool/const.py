@@ -16,7 +16,7 @@ class Const(object):
     APP_NAME: str = 'trans-tool'
 
     # The version of the application.
-    APP_VERSION: str = '2.5.3'
+    APP_VERSION: str = '2.5.4'
 
     # The URL of the application's repository.
     APP_URL: str = 'https://github.com/MarcinOrlowski/trans-tool/'
