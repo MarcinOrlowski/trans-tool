@@ -6,6 +6,9 @@
 
 # Changelog #
 
+* v2.5.4 (2024-10-06)
+  * Code and docs cleanup
+
 * v2.5.3 (2023-10-24)
   * Replaced built-in logger class with external package (reinstall depdendencies!)
   * Updated documentation.

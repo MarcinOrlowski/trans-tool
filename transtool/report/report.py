@@ -3,7 +3,7 @@
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
+# Copyright ©2021-2024 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
@@ -11,6 +11,7 @@
 from typing import List
 
 from simplelog.log import Log
+
 from transtool.config.config import Config
 from transtool.utils import Utils
 from .group import ReportGroup
@@ -66,6 +67,13 @@ class Report(object):
         return len(self._groups) > 0  # noqa: WPS507
 
     def dump(self):
+        """
+        Dumps the report details, including errors and warnings, to the log.
+
+        This method calculates the total number of errors and warnings in the report.
+        If the configuration is set to fatal, warnings are added to the errors count.
+        """
+
         errors = self.errors
         warnings = self.warnings
 

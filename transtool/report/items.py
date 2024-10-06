@@ -3,7 +3,7 @@
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
+# Copyright ©2021-2024 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
@@ -24,6 +24,12 @@ class ReportItem(object):
         self.trans_key = trans_key
 
     def to_string(self) -> str:
+        """
+        Converts the report item to a string representation.
+
+        Returns:
+            str: The string representation of the report item.
+        """
         # Note trailing space!
         line = f'Line {self.position}: ' if self.position else ''
         if self.trans_key:
