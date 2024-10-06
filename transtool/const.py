@@ -3,7 +3,7 @@
 # trans-tool
 # The translation files checker and syncing tool.
 #
-# Copyright ©2021-2023 Marcin Orlowski <MarcinOrlowski.com>
+# Copyright ©2021-2024 Marcin Orlowski <MarcinOrlowski.com>
 # https://github.com/MarcinOrlowski/trans-tool/
 #
 """
@@ -22,7 +22,7 @@ class Const(object):
     APP_URL: str = 'https://github.com/MarcinOrlowski/trans-tool/'
 
     # The years during which the application was developed.
-    APP_YEARS: str = '2021-2023'
+    APP_YEARS: str = '2021-2024'
 
     APP_DESCRIPTION: List[str] = [
         f'{APP_NAME} v{APP_VERSION} * Copyright {APP_YEARS} by Marcin Orlowski.',
